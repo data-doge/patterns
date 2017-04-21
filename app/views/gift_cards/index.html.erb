@@ -22,7 +22,7 @@
       <th>Person ID</th>
       <th>Name</th>
       <th>Reason</th>
-      <th>Giftable ID</th>
+      <th>Giftable Object</th>
       <th>Batch</th>
       <th>Proxy ID</th>
       <th>Card Number</th>
@@ -41,7 +41,9 @@
         <td><%= gift_card.person_id %></td>
         <td><%= link_to "#{gift_card.person.full_name}", person_path(gift_card.person) %></td>
         <td><%= gift_card.reason.titleize %></td>
-        <td><%= gift_card.giftable_id %></td>
+        <td><%=
+        #link_to(url_for(gift_card.gifted_for)) if gift_card.gifted_for
+        %></td>
         <td><%= gift_card.batch_id %></td>
         <td><%= gift_card.proxy_id %></td>
         <td><%= gift_card.gift_card_number %></td>
