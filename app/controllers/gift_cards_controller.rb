@@ -35,6 +35,7 @@ class GiftCardsController < ApplicationController
       @new_gift_cards << GiftCard.new
     end
   end
+
   # GET /gift_cards/1
   # GET /gift_cards/1.json
   def show; end

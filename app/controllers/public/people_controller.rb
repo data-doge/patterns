@@ -27,11 +27,11 @@ class Public::PeopleController < ApplicationController
     success_msg = 'Thanks! We will be in touch soon!'
     error_msg   = "Oops! Looks like something went wrong. Please get in touch with us at <a href='mailto:#{ENV['MAILER_SENDER']}?subject=Patterns sign up problem'>#{ENV['MAILER_SENDER']}</a> to figure it out!"
 
-    if params[:low_income].present? # does the person identify as low income?
-      @person.low_income = params[:low_income]
-    else
-      @person.low_income = false
-    end
+    @person.low_income = if params[:low_income].present? # does the person identify as low income?
+                           params[:low_income]
+                         else
+                           false
+                         end
 
     @person.tag_list.add(params[:age_range]) if params[:age_range].present?
 

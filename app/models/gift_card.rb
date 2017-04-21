@@ -67,7 +67,6 @@ class GiftCard < ActiveRecord::Base
   #   Arel.sql('date(created_at)')
   # end
 
-
   def gifted_for
     if giftable_id
       klass ||= giftable_type.constantize

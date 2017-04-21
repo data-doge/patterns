@@ -9,6 +9,7 @@ AllCops:
     - 'spec/dummy/db/schema.rb'
     - 'db/**/*'
     - 'test/**/**/*'
+    - 'spec/**/**/*'
     - 'config/**/**/*'
 
 Rails:
@@ -78,4 +79,4 @@ Metrics/AbcSize:
 
 Metrics/LineLength:
   Enabled: false
-  
+

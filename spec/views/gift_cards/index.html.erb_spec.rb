@@ -14,7 +14,7 @@ RSpec.describe 'gift_cards/index', type: :view do
       expiration_date: '11/22'
     )
     b = GiftCard.create!(
-      gift_card_number: 12346,
+      gift_card_number: 2346,
       batch_id: 1,
       proxy_id: '4321',
       person_id: person.id,
