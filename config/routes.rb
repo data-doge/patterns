@@ -1,5 +1,12 @@
 Logan::Application.routes.draw do
-  resources :gift_cards
+  resources :gift_cards do
+    collection do
+      get 'recent_signups',
+        action: :recent_signups,
+        as: :recent_signups
+    end
+  end
+
   resources :mailchimp_updates
   namespace :public do
     resources :people, only: [:new, :create, :deactivate] do
