@@ -69,6 +69,7 @@ class Public::PeopleController < ApplicationController
         :email_address,
         :phone_number,
         :preferred_contact_method,
+        :low_income,
         :address_1,
         :address_2,
         :city,

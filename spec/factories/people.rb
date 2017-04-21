@@ -54,6 +54,7 @@ FactoryGirl.define do
     city              { Faker::Address.city }
     state             { Faker::Address.state }
     postal_code       { 11222 }
+    low_income        true
     signup_at         Time.current
     primary_device_id devices[:desktop]
     primary_device_description 'crawling'
