@@ -5,13 +5,13 @@
   delete_class = in_cart ? 'hide' : ''
 %>
   <!-- <%= in_cart %> -->
-              <%= link_to t('.schedule', default: "add to invite"),
+              <%= link_to t('.cart', default: "add to cart"),
                           add_cart_path(person_id: person.id),
                           class: "btn btn-mini #{add_class}",
                           id: "#{person.id}-cart-add",
                           remote: true %>
 
-              <%= link_to t('.schedule', default: "remove from invite"),
+              <%= link_to t('.cart', default: "remove from cart"),
                           delete_cart_path(person_id: person.id),
                           id: "#{person.id}-cart-delete",
                           class:"btn btn-mini #{delete_class}",
