@@ -11,7 +11,7 @@ AllCops:
     - 'test/**/**/*'
     - 'spec/**/**/*'
     - 'config/**/**/*'
-
+    - 'Backup/**/**/*'
 Rails:
   Enabled: true
 

@@ -369,6 +369,9 @@ class Person < ActiveRecord::Base
     end
   end
 
+  # FIXME: Refactor and re-enable cop
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  #
   # Compare to other records in the database to find possible duplicates.
   def possible_duplicates
     @duplicates = {}
@@ -430,6 +433,7 @@ class Person < ActiveRecord::Base
     end
     @duplicates
   end
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 end
 # rubocop:enable ClassLength

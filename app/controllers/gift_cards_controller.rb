@@ -51,6 +51,7 @@ class GiftCardsController < ApplicationController
 
   # POST /gift_cards
   # POST /gift_cards.json
+  # rubocop:disable Metrics/MethodLength
   def create
     @gift_card = GiftCard.new(gift_card_params)
     @create_result = @gift_card.with_user(current_user).save
@@ -77,6 +78,7 @@ class GiftCardsController < ApplicationController
     #   end
     # end
   end
+  # rubocop:enable Metrics/MethodLength
 
   # PATCH/PUT /gift_cards/1
   # PATCH/PUT /gift_cards/1.json

@@ -45,6 +45,8 @@ class PeopleController < ApplicationController
 
   # GET /people
   # GET /people.json
+
+  # rubocop:disable Metrics/AbcSize
   def index
     @verified_types = Person.uniq.pluck(:verified).select(&:present?)
     # this could be cleaner...
@@ -58,6 +60,7 @@ class PeopleController < ApplicationController
               end
     @tags ||= []
   end
+  # rubocop:enable Metrics/AbcSize
 
   # GET /people/1
   # GET /people/1.json
@@ -256,6 +259,7 @@ class PeopleController < ApplicationController
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
+    # rubocop:disable Metrics/MethodLength
     def person_params
       params.require(:person).permit(:first_name,
         :last_name,
@@ -293,6 +297,7 @@ class PeopleController < ApplicationController
           :giftable_type
         ])
     end
+    # rubocop:enable Metrics/MethodLength
 
     def should_skip_janky_auth?
       # don't attempt authentication on reqs from wufoo

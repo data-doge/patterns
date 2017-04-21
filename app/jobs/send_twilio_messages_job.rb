@@ -20,7 +20,7 @@ class SendTwilioMessagesJob < Struct.new(:messages, :phone_numbers, :smsCampaign
   end
 
   # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/BlockLength
   #
   def perform
     # Instantiate a Twilio client
@@ -72,7 +72,7 @@ class SendTwilioMessagesJob < Struct.new(:messages, :phone_numbers, :smsCampaign
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/BlockLength
 
   def before(job); end
 

@@ -14,7 +14,7 @@
 class TaggingsController < ApplicationController
 
   # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   #
   def create
     klass = params[:taggable_type].constantize
@@ -46,8 +46,9 @@ class TaggingsController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
+  # rubocop:disable Metrics/MethodLength
   def destroy
     @tagging = ActsAsTaggableOn::Tagging.find(params[:id])
     @tagging_id = @tagging.id
@@ -62,6 +63,7 @@ class TaggingsController < ApplicationController
     end
   end
 
+  # rubocop:enable Metrics/MethodLength
   def search
     type = params[:type].blank? ? 'Person' : params[:type]
     klass = type.constantize

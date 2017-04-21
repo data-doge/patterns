@@ -5,6 +5,7 @@ class SearchController < ApplicationController
   include PeopleHelper
   include GsmHelper
 
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/BlockLength
   def index_ransack
     @q = Person.ransack(params[:q])
     @results = @q.result.includes(:tags).page(params[:page])
@@ -76,8 +77,7 @@ class SearchController < ApplicationController
       end
     end
   end
-
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/BlockLength
 
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize

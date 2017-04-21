@@ -19,7 +19,7 @@ class Public::PeopleController < ApplicationController
   end
 
   # POST /people
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def create
     @person = ::Person.new(person_params)
     @person.signup_at = Time.current
@@ -44,7 +44,7 @@ class Public::PeopleController < ApplicationController
       format.html { render action: 'create' }
     end
   end
-  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   def deactivate
     @person =Person.find_by(token: d_params[:token])
