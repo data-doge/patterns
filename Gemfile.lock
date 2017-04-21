@@ -192,6 +192,7 @@ GEM
     health_check (2.6.0)
       rails (>= 4.0)
     highline (1.7.8)
+    hiredis (0.6.1)
     holder_rails (2.9.3)
       railties (>= 3.1.0)
     httparty (0.14.0)
@@ -517,6 +518,7 @@ DEPENDENCIES
   guard-rubocop
   has_secure_token
   health_check
+  hiredis
   holder_rails
   icalendar
   jbuilder (~> 1.0.1)

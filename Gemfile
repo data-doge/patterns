@@ -8,7 +8,8 @@ gem 'airbrake', '~> 5.0'
 # must use this version of mysql2 for rails 4.0.0
 gem 'mysql2'
 
-gem 'redis' # ephemeral storage. used for expiring wit.ai contexts
+gem 'redis' # ephemeral storage and caching
+gem 'hiredis' # faster redis
 
 gem 'validates_overlap' # to ensure we don't double book people
 
