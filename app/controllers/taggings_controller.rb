@@ -70,8 +70,7 @@ class TaggingsController < ApplicationController
 
   # rubocop:enable Metrics/MethodLength
   def search
-    type = params[:type].blank? ? 'Person' : params[:type]
-    klass = type.constantize
+    klass = params[:type].blank? ? Person : TAGGABLE_TYPES.fetch(params[:type])
     @tags = klass.tag_counts.where('name like ?', "%#{params[:q]}%").
             order(taggings_count: :desc)
 
