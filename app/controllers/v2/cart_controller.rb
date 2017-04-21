@@ -4,7 +4,12 @@ class V2::CartController < ApplicationController
   # Index
   def index
     init
-    render json: session[:cart].to_json
+    respond_to do |format|
+      format.html {
+        @people = Person.where(id: session[:cart])
+      }
+      format.json { render json: session[:cart].to_json }
+    end
   end
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize

@@ -1,0 +1,30 @@
+<%= render :partial => 'layouts/v2_event_menu' %>
+<h3> People in cart</h3>
+<div class="row">
+  <div class="span12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email address</th>
+          <th>Phone number</th>
+          <th>Preferred Contact Method</th>
+          <th>Tag Count</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @people.each do |person| %>
+        <tr id='cart-<%= person.id %>'>
+          <td><%= person.full_name %></td>
+          <td><%= person.email_address %></td>
+          <td><%= person.phone_number %></td>
+          <td><%= person.preferred_contact_method %></td>
+          <td><%= person.tag_count_cache %></td>
+          <td><%= render partial: '/people/add_remove_cart', locals: {person: person} %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </thread>
+  </table>
+</div>
