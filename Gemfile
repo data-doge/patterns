@@ -25,6 +25,9 @@ group :development do
   # src: https://github.com/capistrano/capistrano/pull/412
   gem 'capistrano', git: 'git://github.com/capistrano/capistrano.git', tag: 'v2.15.4'
   gem 'rvm-capistrano', require: false
+  gem 'rbnacl' # for modern ssh keys
+  gem 'bcrypt_pbkdf' # same as above
+  gem 'rbnacl-libsodium' # same as above
   # this whole group makes finding performance issues much friendlier
   gem 'rack-mini-profiler'
   gem 'flamegraph'
