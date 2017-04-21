@@ -19,6 +19,7 @@ class V2::Event < ActiveRecord::Base
   has_many :time_slots, class_name: '::V2::TimeSlot'
   has_many :invitees, through: :event_invitations
   has_many :reservations, through: :time_slots
+  has_many :gift_cards, as: :giftable, dependent: :destroy
   belongs_to :user
 
   validates :description, presence: true

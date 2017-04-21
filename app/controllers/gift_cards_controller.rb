@@ -4,26 +4,35 @@ class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: [:show, :edit, :update, :destroy]
 
   # GET /gift_cards
-  # GET /gift_cards.json
+  # GET /gift_cards.csv
   def index
     @q_giftcards = GiftCard.ransack(params[:q])
     respond_to do |format|
       format.html do
         @gift_cards = @q_giftcards.result.includes(:person).page(params[:page])
         # @recent_signups = Person.no_signup_card.paginate(page: params[:page]).where('signup_at > :startdate', { startdate: 3.months.ago }).order('signup_at DESC')
-        @q_recent_signups = Person.no_signup_card.ransack(params[:q_signups], search_key: :q_signups)
-        # @q_recent_signups.no_signup_card
-        @q_recent_signups.created_at_date_gteq = 3.weeks.ago.strftime('%Y-%m-%d') unless params[:q_signups]
-        @recent_signups = @q_recent_signups.result.page(params[:page_signups])
-        @new_gift_cards = []
-        @recent_signups.length.times do
-          @new_gift_cards << GiftCard.new
-        end
       end
       format.csv do
         @gift_cards = @q_giftcards.result.includes(:person)
         send_data @gift_cards.export_csv,  filename: "GiftCards-#{Time.zone.today}.csv"
       end
+    end
+  end
+
+  # GET /recent_signups
+  # GET /recent_signups.csv
+  def recent_signups
+    @q_recent_signups = Person.no_signup_card.ransack(params[:q_signups], search_key: :q_signups)
+
+    unless params[:q_signups]
+      @q_recent_signups.created_at_date_gteq = 3.weeks.ago.strftime('%Y-%m-%d')
+    end
+
+    @recent_signups = @q_recent_signups.result.page(params[:page_signups])
+
+    @new_gift_cards = []
+    @recent_signups.length.times do
+      @new_gift_cards << GiftCard.new
     end
   end
 
@@ -42,6 +51,7 @@ class GiftCardsController < ApplicationController
 
   # POST /gift_cards
   # POST /gift_cards.json
+  # rubocop:disable Metrics/MethodLength
   def create
     @gift_card = GiftCard.new(gift_card_params)
     @create_result = @gift_card.with_user(current_user).save
@@ -68,6 +78,7 @@ class GiftCardsController < ApplicationController
     #   end
     # end
   end
+  # rubocop:enable Metrics/MethodLength
 
   # PATCH/PUT /gift_cards/1
   # PATCH/PUT /gift_cards/1.json

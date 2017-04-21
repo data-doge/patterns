@@ -47,7 +47,7 @@ class TwilioMessagesController < ApplicationController
   def sendmessages; end
 
   # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Style/VariableName
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Style/VariableName, Metrics/PerceivedComplexity
   #
   def uploadnumbers
     phone_numbers = []
@@ -89,7 +89,7 @@ class TwilioMessagesController < ApplicationController
       format.html { redirect_to '/twilio_messages/sendmessages' }
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/VariableName
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/VariableName, Metrics/PerceivedComplexity
 
   # GET /twilio_messages/1
   # GET /twilio_messages/1.json

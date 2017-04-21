@@ -13,14 +13,19 @@
 
 class TaggingsController < ApplicationController
 
+  TAGGABLE_TYPES = {
+    'Person'    => Person,
+    'V2::Event' => V2::Event
+  }.freeze
+
   # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   #
   def create
-    klass = params[:taggable_type].constantize
-    obj = klass.find(params[:taggable_id])
+    klass = TAGGABLE_TYPES.fetch(params[:taggable_type])
     res = false
-    if obj.respond_to?(:tag_list) && !params[:tag].blank?
+    if klass && params[:tag].present?
+      obj = klass.find(params[:taggable_id])
       tag = params[:tag]
       # if we want owned tags. Not sure we do...
       # res = current_user.tag(obj,with: params[:tagging][:name])
@@ -46,8 +51,9 @@ class TaggingsController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
+  # rubocop:disable Metrics/MethodLength
   def destroy
     @tagging = ActsAsTaggableOn::Tagging.find(params[:id])
     @tagging_id = @tagging.id
@@ -62,9 +68,9 @@ class TaggingsController < ApplicationController
     end
   end
 
+  # rubocop:enable Metrics/MethodLength
   def search
-    type = params[:type].blank? ? 'Person' : params[:type]
-    klass = type.constantize
+    klass = params[:type].blank? ? Person : TAGGABLE_TYPES.fetch(params[:type])
     @tags = klass.tag_counts.where('name like ?', "%#{params[:q]}%").
             order(taggings_count: :desc)
 

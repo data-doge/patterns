@@ -9,6 +9,9 @@ require 'support/helpers'
 require 'sms_spec'
 require 'timecop'
 require 'mock_redis'
+require 'simplecov'
+SimpleCov.start
+
 
 SmsSpec.driver = :'twilio-ruby'
 

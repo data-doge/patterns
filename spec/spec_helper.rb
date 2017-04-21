@@ -1,6 +1,9 @@
 require 'coveralls'
 Coveralls.wear_merged!('rails')
 
+require 'simplecov'
+SimpleCov.start
+
 require 'devise'
 require 'factory_girl_rails'
 # spec/spec_helper.rb

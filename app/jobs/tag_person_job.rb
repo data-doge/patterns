@@ -1,3 +1,4 @@
+# rubocop:disable Style/StructInheritance
 class TagPersonJob < Struct.new(:id, :tags)
 
   def enqueue(job)
@@ -15,3 +16,4 @@ class TagPersonJob < Struct.new(:id, :tags)
     1
   end
 end
+# rubocop:enable Style/StructInheritance

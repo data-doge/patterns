@@ -43,7 +43,7 @@ class GiftCard < ActiveRecord::Base
   validates_presence_of :proxy_id
 
   validates_format_of :expiration_date,
-    with: /\A(0|1)([0-9])\/([0-9]{2})\z/i,
+    with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i,
     unless: proc { |c| c.expiration_date.blank? }
 
   validates_length_of :proxy_id, is: 4, unless: proc { |c| c.proxy_id.blank? }
@@ -57,7 +57,7 @@ class GiftCard < ActiveRecord::Base
     unless: proc { |c| c.gift_card_number.blank? }
 
   validates_format_of :gift_card_number,
-    with: /\A([0-9]){4,5}\z/i,
+    with:  /\A([0-9]){4,5}\z/i,
     unless: proc { |c| c.gift_card_number.blank? }
 
   # Validation to limit 1 signup per person
@@ -66,6 +66,13 @@ class GiftCard < ActiveRecord::Base
   # ransacker :created_at, type: :date do
   #   Arel.sql('date(created_at)')
   # end
+
+  def gifted_for
+    if giftable_id
+      klass = giftable_type.constantize
+      klass.find(giftable_id)
+    end
+  end
 
   def self.batch_create(post_content)
     # begin exception handling
@@ -83,6 +90,7 @@ class GiftCard < ActiveRecord::Base
     # exception handling
   end  # batch_create
 
+  # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
       csv_column_names =  ['Gift Card ID', 'Batch ID', 'Gift Card Number', 'Expiration Date', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email']
@@ -100,4 +108,5 @@ class GiftCard < ActiveRecord::Base
       end
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end

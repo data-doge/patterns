@@ -82,6 +82,7 @@ class V2::EventInvitationsController < ApplicationController
     end
 
     # TODO: add a nested :event
+    # rubocop:disable Metrics/MethodLength
     def event_invitation_params
       params.require(:v2_event_invitation).permit(
         :people_ids,
@@ -95,4 +96,5 @@ class V2::EventInvitationsController < ApplicationController
         :user_id
       ).merge(user_id: current_user.id)
     end
+  # rubocop:enable Metrics/MethodLength
 end
