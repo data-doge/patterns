@@ -14,12 +14,12 @@ env_file = "#{path}/config/local_env.yml"
 defaults = "#{path}/config/sample.local_env.yml"
 
 YAML.load(File.open(env_file)).each do |key, value|
-  ENV[key.to_s] = value
+  ENV[key.to_s] = value if ENV[key.to_s].nil?
 end if File.exist?(env_file)
 
 # load in defaults unless they are already set
 YAML.load(File.open(defaults)).each do |key, value|
-  ENV[key.to_s] = value unless ENV[key]
+  ENV[key.to_s] = value if ENV[key.to_s].nil?
 end
 
 # run our jobs in the right time zone
