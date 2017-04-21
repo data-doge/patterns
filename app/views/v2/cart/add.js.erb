@@ -1,3 +1,5 @@
-$('#<%= @added %>-cart-delete').show();
-$('#<%= @added %>-cart-add').hide();
+<% @added.each do |add| %>
+  $('#<%= add %>-cart-delete').show();
+  $('#<%= add %>-cart-add').hide();
+<% end %>
 $('#cart-size').html('<%= (session[:cart] ||= []).size %>');

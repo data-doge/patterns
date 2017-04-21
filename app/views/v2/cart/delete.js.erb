@@ -1,6 +1,6 @@
-<% Array(@deleted).each do |delete| %>
-$('#<%= delete %>-cart-delete').hide();
-$('#<%= delete %>-cart-add').show();
-$('#cart-<%= delete %>').remove();
+<% @deleted.each do |delete| %>
+  $('#<%= delete %>-cart-delete').hide();
+  $('#<%= delete %>-cart-add').show();
+  $('#cart-<%= delete %>').remove();
 <% end %>
 $('#cart-size').html('<%= (session[:cart] ||= []).size %>');

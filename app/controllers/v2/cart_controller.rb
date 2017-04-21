@@ -1,27 +1,24 @@
 class V2::CartController < ApplicationController
   include ApplicationHelper
+  before_action :cart_init
   # a cart of user ids. stored in session.
   # Index
   def index
-    init
     respond_to do |format|
-      format.html {
-        @people = Person.where(id: session[:cart])
-      }
+      format.html { @people = Person.where(id: session[:cart]) }
       format.json { render json: session[:cart].to_json }
     end
   end
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-  def add
-    init
-    to_add = cart_params[:person_id].to_i
-    person = Person.find_by(id: to_add) # only people ids here.
-
-    session[:cart] << person.id unless session[:cart].include?(person.id) || person.nil?
-
+  def add # TODO add many
+    to_add = cart_params[:person_id]
+    people = Person.where(id: to_add) # only people ids here.
+    people.each do |person|
+      session[:cart] << person.id unless session[:cart].include?(person.id)
+    end
     # don't update if we don't find a persons
-    @added = person.nil? ? 0 : person.id
+    @added = people.blank? ? [] : people.map(&:id)
     respond_to do |format|
       format.js
       format.json { render json: session[:cart].to_json }
@@ -30,14 +27,15 @@ class V2::CartController < ApplicationController
   end
 
   # Delete
-  def delete
-    init
-    to_delete = cart_params[:person_id].to_i
-    if params[:all].blank?
-      @deleted = session[:cart].delete(to_delete) unless to_delete.blank?
-    else
+  def delete # TODO delete many
+    if cart_params[:person_id].blank?
       @deleted = session[:cart]
       session[:cart] = []
+    else
+      @deleted = []
+      Person.where(id: cart_params[:person_id]).find_each{|to_delete|
+        @deleted << session[:cart].delete(to_delete.id)
+      }
     end
 
     respond_to do |format|
@@ -55,7 +53,7 @@ class V2::CartController < ApplicationController
       params.permit(:person_id, :all)
     end
 
-    def init
+    def cart_init
       # this is a bit of a hack here.
       # before filter seems to break things. I don't know why
       session[:cart] = (session[:cart] ||= []).map(&:to_i).uniq - [0]
