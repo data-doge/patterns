@@ -5,8 +5,6 @@ dist: precise
 bundler_args: "--jobs=4 --retry=3"
 before_script:
 - bundle exec rake db:migrate RAILS_ENV=test
-after_script:
-- bundle exec codeclimate-test-reporter
 addons:
     code_climate:
         repo_token: bc9e0fee3d10d7a24d762909e4fffe85dab761dfded5db6ffddf9d7b6e5b61f4
