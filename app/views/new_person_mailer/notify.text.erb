@@ -1,0 +1,13 @@
+Hello!
+New Patterns person!
+Name: <%= @person.full_name %>
+Email: <%= @person.email_address %>
+Phone: <%= @person.phone_number %>
+Low Income: <%= @person.low_income %>
+Tags: <%= @person.tag_list.to_s %>
+
+<%= link_to 'More Info',
+         person_url(@person) %>
+
+Thanks!,
+<%= ENV['TEAM_NAME'] %>

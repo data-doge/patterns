@@ -33,6 +33,9 @@ class User < ActiveRecord::Base
   has_many :event_invitations, class_name: '::V2::EventInvitation', through: :v2_events
   has_many :v2_reservations, through: :v2_events, source: :reservations
 
+  phony_normalize :phone_number, default_country_code: 'US'
+  phony_normalized_method :phone_number, default_country_code: 'US'
+
   has_secure_token # for calendar feeds
 
   # for sanity's sake
