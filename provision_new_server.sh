@@ -28,8 +28,6 @@ echo "MYSQL_HOST=localhost" >> /etc/environment
 echo "127.0.0.1 $ARG1" >> /etc/hosts
 source /etc/environment;
 
-wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
 apt-get update && apt-get dist-upgrade -y
 apt-get install -y python-software-properties software-properties-common
 apt-add-repository -y ppa:nginx/development
@@ -37,9 +35,8 @@ apt-add-repository -y ppa:nginx/development
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password'
 
-apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server openjdk-6-jre elasticsearch git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nginx gpgv2 ruby-dev openjdk-7-jre autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev
+apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nginx gpgv2 ruby-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev
 
-service elasticsearch start
 mysqladmin -ppassword create `echo $RAILS_ENV`
 openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 2048
 
@@ -101,13 +98,14 @@ EOL
   ssh-keyscan -H github.com >> ~/.ssh/known_hosts
   echo 'export PATH=$PATH:/usr/sbin' >> ~/.bashrc
   echo 'gem: --no-document' >> ~/.gemrc
+
   # installing ruby and rvm
   gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
   curl -sSL https://get.rvm.io | bash -s stable
   echo 'rvm_trust_rvmrcs_flag=1' >> ~/.rvmrc
   source /home/logan/.rvm/scripts/rvm
-  rvm install 2.2.5
-  rvm use 2.2.5@`echo $RAILS_ENV` --create
+  rvm install 2.3.4
+  rvm use 2.3.4@`echo $RAILS_ENV` --create
   rvm @global do gem install backup bundler rake whenever
   ln -s /var/www/logan-`echo $RAILS_ENV`/current `echo $RAILS_ENV`
   exit # back to root.

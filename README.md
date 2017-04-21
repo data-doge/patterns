@@ -15,7 +15,6 @@ Kimball is a Ruby on Rails app.
 
 * Server Set up:
   * It currently uses Capistrano for deployment to staging and production instances.
-  * ElasticSearch needs to be installed and running for Kimball to work.
   * Environment Variables are used (saved in a local_env.yml file) for API keys and other IDs.
   * you'll need ssh-agent forwarding:
   ```ssh-add -L``
@@ -103,6 +102,7 @@ If a variable isn't defined in your local_env.yml, we use the default value from
     * AWS_API_SECRET
     * AWS_S3_BUCKET
   * provisioning script sets this up for you. runs 32 minutes after the hour, ever hour.
+
 
 TODO
 ----
