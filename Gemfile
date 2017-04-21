@@ -147,7 +147,7 @@ gem 'aasm'
 gem 'whenever', require: false
 
 # handling emoji!
-gem 'emoji', git: 'https://github.com/cromulus/emoji', branch: 'add_replace_unicode_moji_with_name'
+gem 'emoji'
 
 # auditing.
 gem 'paper_trail'
