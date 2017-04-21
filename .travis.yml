@@ -3,6 +3,8 @@ cache: bundler
 sudo: required
 dist: precise
 bundler_args: "--jobs=4 --retry=3"
+services:
+ - redis
 before_script:
 - bundle exec rake db:migrate RAILS_ENV=test
 addons:
