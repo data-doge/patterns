@@ -10,7 +10,7 @@ gem 'mysql2'
 
 gem 'redis' # ephemeral storage and caching
 gem 'hiredis' # faster redis
-
+gem 'redis-rails' # for session store
 gem 'validates_overlap' # to ensure we don't double book people
 
 gem 'rails_12factor'
