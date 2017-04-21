@@ -43,6 +43,14 @@ every :day, at: nyc_time("8:00am") do
   runner "User.send_all_reminders"
   runner "Person.send_all_reminders"
 end
+
+every :day, at: nyc_time("2:00am") do
+  command "cd #{path} && bundle exec #{path}/bin/delayed_job restart"
+end
+
+every :reboot do
+  command "cd #{path} && #{path}/bin/unicorn_rails -c config/unicorn.rb -E #{ENV['RAILS_ENV']} -D "
+end
 #
 # every 4.days do
 #   command "/usr/bin/some_great_command"
