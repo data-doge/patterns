@@ -133,6 +133,8 @@ class CalendarController < ApplicationController
         :id,
         :event_id,
         :user_id,
+        :start,
+        :end,
         :type,
         :reservation_id,
         :time_slot_id,
