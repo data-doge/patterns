@@ -556,6 +556,7 @@ DEPENDENCIES
   rvm-capistrano
   sass-rails
   shoulda-matchers (~> 3.1.1)
+  simplecov
   skylight
   sms-spec
   sqlite3

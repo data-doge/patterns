@@ -1,8 +1,8 @@
-require 'codeclimate-test-reporter'
-CodeClimate::TestReporter.start
-
 require 'coveralls'
 Coveralls.wear_merged!('rails')
+
+require 'simplecov'
+SimpleCov.start
 
 require 'devise'
 require 'factory_girl_rails'
