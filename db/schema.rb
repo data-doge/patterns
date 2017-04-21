@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170421140532) do
+ActiveRecord::Schema.define(version: 20170421190749) do
 
   create_table "applications", force: :cascade do |t|
     t.string   "name",         limit: 255
@@ -267,24 +267,25 @@ ActiveRecord::Schema.define(version: 20170421140532) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  limit: 255, default: "",    null: false
-    t.string   "encrypted_password",     limit: 255, default: "",    null: false
-    t.string   "reset_password_token",   limit: 255
+    t.string   "email",                   limit: 255, default: "",    null: false
+    t.string   "encrypted_password",      limit: 255, default: "",    null: false
+    t.string   "reset_password_token",    limit: 255
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          limit: 4,   default: 0
+    t.integer  "sign_in_count",           limit: 4,   default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",     limit: 255
-    t.string   "last_sign_in_ip",        limit: 255
-    t.string   "password_salt",          limit: 255
-    t.string   "invitation_token",       limit: 255
+    t.string   "current_sign_in_ip",      limit: 255
+    t.string   "last_sign_in_ip",         limit: 255
+    t.string   "password_salt",           limit: 255
+    t.string   "invitation_token",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "approved",                           default: false, null: false
-    t.string   "name",                   limit: 255
-    t.string   "token",                  limit: 255
-    t.string   "phone_number",           limit: 255
+    t.boolean  "approved",                            default: false, null: false
+    t.string   "name",                    limit: 255
+    t.string   "token",                   limit: 255
+    t.string   "phone_number",            limit: 255
+    t.boolean  "new_person_notification",             default: false
   end
 
   create_table "v2_event_invitations", force: :cascade do |t|

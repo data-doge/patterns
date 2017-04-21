@@ -75,6 +75,7 @@ class Person < ActiveRecord::Base
   after_update  :sendToMailChimp
   after_create  :sendToMailChimp
   after_create  :update_neighborhood
+  after_create  :send_notifications
 
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -366,6 +367,13 @@ class Person < ActiveRecord::Base
     unless n.blank?
       self.neighborhood = n
       save
+    end
+  end
+
+  def send_notifications
+    User.where(new_person_notification: true).find_each do |user|
+      email = user.email_address
+      NewPersonMailer.notify(email_address: email, person: self).deliver_later
     end
   end
 
