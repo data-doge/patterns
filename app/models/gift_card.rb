@@ -57,7 +57,7 @@ class GiftCard < ActiveRecord::Base
     unless: proc { |c| c.gift_card_number.blank? }
 
   validates_format_of :gift_card_number,
-    with:  %r{\A([0-9]){4,5}\z}i,
+    with:  /\A([0-9]){4,5}\z/i,
     unless: proc { |c| c.gift_card_number.blank? }
 
   # Validation to limit 1 signup per person
