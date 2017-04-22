@@ -1,3 +1,56 @@
+<style>
+.toggle-check-input {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+}
+
+.toggle-check-text {
+  display: inline-block;
+  position: relative;
+  text-transform: uppercase;
+  background: #CCC;
+  padding: 0.25em 0.5em 0.25em 2em;
+  border-radius: 1em;
+  min-width: 2em;
+  color: #FFF;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.toggle-check-text:after {
+  content: ' ';
+  display: block;
+  background: #FFF;
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 1em;
+  position: absolute;
+  left: 0.3em;
+  top: 0.25em;
+  transition: left 0.15s, margin-left 0.15s;
+}
+
+.toggle-check-text:before {
+  content: 'No';
+}
+
+.toggle-check-input:checked ~ .toggle-check-text {
+  background: #8ad869;
+  padding-left: 0.5em;
+  padding-right: 2em;
+}
+
+.toggle-check-input:checked ~ .toggle-check-text:before {
+  content: 'Yes';
+}
+
+.toggle-check-input:checked ~ .toggle-check-text:after {
+  left: 100%;
+  margin-left: -1.4em;
+}
+</style>
+
 <%= form_for @person, url: public_people_path do |f| %>
   <div class="control-group">
     <%= f.label :first_name, :class => 'control-label' %>
@@ -132,9 +185,14 @@
   <div class="control-group">
     <label class="control-label" for="low_income">Do you consider yourself low-income?</label>
     <div class="controls">
-      <%= f.check_box :low_income %>
+      <label class="toggle-check">
+        <input type="checkbox" name="person[low_income]" id="person_low_income" class="toggle-check-input" />
+        <span class="toggle-check-text"></span>
+      </label>
     </div>
   </div>
+
+
   <% end %>
   <div class="form-actions">
     <%= f.submit 'Save', :class => 'btn btn-primary' %>
