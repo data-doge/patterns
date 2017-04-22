@@ -12,6 +12,7 @@ AllCops:
     - 'spec/**/**/*'
     - 'config/**/**/*'
     - 'Backup/**/**/*'
+    - 'lib/tasks/**/**/*'
 Rails:
   Enabled: true
 
