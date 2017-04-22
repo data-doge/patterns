@@ -89,6 +89,8 @@ gem 'unicorn'
 
 gem 'twitter-bootstrap-rails', '~> 2.2.0'
 
+gem 'momentjs-rails'
+gem 'bootstrap3-datetimepicker-rails'
 # use tire for ElasticSearch integration
 # gem 'tire' # no longer needed
 
