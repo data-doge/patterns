@@ -306,8 +306,7 @@ class PeopleController < ApplicationController
     end
 
     def sort_column
-      res = Person.column_names.include?(params[:sort]) ? params[:sort] : 'id'
-      "people.#{res}"
+      Person.column_names.include?(params[:sort]) ? params[:sort] : "person.id"
     end
 
     # currently busted. gotta figre out why never descending
