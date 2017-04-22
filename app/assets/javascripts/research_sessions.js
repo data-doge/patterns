@@ -2,9 +2,9 @@
 
 $(document).on('page:load ready', function(){
 
-  var slotLengthElement = $("#v2_event_invitation_slot_length");
-  var startTimeElement = $("#v2_event_invitation_start_time");
-  var endTimeElement = $("#v2_event_invitation_end_time");
+
+  var startTimeElement = $("#research_session_start_datetime");
+  var endTimeElement = $("#research_session_end_datetime");
 
   $("#submit").click(function(e){
     var startTime = timeToSeconds(startTimeElement.val());
@@ -17,21 +17,12 @@ $(document).on('page:load ready', function(){
       e.preventDefault();
     }
 
-    if (isTimeWindowMultipleOfSlotLength(slotLength(), startTime, endTime)) {
-      var warningMessage = "Your time window is not a multiple of the call length. Do you still want to save the Event?";
-      if (!confirm(warningMessage))
-        e.preventDefault();
-    }
-
   });
 
   startTimeElement.change(function(){
     endTimeElement.val(startTimeElement.val());
   });
 
-  function isTimeWindowMultipleOfSlotLength(startTime, endTime) {
-    return ((endTime - startTime) % slotLength() !== 0);
-  }
 
   function isEndTimeAfterStartTime(startTime, endTime) {
     return !(endTime > startTime);
@@ -45,8 +36,7 @@ $(document).on('page:load ready', function(){
     parseInt(slotLengthElement.val().substr(0,2),10) * 60;
   };
 
-  // defaulting the buffer.
-  $('#v2_event_invitation_buffer').prop('selectedIndex', 1);
+  //https://eonasdan.github.io/bootstrap-datetimepicker/
   $('.datepicker').datepicker('setDate', new Date());
   // defaulting to a reasonable time
   startTimeElement.prop('selectedIndex', 38).change();

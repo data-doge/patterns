@@ -9,6 +9,7 @@ class InvitationReminderSms < ApplicationSms
     @invitations = invitations
   end
 
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def generate_res_msgs
     msg = "You have #{res_count} invitation#{res_count > 1 ? 's': ''} soon.\n"
     invitations.each do |r|

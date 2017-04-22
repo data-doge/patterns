@@ -1,10 +1,10 @@
 <p>Hello <%= @person.first_name %>,</p>
 
-<p><%= @event.description %></p>
-
+<p><%= @invitation.description %></p>
+<!--
 <p><%= link_to 'Please click to setup a time for your interview',
-           calendar_url(token: @person.token, event_id: @event.id) %></p>
-
+           calendar_url(token: @person.token) %></p>
+-->
 <p>Thanks!</p>
 <p><%= ENV['TEAM_NAME'] %></p>
 
