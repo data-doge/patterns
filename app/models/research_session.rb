@@ -1,20 +1,18 @@
 # == Schema Information
 #
-# Table name: session
+# Table name: research_sessions
 #
-#  id          :integer          not null, primary key
-#  v2_event_id :integer
-#  people_ids  :string(255)
-#  description :string(255)
-#  slot_length :string(255)
-#  date        :string(255)
-#  start_time  :string(255)
-#  end_time    :string(255)
-#  buffer      :integer          default(0), not null
-#  created_at  :datetime
-#  updated_at  :datetime
-#  user_id     :integer
-#  title       :string(255)
+#  id              :integer          not null, primary key
+#  description     :string(255)
+#  buffer          :integer          default(0), not null
+#  created_at      :datetime
+#  updated_at      :datetime
+#  user_id         :integer
+#  title           :string(255)
+#  start_datetime  :datetime
+#  end_datetime    :datetime
+#  sms_description :string(255)
+#  session_type    :integer          default(1)
 #
 
 class ResearchSession < ActiveRecord::Base
