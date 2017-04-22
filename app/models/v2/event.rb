@@ -42,7 +42,7 @@ class V2::Event < ActiveRecord::Base
     return [] if !person.nil? && person.v2_reservations.find_by(event_id: id)
 
     available_slots = time_slots.includes(:reservation).find_all do |slot|
-      !slot.reservation.present?
+      slot.reservation.blank?
     end
 
     available_slots = filter_reservations([user, person].compact, available_slots)
@@ -62,7 +62,7 @@ class V2::Event < ActiveRecord::Base
       res.flatten!
       slots.to_a.delete_if do |slot|
         # if we find a reservation that overlaps!
-        !res.find { |r| overlap?(r, slot) }.blank?
+        res.find { |r| overlap?(r, slot) }.present?
       end
     end
 

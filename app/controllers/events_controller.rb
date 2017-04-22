@@ -19,7 +19,7 @@
 
 class EventsController < ApplicationController
 
-  before_action :set_event, only: [:show, :edit, :update, :destroy, :export]
+  before_action :set_event, only: %i[show edit update destroy export]
 
   # GET /events
   # GET /events.json

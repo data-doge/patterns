@@ -15,7 +15,7 @@
 
 class TwilioWufoosController < ApplicationController
 
-  before_action :set_twilio_wufoo, only: [:show, :edit, :update, :destroy]
+  before_action :set_twilio_wufoo, only: %i[show edit update destroy]
 
   # GET /twilio_wufoos
   # GET /twilio_wufoos.json

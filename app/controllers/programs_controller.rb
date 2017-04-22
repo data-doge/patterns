@@ -13,7 +13,7 @@
 
 class ProgramsController < ApplicationController
 
-  before_action :set_program, only: [:show, :edit, :update, :destroy]
+  before_action :set_program, only: %i[show edit update destroy]
 
   # GET /programs
   # GET /programs.json

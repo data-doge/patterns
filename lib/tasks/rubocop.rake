@@ -1,4 +1,4 @@
-if Rails.env != 'production' and Rails.env != 'staging'
+if Rails.env !='production' && Rails.env !='staging'
   require 'rubocop/rake_task'
   desc 'Run rubocop'
   task :rubocop do

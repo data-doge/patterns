@@ -17,7 +17,7 @@
 
 class ApplicationsController < ApplicationController
 
-  before_action :set_application, only: [:show, :edit, :update, :destroy]
+  before_action :set_application, only: %i[show edit update destroy]
 
   # GET /applications
   # GET /applications.json

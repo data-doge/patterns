@@ -52,7 +52,6 @@ module PeopleHelper
                  other: 'Other',
                  public_computer: 'Public computer',
                  public_wifi: 'Public wifi' }
-
     begin; mappings[Logan::Application.config.connection_mappings.rassoc(connection_id)[0]]; rescue; 'Unknown/No selection'; end
   end
 
@@ -81,7 +80,6 @@ module PeopleHelper
                                   MMERGE13: person.primary_device_id,
                                   MMERGE14: person.preferred_contact_method } }
         )
-
       rescue Gibbon::MailChimpError => e
         Rails.logger.fatal("[People_Helper->sendToMailChimp] fatal error sending #{person.id} to Mailchimp: #{e.message}")
       end

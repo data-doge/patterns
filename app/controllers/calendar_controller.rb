@@ -110,12 +110,12 @@ class CalendarController < ApplicationController
     # this does the token based auth for users and persons
     def person?
       @person = nil
-      if !allowed_params[:token].blank?
+      if allowed_params[:token].present?
         @person = Person.find_by(token: allowed_params[:token])
         # if we don't have a person, see if we have a user's token.
         # thus we can provide a feed without auth1
         @person = User.find_by(token: allowed_params[:token]) if @person.nil?
-      elsif !allowed_params[:id].blank?
+      elsif allowed_params[:id].present?
         @person = Person.find_by(id: allowed_params[:id])
       end
       @person.nil? ? false : true

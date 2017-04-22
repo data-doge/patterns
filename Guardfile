@@ -1,7 +1,7 @@
 # This group allows to skip running RuboCop when RSpec failed.
 group :red_green_refactor, halt_on_fail: true do
-  guard :rspec, cmd: "bundle exec rspec --fail-fast" do
-    require "guard/rspec/dsl"
+  guard :rspec, cmd: 'bundle exec rspec --fail-fast' do
+    require 'guard/rspec/dsl'
     dsl = Guard::RSpec::Dsl.new(self)
 
     # Feel free to open issues for suggestions and improvements
@@ -17,15 +17,15 @@ group :red_green_refactor, halt_on_fail: true do
     dsl.watch_spec_files_for(ruby.lib_files)
 
     # Rails files
-    rails = dsl.rails(view_extensions: %w(erb haml slim))
+    rails = dsl.rails(view_extensions: %w[erb haml slim])
     dsl.watch_spec_files_for(rails.app_files)
     dsl.watch_spec_files_for(rails.views)
 
     watch(rails.controllers) do |m|
       [
-        rspec.spec.("routing/#{m[1]}_routing"),
-        rspec.spec.("controllers/#{m[1]}_controller"),
-        rspec.spec.("acceptance/#{m[1]}")
+        rspec.spec.call("routing/#{m[1]}_routing"),
+        rspec.spec.call("controllers/#{m[1]}_controller"),
+        rspec.spec.call("acceptance/#{m[1]}")
       ]
     end
 
@@ -35,8 +35,8 @@ group :red_green_refactor, halt_on_fail: true do
     watch(rails.app_controller)  { "#{rspec.spec_dir}/controllers" }
 
     # Capybara features specs
-    watch(rails.view_dirs)     { |m| rspec.spec.("features/#{m[1]}") }
-    watch(rails.layouts)       { |m| rspec.spec.("features/#{m[1]}") }
+    watch(rails.view_dirs)     { |m| rspec.spec.call("features/#{m[1]}") }
+    watch(rails.layouts)       { |m| rspec.spec.call("features/#{m[1]}") }
 
     watch('app/models/v2/event.rb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
     watch('app/models/v2/event.rb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
@@ -96,7 +96,7 @@ group :red_green_refactor, halt_on_fail: true do
   end
 
   guard :rubocop do
-    watch(%r{.+\.rb$})
+    watch(/.+\.rb$/)
     watch(%r{(?:.+/)?\.rubocop\.yml$}) { |m| File.dirname(m[0]) }
   end
 end

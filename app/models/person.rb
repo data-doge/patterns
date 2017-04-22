@@ -115,7 +115,7 @@ class Person < ActiveRecord::Base
   scope :ransack_tagged_with, ->(*tags) { tagged_with(tags) }
 
   def self.ransackable_scopes(_auth_object = nil)
-    %i(no_signup_card ransack_tagged_with)
+    %i[no_signup_card ransack_tagged_with]
   end
 
   ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number
@@ -228,7 +228,6 @@ class Person < ActiveRecord::Base
       if verified.present?
         if verified.start_with?('Verified')
           begin
-
             gibbon = Gibbon::Request.new
             mailchimpSend = gibbon.lists(Logan::Application.config.cut_group_mailchimp_list_id).members(Digest::MD5.hexdigest(email_address.downcase)).upsert(
               body: { email_address: email_address.downcase,
@@ -364,7 +363,7 @@ class Person < ActiveRecord::Base
 
   def update_neighborhood
     n = zip_to_neighborhood(postal_code)
-    unless n.blank?
+    if n.present?
       self.neighborhood = n
       save
     end

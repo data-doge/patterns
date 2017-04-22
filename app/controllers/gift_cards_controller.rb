@@ -1,7 +1,7 @@
 require 'csv'
 
 class GiftCardsController < ApplicationController
-  before_action :set_gift_card, only: [:show, :edit, :update, :destroy]
+  before_action :set_gift_card, only: %i[show edit update destroy]
 
   # GET /gift_cards
   # GET /gift_cards.csv

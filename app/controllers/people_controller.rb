@@ -37,10 +37,10 @@
 # rubocop:disable ClassLength
 class PeopleController < ApplicationController
 
-  before_action :set_person, only: [:show, :edit, :update, :destroy]
+  before_action :set_person, only: %i[show edit update destroy]
 
   skip_before_action :authenticate_user!, if: :should_skip_janky_auth?
-  skip_before_action :verify_authenticity_token, only: [:create, :create_sms]
+  skip_before_action :verify_authenticity_token, only: %i[create create_sms]
   helper_method :sort_column, :sort_direction
 
   # GET /people
@@ -285,16 +285,16 @@ class PeopleController < ApplicationController
         :phone_number,
         :participation_type,
         :preferred_contact_method,
-        gift_cards_attributes: [
-          :gift_card_number,
-          :expiration_date,
-          :person_id,
-          :notes,
-          :created_by,
-          :reason,
-          :amount,
-          :giftable_id,
-          :giftable_type
+        gift_cards_attributes: %i[
+          gift_card_number
+          expiration_date
+          person_id
+          notes
+          created_by
+          reason
+          amount
+          giftable_id
+          giftable_type
         ])
     end
     # rubocop:enable Metrics/MethodLength
@@ -306,12 +306,12 @@ class PeopleController < ApplicationController
     end
 
     def sort_column
-      Person.column_names.include?(params[:sort]) ? params[:sort] : "people.id"
+      Person.column_names.include?(params[:sort]) ? params[:sort] : 'people.id'
     end
 
     # currently busted. gotta figre out why never descending
     def sort_direction
-      %w(asc desc).include?(params[:direction]) ? params[:direction] : 'desc'
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
     end
 
 end

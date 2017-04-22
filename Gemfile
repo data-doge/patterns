@@ -8,8 +8,8 @@ gem 'airbrake', '~> 5.0'
 # must use this version of mysql2 for rails 4.0.0
 gem 'mysql2'
 
-gem 'redis' # ephemeral storage and caching
 gem 'hiredis' # faster redis
+gem 'redis' # ephemeral storage and caching
 gem 'redis-rails' # for session store
 gem 'validates_overlap' # to ensure we don't double book people
 
@@ -19,22 +19,21 @@ gem 'mail', '2.6.3'
 
 gem 'ransack', github: 'activerecord-hackery/ransack'
 
-
 group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
   # src: https://github.com/capistrano/capistrano/pull/412
-  gem 'capistrano', git: 'git://github.com/capistrano/capistrano.git', tag: 'v2.15.4'
-  gem 'rvm-capistrano', require: false
-  gem 'rbnacl' # for modern ssh keys
   gem 'bcrypt_pbkdf' # same as above
+  gem 'capistrano', git: 'git://github.com/capistrano/capistrano.git', tag: 'v2.15.4'
+  gem 'rbnacl' # for modern ssh keys
   gem 'rbnacl-libsodium' # same as above
+  gem 'rvm-capistrano', require: false
   # this whole group makes finding performance issues much friendlier
-  gem 'rack-mini-profiler'
   gem 'flamegraph'
-  gem 'stackprof' # ruby 2.1+ only
   gem 'memory_profiler'
+  gem 'rack-mini-profiler'
   gem 'ruby-prof'
+  gem 'stackprof' # ruby 2.1+ only
 
   # n+1 killer.
   gem 'bullet'
@@ -63,8 +62,8 @@ end
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails'
   gem 'coffee-rails'
+  gem 'sass-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer', platforms: :ruby
@@ -104,7 +103,7 @@ gem 'health_check'
 gem 'holder_rails'
 
 # use devise for auth/identity
-gem 'devise','~>4.1.0'
+gem 'devise', '~>4.1.0'
 
 # use gibbon for easy Mailchimp API access
 gem 'gibbon', '~> 2.2.3'
@@ -119,8 +118,8 @@ gem 'wuparty'
 gem 'gsm_encoder'
 
 # use Delayed Job to queue messages
-gem 'delayed_job_active_record'
 gem 'daemons'
+gem 'delayed_job_active_record'
 
 # for generating unique tokens for Person
 gem 'has_secure_token'
@@ -136,7 +135,6 @@ gem 'best_in_place', '~> 3.0.1'
 
 # validation for new persons on the public page.
 gem 'jquery-validation-rails'
-
 
 # for automatically populating tags
 gem 'twitter-typeahead-rails'
@@ -158,7 +156,7 @@ gem 'paper_trail'
 gem 'paper_trail-globalid'
 
 gem 'fast_blank' # blank? rewritten in c
-#gem 'faster_path' # soon! path, rewitted in rust. requires rust compiler
+# gem 'faster_path' # soon! path, rewitted in rust. requires rust compiler
 
 # storing money with money-rails
 gem 'money-rails'
@@ -173,18 +171,18 @@ group :test do
   # mock tests w/mocha
   gem 'mocha', require: false
 
-  gem 'sqlite3', platform: [:ruby, :mswin, :mingw]
+  gem 'sqlite3', platform: %i[ruby mswin mingw]
 
   # for JRuby
   gem 'jdbc-sqlite3', platform: :jruby
   gem 'memory_test_fix' # in memory DB, for the speedy
 
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
+  gem 'codeclimate-test-reporter', '~> 1.0.0'
+  gem 'coveralls', require: false
   gem 'faker'
   gem 'rubocop', require: false
   gem 'simplecov', require: false
-  gem "codeclimate-test-reporter", "~> 1.0.0"
-  gem 'coveralls', require: false
   # screenshots when capybara fails
   gem 'capybara-screenshot'
 
@@ -202,18 +200,18 @@ group :test do
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0'
-  gem 'guard'
-  gem 'guard-rspec', require: false
-  gem 'guard-minitest'
-  gem 'guard-rubocop'
-  gem 'guard-bundler', require: false
   gem 'capybara'
   gem 'capybara-email'
-  gem 'pry'
-  gem 'factory_girl_rails', require: false
-  gem 'shoulda-matchers', '~> 3.1.1', require: false
   gem 'database_cleaner'
+  gem 'factory_girl_rails', require: false
+  gem 'guard'
+  gem 'guard-bundler', require: false
+  gem 'guard-minitest'
+  gem 'guard-rspec', require: false
+  gem 'guard-rubocop'
   gem 'poltergeist'
+  gem 'pry'
+  gem 'rspec-rails', '~> 3.0'
+  gem 'shoulda-matchers', '~> 3.1.1', require: false
   gem 'sms-spec'
 end

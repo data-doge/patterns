@@ -16,16 +16,16 @@
 # rubocop:disable ClassLength
 class V2::ReservationsController < ApplicationController
   skip_before_action :authenticate_user!
-  before_action :set_reservation_and_visitor, only: [:show,
-                                                     :edit,
-                                                     :update,
-                                                     :destroy,
-                                                     :confirm,
-                                                     :cancel,
-                                                     :change,
-                                                     :show_actions,
-                                                     :show_reservation,
-                                                     :show_invitation]
+  before_action :set_reservation_and_visitor, only: %i[show
+                                                       edit
+                                                       update
+                                                       destroy
+                                                       confirm
+                                                       cancel
+                                                       change
+                                                       show_actions
+                                                       show_reservation
+                                                       show_invitation]
   # need a before action here for authentication of reservation changes
   def new
     @person = Person.find_by(token: person_params[:token])
@@ -137,7 +137,7 @@ class V2::ReservationsController < ApplicationController
   private
 
     def set_reservation_and_visitor
-      unless params[:token].blank?
+      if params[:token].present?
         @person = Person.find_by(token: params[:token])
         # if we don't have a person, see if we have a user's token.
         # thus we can provide a feed without auth1

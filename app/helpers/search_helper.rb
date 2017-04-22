@@ -26,11 +26,11 @@ module SearchHelper
   end
 
   def person_column_headers
-    %i(id first_name last_name email_address created_at updated_at).freeze
+    %i[id first_name last_name email_address created_at updated_at].freeze
   end
 
   def person_column_fields
-    %i(id first_name last_name email_address created updated).freeze
+    %i[id first_name last_name email_address created updated].freeze
   end
 
   def results_limit
@@ -39,11 +39,11 @@ module SearchHelper
   end
 
   def condition_fields
-    %w(fields condition).freeze
+    %w[fields condition].freeze
   end
 
   def value_fields
-    %w(fields value).freeze
+    %w[fields value].freeze
   end
 
   def display_distinct_label_and_check_box

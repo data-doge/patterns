@@ -33,7 +33,7 @@ require 'csv'
 class TwilioMessagesController < ApplicationController
 
   include GsmHelper
-  before_action :set_twilio_message, only: [:show, :edit, :update, :destroy]
+  before_action :set_twilio_message, only: %i[show edit update destroy]
   # skip_before_action :verify_authenticity_token , only: [:newtwil]
 
   # GET /twilio_messages

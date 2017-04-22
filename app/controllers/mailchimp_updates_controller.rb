@@ -14,7 +14,7 @@
 
 class MailchimpUpdatesController < ApplicationController
   require 'will_paginate/array'
-  before_action :set_mailchimp_update, only: [:show, :edit, :update, :destroy]
+  before_action :set_mailchimp_update, only: %i[show edit update destroy]
   skip_before_action :authenticate_user!, if: :should_skip_janky_auth?
   skip_before_action :verify_authenticity_token, only: [:create]
 

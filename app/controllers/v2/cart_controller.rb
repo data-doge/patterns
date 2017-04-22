@@ -33,9 +33,9 @@ class V2::CartController < ApplicationController
       session[:cart] = []
     else
       @deleted = []
-      Person.where(id: cart_params[:person_id]).find_each{|to_delete|
+      Person.where(id: cart_params[:person_id]).find_each do |to_delete|
         @deleted << session[:cart].delete(to_delete.id)
-      }
+      end
     end
 
     respond_to do |format|
