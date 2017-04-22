@@ -11,7 +11,7 @@ class V2::CartController < ApplicationController
   end
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-  def add # TODO add many
+  def add
     to_add = cart_params[:person_id]
     people = Person.where(id: to_add) # only people ids here.
     people.each do |person|
@@ -27,7 +27,7 @@ class V2::CartController < ApplicationController
   end
 
   # Delete
-  def delete # TODO delete many
+  def delete
     if cart_params[:person_id].blank?
       @deleted = session[:cart]
       session[:cart] = []
