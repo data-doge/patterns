@@ -13,6 +13,10 @@ AllCops:
     - 'config/**/**/*'
     - 'Backup/**/**/*'
     - 'lib/tasks/**/**/*'
+    - 'Guardfile'
+    - 'Gemfile'
+    - 'Vagrantfile'
+    - '**/*.jbuilder'
 Rails:
   Enabled: true
 
