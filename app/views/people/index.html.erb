@@ -71,7 +71,7 @@
               <%= person.invitations.size %>
             </td>
             <td>
-              <%= person.invitations.where(state:'attended').size %>
+              <%= person.invitations.where(aasm_state:'attended').size %>
             </td>
 
             <td>

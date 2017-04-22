@@ -21,68 +21,70 @@ class ResearchSessionsController < ApplicationController
     # people_ids should come from a session.
     @people_ids = session[:cart].blank? ? '' : session[:cart].uniq.join(',')
 
-    @session = Session.new(people: @people_ids)
-    @people = @session.people
+    @research_session = ResearchSession.new(people: @people_ids)
+    @people = @research_session.people
   end
 
   def create
-    @session = Session.new(session_params)
-    if @session.save
-      send_notifications(@session)
+    @research_session = ResearchSession.new(research_session_params)
+    if @research_session.save
+      send_notifications(@research_session)
       session[:cart] = []
-      flash[:notice] = "#{@session.people.size} invitations sent!"
+      # this needs to change
+      flash[:notice] = "#{@research_session.people.size} invitations sent!"
     else
-      errors = @session.errors.full_messages.join(', ')
+      errors = @research_session.errors.full_messages.join(', ')
       flash[:error] = 'There were problems with some of the fields: ' + errors
     end
 
-    render new_v2_session_path
+    render new_research_session_path
   end
 
   def index
-    @sessions = Session.all.order(id: :desc).page(params[:page])
+    @research_sessions = ResearchSession.all.order(id: :desc).page(params[:page])
   end
 
   def show
-    @sessions =  Session.find(params[:id])
+    @research_session =  ResearchSession.find(params[:id])
   end
 
   private
 
-    def send_notifications(session)
-      session.people.each do |invitee|
-        case invitee.preferred_contact_method.upcase
+    def send_notifications(research_session)
+      # needs fixing
+      reserch_session.invitations.each do |invitee|
+        case invitee.person.preferred_contact_method.upcase
         when 'SMS'
-          send_sms(invitee, session)
+          send_sms(invitee.person, invitee)
         when 'EMAIL'
-          send_email(invitee, session)
+          send_email(invitee.person, invitee)
         end
       end
     end
 
-    def send_email(person, session)
-      EventInvitationMailer.invite(
+    def send_email(person, invitation)
+      InvitationMailer.invite(
         email_address: person.email_address,
-        session:  session,
+        invitation:  invitation,
         person: person
       ).deliver_later
     end
 
-    def send_sms(person, session)
+    def send_sms(person, invitation)
       # we send a bunch at once, delay it. Plus this has extra logic
-      Delayed::Job.enqueue(SendEventInvitationsSmsJob.new(person, session))
+      Delayed::Job.enqueue(SendInvitationsSmsJob.new(person, invitation))
     end
 
     # TODO: add a nested :event
     # rubocop:disable Metrics/MethodLength
     def session_params
-      params.require(:v2_session).permit(
+      params.require(:research_session).permit(
         :people_ids,
         :description,
-        :slot_length,
-        :date,
-        :start_time,
-        :end_time,
+        :sms_description,
+        :session_type,
+        :start_datetime,
+        :end_datetime,
         :buffer,
         :title,
         :user_id
