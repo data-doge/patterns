@@ -1,5 +1,5 @@
 # FIXME: Refactor
-class V2::SmsReservationsController < ApplicationController
+class SmsInvitationsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   skip_before_action :authenticate_user!
 
@@ -18,26 +18,26 @@ class V2::SmsReservationsController < ApplicationController
       person.deactivate!('sms')
       person.save!
       ::RemoveSms.new(to: person).send
-    elsif confirm? # confirmation for the days reservations
+    elsif confirm? # confirmation for the days invitations
       if !person.invitations.for_today_and_tomorrow.empty?
         person.invitations.for_today_and_tomorrow.each(&:confirm!)
       else
-        ::ReservationReminderSms.new(to: person, reservations: person.invitations.for_today).send
+        ::InvitationReminderSms.new(to: person, invitations: person.invitations.for_today).send
       end
     elsif cancel?
       if !person.invitations.for_today_and_tomorrow.empty?
         person.invitations.for_today_and_tomorrow.each(&:cancel!)
       else
-        ::ReservationReminderSms.new(to: person, reservations: person.invitations.for_today).send
+        ::InvitationReminderSms.new(to: person, invitations: person.invitations.for_today).send
       end
     elsif change?
       if !person.invitations.for_today_and_tomorrow.empty?
         person.invitations.for_today_and_tomorrow.each(&:reschedule!)
       else
-        ::ReservationReminderSms.new(to: person, reservations: person.invitations.for_today).send
+        ::InvitationReminderSms.new(to: person, invitations: person.invitations.for_today).send
       end
     elsif calendar?
-      ::ReservationReminderSms.new(to: person, reservations: person.invitations.for_today_and_tomorrow).send
+      ::InvitationReminderSms.new(to: person, invitations: person.invitations.for_today_and_tomorrow).send
     end
     # twilio wants an xml response.
     render text: '<?xml version="1.0" encoding="UTF-8" ?><Response></Response>'
@@ -55,17 +55,13 @@ class V2::SmsReservationsController < ApplicationController
       @person ||= Person.find_by(phone_number: sms_params[:From])
     end
 
-    def event_invitation
-      @event_invitation ||= event.event_invitation
-    end
-
     def user
-      @user ||= event_invitation.user
+      @user ||= invitation.user
     end
 
-    def send_new_reservation_notifications(person, reservation)
-      ::ReservationSms.new(to: person, reservation: reservation).send
-      ReservationNotifier.notify(email_address: reservation.user.email, reservation: reservation).deliver_later
+    def send_new_invitation_notifications(person, invitation)
+      ::InvitationSms.new(to: person, invitation: invitation).send
+      InvitationNotifier.notify(email_address: invitation.user.email, invitation: invitation).deliver_later
     end
 
     def send_decline_notifications(person, event)
@@ -80,10 +76,7 @@ class V2::SmsReservationsController < ApplicationController
       render text: '<?xml version="1.0" encoding="UTF-8" ?><Response></Response>'
     end
 
-    def resend_available_slots(person, event)
-      ::TimeSlotNotAvailableSms.new(to: person, event: event).send
-    end
-
+    # perhaps a fuzzy_text here?
     def confirm?
       message.downcase.include?('confirm')
     end

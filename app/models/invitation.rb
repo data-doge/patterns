@@ -3,13 +3,10 @@
 # Table name: invitations
 #
 #  id                  :integer          not null, primary key
-#  time_slot_id        :integer
 #  person_id           :integer
 #  created_at          :datetime
 #  updated_at          :datetime
-#  user_id             :integer
-#  event_id            :integer
-#  event_invitation_id :integer
+#  research_session_id :integer
 #  aasm_state          :string(255)
 #
 
@@ -32,7 +29,6 @@ class Invitation < ActiveRecord::Base
 
   belongs_to :person
   has_one :research_session
-  belongs_to :user, through: :research_session
 
   # so users can take notes.
   has_many :comments, as: :commentable, dependent: :destroy
@@ -74,7 +70,8 @@ class Invitation < ActiveRecord::Base
   #   }
 
   # not sure about all these delegations.
-  delegate :start_datetime,
+  delegate :user,
+    :start_datetime,
     :end_datetime,
     :title,
     :description,

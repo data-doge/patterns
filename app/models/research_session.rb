@@ -22,8 +22,8 @@ class ResearchSession < ActiveRecord::Base
   acts_as_taggable # new, better tagging system
   include Calendarable
 
-  # different types
-  enum type: %i[interview focus_group social test]
+  # different types # breaks stuff
+  #  enum session_type: %i[interview focus_group social test]
 
   belongs_to :user
   has_many :invitations

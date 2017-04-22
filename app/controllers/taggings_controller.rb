@@ -15,7 +15,7 @@ class TaggingsController < ApplicationController
 
   TAGGABLE_TYPES = {
     'Person'    => Person,
-    'V2::Event' => V2::Event
+    'ResearchSession' => ResearchSession
   }.freeze
 
   # FIXME: Refactor and re-enable cop

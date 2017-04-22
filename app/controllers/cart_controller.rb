@@ -1,4 +1,4 @@
-class V2::CartController < ApplicationController
+class CartController < ApplicationController
   include ApplicationHelper
   before_action :cart_init
   # a cart of user ids. stored in session.

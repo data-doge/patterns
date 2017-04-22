@@ -68,10 +68,10 @@
             <%= person.tag_count %>
             </td>
             <td>
-              <%= V2::EventInvitation.joins(:invitees).where(invitation_invitees_join_table: {person_id: person.id}).size %>
+              <%= person.invitations.size %>
             </td>
             <td>
-              <%= V2::Reservation.where(person_id: person.id).size %>
+              <%= person.invitations.where(state:'attended').size %>
             </td>
 
             <td>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170422184903) do
+ActiveRecord::Schema.define(version: 20170422203654) do
 
   create_table "applications", force: :cascade do |t|
     t.string   "name",         limit: 255
@@ -199,7 +199,7 @@ ActiveRecord::Schema.define(version: 20170422184903) do
     t.datetime "start_datetime"
     t.datetime "end_datetime"
     t.string   "sms_description", limit: 255
-    t.integer  "type",            limit: 4,   default: 1
+    t.integer  "session_type",    limit: 4,   default: 1
   end
 
   create_table "reservations", force: :cascade do |t|
