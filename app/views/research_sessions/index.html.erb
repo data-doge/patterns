@@ -1,0 +1,47 @@
+<%= render :partial => 'layouts/research_sessions_menu' %>
+<h1> List of Sessions</h1>
+<div class="row">
+  <div class="span12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Starts at</th>
+          <th>Ends at</th>
+          <th>Created By</th>
+          <th>Number Invited:</th>
+          <th>Attended</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @research_sessions.each do |sesh| %>
+          <tr>
+            <td><%= link_to sesh.title, sesh %></td>
+            <td><%= sesh.description %></td>
+            <td><%= sesh.start_datetime.to_s :long %></td>
+            <td><%= sesh.end_datetime.to_s :long %></td>
+            <td><%= sesh.user.name %></td>
+            <td><%= sesh.people.count %></td>
+            <td><%= sesh.invitations.where(state:'attended').size %></td>
+            <!-- probably link to the reservations for this event -->
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12" style="text-align:center">
+    <%= will_paginate @research_sessions, :renderer => BootstrapPagination::Rails %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+    <p><%= link_to 'New Session', new_research_session_path %></p>
+  </div>
+</div>

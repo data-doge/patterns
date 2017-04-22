@@ -7,7 +7,7 @@ RSpec.describe CalendarController, type: :controller do
   let!(:person) { event_invitation.invitees.sample }
   let!(:time_slot) { event_invitation.event.time_slots.sample }
   let!(:reservation) {
-    V2::Reservation.create(person: person,
+    Invitation.create(person: person,
     time_slot: time_slot,
     user: user,
     event: event,

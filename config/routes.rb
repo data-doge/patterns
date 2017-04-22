@@ -14,38 +14,38 @@ Logan::Application.routes.draw do
     end
   end
 
-  namespace :v2 do
-    resources :event_invitations
-    resources :reservations do
-      collection do
-        post ':id/confirm/(:token)',
-              to: 'reservations#confirm',
-              as: :confirm
-        post ':id/cancel/(:token)',
-              to: 'reservations#cancel',
-              as: :cancel
-        post ':id/change/(:token)',
-              to: 'reservations#change',
-              as: :change
-        get ':id/confirm/(:token)',
-              to: 'reservations#confirm',
-              as: :remote_confirm
-        get ':id/cancel/(:token)',
-              to: 'reservations#cancel',
-              as: :remote_cancel
-        get ':id/change/(:token)',
-              to: 'reservations#change',
-              as: :remote_change
-      end
-      resources :comments, controller: '/comments'
+
+  resources :research_sessions
+  resources :invitations do
+    collection do
+      post ':id/confirm/(:token)',
+            to: 'invitations#confirm',
+            as: :confirm
+      post ':id/cancel/(:token)',
+            to: 'invitations#cancel',
+            as: :cancel
+      post ':id/change/(:token)',
+            to: 'invitations#change',
+            as: :change
+      get ':id/confirm/(:token)',
+            to: 'invitations#confirm',
+            as: :remote_confirm
+      get ':id/cancel/(:token)',
+            to: 'invitations#cancel',
+            as: :remote_cancel
+      get ':id/change/(:token)',
+            to: 'invitations#change',
+            as: :remote_change
     end
-    resources :sms_reservations, only: [:create]
+    resources :comments, controller: 'comments'
   end
+  resources :sms_invitations, only: [:create]
+
 
   # simple session based cart for storing people ids.
-  get 'v2/cart', to: 'v2/cart#index', as: :show_cart
-  get 'v2/cart/add/:person_id', to: 'v2/cart#add', as: :add_cart
-  get 'v2/cart/delete(/:person_id(/:all))', to: 'v2/cart#delete', as: :delete_cart
+  get 'cart', to: 'cart#index', as: :show_cart
+  get 'cart/add/:person_id', to: 'cart#add', as: :add_cart
+  get 'cart/delete(/:person_id(/:all))', to: 'cart#delete', as: :delete_cart
 
   get 'registration', to: 'public/people#new'
 

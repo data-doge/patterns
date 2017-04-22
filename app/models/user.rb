@@ -27,11 +27,16 @@ class User < ActiveRecord::Base
   has_paper_trail
   # acts_as_tagger #if we want owned tags.
 
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, stretches: 10
+  devise :database_authenticatable,
+    :registerable,
+    :recoverable,
+    :rememberable,
+    :trackable,
+    :validatable,
+    stretches: Rails.env.production? ? 1 : 10
 
-  has_many :v2_events, class_name: '::V2::Event'
-  has_many :event_invitations, class_name: '::V2::EventInvitation', through: :v2_events
-  has_many :v2_reservations, through: :v2_events, source: :reservations
+  has_many :research_sessions
+  has_many :invitations, through: :research_sessions
 
   phony_normalize :phone_number, default_country_code: 'US'
   phony_normalized_method :phone_number, default_country_code: 'US'
@@ -68,14 +73,6 @@ class User < ActiveRecord::Base
     Rails.logger.info("Unapproved user #{email}")
   end
 
-  def reservations
-    v2_reservations
-  end
-
-  def events
-    v2_events
-  end
-
   def full_name # convienence for calendar view.
     name
   end
@@ -83,13 +80,13 @@ class User < ActiveRecord::Base
   def self.send_all_reminders
     # this is where reservation_reminders
     # called by whenever in /config/schedule.rb
-    User.all.find_each(&:send_reservation_reminder)
+    User.all.find_each(&:send_session_reminder)
   end
 
-  def send_reservation_reminder
-    return if v2_reservations.for_today.size.zero?
+  def send_session_reminder
+    return if research_sessions.for_today.size.zero?
     ReservationNotifier.remind(
-      reservations:  v2_reservations.for_today,
+      sessions:  research_sessions.for_today,
       person: email
     ).deliver_later
   end

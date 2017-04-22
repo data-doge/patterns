@@ -17,7 +17,7 @@ class CalendarController < ApplicationController
     if visitor
       # TODO: refactor into calendarable.
       calendar = Icalendar::Calendar.new
-      visitor.v2_reservations.each { |r| calendar.add_event(r.to_ics) }
+      visitor.invitations.each { |r| calendar.add_event(r.to_ics) }
       visitor.v2_events.each { |e| calendar.add_event(e.to_ics) }
       calendar.publish
       render text: calendar.to_ical
@@ -29,7 +29,7 @@ class CalendarController < ApplicationController
   def reservations
     if visitor
       # TODO: refactor into reservations?
-      @reservations = visitor.v2_reservations.joins(:event_invitation).where('v2_event_invitations.date BETWEEN ? AND ?', cal_params[:start], cal_params[:end])
+      @reservations = visitor.invitations.joins(:event_invitation).where('session.date BETWEEN ? AND ?', cal_params[:start], cal_params[:end])
     else
       redirect_to root_url
     end
@@ -65,8 +65,8 @@ class CalendarController < ApplicationController
     @events = current_user.
               events.
               joins(:event_invitation).
-              includes(:v2_event_invitations).
-              where('v2_event_invitations.date BETWEEN ? AND ?', cal_params[:start], cal_params[:end])
+              includes(:session).
+              where('session.date BETWEEN ? AND ?', cal_params[:start], cal_params[:end])
   end
 
   def show_actions
@@ -77,7 +77,7 @@ class CalendarController < ApplicationController
 
   def show_reservation
     visitor
-    @reservation = V2::Reservation.find_by(id: allowed_params[:id])
+    @reservation = Invitation.find_by(id: allowed_params[:id])
     respond_to do |format|
       if @reservation.owner_or_invitee?(@visitor)
         format.js {}
@@ -90,7 +90,7 @@ class CalendarController < ApplicationController
 
   def show_invitation
     visitor
-    @reservation = V2::Reservation.new
+    @reservation = Invitation.new
     @time_slot = V2::TimeSlot.find_by(id: allowed_params[:id])
     respond_to do |format|
       format.js
@@ -149,7 +149,7 @@ class CalendarController < ApplicationController
 
     def reservation
       if allowed_params['reservation_id']
-        @reservation ||= V2::Reservation.find_by(id: allowed_params['reservation_id'])
+        @reservation ||= Invitation.find_by(id: allowed_params['reservation_id'])
       end
     end
 

@@ -1,18 +1,17 @@
 # TODO: needs a spec.
 # but a unit test would make coverage more robust
-class ReservationReminderSms < ApplicationSms
-  attr_reader :to, :reservations
+class InvitationReminderSms < ApplicationSms
+  attr_reader :to, :invitations
 
-  def initialize(to:, reservations:)
+  def initialize(to:, invitations:)
     super
     @to = to
-    @reservations = reservations
+    @invitations = invitations
   end
 
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def generate_res_msgs
-    msg = "You have #{res_count} reservation#{res_count > 1 ? 's': ''} soon.\n"
-    reservations.each do |r|
+    msg = "You have #{res_count} invitation#{res_count > 1 ? 's': ''} soon.\n"
+    invitations.each do |r|
       next if r.end_datetime < Time.current # don't remind people of past events
       msg +=  "#{r.description} on #{r.start_datetime_human} for #{r.duration / 60} minutes with #{r.user.name} tel: #{r.user.phone_number} \n"
     end
@@ -27,12 +26,12 @@ class ReservationReminderSms < ApplicationSms
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def res_count
-    @reservations.size
+    @invitations.size
   end
 
   def body
-    if @reservations.blank?
-      %(You have no reservations for today or tomorrow! )
+    if @invitations.blank?
+      %(You have no invitations for today or tomorrow! )
     else
       generate_res_msgs
     end

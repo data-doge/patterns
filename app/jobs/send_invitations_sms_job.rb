@@ -6,10 +6,10 @@
 # FIXME: Refactor and re-enable cop
 # rubocop:disable Style/StructInheritance
 #
-class SendEventInvitationsSmsJob < Struct.new(:to, :event)
+class SendInvitationsSmsJob < Struct.new(:to, :invitation)
 
   def enqueue(job)
-    Rails.logger.info '[SendEventInvitationsSms] job enqueued'
+    Rails.logger.info '[SendInvitationsSms] job enqueued'
     job.save!
   end
 
@@ -28,22 +28,21 @@ class SendEventInvitationsSmsJob < Struct.new(:to, :event)
     #   yes: requeue for 8:30am
     #   no: set context with expire and send!
 
-    lock = Redis.current.get("event_lock:#{to.id}")
+    lock = Redis.current.get("invite_lock:#{to.id}")
     if lock.nil? # && !time_requeue? # no lock, not too late
       Rails.logger.info 'not locked!'
-      Redis.current.set("wit_context:#{to.id}", context.to_json)
 
       # this is where we lock. the invitation to this event.
-      Redis.current.setex("event_lock:#{to.id}", 7200, event.id)
+      Redis.current.setex("invite_lock:#{to.id}", 7200, invitation.id)
 
-      EventInvitationSms.new(to: to, event: event).send
+      InvitationSms.new(to: to, session: session).send
     elsif time_requeue?
       Rails.logger.info 'after business hours'
-      Delayed::Job.enqueue(SendEventInvitationsSmsJob.new(to, event), run_at: run_in_business_hours)
+      Delayed::Job.enqueue(SendInvitationsSmsJob.new(to, invitation), run_at: run_in_business_hours)
     else # person is locked, wait till the lock times out.
-      ttl = Redis.current.ttl("event_lock:#{to.id}") # ttl is in seconds
+      ttl = Redis.current.ttl("invite_lock:#{to.id}") # ttl is in seconds
       Rails.logger.info "puts locked for #{ttl}"
-      Delayed::Job.enqueue(SendEventInvitationsSmsJob.new(to, event), run_at: ttl.seconds.from_now)
+      Delayed::Job.enqueue(SendInvitationsSmsJob.new(to, invitation), run_at: ttl.seconds.from_now)
     end
     sleep(1) # twilio rate limiting.
   end

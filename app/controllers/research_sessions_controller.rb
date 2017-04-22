@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: v2_event_invitations
+# Table name: researchsession
 #
 #  id              :integer          not null, primary key
 #  v2_event_id     :integer
@@ -16,75 +16,67 @@
 #  user_id         :integer
 #
 
-class V2::EventInvitationsController < ApplicationController
+class ResearchSessionsController < ApplicationController
   def new
     # people_ids should come from a session.
     @people_ids = session[:cart].blank? ? '' : session[:cart].uniq.join(',')
 
-    @event_invitation = V2::EventInvitation.new(people_ids: @people_ids)
-    @people = @event_invitation.people
+    @session = Session.new(people: @people_ids)
+    @people = @session.people
   end
 
   def create
-    @event_invitation = V2::EventInvitation.new(event_invitation_params)
-    if @event_invitation.save
-      send_notifications(@event_invitation)
+    @session = Session.new(session_params)
+    if @session.save
+      send_notifications(@session)
       session[:cart] = []
-      flash[:notice] = "#{@event_invitation.invitees.size} invitations sent!"
+      flash[:notice] = "#{@session.people.size} invitations sent!"
     else
-      errors = @event_invitation.errors.full_messages.join(', ')
+      errors = @session.errors.full_messages.join(', ')
       flash[:error] = 'There were problems with some of the fields: ' + errors
     end
 
-    render new_v2_event_invitation_path
+    render new_v2_session_path
   end
 
   def index
-    @events = V2::EventInvitation.all.order(id: :desc).page(params[:page])
+    @sessions = Session.all.order(id: :desc).page(params[:page])
   end
 
   def show
-    @event =  V2::EventInvitation.find(params[:id])
+    @sessions =  Session.find(params[:id])
   end
 
   private
 
-    def create_event(event_invitation)
-      V2::Event.create(
-        description: event_invitation.description,
-        time_slots: event_invitation.break_time_window_into_time_slots,
-        user_id: current_user || 1 # if nil, make admin owner
-      )
-    end
-
-    def send_notifications(event_invitation)
-      event_invitation.invitees.each do |invitee|
+    def send_notifications(session)
+      session.people.each do |invitee|
         case invitee.preferred_contact_method.upcase
         when 'SMS'
-          send_sms(invitee, event_invitation)
+          send_sms(invitee, session)
         when 'EMAIL'
-          send_email(invitee, event_invitation)
+          send_email(invitee, session)
         end
       end
     end
 
-    def send_email(person, event_invitation)
+    def send_email(person, session)
       EventInvitationMailer.invite(
         email_address: person.email_address,
-        event:  event_invitation,
+        session:  session,
         person: person
       ).deliver_later
     end
 
-    def send_sms(person, event_invitation)
+    def send_sms(person, session)
       # we send a bunch at once, delay it. Plus this has extra logic
-      Delayed::Job.enqueue(SendEventInvitationsSmsJob.new(person, event_invitation))
+      Delayed::Job.enqueue(SendEventInvitationsSmsJob.new(person, session))
     end
 
     # TODO: add a nested :event
     # rubocop:disable Metrics/MethodLength
-    def event_invitation_params
-      params.require(:v2_event_invitation).permit(
+    def session_params
+      params.require(:v2_session).permit(
         :people_ids,
         :description,
         :slot_length,

@@ -16,7 +16,7 @@
 require 'faker'
 
 FactoryGirl.define do
-  factory :reservation, class: V2::Reservation do
+  factory :reservation, class: Invitation do
     person
     user
     event

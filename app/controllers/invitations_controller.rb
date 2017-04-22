@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: v2_reservations
+# Table name: invitations
 #
 #  id                  :integer          not null, primary key
 #  time_slot_id        :integer
@@ -14,7 +14,7 @@
 
 # FIXME: Refactor and re-enable cop
 # rubocop:disable ClassLength
-class V2::ReservationsController < ApplicationController
+class InvitationsController < ApplicationController
   skip_before_action :authenticate_user!
   before_action :set_reservation_and_visitor, only: %i[show
                                                        edit
@@ -32,17 +32,17 @@ class V2::ReservationsController < ApplicationController
 
     redirect_to root_url unless @person
 
-    @event_invitation = V2::EventInvitation.find_by(v2_event_id: event_params[:event_id])
+    @event_invitation = Session.find_by(v2_event_id: event_params[:event_id])
     @user = @event_invitation.user
     @event = @event_invitation.event
     @available_time_slots = @event.available_time_slots(@person)
-    @reservation = V2::Reservation.new(time_slot: V2::TimeSlot.new)
+    @reservation = Invitation.new(time_slot: V2::TimeSlot.new)
   end
 
   # rubocop:disable Metrics/MethodLength
   # TODO: refactor
   def create
-    @reservation = V2::Reservation.new(reservation_params)
+    @reservation = Invitation.new(reservation_params)
     if @reservation.save
       flash[:notice] = "An interview has been booked for #{@reservation.time_slot.start_datetime_human}"
       send_notifications(@reservation)
@@ -61,7 +61,7 @@ class V2::ReservationsController < ApplicationController
   # no authorization here. yet.
 
   def index
-    @reservations = V2::Reservation.order(id: :desc).page(params[:page])
+    @reservations = Invitation.order(id: :desc).page(params[:page])
   end
 
   def show
@@ -129,7 +129,7 @@ class V2::ReservationsController < ApplicationController
   def destroy
     @reservation.destroy!
     respond_to do |format|
-      format.html { redirect_to v2_reservation_url }
+      format.html { redirect_to invitation_url }
       format.json { head :no_content }
     end
   end
@@ -144,7 +144,7 @@ class V2::ReservationsController < ApplicationController
         visitor
       end
 
-      @reservation = V2::Reservation.find_by(id: params[:id])
+      @reservation = Invitation.find_by(id: params[:id])
       unless @reservation && @reservation.owner_or_invitee?(@visitor)
         return false
       end
@@ -180,7 +180,7 @@ class V2::ReservationsController < ApplicationController
     end
 
     def reservation_params
-      params.require(:v2_reservation).permit(
+      params.require(:invitation).permit(
         :person_id,
         :time_slot_id,
         :event_id,

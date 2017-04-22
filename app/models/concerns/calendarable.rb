@@ -3,6 +3,41 @@ require 'active_support/concern'
 module Calendarable
   extend ActiveSupport::Concern
 
+  # to be "calendarable"
+  # start_time
+  # end_time
+  # description
+  # title
+  # Optionally have a person
+
+  # http://stackoverflow.com/questions/7323793/shared-scopes-via-module
+  # http://stackoverflow.com/questions/2682638/finding-records-that-overlap-a-range-in-rails
+  included do
+    scope :in_range, ->(range) {
+      where("(#{table_name}.start_time BETWEEN ? AND ? OR #{table_name}.end_time BETWEEN ? AND ?) OR (#{table_name}.start_time <= ? AND #{table_name}.end_time >= ?)", range.first, range.last, range.first, range.last, range.first, range.last)
+    }
+
+    scope for_today -> {
+      where('#{self.table_name}.start_datetime >= ? and #{self.table_name}.end_datetime <= ?',
+        Time.zone.now.beginning_of_day,
+        Time.zone.now.end_of_day)
+    }
+
+    scope for_today_and_tomorrow -> {
+      where('#{self.table_name}.start_datetime >= ? and #{self.table_name}.end_datetime <= ?',
+        Time.zone.now.beginning_of_day,
+        Time.zone.now.end_of_day + 1.day)
+    }
+  end
+
+  def not_overlap?(other)
+    !overlap?(other)
+  end
+
+  def overlap?(other)
+    ((start_datetime - other.end_datetime) * (other.start_datetime - end_datetime) >= 0)
+  end
+
   def to_ics
     e               = Icalendar::Event.new
     e.summary       = title
@@ -14,15 +49,12 @@ module Calendarable
     add_alarm(e)
   end
 
-  # for the calendar display
-  def start_datetime
-    return start_time if start_time.class == ActiveSupport::TimeWithZone
-    date_plus_time(date, start_time)
+  def duration
+    (start_datetime - end_datetime).to_i.minutes
   end
 
-  def end_datetime
-    return end_time if end_time.class == ActiveSupport::TimeWithZone
-    date_plus_time(date, end_time)
+  def date
+    start_datetime.to_date
   end
 
   def to_time_and_weekday
@@ -37,7 +69,7 @@ module Calendarable
     "#{start_datetime.strftime('%l:%M%p, %a %b').lstrip} #{start_datetime.strftime('%d').to_i.ordinalize}"
   end
 
-  def slot_time_human
+  def duration_human
     "#{start_datetime.strftime('%l:%M%p').lstrip}-#{end_datetime.strftime('%l:%M%p, %a %b').lstrip} #{start_datetime.strftime('%d').to_i.ordinalize}"
   end
 

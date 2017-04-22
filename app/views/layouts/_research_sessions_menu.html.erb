@@ -1,0 +1,7 @@
+<%= nav_bar('nav nav-tabs') do %>
+  <%= nav_link('Calendar', calendar_path, class: 'presentation') %>
+  <%= nav_link('Invite', new_research_session_path, class: 'presentation') %>
+  <%= nav_link('Sessions', research_sessions_path, class: 'presentation') %>
+  <%= nav_link('Invitations', invitations_path,class: 'presentation')  %>
+  <%= nav_link('Cart', show_cart_path, class: 'presentation')  %>
+<% end %>

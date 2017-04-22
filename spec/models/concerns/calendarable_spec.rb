@@ -6,7 +6,7 @@ describe Calendarable do
     let!(:person) { event_invitation.invitees.sample }
     let!(:time_slot) { event_invitation.event.time_slots.sample }
     let!(:reservation) {
-      V2::Reservation.create(person: person,
+      Invitation.create(person: person,
                              time_slot: time_slot,
                              user: event_invitation.user,
                              event_invitation: event_invitation,

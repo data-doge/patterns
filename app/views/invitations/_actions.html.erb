@@ -1,16 +1,16 @@
 <% if @visitor.class.to_s == 'User' %>
-  <div class="btn-group" role="group" aria-label="Reservation Actions">
-    <% @reservation.state_action_array.each do |e| %>
-    <%= button_to e[1], v2_reservation_path, params: {aasm_state: e[0]}, method: :patch,  class: "btn btn-secondary" %>
+  <div class="btn-group" role="group" aria-label="Invitation Actions">
+    <% @invitation.state_action_array.each do |e| %>
+    <%= button_to e[1], v2_invitation_path, params: {aasm_state: e[0]}, method: :patch,  class: "btn btn-secondary" %>
     <% end %>
   </div>
 <% else %>
-  <div id='reservation-actions' class="row-fluid no-gutter">
+  <div id='invitation-actions' class="row-fluid no-gutter">
     <div class='span6'></div>
     <div class="span2">
-      <% if @reservation.permitted_events.include?('confirm') %>
+      <% if @invitation.permitted_events.include?('confirm') %>
       <%= button_to 'Confirm',
-        confirm_v2_reservations_path(id: @reservation.id,
+        confirm_v2_invitations_path(id: @invitation.id,
                                       token: @visitor.token),
         method: :post,
         remote: true,
@@ -19,22 +19,22 @@
       <% end %>
     </div>
     <div class="span2">
-    <% if @reservation.permitted_events.include?('reschedule') %>
+    <% if @invitation.permitted_events.include?('reschedule') %>
       <%= button_to 'Change',
-        change_v2_reservations_path(id: @reservation.id,
+        change_v2_invitations_path(id: @invitation.id,
                                     token: @visitor.token),
         method: :post,
         remote: true,
         class: "btn btn-warning",
         id: 'change',
-        data: { confirm: 'Are you sure you need to change this reservation?',
+        data: { confirm: 'Are you sure you need to change this invitation?',
         disable_with: 'loading...' } %>
     <% end %>
     </div>
     <div class='span2'>
-    <% if @reservation.permitted_events.include?('cancel') %>
+    <% if @invitation.permitted_events.include?('cancel') %>
       <%= button_to 'Cancel',
-        cancel_v2_reservations_path(id: @reservation.id,
+        cancel_v2_invitations_path(id: @invitation.id,
                                     token: @visitor.token),
         method: :post,
         remote: true,

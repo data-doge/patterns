@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: v2_event_invitations
+# Table name: session
 #
 #  id          :integer          not null, primary key
 #  v2_event_id :integer
@@ -19,7 +19,7 @@
 
 require 'rails_helper'
 
-describe V2::EventInvitation do
+describe Session do
   it { is_expected.to validate_presence_of(:people_ids) }
   it { is_expected.to validate_presence_of(:description) }
   it { is_expected.to validate_presence_of(:title) }

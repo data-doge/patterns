@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: v2_reservations
+# Table name: invitation
 #
 #  id                  :integer          not null, primary key
 #  time_slot_id        :integer
@@ -15,7 +15,7 @@
 
 require 'rails_helper'
 
-describe V2::Reservation do
+describe Invitation do
   # it { is_expected.to validate_presence_of(:person) }
   # it { is_expected.to validate_presence_of(:user) }
   # it { is_expected.to validate_presence_of(:time_slot) }
