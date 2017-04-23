@@ -77,6 +77,8 @@ GEM
     best_in_place (3.0.3)
       actionpack (>= 3.2)
       railties (>= 3.2)
+    bootstrap3-datetimepicker-rails (4.17.47)
+      momentjs-rails (>= 2.8.1)
     builder (3.2.3)
     bullet (5.5.1)
       activesupport (>= 3.0.0)
@@ -234,6 +236,8 @@ GEM
     mocha (1.2.1)
       metaclass (~> 0.0.1)
     mock_redis (0.17.3)
+    momentjs-rails (2.17.1)
+      railties (>= 3.1)
     monetize (1.6.0)
       money (~> 6.8)
     money (6.8.4)
@@ -508,6 +512,7 @@ DEPENDENCIES
   annotate
   bcrypt_pbkdf
   best_in_place (~> 3.0.1)
+  bootstrap3-datetimepicker-rails
   bullet
   capistrano!
   capybara
@@ -547,6 +552,7 @@ DEPENDENCIES
   memory_test_fix
   mocha
   mock_redis
+  momentjs-rails
   money-rails
   mysql2
   newrelic_rpm

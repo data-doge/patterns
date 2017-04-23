@@ -17,11 +17,12 @@
 //= require twitter/bootstrap
 //= require twitter/typeahead.min
 //= require holder
-//= require datepicker/bootstrap-datepicker.min
+
 //= require tokenfield/bootstrap-tokenfield.js
 //= require jquery.validate
 //= require jquery.validate.additional-methods
-//= require moment/moment.min
+//= require moment
+//= require bootstrap-datetimepicker
 //= require fullcalendar/fullcalendar.min
 //= require jquery-touchswipe/jquery.touchSwipe.min
 //= require_tree .

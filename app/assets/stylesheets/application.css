@@ -9,7 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require datepicker/bootstrap-datepicker
+ *= require bootstrap-datetimepicker
  *= require tokenfield/bootstrap-tokenfield
  *= require tokenfield/tokenfield-typeahead
  *= require fullcalendar/fullcalendar.min
