@@ -1,19 +1,20 @@
 require 'active_support/concern'
 
+# to be "calendarable", must have or delegate to
+# start_datetime
+# end_datetime
+# description
+# title
+# a user or person
+
 module Calendarable
   extend ActiveSupport::Concern
-
-  # to be "calendarable", must have or delegate to
-  # start_datetime
-  # end_datetime
-  # description
-  # title
-  # a user or person
-
   # http://stackoverflow.com/questions/7323793/shared-scopes-via-module
   # http://stackoverflow.com/questions/2682638/finding-records-that-overlap-a-range-in-rails
   # rubocop:disable Lint/AmbiguousBlockAssociation
   included do
+    # doesn't work if you delegate start_datetime etc.
+    # how do we fix?
     scope :in_range, ->(range) {
       where("(#{table_name}.start_datetime BETWEEN ? AND ? OR #{table_name}.end_datetime BETWEEN ? AND ?) OR (#{table_name}.start_datetime <= ? AND #{table_name}.end_datetime >= ?)", range.first, range.last, range.first, range.last, range.first, range.last)
     }

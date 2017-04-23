@@ -16,7 +16,13 @@
 #
 
 class ResearchSessionsController < ApplicationController
+
   def new
+    if session[:person_id].present?
+      @people_ids =  params[:person_id]
+    elsif session[:cart].present?
+      @people_ids = session[:cart]
+    end
     @research_session = ResearchSession.new
   end
 
@@ -25,11 +31,16 @@ class ResearchSessionsController < ApplicationController
     @research_session = ResearchSession.new(research_session_params)
     if @research_session.save
 
+      @research_session.tag_list(research_session_params[:tags])
+
       # need to handle case when the invitation is invalid
       # i.e. timing overlaps, etc.
-      p_params = people_ids.map { |p| { person_id: p } }
+      p_params = people_ids.map do |pid|
+        { person_id: pid, research_session_id: @research_session.id }
+      end
 
-      @research_session.invitations << Invitation.create(p_params)
+      Invitation.create(p_params)
+
       # sends all of the invitations.
       @research_session.invitations.each(&:invite)
 
