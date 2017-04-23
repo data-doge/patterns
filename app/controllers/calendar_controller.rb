@@ -18,7 +18,7 @@ class CalendarController < ApplicationController
       # TODO: refactor into calendarable.
       calendar = Icalendar::Calendar.new
       visitor.invitations.each { |r| calendar.add_event(r.to_ics) }
-      visitor.v2_events.each { |e| calendar.add_event(e.to_ics) }
+      visitor.research_sessions.each { |e| calendar.add_event(e.to_ics) }
       calendar.publish
       render text: calendar.to_ical
     else
@@ -26,10 +26,13 @@ class CalendarController < ApplicationController
     end
   end
 
-  def reservations
+  def invitations # should be different for user and person, maybe?
     if visitor
-      # TODO: refactor into reservations?
-      @reservations = visitor.invitations.joins(:event_invitation).where('session.date BETWEEN ? AND ?', cal_params[:start], cal_params[:end])
+      @invitations = visitor.
+                     invitations.joins(:research_session).
+                     where('research_session.date BETWEEN ? AND ?',
+                       cal_params[:start],
+                       cal_params[:end])
     else
       redirect_to root_url
     end
@@ -41,7 +44,7 @@ class CalendarController < ApplicationController
     # TODO: refactor into user and person models with the same interface
     if visitor
       events = visitor.
-               event_invitations.
+               invitations.
                includes(event: :time_slots).
                where('date BETWEEN ? AND ?', cal_params[:start], cal_params[:end]).
                map(&:event).compact
@@ -75,11 +78,11 @@ class CalendarController < ApplicationController
     end
   end
 
-  def show_reservation
+  def show_invitation
     visitor
-    @reservation = Invitation.find_by(id: allowed_params[:id])
+    @invitation = Invitation.find_by(id: allowed_params[:id])
     respond_to do |format|
-      if @reservation.owner_or_invitee?(@visitor)
+      if @invitation.owner_or_invitee?(@visitor)
         format.js {}
       else
         flash[:error] = 'invalid option'
@@ -88,18 +91,9 @@ class CalendarController < ApplicationController
     end
   end
 
-  def show_invitation
+  def show_research_session
     visitor
-    @reservation = Invitation.new
-    @time_slot = V2::TimeSlot.find_by(id: allowed_params[:id])
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def show_event
-    visitor
-    @event = V2::Event.find_by(id: allowed_params[:id])
+    @research_session = ResearchSession.find_by(id: allowed_params[:id])
     respond_to do |format|
       format.js
     end
@@ -122,7 +116,8 @@ class CalendarController < ApplicationController
     end
 
     # both types can visit the page. they have the same interface
-    def visitor
+    # TODO fix this
+    def visitor # this looks like it needs work
       @visitor ||= @person ? @person : current_user
       PaperTrail.whodunnit = @visitor
       @visitor
@@ -131,38 +126,30 @@ class CalendarController < ApplicationController
     def allowed_params
       params.permit(:token,
         :id,
-        :event_id,
+        :research_session_id,
         :user_id,
         :start,
         :end,
         :type,
-        :reservation_id,
-        :time_slot_id,
+        :invitation_id,
         :default_time)
     end
 
-    def event
-      if allowed_params['event_id']
-        @event ||= V2::Event.find_by(id: allowed_params['event_id'])
+    def research_session
+      if allowed_params['research_session_id']
+        @research_session ||= ResearchSession.find_by(id: allowed_params['research_session_id'])
       end
     end
 
-    def reservation
-      if allowed_params['reservation_id']
-        @reservation ||= Invitation.find_by(id: allowed_params['reservation_id'])
-      end
-    end
-
-    def time_slot
-      if allowed_params['time_slot_id']
-        @time_slot ||= V2::TimeSlot.find_by(id: allowed_params['time_slot_id'])
+    def invitation
+      if allowed_params['invitation_id']
+        @invitation ||= Invitation.find_by(id: allowed_params['invitation_id'])
       end
     end
 
     def default_time
-      return reservation.start_datetime.strftime('%F') if reservation
-      return time_slot.start_datetime.strftime('%F') if time_slot
-      return event.start_datetime.strftime('%F') if event
+      return invitation.start_datetime.strftime('%F') if invitation
+      return research_session.start_datetime.strftime('%F') if research_session
       if allowed_params['default_time']
         return Time.zone.parse(allowed_params['default_time']).strftime('%F')
       end
@@ -170,9 +157,9 @@ class CalendarController < ApplicationController
     end
 
     def modal_to_load
-      return 'reservation' if reservation
-      return 'time_slot' if time_slot
-      return 'event' if event
+      return 'invitation' if invitation
+
+      return 'research_session' if research_session
       false
     end
 

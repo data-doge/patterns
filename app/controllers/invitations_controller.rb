@@ -31,7 +31,7 @@ class InvitationsController < ApplicationController
     #   @person = Person.find_by(token: person_params[:token])
 
     @user = current_user
-    @research_session = @invitation.research_session
+    @research_session = ResearchSession.find(params[:research_session_id])
     @invitation = Invitation.new
   end
 
@@ -39,9 +39,13 @@ class InvitationsController < ApplicationController
   # TODO: refactor
   def create
     @invitation = Invitation.new(invitation_params)
+
     if @invitation.save
-      flash[:notice] = "A sessino has been booked for #{@invitation.start_datetime_human}"
-      send_notifications(@invitation)
+      @research_session = ResearchSession.find(params[:research_session_id])
+      @research_session.invitations << @invitation
+      @research_session.invitations.each(&:invite!)
+      flash[:notice] = "A session has been booked for #{@invitation.start_datetime_human}"
+
     else
       flash[:error] = "No time slot was selected, couldn't create the invitation"
     end

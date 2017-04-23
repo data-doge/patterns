@@ -70,6 +70,7 @@ class Invitation < ActiveRecord::Base
   # invitations can move through states
   aasm do
     state :created, initial: true
+    state :invited
     state :reminded
     state :confirmed
     state :cancelled
@@ -77,20 +78,24 @@ class Invitation < ActiveRecord::Base
     state :missed
     state :attended
 
+    event :invite, before_commit: :send_invitation do
+      transitions from: :created, to: :invited
+    end
+
     event :remind do
-      transitions from: :created, to: :reminded
+      transitions from: :invited, to: :reminded
     end
 
     event :confirm, after_commit: :notify_about_confirmation do
-      transitions from: %i[created reminded], to: :confirmed
+      transitions from: %i[invited reminded], to: :confirmed
     end
 
     event :cancel, after_commit: :notify_about_cancellation do
-      transitions from: %i[created reminded confirmed], to: :cancelled
+      transitions from: %i[invited reminded confirmed], to: :cancelled
     end
 
     event :reschedule, after_commit: :notify_about_reschedule do
-      transitions from: %i[created reminded confirmed], to: :rescheduled
+      transitions from: %i[invited reminded confirmed], to: :rescheduled
     end
 
     event :attend do
@@ -98,7 +103,7 @@ class Invitation < ActiveRecord::Base
     end
 
     event :miss do
-      transitions from: %i[created reminded confirmed], to: :missed
+      transitions from: %i[invited reminded confirmed], to: :missed
     end
   end
 
@@ -108,6 +113,28 @@ class Invitation < ActiveRecord::Base
     return true if person == person_or_user
     return false if person_or_user.nil?
     false
+  end
+
+  def send_invitation
+    case person.preferred_contact_method.upcase
+    when 'SMS'
+      send_invite_sms
+    when 'EMAIL'
+      send_invite_email
+    end
+  end
+
+  def send_invite_email
+    InvitationMailer.invite(
+      email_address: person.email_address,
+      invitation:  self,
+      person: person
+    ).deliver_later
+  end
+
+  def send_invite_sms
+    # we send a bunch at once, delay it. Plus this has extra logic
+    Delayed::Job.enqueue(SendInvitationsSmsJob.new(person, self))
   end
 
   # these three could definitely be refactored. too much copy-paste

@@ -19,6 +19,7 @@
 
 class Event < ActiveRecord::Base
   include Calendarable
+
   validates_presence_of :name,
     :application_id,
     :location,
