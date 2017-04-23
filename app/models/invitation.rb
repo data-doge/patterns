@@ -18,15 +18,6 @@ class Invitation < ActiveRecord::Base
   include AASM
   include Calendarable
 
-  scope :for_today, lambda {
-    joins(:time_slot).where('v2_time_slots.start_time > ? and v2_time_slots.start_time < ? ',  Time.zone.today.beginning_of_day, Time.zone.today.end_of_day)
-  }
-
-  scope :for_today_and_tomorrow,
-    lambda {
-      joins(:time_slot).where('v2_time_slots.start_time > ? and v2_time_slots.start_time < ? ',  Time.zone.today.beginning_of_day, (Time.zone.today + 1.day).end_of_day)
-    }
-
   belongs_to :person
   has_one :research_session
 

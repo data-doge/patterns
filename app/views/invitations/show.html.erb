@@ -35,7 +35,7 @@
   <div class="span6">
     <h3>Notes</h3>
     <%= form_for([@invitation, @comment], remote: true) do |form| %>
-      <%= form.hidden_field :commentable_type, :value => 'V2::invitation' %>
+      <%= form.hidden_field :commentable_type, :value => 'Invitation' %>
       <%= form.hidden_field :commentable_id, :value => @invitation.id %>
       <%= form.text_area :content, rows: 3, class: "span6 input-block-level" %>
       <%= form.submit 'Add note', :class => "btn" %>
@@ -47,4 +47,4 @@
   </div>
 </div>
 
-<%= button_to 'Back', v2_invitations_path %>
+<%= button_to 'Back', Invitations_path %>

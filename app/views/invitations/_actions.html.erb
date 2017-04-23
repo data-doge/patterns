@@ -10,7 +10,7 @@
     <div class="span2">
       <% if @invitation.permitted_events.include?('confirm') %>
       <%= button_to 'Confirm',
-        confirm_v2_invitations_path(id: @invitation.id,
+        confirm_invitations_path(id: @invitation.id,
                                       token: @visitor.token),
         method: :post,
         remote: true,
@@ -21,7 +21,7 @@
     <div class="span2">
     <% if @invitation.permitted_events.include?('reschedule') %>
       <%= button_to 'Change',
-        change_v2_invitations_path(id: @invitation.id,
+        change_invitations_path(id: @invitation.id,
                                     token: @visitor.token),
         method: :post,
         remote: true,
@@ -34,7 +34,7 @@
     <div class='span2'>
     <% if @invitation.permitted_events.include?('cancel') %>
       <%= button_to 'Cancel',
-        cancel_v2_invitations_path(id: @invitation.id,
+        cancel_invitations_path(id: @invitation.id,
                                     token: @visitor.token),
         method: :post,
         remote: true,

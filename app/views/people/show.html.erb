@@ -57,13 +57,13 @@
           <dt>Interviews</dt>
           <dd><%= link_to "Calendar", calendar_path(token: @person.token) %></dd>
           <dt>Invitations</dt>
-          <dd><%= @person.event_invitations.size %></dd>
+          <dd><%= @person.invitations.size %></dd>
           <dt>Reserved</dt>
-          <dd><%=@person.v2_reservations.size %></dd>
+          <dd><%=@person.invitations.confirmed.size %></dd>
           <dt>Attended</dt>
-          <dd><%= @person.v2_reservations.attended.size %></dd>
+          <dd><%= @person.invitations.attended.size %></dd>
           <dt>Cancel</dt>
-          <dd><%= @person.v2_reservations.cancelled.size %> </dd>
+          <dd><%= @person.invitations.cancelled.size %> </dd>
           <dd><%= best_in_place @person, :participation_type %></dd>
         </dl>
       </div>
