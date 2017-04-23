@@ -3,28 +3,28 @@ require 'active_support/concern'
 module Calendarable
   extend ActiveSupport::Concern
 
-  # to be "calendarable"
-  # start_time
-  # end_time
+  # to be "calendarable", must have or delegate to
+  # start_datetime
+  # end_datetime
   # description
   # title
-  # Optionally have a person
+  # a user or person
 
   # http://stackoverflow.com/questions/7323793/shared-scopes-via-module
   # http://stackoverflow.com/questions/2682638/finding-records-that-overlap-a-range-in-rails
   included do
     scope :in_range, ->(range) {
-      where("(#{table_name}.start_time BETWEEN ? AND ? OR #{table_name}.end_time BETWEEN ? AND ?) OR (#{table_name}.start_time <= ? AND #{table_name}.end_time >= ?)", range.first, range.last, range.first, range.last, range.first, range.last)
+      where("(#{table_name}.start_datetime BETWEEN ? AND ? OR #{table_name}.end_datetime BETWEEN ? AND ?) OR (#{table_name}.start_datetime <= ? AND #{table_name}.end_datetime >= ?)", range.first, range.last, range.first, range.last, range.first, range.last)
     }
 
     scope :for_today, -> {
-      where('#{self.table_name}.start_datetime >= ? and #{self.table_name}.end_datetime <= ?',
+      where("#{table_name}.start_datetime >= ? and #{table_name}.end_datetime <= ?",
         Time.zone.now.beginning_of_day,
         Time.zone.now.end_of_day)
     }
 
     scope :for_today_and_tomorrow, -> {
-      where('#{self.table_name}.start_datetime >= ? and #{self.table_name}.end_datetime <= ?',
+      where("#{table_name}.start_datetime >= ? and #{table_name}.end_datetime <= ?",
         Time.zone.now.beginning_of_day,
         Time.zone.now.end_of_day + 1.day)
     }
@@ -50,7 +50,7 @@ module Calendarable
   end
 
   def duration
-    (start_datetime - end_datetime).to_i.minutes
+    (end_datetime-start_datetime)/1.minute
   end
 
   def date

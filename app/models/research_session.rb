@@ -37,7 +37,6 @@ class ResearchSession < ActiveRecord::Base
   default_scope { includes(:invitations) }
 
   def people_name_and_id
-    return [] if people_ids.nil?
     people.map { |i| { id: i.id, name: i.full_name, label: i.full_name, value: i.id } }
   end
 

@@ -50,7 +50,7 @@ class ResearchSessionsController < ApplicationController
 
   private
 
-    def send_notifications(research_session)
+    def send_notifications(_research_session)
       # needs fixing
       reserch_session.invitations.each do |invitee|
         case invitee.person.preferred_contact_method.upcase

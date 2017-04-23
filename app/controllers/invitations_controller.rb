@@ -17,22 +17,22 @@
 class InvitationsController < ApplicationController
   skip_before_action :authenticate_user!
   before_action :set_invitation_and_visitor, only: %i[show
-                                                       edit
-                                                       update
-                                                       destroy
-                                                       confirm
-                                                       cancel
-                                                       change
-                                                       show_actions
-                                                       show_invitation
-                                                       show_invitation]
+                                                      edit
+                                                      update
+                                                      destroy
+                                                      confirm
+                                                      cancel
+                                                      change
+                                                      show_actions
+                                                      show_invitation
+                                                      show_invitation]
   # need a before action here for authentication of invitation changes
   def new
- #   @person = Person.find_by(token: person_params[:token])
+    #   @person = Person.find_by(token: person_params[:token])
 
     @user = current_user
     @research_session = @invitation.research_session
-    @invitation = Invitation.new()
+    @invitation = Invitation.new
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -141,9 +141,7 @@ class InvitationsController < ApplicationController
       end
 
       @invitation = Invitation.find_by(id: params[:id])
-      unless @invitation && @invitation.owner_or_invitee?(@visitor)
-        return false
-      end
+      return false unless @invitation && @invitation.owner_or_invitee?(@visitor)
       @visitor.nil? ? false : true
     end
 

@@ -18,13 +18,21 @@
 #
 
 class Event < ActiveRecord::Base
-
-  validates_presence_of :name, :application_id, :location, :address, :starts_at, :ends_at, :description
+  include Calendarable
+  validates_presence_of :name,
+    :application_id,
+    :location,
+    :address,
+    :start_datetime,
+    :enddatetime,
+    :description
 
   belongs_to :application
 
   has_many :reservations
   has_many :people, through: :reservations
+
+  alias title name
 
   def to_param
     "#{id}-#{name.parameterize}"

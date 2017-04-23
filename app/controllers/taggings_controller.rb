@@ -14,7 +14,7 @@
 class TaggingsController < ApplicationController
 
   TAGGABLE_TYPES = {
-    'Person'    => Person,
+    'Person'          => Person,
     'ResearchSession' => ResearchSession
   }.freeze
 

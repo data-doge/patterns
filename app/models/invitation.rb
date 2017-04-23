@@ -11,7 +11,6 @@
 #
 
 # FIXME: Refactor and re-enable cop
-# rubocop:disable ClassLength
 class Invitation < ActiveRecord::Base
   has_paper_trail
 
@@ -19,7 +18,7 @@ class Invitation < ActiveRecord::Base
   include Calendarable
 
   belongs_to :person
-  has_one :research_session
+  belongs_to :research_session
 
   # so users can take notes.
   has_many :comments, as: :commentable, dependent: :destroy
@@ -28,14 +27,13 @@ class Invitation < ActiveRecord::Base
 
   has_many :gift_cards, as: :giftable, dependent: :destroy
   validates :person, presence: true
-  validates :user, presence: true
 
   # unclear
   # can't have the same time slot id twice.
   # validates :time_slot, uniqueness: true, presence: true
 
   # one person can't have multiple invitations for the same event
-  validates :person, uniqueness: { scope: :session }
+  validates :person, uniqueness: { scope: :research_session }
 
   # these overlap validations are super tricksy.
   # do we check this here?
@@ -67,7 +65,7 @@ class Invitation < ActiveRecord::Base
     :title,
     :description,
     :sms_description,
-    :duration, to: :session
+    :duration, to: :research_session
 
   # invitations can move through states
   aasm do
