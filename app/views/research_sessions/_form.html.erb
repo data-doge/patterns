@@ -15,49 +15,37 @@
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :title, 'Event title', :class => 'control-label' %>
+    <%= f.label :title, 'Session title', :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :title, :class => 'text_field' %>
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :description, 'Event description', :class => 'control-label' %>
+    <%= f.label :description, 'Session description', :class => 'control-label' %>
     <div class="controls">
       <%= f.text_area :description, :class => 'text_area' %>
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :slot_length, 'Call length', :class => 'control-label' %>
+    <%= f.label :sms_description, 'SMS Session description', :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :slot_length, options_for_select([15,30,45,60].map {|o| "#{o.to_s} mins"}), :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :buffer, 'Buffer', :class => 'control-label' %>
-    <div class="controls">
-      <%= f.select :buffer, options_for_select([0,5,10,15,20,30,45,60].map {|o| ["#{o.to_s} mins",o]},selected: 5), :class => 'text_field' %>
+      <%= f.text_area :sms_description, :class => 'text_area' %>
     </div>
   </div>
 
-  <h2>Time window</h2>
+  <h2>Time</h2>
+
   <div class="control-group">
-    <%= f.label :date, :class => 'control-label' %>
+    <%= f.label :start_datetime, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :date, :class => 'text_field datepicker' %>
+      <%= f.datetime_field :start_datetime, :class => 'text_field' %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :start_time, :class => 'control-label' %>
+    <%= f.label :end_datetime, :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :start_time, simple_time_select_options, :class => 'text_field' %>
-    </div>
-  </div>
-
-  <div class="control-group">
-    <%= f.label :end_time, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.select :end_time, simple_time_select_options, :class => 'text_field' %>
+      <%= f.datetime_field :end_datetime, :class => 'text_field' %>
     </div>
   </div>
 

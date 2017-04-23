@@ -33,10 +33,13 @@ class Event < ActiveRecord::Base
   has_many :reservations
   has_many :people, through: :reservations
 
-  alias title name
+
 
   def to_param
     "#{id}-#{name.parameterize}"
   end
 
+  def title
+    name
+  end
 end
