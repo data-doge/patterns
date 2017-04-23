@@ -16,6 +16,7 @@
 #
 
 class ResearchSessionsController < ApplicationController
+  before_action :parse_dates, only: [:create, :update]
 
   def new
     if session[:person_id].present?
@@ -27,11 +28,12 @@ class ResearchSessionsController < ApplicationController
   end
 
   def create
-    people_ids = research_session_params.delete(:people_ids)
+    people_ids = params[:research_session][:people_ids]
+
     @research_session = ResearchSession.new(research_session_params)
     if @research_session.save
 
-      @research_session.tag_list(research_session_params[:tags])
+      #@research_session.tag_list(research_session_params[:tags])
 
       # need to handle case when the invitation is invalid
       # i.e. timing overlaps, etc.
@@ -70,10 +72,16 @@ class ResearchSessionsController < ApplicationController
 
   private
 
+    def parse_dates
+      if params[:end_datetime].present? && params[:start_datetime].present?
+        params[:end_datetime] = Time.zone.parse(params[:end_datetime])
+        params[:start_datetime] = Time.zone.parse(params[:start_datetime])
+      end
+    end
+
     # rubocop:disable Metrics/MethodLength
-    def session_params
+    def research_session_params
       params.require(:research_session).permit(
-        :people_ids,
         :description,
         :sms_description,
         :session_type,
@@ -81,9 +89,8 @@ class ResearchSessionsController < ApplicationController
         :end_datetime,
         :buffer,
         :title,
-        :tags,
         :user_id
-      ).merge(user_id: current_user.id)
+      ).merge(user_id: current_user.id).symbolize_keys
     end
   # rubocop:enable Metrics/MethodLength
 end

@@ -21,8 +21,8 @@
 //= require tokenfield/bootstrap-tokenfield.js
 //= require jquery.validate
 //= require jquery.validate.additional-methods
-//= require moment
-//= require bootstrap-datetimepicker
+//= require moment/moment.min
+//= require datepicker/bootstrap-datetimepicker.min
 //= require fullcalendar/fullcalendar.min
 //= require jquery-touchswipe/jquery.touchSwipe.min
 //= require_tree .
