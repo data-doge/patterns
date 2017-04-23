@@ -37,7 +37,15 @@ class ResearchSession < ActiveRecord::Base
   default_scope { includes(:invitations) }
 
   def people_name_and_id
-    people.map { |i| { id: i.id, name: i.full_name, label: i.full_name, value: i.id } }
+    people.map do |i|
+      { id: i.id,
+        name: i.full_name,
+        label: i.full_name,
+        value: i.id }
+    end
   end
 
+  def send_invitation_notifications
+    invitations.where(aasm_state: 'created').find_each(&:invite!)
+  end
 end

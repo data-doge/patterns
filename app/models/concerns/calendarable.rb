@@ -12,6 +12,7 @@ module Calendarable
 
   # http://stackoverflow.com/questions/7323793/shared-scopes-via-module
   # http://stackoverflow.com/questions/2682638/finding-records-that-overlap-a-range-in-rails
+  # rubocop:disable Lint/AmbiguousBlockAssociation
   included do
     scope :in_range, ->(range) {
       where("(#{table_name}.start_datetime BETWEEN ? AND ? OR #{table_name}.end_datetime BETWEEN ? AND ?) OR (#{table_name}.start_datetime <= ? AND #{table_name}.end_datetime >= ?)", range.first, range.last, range.first, range.last, range.first, range.last)
@@ -29,6 +30,7 @@ module Calendarable
         Time.zone.now.end_of_day + 1.day)
     }
   end
+  # rubocop:enable Lint/AmbiguousBlockAssociation
 
   def not_overlap?(other)
     !overlap?(other)

@@ -19,44 +19,16 @@ class Invitation < ActiveRecord::Base
 
   belongs_to :person
   belongs_to :research_session
+  validates :person, presence: true
 
   # so users can take notes.
   has_many :comments, as: :commentable, dependent: :destroy
 
   # this is how we give gift cards for sessions.
-
   has_many :gift_cards, as: :giftable, dependent: :destroy
-  validates :person, presence: true
-
-  # unclear
-  # can't have the same time slot id twice.
-  # validates :time_slot, uniqueness: true, presence: true
 
   # one person can't have multiple invitations for the same event
   validates :person, uniqueness: { scope: :research_session }
-
-  # these overlap validations are super tricksy.
-  # do we check this here?
-  # User can't book over themselves.
-
-  # validates 'v2_time_slots.start_time', 'v2_time_slots.end_time',
-  #   overlap: {
-  #     query_options: { includes: [:time_slot] },
-  #     scope: 'user_id',
-  #     exclude_edges: %w[v2_time_slots.start_time v2_time_slots.end_time],
-  #     message_title:  'Sorry!',
-  #     message_content: 'This time is no longer available.'
-  #   }
-
-  # # person can only have one invitation at a time.
-  # validates 'v2_time_slots.start_time', 'v2_time_slots.end_time',
-  #   overlap: {
-  #     query_options: { includes: :time_slot },
-  #     scope: 'person_id',
-  #     exclude_edges: %w[v2_time_slots.start_time v2_time_slots.end_time],
-  #     message_title:  'Sorry!',
-  #     message_content: 'This time is no longer available.'
-  #   }
 
   # not sure about all these delegations.
   delegate :user,
@@ -68,6 +40,7 @@ class Invitation < ActiveRecord::Base
     :duration, to: :research_session
 
   # invitations can move through states
+  # necessary for text messaging bits in the future
   aasm do
     state :created, initial: true
     state :invited
@@ -82,7 +55,7 @@ class Invitation < ActiveRecord::Base
       transitions from: :created, to: :invited
     end
 
-    event :remind do
+    event :remind, before_commit: :send_reminder do
       transitions from: :invited, to: :reminded
     end
 
@@ -125,7 +98,7 @@ class Invitation < ActiveRecord::Base
   end
 
   def send_invite_email
-    InvitationMailer.invite(
+    InvitationNotifier.invite(
       email_address: person.email_address,
       invitation:  self,
       person: person

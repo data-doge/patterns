@@ -15,6 +15,8 @@
 # FIXME: Refactor and re-enable cop
 # rubocop:disable ClassLength
 class InvitationsController < ApplicationController
+  # this is accessed by people, without usernames/passwords.
+  # confitmation, updates, etc.
   skip_before_action :authenticate_user!
   before_action :set_invitation_and_visitor, only: %i[show
                                                       edit
@@ -26,6 +28,7 @@ class InvitationsController < ApplicationController
                                                       show_actions
                                                       show_invitation
                                                       show_invitation]
+
   # need a before action here for authentication of invitation changes
   def new
     #   @person = Person.find_by(token: person_params[:token])
@@ -38,12 +41,10 @@ class InvitationsController < ApplicationController
   # rubocop:disable Metrics/MethodLength
   # TODO: refactor
   def create
+    # params should include a research_session_id
     @invitation = Invitation.new(invitation_params)
-
     if @invitation.save
-      @research_session = ResearchSession.find(params[:research_session_id])
-      @research_session.invitations << @invitation
-      @research_session.invitations.each(&:invite!)
+      @invitation.invite!
       flash[:notice] = "A session has been booked for #{@invitation.start_datetime_human}"
 
     else
@@ -67,13 +68,14 @@ class InvitationsController < ApplicationController
   def show
     visitor
     @comment = Comment.new commentable: @invitation
+    @gift_card = GiftCard.new giftable: @invitation
   end
 
   def edit; end
 
   # these are our methods for people and users to edit invitations
   def confirm
-    # can't confirma invitation in the past!
+    # can't confirm invitation in the past!
     render false && return unless @invitation.start_datetime > Time.current
     if @invitation.confirm && @invitation.save
       flash[:notice] = "You are confirmed for #{@invitation.start_datetime_human}, with #{@invitation.user.name}."
@@ -155,24 +157,6 @@ class InvitationsController < ApplicationController
       @visitor
     end
 
-    # rubocop:disable Metrics/MethodLength
-    def send_notifications(invitation)
-      if invitation.person.preferred_contact_method == 'EMAIL'
-        InvitationNotifier.notify(
-          email_address: invitation.person.email_address,
-          invitation: invitation
-        ).deliver_later
-      else
-        ::InvitationSms.new(to: invitation.person, invitation: invitation).send
-      end
-      # notify the user
-      InvitationNotifier.notify(
-        email_address: invitation.user.email_address,
-        invitation: invitation
-      ).deliver_later
-    end
-    # rubocop:enable Metrics/MethodLength
-
     def event_params
       params.permit(:event_id)
     end
@@ -191,9 +175,7 @@ class InvitationsController < ApplicationController
       params.permit(
         :id,
         :person_id,
-        :time_slot_id,
-        :event_id,
-        :event_invitation_id,
+        :research_session_id,
         :user_id,
         :aasm_event,
         :aasm_state
