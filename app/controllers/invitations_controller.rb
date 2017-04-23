@@ -16,7 +16,7 @@
 # rubocop:disable ClassLength
 class InvitationsController < ApplicationController
   skip_before_action :authenticate_user!
-  before_action :set_reservation_and_visitor, only: %i[show
+  before_action :set_invitation_and_visitor, only: %i[show
                                                        edit
                                                        update
                                                        destroy
@@ -24,33 +24,29 @@ class InvitationsController < ApplicationController
                                                        cancel
                                                        change
                                                        show_actions
-                                                       show_reservation
+                                                       show_invitation
                                                        show_invitation]
-  # need a before action here for authentication of reservation changes
+  # need a before action here for authentication of invitation changes
   def new
-    @person = Person.find_by(token: person_params[:token])
+ #   @person = Person.find_by(token: person_params[:token])
 
-    redirect_to root_url unless @person
-
-    @event_invitation = Session.find_by(v2_event_id: event_params[:event_id])
-    @user = @event_invitation.user
-    @event = @event_invitation.event
-    @available_time_slots = @event.available_time_slots(@person)
-    @reservation = Invitation.new(time_slot: V2::TimeSlot.new)
+    @user = current_user
+    @research_session = @invitation.research_session
+    @invitation = Invitation.new()
   end
 
   # rubocop:disable Metrics/MethodLength
   # TODO: refactor
   def create
-    @reservation = Invitation.new(reservation_params)
-    if @reservation.save
-      flash[:notice] = "An interview has been booked for #{@reservation.time_slot.start_datetime_human}"
-      send_notifications(@reservation)
+    @invitation = Invitation.new(invitation_params)
+    if @invitation.save
+      flash[:notice] = "A sessino has been booked for #{@invitation.start_datetime_human}"
+      send_notifications(@invitation)
     else
-      flash[:error] = "No time slot was selected, couldn't create the reservation"
+      flash[:error] = "No time slot was selected, couldn't create the invitation"
     end
-    @available_time_slots = []
-    @person = @reservation.person
+
+    @person = @invitation.person
     respond_to do |format|
       format.js {}
       format.html { render :new }
@@ -61,62 +57,62 @@ class InvitationsController < ApplicationController
   # no authorization here. yet.
 
   def index
-    @reservations = Invitation.order(id: :desc).page(params[:page])
+    @invitations = Invitation.order(id: :desc).page(params[:page])
   end
 
   def show
     visitor
-    @comment = Comment.new commentable: @reservation
+    @comment = Comment.new commentable: @invitation
   end
 
   def edit; end
 
-  # these are our methods to
+  # these are our methods for people and users to edit invitations
   def confirm
-    # can't confirma reservation in the past!
-    render false && return unless @reservation.start_datetime > Time.current
-    if @reservation.confirm && @reservation.save
-      flash[:notice] = "You are confirmed for #{@reservation.start_datetime_human}, with #{@reservation.user.name}."
+    # can't confirma invitation in the past!
+    render false && return unless @invitation.start_datetime > Time.current
+    if @invitation.confirm && @invitation.save
+      flash[:notice] = "You are confirmed for #{@invitation.start_datetime_human}, with #{@invitation.user.name}."
     else
       flash[:alert] = 'Error'
     end
     respond_to do |format|
-      format.html { redirect_to calendar_path(token: @visitor.token, reservation_id: @reservation.id) }
-      format.js { render text: "$('#reservationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
+      format.html { redirect_to calendar_path(token: @visitor.token, invitation_id: @invitation.id) }
+      format.js { render text: "$('#invitationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
     end
   end
 
   def cancel
-    if @reservation.cancel
+    if @invitation.cancel
       flash[:notice] = 'Cancelled'
-      @reservation.save
+      @invitation.save
     else
       flash[:alert] = 'Error'
     end
     respond_to do |format|
-      format.html { redirect_to calendar_path(token: @visitor.token, reservation_id: @reservation.id) }
-      format.js { render text: "$('#reservationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
+      format.html { redirect_to calendar_path(token: @visitor.token, invitation_id: @invitation.id) }
+      format.js { render text: "$('#invitationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
     end
   end
 
   def change
-    if @reservation.reschedule
-      flash[:notice] = "#{@reservation.user.name} will be in touch soon to find a different time."
-      @reservation.save
+    if @invitation.reschedule
+      flash[:notice] = "#{@invitation.user.name} will be in touch soon to find a different time."
+      @invitation.save
     else
       flash[:alert] = 'Error'
     end
     respond_to do |format|
-      format.html { redirect_to calendar_path(token: @visitor.token, reservation_id: @reservation.id) }
-      format.js { render text: "$('#reservationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
+      format.html { redirect_to calendar_path(token: @visitor.token, invitation_id: @invitation.id) }
+      format.js { render text: "$('#invitationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
     end
   end
 
   def update
     # flash a  notice here and return a js file that reloads the page
     # or calls turbolinks to reload or somesuch
-    if @reservation.update(update_params)
-      flash[:notice] = 'Reservation updated'
+    if @invitation.update(update_params)
+      flash[:notice] = 'invitation updated'
     else
       flash[:error]  = 'update failed'
     end
@@ -127,7 +123,7 @@ class InvitationsController < ApplicationController
   end
 
   def destroy
-    @reservation.destroy!
+    @invitation.destroy!
     respond_to do |format|
       format.html { redirect_to invitation_url }
       format.json { head :no_content }
@@ -136,7 +132,7 @@ class InvitationsController < ApplicationController
 
   private
 
-    def set_reservation_and_visitor
+    def set_invitation_and_visitor
       if params[:token].present?
         @person = Person.find_by(token: params[:token])
         # if we don't have a person, see if we have a user's token.
@@ -144,8 +140,8 @@ class InvitationsController < ApplicationController
         visitor
       end
 
-      @reservation = Invitation.find_by(id: params[:id])
-      unless @reservation && @reservation.owner_or_invitee?(@visitor)
+      @invitation = Invitation.find_by(id: params[:id])
+      unless @invitation && @invitation.owner_or_invitee?(@visitor)
         return false
       end
       @visitor.nil? ? false : true
@@ -158,19 +154,19 @@ class InvitationsController < ApplicationController
     end
 
     # rubocop:disable Metrics/MethodLength
-    def send_notifications(reservation)
-      if reservation.person.preferred_contact_method == 'EMAIL'
-        ReservationNotifier.notify(
-          email_address: reservation.person.email_address,
-          reservation: reservation
+    def send_notifications(invitation)
+      if invitation.person.preferred_contact_method == 'EMAIL'
+        InvitationNotifier.notify(
+          email_address: invitation.person.email_address,
+          invitation: invitation
         ).deliver_later
       else
-        ::ReservationSms.new(to: reservation.person, reservation: reservation).send
+        ::InvitationSms.new(to: invitation.person, invitation: invitation).send
       end
       # notify the user
-      ReservationNotifier.notify(
-        email_address: reservation.user.email_address,
-        reservation: reservation
+      InvitationNotifier.notify(
+        email_address: invitation.user.email_address,
+        invitation: invitation
       ).deliver_later
     end
     # rubocop:enable Metrics/MethodLength
@@ -179,12 +175,10 @@ class InvitationsController < ApplicationController
       params.permit(:event_id)
     end
 
-    def reservation_params
+    def invitation_params
       params.require(:invitation).permit(
         :person_id,
-        :time_slot_id,
-        :event_id,
-        :event_invitation_id,
+        :research_session_id,
         :user_id,
         :aasm_event,
         :aasm_state

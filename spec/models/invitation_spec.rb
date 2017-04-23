@@ -1,15 +1,12 @@
 # == Schema Information
 #
-# Table name: invitation
+# Table name: invitations
 #
 #  id                  :integer          not null, primary key
-#  time_slot_id        :integer
 #  person_id           :integer
 #  created_at          :datetime
 #  updated_at          :datetime
-#  user_id             :integer
-#  event_id            :integer
-#  event_invitation_id :integer
+#  research_session_id :integer
 #  aasm_state          :string(255)
 #
 
