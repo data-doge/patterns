@@ -123,7 +123,7 @@
     var defaults = {
       showLoadingIndicator: true,
       loading: 'Loading ...',
-      spinner: 'http://www.travistidwell.com/seamless.js/src/loader.gif',
+      spinner: 'https://www.travistidwell.com/seamless.js/src/loader.gif',
       onConnect: null,
       styles: [],
       fallback: true,
