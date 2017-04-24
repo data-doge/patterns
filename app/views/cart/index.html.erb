@@ -1,5 +1,6 @@
 <%= render :partial => 'layouts/research_sessions_menu' %>
 <h3> People in cart</h3>
+<input id='cart-typeahead' type="text" placeholder="People Search">
 <div class="row">
   <div class="span12">
     <table class="table table-striped">
@@ -13,16 +14,9 @@
           <th>&nbsp;</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id='full-cart'>
         <% @people.each do |person| %>
-        <tr id='cart-<%= person.id %>'>
-          <td><%= person.full_name %></td>
-          <td><%= person.email_address %></td>
-          <td><%= person.phone_number %></td>
-          <td><%= person.preferred_contact_method %></td>
-          <td><%= person.tag_count_cache %></td>
-          <td><%= render partial: '/people/add_remove_cart', locals: {person: person} %></td>
-        </tr>
+          <%= render partial: 'cart/full_item', locals: {person: person} %>
         <% end %>
       </tbody>
     </thread>

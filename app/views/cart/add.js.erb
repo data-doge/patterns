@@ -1,5 +1,10 @@
 <% @added.each do |add| %>
+  <% if @type.present? %>
+    $('#<%= @type %>-cart').append("<%= j render partial: "cart/#{@type}_item", locals: {person: Person.find(add)} %>");
+  <% end %>
   $('#<%= add %>-cart-delete').show();
   $('#<%= add %>-cart-add').hide();
 <% end %>
+
 $('#cart-size').html('<%= (session[:cart] ||= []).size %>');
+

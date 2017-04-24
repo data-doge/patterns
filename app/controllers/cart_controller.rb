@@ -50,12 +50,14 @@ class CartController < ApplicationController
 
     def cart_params
       # person id is a single int.
-      params.permit(:person_id, :all)
+      params.permit(:person_id, :all, :type)
     end
 
     def cart_init
       # this is a bit of a hack here.
       # before filter seems to break things. I don't know why
       session[:cart] = (session[:cart] ||= []).map(&:to_i).uniq - [0]
+
+      @type = cart_params[:type].present? ? cart_params[:type] : nil
     end
 end

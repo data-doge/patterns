@@ -20,8 +20,8 @@
           <tr>
             <td><%= link_to sesh.title, sesh %></td>
             <td><%= sesh.description %></td>
-            <td><%= sesh.start_datetime.to_s :long %></td>
-            <td><%= sesh.end_datetime.to_s :long %></td>
+            <td><%= sesh.start_datetime.to_s :short %></td>
+            <td><%= sesh.end_datetime.to_s :short %></td>
             <td><%= sesh.user.name %></td>
             <td><%= sesh.people.count %></td>
             <td><%= sesh.invitations.where(aasm_state:'attended').size %></td>

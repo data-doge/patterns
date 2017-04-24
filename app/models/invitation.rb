@@ -46,9 +46,9 @@ class Invitation < ActiveRecord::Base
     state :invited
     state :reminded
     state :confirmed
-    state :cancelled
+    state :cancelled # means that they cancelled ahead of time
     state :rescheduled
-    state :missed
+    state :missed # means they didn't cancel
     state :attended
 
     event :invite, before_commit: :send_invitation do
