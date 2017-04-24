@@ -1,26 +1,26 @@
 <%= render :partial => 'layouts/research_sessions_menu' %>
 
-<% content_for :page_title, @event.title %>
+<% content_for :page_title, @research_session.title %>
 
 <div class="page-header">
-  <h1><%= @event.title %></h1>
+  <h1><%= @research_session.title %></h1>
 </div>
 
 <div class="row">
   <div class="span3">
-    <%= simple_format @event.description %>
+    <%= simple_format @research_session.description %>
   </div>
   <div class="span6">
     <h3>Invitees</h3>
-    <% if @event.event.reservations.any? %>
+    <% if @research_session.invitations.any? %>
     <table class="table table-hover">
       <tbody>
         <tr><th>Name</th><th>Status</th><th>Attended</th></tr>
-        <% for reservation in @event.event.reservations.includes(:person) do %>
+        <% for invitation in @research_session.invitations.includes(:person) do %>
           <tr>
-          <td><%= link_to reservation.person.full_name, reservation.person %></td>
-          <%= form_for(reservation, remote: true) do |form| %>
-            <td><%= form.select :aasm_state, options_for_select(reservation.aasm.states(permitted: true).map(&:name), reservation.aasm_state) %></td>
+          <td><%= link_to invitation.person.full_name, invitation.person %></td>
+          <%= form_for(invitation, remote: true) do |form| %>
+            <td><%= form.select :aasm_state, options_for_select(invitation.aasm.states(permitted: true).map(&:name), invitation.aasm_state) %></td>
           <% end %>
           </tr>
         <% end %>
@@ -35,24 +35,24 @@
       <div class="span6">
         <h3>Tags</h3>
         <ul id="tag-list">
-        <%= render partial: 'taggings/tagging', collection: @event.taggings %>
+        <%= render partial: 'taggings/tagging', collection: @research_session.taggings %>
         </ul>
-        <%= render partial: 'taggings/tag_form', locals: { taggable_obj: @event } %>
+        <%= render partial: 'taggings/tag_form', locals: { taggable_obj: @research_session } %>
       </div>
   </div>
   <div class="span3">
     <div class="well">
       <dl>
         <dt>Starts at</dt>
-        <dd><%= @event.start_datetime %></dd>
+        <dd><%= @research_session.start_datetime %></dd>
         <dt>Ends at</dt>
-        <dd><%= @event.end_datetime %></dd>
+        <dd><%= @research_session.end_datetime %></dd>
         <dt>Creator</dt>
-        <dd><%= @event.user.name %></dd>
+        <dd><%= @research_session.user.name %></dd>
         <dt>Invited</dt>
-        <dd><%= @event.invitees.size %></dd>
+        <dd><%= @research_session.invitations.size %></dd>
         <dt>Reserved</dt>
-        <dd><%= @event.event.reservations.size %></p>
+        <dd><%= @research_session.invitations.size %></p>
       </dl>
     </div>
   </div>
@@ -60,6 +60,6 @@
 
 <div class="row">
   <div class="span12">
-    <!-- should link back to all events or somesuch here. -->
+    <!-- should link back to all research_sessions or somesuch here. -->
   </div>
 </div>

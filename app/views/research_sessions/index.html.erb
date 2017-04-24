@@ -1,4 +1,4 @@
-<%= render :partial => 'layouts/research_sessions_menu' %>
+<%= render partial: 'layouts/research_sessions_menu' %>
 <h1> List of Sessions</h1>
 <div class="row">
   <div class="span12">
@@ -24,7 +24,7 @@
             <td><%= sesh.end_datetime.to_s :long %></td>
             <td><%= sesh.user.name %></td>
             <td><%= sesh.people.count %></td>
-            <td><%= sesh.invitations.where(state:'attended').size %></td>
+            <td><%= sesh.invitations.where(aasm_state:'attended').size %></td>
             <!-- probably link to the reservations for this event -->
           </tr>
         <% end %>

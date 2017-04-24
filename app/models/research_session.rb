@@ -27,6 +27,8 @@ class ResearchSession < ActiveRecord::Base
   has_many :invitations
   has_many :people, through: :invitations
 
+  accepts_nested_attributes_for :invitations, reject_if: :all_blank, allow_destroy: true
+
   validates :description,
     :title,
     :start_datetime,

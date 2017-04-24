@@ -1,17 +1,21 @@
 <%= form_for @research_session,
              url: research_sessions_path,
              method: :POST,
-             remote: true,
+             remote: false,
              html: { class: 'form-horizontal' } do |f| %>
   <div class="control-group">
-    <%= f.label :people_ids, "People", :class => 'control-label' %>
+    <%= f.label :people, "People", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :people, class: 'tokenfield text_area',
-                      style: 'border: 1px solid #cccccc; border-radius:5px;',
-                      data: { search_url: '/search/index_ransack.json?q[nav_bar_search_cont]=%QUERY',
-                              submit_id: '#people_ids',
-                              pre_populate: @research_session.people_name_and_id.to_json} %>
-      <%= f.hidden_field :people_ids, id: 'people_ids', value: @people_ids.to_s %>
+    <!--
+      the cart adds person_ids here.
+      adding a person doesn't remove them from the cart.
+      use the cocoon stuff here and session edit too.
+      cart should be in the session edit as well.
+     -->
+      <% f.fields_for :invitations do |inv| %>
+        <%= render 'invitation_fields', f: inv %>
+      <% end %>
+      <%= link_to_add_association 'add person', f, :invitations %>
     </div>
   </div>
   <div class="control-group">
@@ -32,7 +36,18 @@
       <%= f.text_area :sms_description, :class => 'text_area' %>
     </div>
   </div>
-
+  <div class="control-group">
+    <%= f.label :tags,  "Tags", :class => 'control-label' %>
+    <div class='controls'>
+    <%= f.text_field :tag_list,
+        class: 'tokenfield input span4',
+        data: { search_url: '/taggings/search?type=ResearchSession&q=%QUERY',
+                submit_id: 'search-tag-hidden-input',
+                pre_populate: []
+              }
+      %>
+    </div>
+  </div>
   <h2>Time</h2>
 
   <div class="control-group">

@@ -17,7 +17,7 @@
 //= require twitter/bootstrap
 //= require twitter/typeahead.min
 //= require holder
-
+//= require cocoon
 //= require tokenfield/bootstrap-tokenfield.js
 //= require jquery.validate
 //= require jquery.validate.additional-methods

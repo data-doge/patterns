@@ -14,16 +14,11 @@
 #
 
 class Reservation < ActiveRecord::Base
-  include Calendarable
   has_paper_trail
   validates_presence_of :person_id, :event_id
 
   belongs_to :person
   belongs_to :event
 
-  delegate :start_datetime,
-    :end_datetime,
-    :title,
-    :description, :event
 
 end

@@ -19,21 +19,16 @@ class ResearchSessionsController < ApplicationController
   before_action :parse_dates, only: [:create, :update]
 
   def new
-    if session[:person_id].present?
-      @people_ids =  params[:person_id]
-    elsif session[:cart].present?
-      @people_ids = session[:cart]
-    end
     @research_session = ResearchSession.new
   end
 
   def create
-    people_ids = params[:research_session][:people_ids]
+
 
     @research_session = ResearchSession.new(research_session_params)
     if @research_session.save
 
-      #@research_session.tag_list(research_session_params[:tags])
+      #@research_session.tag_list.add(params[:tags])
 
       # need to handle case when the invitation is invalid
       # i.e. timing overlaps, etc.

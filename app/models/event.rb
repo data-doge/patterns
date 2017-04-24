@@ -18,14 +18,13 @@
 #
 
 class Event < ActiveRecord::Base
-  include Calendarable
 
   validates_presence_of :name,
     :application_id,
     :location,
     :address,
     :start_datetime,
-    :enddatetime,
+    :end_datetime,
     :description
 
   belongs_to :application

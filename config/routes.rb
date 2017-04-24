@@ -15,30 +15,33 @@ Logan::Application.routes.draw do
   end
 
 
-  resources :research_sessions
-  resources :invitations do
-    collection do
-      post ':id/confirm/(:token)',
-            to: 'invitations#confirm',
-            as: :confirm
-      post ':id/cancel/(:token)',
-            to: 'invitations#cancel',
-            as: :cancel
-      post ':id/change/(:token)',
-            to: 'invitations#change',
-            as: :change
-      get ':id/confirm/(:token)',
-            to: 'invitations#confirm',
-            as: :remote_confirm
-      get ':id/cancel/(:token)',
-            to: 'invitations#cancel',
-            as: :remote_cancel
-      get ':id/change/(:token)',
-            to: 'invitations#change',
-            as: :remote_change
-    end
+  resources :research_sessions, path: :sessions, has_many: :invitations do
     resources :comments, controller: 'comments'
+    resources :invitations do
+      collection do
+        post ':id/confirm/(:token)',
+              to: 'invitations#confirm',
+              as: :confirm
+        post ':id/cancel/(:token)',
+              to: 'invitations#cancel',
+              as: :cancel
+        post ':id/change/(:token)',
+              to: 'invitations#change',
+              as: :change
+        get ':id/confirm/(:token)',
+              to: 'invitations#confirm',
+              as: :remote_confirm
+        get ':id/cancel/(:token)',
+              to: 'invitations#cancel',
+              as: :remote_cancel
+        get ':id/change/(:token)',
+              to: 'invitations#change',
+              as: :remote_change
+      end
+      resources :comments, controller: 'comments'
+    end
   end
+
   resources :sms_invitations, only: [:create]
 
 
