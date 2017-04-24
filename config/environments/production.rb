@@ -45,8 +45,7 @@ Logan::Application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
-  # Set to :debug to see everything in the log.
-  config.log_level = :info
+
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -78,9 +77,16 @@ Logan::Application.configure do
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
 
+  # Set to :debug to see everything in the log.
+  config.log_level = :info
+  config.lograge.enabled = true
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
-
+  if ENV['PAPERTRAIL_HOST'] && ENV['PAPERTRAIL_PORT']
+    config.logger = RemoteSyslogLogger.new(ENV['PAPERTRAIL_HOST'],
+                                           ENV['PAPERTRAIL_PORT'],
+                                           :program => "kimball-#{RAILS_ENV}")
+  end
   # Analytics
   config.google_analytics_enabled = true
 
