@@ -18,10 +18,7 @@
         <tr><th>Name</th><th>Status</th><th>Attended</th></tr>
         <% for invitation in @research_session.invitations.includes(:person) do %>
           <tr>
-          <td><%= link_to invitation.person.full_name, invitation.person %></td>
-          <%= form_for(invitation, remote: true) do |form| %>
-            <td><%= form.select :aasm_state, options_for_select(invitation.aasm.states(permitted: true).map(&:name), invitation.aasm_state) %></td>
-          <% end %>
+          <td><%= invitation.person.full_name %></td>
           </tr>
         <% end %>
       </tbody>

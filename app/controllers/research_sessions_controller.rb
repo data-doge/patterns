@@ -16,36 +16,37 @@
 #
 
 class ResearchSessionsController < ApplicationController
-  before_action :parse_dates, only: [:create, :update]
+  before_action :parse_dates, only: %i[create update]
 
   def new
     @research_session = ResearchSession.new
   end
 
   def create
-
-
     @research_session = ResearchSession.new(research_session_params)
     if @research_session.save
 
-      #@research_session.tag_list.add(params[:tags])
+      @research_session.tag_list.add(params['tags'])
 
       # need to handle case when the invitation is invalid
       # i.e. timing overlaps, etc.
-      p_params = people_ids.map do |pid|
-        { person_id: pid, research_session_id: @research_session.id }
+      i_params = params['research_session']['invitations_attributes']
+      people = i_params.values.map do |v|
+        { person_id: v['person_id'],
+          research_session_id: @research_session.id }
       end
 
-      Invitation.create(p_params)
+      Invitation.create(people) # auto associates
 
+      @research_session.save
       # sends all of the invitations.
       @research_session.invitations.each(&:invite)
 
-      render edit_research_session_path
+      redirect_to new_research_session_path
     else
       errors = @research_session.errors.full_messages.join(', ')
       flash[:error] = 'There were problems with some of the fields: ' + errors
-      render new_research_session_path
+      redirect_to new_research_session_path
     end
   end
 
@@ -73,8 +74,6 @@ class ResearchSessionsController < ApplicationController
         params[:start_datetime] = Time.zone.parse(params[:start_datetime])
       end
     end
-
-    # rubocop:disable Metrics/MethodLength
     def research_session_params
       params.require(:research_session).permit(
         :description,
@@ -87,5 +86,6 @@ class ResearchSessionsController < ApplicationController
         :user_id
       ).merge(user_id: current_user.id).symbolize_keys
     end
+
   # rubocop:enable Metrics/MethodLength
 end

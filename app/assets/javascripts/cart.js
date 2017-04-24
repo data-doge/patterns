@@ -3,6 +3,7 @@ $(document).on('ready page:load',function() {
   // interacts with cocoon to do nested forms
   // does both big and mini-cart
 
+  var added_person={};
 
     // initialize bloodhound engine
   var searchSelector = 'input#cart-typeahead';
@@ -55,4 +56,32 @@ $(document).on('ready page:load',function() {
       }
     })
   });
+
+
+  if ($('#mini-cart').length != 0) {
+    $('.add-to-session').on('click',function(el){
+      added_person = {  full_name: $(this).data('fullname'),
+                        person_id: $(this).data('personid')};
+      $('a.add_fields').click();
+    })
+
+    $('form').on('cocoon:after-insert', function(e,inserted_item) {
+      //console.log(added_person);
+      $(inserted_item).find('.person-name').each(function(){
+        $(this).text(added_person.full_name);
+      });
+
+      $(inserted_item).find('input[type=hidden]').each(function(){
+        $(this).val(added_person.person_id);
+        $('.add-to-session#add-'+added_person.person_id).hide();
+      });
+    });
+
+    $('form').on('cocoon:before-remove', function(e,removed_item) {
+      $(removed_item).find('input[type=hidden]').each(function(){
+        $('.add-to-session#add-'+$(this).val()).show();
+      });
+    });
+  }
+  $(".add_fields").hide();
 });

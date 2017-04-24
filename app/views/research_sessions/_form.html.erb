@@ -15,7 +15,8 @@
       <% f.fields_for :invitations do |inv| %>
         <%= render 'invitation_fields', f: inv %>
       <% end %>
-      <%= link_to_add_association 'add person', f, :invitations %>
+      <%= link_to_add_association 'add person', f, :invitations,
+          render_options: { wrapper: 'hidden' } %>
     </div>
   </div>
   <div class="control-group">
