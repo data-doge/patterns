@@ -85,7 +85,7 @@ Logan::Application.configure do
   if ENV['PAPERTRAIL_HOST'] && ENV['PAPERTRAIL_PORT']
     config.logger = RemoteSyslogLogger.new(ENV['PAPERTRAIL_HOST'],
                                            ENV['PAPERTRAIL_PORT'],
-                                           :program => "kimball-#{RAILS_ENV}")
+                                           :program => "kimball-production")
   end
   # Analytics
   config.google_analytics_enabled = true
