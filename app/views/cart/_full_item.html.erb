@@ -1,5 +1,5 @@
 <tr id='cart-<%= person.id %>'>
-  <td><%= person.full_name %></td>
+  <td><%= link_to person.full_name, person_path(person.id) %></td>
   <td><%= person.email_address %></td>
   <td><%= person.phone_number %></td>
   <td><%= person.preferred_contact_method %></td>

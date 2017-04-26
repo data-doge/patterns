@@ -17,18 +17,9 @@
 class InvitationsController < ApplicationController
   # this is accessed by people, without usernames/passwords.
   # confitmation, updates, etc.
-  skip_before_action :authenticate_user!
-  before_action :set_invitation_and_visitor, only: %i[show
-                                                      edit
-                                                      update
-                                                      destroy
-                                                      confirm
-                                                      cancel
-                                                      change
-                                                      show_actions
-                                                      show_invitation
-                                                      show_invitation]
-
+  skip_before_action :authenticate_user!, only: %i[show confirm cancel]
+  before_action :set_visitor, only: %i[show confirm cancel]
+  before_action :set_invitation
   # need a before action here for authentication of invitation changes
   def new
     #   @person = Person.find_by(token: person_params[:token])
@@ -73,6 +64,27 @@ class InvitationsController < ApplicationController
 
   def edit; end
 
+  def event
+    if params[:event] != 'attend' # can set attendance in the past
+      render false && return unless @invitation.start_datetime > Time.current
+    end
+    events = @invitation.aasm.events(permitted: true).map(&:name).map(&:to_s)
+    event = events.detect{|a| a == params[:event] }
+    if @invitation.send(event) && @invitation.save
+      flash[:notice] = "#{event.capitalize} for #{@invitation.person.full_name}"
+    else
+      flash[:alert] = "Error"
+    end
+    respond_to do |format|
+      # /sessions/:research_session_id/invitations_panel
+      format.js { render text: "$('#dynamic-invitation-panel').load('/sessions/#{@invitation.research_session.id}/invitations_panel.html');" }
+      format.json {
+        { invitation_id: @invitation.id, state: @invitation.aasm_state }
+      }
+    end
+  end
+
+
   # these are our methods for people and users to edit invitations
   def confirm
     # can't confirm invitation in the past!
@@ -85,6 +97,9 @@ class InvitationsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to calendar_path(token: @visitor.token, invitation_id: @invitation.id) }
       format.js { render text: "$('#invitationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
+      format.json {
+        { invitation_id: @invitation.id, state: @invitation.aasm_state }
+      }
     end
   end
 
@@ -96,21 +111,13 @@ class InvitationsController < ApplicationController
       flash[:alert] = 'Error'
     end
     respond_to do |format|
+      # where to redirect for person?
       format.html { redirect_to calendar_path(token: @visitor.token, invitation_id: @invitation.id) }
-      format.js { render text: "$('#invitationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
-    end
-  end
-
-  def change
-    if @invitation.reschedule
-      flash[:notice] = "#{@invitation.user.name} will be in touch soon to find a different time."
-      @invitation.save
-    else
-      flash[:alert] = 'Error'
-    end
-    respond_to do |format|
-      format.html { redirect_to calendar_path(token: @visitor.token, invitation_id: @invitation.id) }
-      format.js { render text: "$('#invitationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
+      format.js { render text: "$('#invitationModal').modal('hide');
+        $('#calendar').fullCalendar( 'refetchEvents' );" }
+      format.json {
+        { invitation_id: @invitation.id, state: @invitation.aasm_state }
+      }
     end
   end
 
@@ -137,16 +144,19 @@ class InvitationsController < ApplicationController
   end
 
   private
+    def set_invitation
+      @invitation ||= Invitation.find_by(id: params[:id])
+    end
 
-    def set_invitation_and_visitor
+    def set_visitor
       if params[:token].present?
         @person = Person.find_by(token: params[:token])
-        # if we don't have a person, see if we have a user's token.
-        # thus we can provide a feed without auth1
-        visitor
       end
+      # if we don't have a person, see if we have a user's token.
+      # thus we can provide a feed without auth1
+      visitor # sets our visitor object
+      @invitation ||= Invitation.find_by(id: params[:id])
 
-      @invitation = Invitation.find_by(id: params[:id])
       return false unless @invitation && @invitation.owner_or_invitee?(@visitor)
       @visitor.nil? ? false : true
     end

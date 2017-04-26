@@ -10,23 +10,10 @@
   <div class="span3">
     <%= simple_format @research_session.description %>
   </div>
-  <div class="span6">
-    <h3>Invitees</h3>
-    <% if @research_session.invitations.any? %>
-    <table class="table table-hover">
-      <tbody>
-        <tr><th>Name</th><th>Status</th><th>Attended</th></tr>
-        <% for invitation in @research_session.invitations.includes(:person) do %>
-          <tr>
-          <td><%= invitation.person.full_name %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-
-    <% else %>
-    <p>No attendees yet</p>
-    <% end %>
+  <!-- http://stackoverflow.com/questions/10539143/reloading-partial-in-an-rails-app -->
+  <div class="span6" id='dynamic-invitation-panel'>
+    <%= render partial: 'invitations_panel',
+          locals: { invitations: @research_session.invitations } %>
   </div>
   <div class="row">
       <div class="span6">

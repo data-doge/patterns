@@ -13,10 +13,12 @@
       cart should be in the session edit as well.
      -->
       <% f.fields_for :invitations do |inv| %>
-        <%= render 'invitation_fields', f: inv %>
+        <%= render 'nested_invitation_fields', f: inv %>
       <% end %>
-      <%= link_to_add_association 'add person', f, :invitations,
-          render_options: { wrapper: 'hidden' } %>
+      <%= link_to_add_association 'add person',
+            f, :invitations,
+            render_options: { wrapper: 'hidden' },
+            partial: 'nested_invitation_fields' %>
     </div>
   </div>
   <div class="control-group">

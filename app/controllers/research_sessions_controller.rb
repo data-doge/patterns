@@ -58,12 +58,22 @@ class ResearchSessionsController < ApplicationController
     @research_session =  ResearchSession.find(params[:id])
   end
 
+  def invitations_panel
+    @research_session =  ResearchSession.find(params[:research_session_id])
+    render partial: 'invitations_panel',
+      locals: { invitations: @research_session.invitations }
+  end
+
   def update
     # the usual
   end
 
   def add_person
-    # allow new people to be added to research session.
+    @research_session =  ResearchSession.find(params[:research_session_id])
+    invited = params[:invited].present? ? params[:invited] : false
+    inv = Invitation.new(person_id: params[:person_id], aasm_state: state)
+    @research_session << inv
+    @research_session.save
   end
 
   private

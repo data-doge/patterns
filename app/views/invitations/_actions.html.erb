@@ -1,7 +1,8 @@
 <% if @visitor.class.to_s == 'User' %>
   <div class="btn-group" role="group" aria-label="Invitation Actions">
-    <% @invitation.state_action_array.each do |e| %>
-    <%= button_to e[1], v2_invitation_path, params: {aasm_state: e[0]}, method: :patch,  class: "btn btn-secondary" %>
+    <% @invitation.states(permitted: true).each do |e| %>
+      <%  next unless
+    <%= button_to e[1], research_invitation_path(@invitation), params: {aasm_state: e[0]}, method: :patch,  class: "btn btn-secondary" %>
     <% end %>
   </div>
 <% else %>

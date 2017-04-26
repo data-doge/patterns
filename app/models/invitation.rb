@@ -47,9 +47,9 @@ class Invitation < ActiveRecord::Base
     state :reminded
     state :confirmed
     state :cancelled # means that they cancelled ahead of time
-    state :rescheduled
     state :missed # means they didn't cancel
     state :attended
+    #state :rescheduled
 
     event :invite, before_commit: :send_invitation do
       transitions from: :created, to: :invited
@@ -67,9 +67,9 @@ class Invitation < ActiveRecord::Base
       transitions from: %i[invited reminded confirmed], to: :cancelled
     end
 
-    event :reschedule, after_commit: :notify_about_reschedule do
-      transitions from: %i[invited reminded confirmed], to: :rescheduled
-    end
+    # event :reschedule, after_commit: :notify_about_reschedule do
+    #   transitions from: %i[invited reminded confirmed], to: :rescheduled
+    # end
 
     event :attend do
       transitions to: :attended

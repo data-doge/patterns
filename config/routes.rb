@@ -17,17 +17,33 @@ Logan::Application.routes.draw do
 
   resources :research_sessions, path: :sessions, has_many: :invitations do
     resources :comments, controller: 'comments'
+    get 'invitations_panel',
+      to: 'research_sessions#invitations_panel',
+      as: :invitations_panel
     resources :invitations do
       collection do
+        post ':id/event/:event',
+              to: 'invitations#event',
+              as: :event
+        post ':id/attend/(:token)',
+              to: 'invitations#attend',
+              as: :attend
+        post ':id/invite/(:token)',
+              to: 'invitations#invite',
+              as: :invite
+        post ':id/remind/(:token)',
+              to: 'invitations#remind',
+              as: :remind
         post ':id/confirm/(:token)',
               to: 'invitations#confirm',
               as: :confirm
         post ':id/cancel/(:token)',
               to: 'invitations#cancel',
               as: :cancel
-        post ':id/change/(:token)',
-              to: 'invitations#change',
-              as: :change
+        post ':id/miss/(:token)',
+              to: 'invitations#miss',
+              as: :miss
+
         get ':id/confirm/(:token)',
               to: 'invitations#confirm',
               as: :remote_confirm
