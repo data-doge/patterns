@@ -70,10 +70,15 @@ class ResearchSessionsController < ApplicationController
 
   def add_person
     @research_session =  ResearchSession.find(params[:research_session_id])
-    invited = params[:invited].present? ? params[:invited] : false
+    state = params[:invited].present? ? params[:invited] : 'created'
     inv = Invitation.new(person_id: params[:person_id], aasm_state: state)
-    @research_session << inv
-    @research_session.save
+    @research_session.invitations << inv
+    if @research_session.save
+      flash[:notice] = "#{Person.find(inv.person_id).full_name} added to session!"
+    end
+    respond_to do |format|
+      format.js { render text: "$('#dynamic-invitation-panel').load('/sessions/#{@research_session.id}/invitations_panel.html');" }
+    end
   end
 
   private

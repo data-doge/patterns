@@ -20,6 +20,9 @@ Logan::Application.routes.draw do
     get 'invitations_panel',
       to: 'research_sessions#invitations_panel',
       as: :invitations_panel
+    get 'add_person/:person_id',
+      to: 'research_sessions#add_person',
+      as: :add_person
     resources :invitations do
       collection do
         post ':id/event/:event',

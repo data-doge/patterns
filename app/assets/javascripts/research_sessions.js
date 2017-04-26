@@ -19,17 +19,17 @@ $(document).on('page:load ready', function(){
 
 
   // initialize bloodhound engine
-  var searchSelector = 'input#cart-typeahead';
+  var searchSelector = 'input#invitees-typeahead';
 
   //filters out tags that are already in the list
-  // var filter = function(suggestions) {9
-  //   var current_people = $('#mini-cart tr').map(function(index,el){
-  //     return Number(el.id.replace(/^(cart-)/,''));
-  //   });
-  //   return $.grep(suggestions, function(suggestion) {
-  //       return $.inArray(suggestion.id,current_people) === -1;
-  //   });
-  // };
+  var filter = function(suggestions) {
+    var current_people = $('.invitees a').map(function(index,el){
+      return Number(el.id.replace(/^(person-)/,''));
+    });
+    return $.grep(suggestions, function(suggestion) {
+        return $.inArray(suggestion.id,current_people) === -1;
+    });
+  };
 
   var bloodhound = new Bloodhound({
     datumTokenizer: function (d) {
@@ -61,7 +61,7 @@ $(document).on('page:load ready', function(){
     };
 
     $.ajax({
-      url: '/cart/add/'+datum.id,
+      url: '/sessions/'+research_session_id+'/add_person/'+datum.id,
       data: {type: cart_type },
       dataType: "script",
       success: function(){

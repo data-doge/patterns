@@ -1,7 +1,9 @@
 <%= render :partial => 'layouts/research_sessions_menu' %>
 
 <% content_for :page_title, @research_session.title %>
-
+<script>
+var research_session_id = <%= @research_session.id%>;
+</script>
 <div class="page-header">
   <h1><%= @research_session.title %></h1>
 </div>
@@ -11,7 +13,9 @@
     <%= simple_format @research_session.description %>
   </div>
   <!-- http://stackoverflow.com/questions/10539143/reloading-partial-in-an-rails-app -->
-  <div class="span6" id='dynamic-invitation-panel'>
+  <div class="span6">
+    <h3>Invitees</h3>
+    <input id='invitees-typeahead' type="text" placeholder="People Search">
     <%= render partial: 'invitations_panel',
           locals: { invitations: @research_session.invitations } %>
   </div>
