@@ -69,7 +69,7 @@ class PeopleController < ApplicationController
     @last_gift_card = GiftCard.last
     @gift_card = GiftCard.new
     @reservation = Reservation.new person: @person
-    @tags = @person.tag_list
+    @tags = @person.tags.map(&:name)
     @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).where.not(wufoo_formid: nil)
     @twilio_wufoo_formids = @outgoingmessages.pluck(:wufoo_formid).uniq
     @twilio_wufoo_forms = TwilioWufoo.where(id: @twilio_wufoo_formids)
@@ -255,7 +255,7 @@ class PeopleController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_person
-      @person = Person.find(params[:id])
+      @person = Person.includes(:tags,:taggings).find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

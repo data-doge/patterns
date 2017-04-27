@@ -10,9 +10,7 @@
         </tr>
       </thead>
       <tbody id='mini-cart'>
-        <% people.each do |person| %>
-          <%= render partial: 'cart/mini_item', locals: {person: person} %>
-        <% end %>
+        <%= render partial: 'cart/mini_item', collection: people, as: :person %>
       </tbody>
     </thread>
   </table>

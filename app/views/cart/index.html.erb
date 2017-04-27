@@ -15,9 +15,7 @@
         </tr>
       </thead>
       <tbody id='full-cart'>
-        <% @people.each do |person| %>
-          <%= render partial: 'cart/full_item', locals: {person: person} %>
-        <% end %>
+        <%= render partial: 'cart/full_item', collection: @people, as: :person %>
       </tbody>
     </thread>
   </table>

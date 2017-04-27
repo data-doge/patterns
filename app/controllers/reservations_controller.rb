@@ -94,7 +94,7 @@ class ReservationsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_reservation
-      @reservation ||= Reservation.find(params[:id])
+      @reservation ||= Reservation.includes(:tags,:taggings).find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
