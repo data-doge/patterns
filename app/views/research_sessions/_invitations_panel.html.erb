@@ -1,0 +1,20 @@
+<table class="table table-hover invitees" id='dynamic-invitation-panel' >
+  <tbody>
+    <tr><th>Name</th><th>Status</th><th>Attended</th></tr>
+    <% for invitation in @research_session.invitations.includes(:person) do %>
+      <tr>
+        <td><%= link_to invitation.person.full_name, person_path(invitation.person), id: "person-#{invitation.person.id}" %></td>
+        <td>
+          <% invitation.aasm.events(permitted:true).each do |e| %>
+            <%= button_to e.name,
+                  event_research_session_invitations_path(@research_session,invitation,e.name),
+                  method: :post,
+                  remote: true,
+                  class: "btn btn-mini btn-block dynamic-invitations" %>
+          <% end %>
+        </td>
+        <td><%= invitation.aasm_state %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
