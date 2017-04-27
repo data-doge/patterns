@@ -3,6 +3,10 @@ require 'csv'
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy]
 
+  GIFTABLE_TYPES = {
+    'Person' => Person,
+    'Invitation' => Invitation
+  }.freeze
   # GET /gift_cards
   # GET /gift_cards.csv
   def index
@@ -98,11 +102,22 @@ class GiftCardsController < ApplicationController
   # DELETE /gift_cards/1.json
   def destroy
     @gift_card.destroy
-    @gift_card.person.reload
+    @gift_card.giftable.reload
     respond_to do |format|
       format.html { redirect_to :back }
       format.json { head :no_content }
       format.js {}
+    end
+  end
+
+  def modal
+    klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
+    @giftable = klass.find(params[:giftable_id])
+    @gift_card = GiftCard.new
+    @last_gift_card = GiftCard.last || GiftCard.new
+    respond_to do |format|
+      format.html
+      format.js
     end
   end
 

@@ -1,49 +1,7 @@
-<% if @visitor.class.to_s == 'User' %>
-  <div class="btn-group" role="group" aria-label="Invitation Actions">
-    <% @invitation.states(permitted: true).each do |e| %>
-      <%  next unless
-    <%= button_to e[1], research_invitation_path(@invitation), params: {aasm_state: e[0]}, method: :patch,  class: "btn btn-secondary" %>
-    <% end %>
-  </div>
-<% else %>
-  <div id='invitation-actions' class="row-fluid no-gutter">
-    <div class='span6'></div>
-    <div class="span2">
-      <% if @invitation.permitted_events.include?('confirm') %>
-      <%= button_to 'Confirm',
-        confirm_invitations_path(id: @invitation.id,
-                                      token: @visitor.token),
-        method: :post,
-        remote: true,
-        class: "btn btn-success",
-        id: 'confirm' %>
-      <% end %>
-    </div>
-    <div class="span2">
-    <% if @invitation.permitted_events.include?('reschedule') %>
-      <%= button_to 'Change',
-        change_invitations_path(id: @invitation.id,
-                                    token: @visitor.token),
-        method: :post,
-        remote: true,
-        class: "btn btn-warning",
-        id: 'change',
-        data: { confirm: 'Are you sure you need to change this invitation?',
-        disable_with: 'loading...' } %>
-    <% end %>
-    </div>
-    <div class='span2'>
-    <% if @invitation.permitted_events.include?('cancel') %>
-      <%= button_to 'Cancel',
-        cancel_invitations_path(id: @invitation.id,
-                                    token: @visitor.token),
-        method: :post,
-        remote: true,
-        class: "btn btn-danger",
-        id: 'cancel',
-        data: { confirm: 'Are you sure you want to cancel?',
-        disable_with: 'loading...' } %>
-      <% end %>
-    </div>
-  </div>
+<% invitation.aasm.events(permitted:true).each do |e| %>
+            <%= button_to e.name,
+                  research_session_invitations_path(@research_session,invitation,e.name),
+                  method: :post,
+                  remote: true,
+                  class: "btn btn-mini btn-block dynamic-invitations" %>
 <% end %>

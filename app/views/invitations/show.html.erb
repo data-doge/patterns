@@ -6,9 +6,9 @@
 
 <p>
   <strong>Event:</strong>
-  <%= @invitation.event.title %>
+  <%= @invitation.title %>
   </br>
-  <%= @invitation.event.description %>
+  <%= @invitation.description %>
 </p>
 
 <p>
@@ -19,11 +19,6 @@
 <p>
   <strong>Created by:</strong>
   <%= @invitation.user.name %>
-</p>
-
-<p>
-  <strong>Time Slot:</strong>
-  <%= @invitation.time_slot.to_weekday_and_time %>
 </p>
 
 <%= render partial: 'actions', locals: {invitation: @invitation}  %>
@@ -47,4 +42,4 @@
   </div>
 </div>
 
-<%= button_to 'Back', Invitations_path %>
+<%= button_to 'Back', :back %>

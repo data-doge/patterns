@@ -63,14 +63,24 @@ class GiftCard < ActiveRecord::Base
   # Validation to limit 1 signup per person
   validates_uniqueness_of :reason, scope: :person_id, if: "reason == 'signup'"
 
+  validate :giftable_person_ownership
   # ransacker :created_at, type: :date do
   #   Arel.sql('date(created_at)')
   # end
 
-  def gifted_for
-    if giftable_id
-      klass = giftable_type.constantize
-      klass.find(giftable_id)
+  def giftable_person_ownership
+    return true if giftable.nil?
+
+    giftable.respond_to?(:person_id) ? person_id == giftable.person_id : false
+  end
+
+  def giftable_name
+    return 'None' if giftable.nil?
+
+    if giftable.respond_to?(:full_name)
+      return giftable.full_name
+    elsif giftable.respond_to?(:full_name)
+      return giftable.title
     end
   end
 

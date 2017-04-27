@@ -125,7 +125,8 @@ class Person < ActiveRecord::Base
   end
 
   def gift_card_total
-    total = gift_cards.sum(:amount_cents)
+    end_of_last_year = Date.today.beginning_of_year - 1.day
+    total = gift_cards.where('created_at > ?',end_of_last_year).sum(:amount_cents)
     Money.new(total, 'USD')
   end
 

@@ -57,9 +57,7 @@ class InvitationsController < ApplicationController
   end
 
   def show
-    visitor
-    @comment = Comment.new commentable: @invitation
-    @gift_card = GiftCard.new giftable: @invitation
+    redirect_to url_for(@invitation.research_session)
   end
 
   def edit; end

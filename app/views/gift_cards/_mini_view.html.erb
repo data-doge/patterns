@@ -1,0 +1,18 @@
+<table class="table table-striped gift-cards">
+  <thead>
+    <tr>
+      <th>proxy_id</th>
+      <th>amount</th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody id='mini-gift-card'>
+    <%= render partial: 'gift_cards/mini_gift_card',
+          collection: gift_cards,
+          as: :gift_card %>
+  </tbody>
+</thread>
+</table>
+

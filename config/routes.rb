@@ -1,9 +1,8 @@
 Logan::Application.routes.draw do
   resources :gift_cards do
     collection do
-      get 'recent_signups',
-        action: :recent_signups,
-        as: :recent_signups
+      get 'recent_signups', action: :recent_signups, as: :recent_signups
+      get 'modal/:giftable_type/:giftable_id', action: :modal, as: :modal
     end
   end
 
@@ -14,6 +13,9 @@ Logan::Application.routes.draw do
     end
   end
 
+  resources :invitations do
+    resources :comments, controller: 'comments'
+  end
 
   resources :research_sessions, path: :sessions, has_many: :invitations do
     resources :comments, controller: 'comments'
