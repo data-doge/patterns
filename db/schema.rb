@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170423161751) do
+ActiveRecord::Schema.define(version: 20170427150558) do
 
   create_table "applications", force: :cascade do |t|
     t.string   "name",         limit: 255
@@ -105,6 +105,9 @@ ActiveRecord::Schema.define(version: 20170423161751) do
     t.integer  "research_session_id", limit: 4
     t.string   "aasm_state",          limit: 255
   end
+
+  add_index "invitations", ["person_id"], name: "index_invitations_on_person_id", using: :btree
+  add_index "invitations", ["research_session_id"], name: "index_invitations_on_research_session_id", using: :btree
 
   create_table "mailchimp_exports", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -201,6 +204,8 @@ ActiveRecord::Schema.define(version: 20170423161751) do
     t.string   "sms_description", limit: 255
     t.integer  "session_type",    limit: 4,   default: 1
   end
+
+  add_index "research_sessions", ["user_id"], name: "index_research_sessions_on_user_id", using: :btree
 
   create_table "reservations", force: :cascade do |t|
     t.integer  "person_id",    limit: 4
