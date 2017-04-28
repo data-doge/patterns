@@ -25,7 +25,7 @@ class TaggingsController < ApplicationController
     klass = TAGGABLE_TYPES.fetch(params[:taggable_type])
     res = false
     if klass && params[:tag].present?
-      obj = klass.includes(:tags,:taggings).find(params[:taggable_id])
+      obj = klass.includes(:tags, :taggings).find(params[:taggable_id])
       tag = params[:tag]
       # if we want owned tags. Not sure we do...
       # res = current_user.tag(obj,with: params[:tagging][:name])

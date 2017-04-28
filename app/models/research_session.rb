@@ -26,6 +26,7 @@ class ResearchSession < ActiveRecord::Base
   belongs_to :user
   has_many :invitations
   has_many :people, through: :invitations
+  has_many :comments, as: :commentable, dependent: :destroy
 
   accepts_nested_attributes_for :invitations, reject_if: :all_blank, allow_destroy: true
 
@@ -36,7 +37,13 @@ class ResearchSession < ActiveRecord::Base
     :user_id,
     presence: true
 
-  default_scope { includes(:invitations) }
+  default_scope { includes(:invitations).order(:start_datetime)}
+  scope :today, -> { where(start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day) }
+  scope :future, -> { where('start_datetime > ?',
+                      Time.zone.today.end_of_day) }
+  scope :past, -> { where('start_datetime < ?',
+                      Time.zone.today.beginning_of_day) }
+
 
   def people_name_and_id
     people.map do |i|

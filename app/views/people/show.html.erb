@@ -110,9 +110,15 @@
   </div>
 
   <div class="span6">
-    <h3>Location</h3>
-    <a href="https://maps.google.com?q=<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>" target="_blank" title="View in Google Maps"><img src="https://maps.googleapis.com/maps/api/staticmap?markers=|<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>&amp;zoom=14&amp;size=570x200&amp;sensor=false"></a>
-    <!-- <img src="https://maps.googleapis.com/maps/api/streetview?size=570x200&amp;location=<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>&amp;sensor=false"> -->
+    <div class='row'>
+      <h3>Location</h3>
+      <a href="https://maps.google.com?q=<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>" target="_blank" title="View in Google Maps"><img src="https://maps.googleapis.com/maps/api/staticmap?markers=|<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>&amp;zoom=14&amp;size=570x200&amp;sensor=false"></a>
+    </div>
+    <div class='row'>
+      <h3> Research Sessions</h3>
+      <%= render partial: 'research_sessions/mini_view',
+            locals: {person: @person} %>
+    </div>
   </div>
 </div>
 
@@ -127,7 +133,9 @@
     <% end %>
 
     <div id="comments">
-      <%= render partial: 'comment', collection: @person.comments.order("created_at DESC") %>
+      <%= render partial: 'comments/embed',
+            collection: @person.comments.order("created_at DESC"),
+            as: :comment %>
     </div>
   </div>
 

@@ -1,5 +1,5 @@
 <tr class="gift-card" id="gift-card-<%= gift_card.id %>">
-    <td><%= gift_card.proxy_id %></td>
+    <td><%= best_in_place gift_card, :proxy_id %></td>
     <td><%= humanized_money_with_symbol gift_card.amount %></td>
     <td><%= link_to 'Show', gift_card %></td>
     <td><%= link_to 'Edit', edit_gift_card_path(gift_card) %></td>

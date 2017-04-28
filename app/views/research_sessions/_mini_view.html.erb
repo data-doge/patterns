@@ -1,0 +1,87 @@
+<div id='sessions_tags'>
+<table>
+  <tr>
+    <th>Count</th>
+    <th>Tag</th>
+  </tr>
+
+  <% person.research_sessions.tag_counts.limit(10).each do |tag| %>
+    <tr class='tag' id='tag-<%=tag.id%>'>
+        <td><span class='badge'><%=tag.taggings_count%></span></td>
+        <td><%= tag.name %></td>
+    </tr>
+  <% end %>
+</table>
+</div>
+
+<div id='recent-sessions'>
+  <div id='future-sessions'>
+    <h4>Future Sessions</h4>
+    <table class='table table-striped'>
+      <tr>
+        <th>title</th>
+        <th>date</th>
+        <th>user</th>
+      </tr>
+    <% person.research_sessions.future.limit(5).each do |session| %>
+      <tr>
+        <td>
+          <%= link_to session.title, session %>
+        </td>
+        <td>
+          <%= session.start_datetime.to_s :short %>
+        </td>
+        <td>
+          <%= session.user.name %>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+  </div>
+  <div id='today-sessions'>
+    <h4>Today Sessions</h4>
+    <table class='table table-striped'>
+      <tr>
+        <th>title</th>
+        <th>date</th>
+        <th>user</th>
+      </tr>
+    <% person.research_sessions.today.each do |session| %>
+     <tr>
+        <td>
+          <%= link_to session.title, session %>
+        </td>
+        <td>
+          <%= session.start_datetime.to_s :short %>
+        </td>
+        <td>
+          <%= session.user.name %>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+  </div>
+  <div id='past-sessions'>
+    <h4>Past Sessions</h4>
+    <table class='table table-striped'>
+      <tr>
+        <th>title</th>
+        <th>date</th>
+        <th>user</th>
+      </tr>
+    <% person.research_sessions.past.limit(5).each do |session| %>
+       <tr>
+        <td>
+          <%= link_to session.title, session %>
+        </td>
+        <td>
+          <%= session.start_datetime.to_s :short %>
+        </td>
+        <td>
+          <%= session.user.name %>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+  </div>
+</div>
