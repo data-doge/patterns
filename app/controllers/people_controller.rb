@@ -70,9 +70,10 @@ class PeopleController < ApplicationController
     @gift_card = GiftCard.new
     @reservation = Reservation.new person: @person
     @tags = @person.tags.map(&:name)
-    @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).where.not(wufoo_formid: nil)
+    @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
     @twilio_wufoo_formids = @outgoingmessages.pluck(:wufoo_formid).uniq
     @twilio_wufoo_forms = TwilioWufoo.where(id: @twilio_wufoo_formids)
+    @allmessages =  TwilioMessage.where(to: @person.normalized_phone_number).or(from: @person.normalized_phone_number).limit(10)
   end
 
   # GET /people/new

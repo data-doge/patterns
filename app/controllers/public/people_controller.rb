@@ -45,6 +45,8 @@ class Public::PeopleController < ApplicationController
 
     if @person && @person.id == d_params[:person_id].to_i
       @person.deactivate!('email')
+      @person.save
+      ::AdminMailer.deactivate(person: @person).deliver_later
     else
       redirect_to root_path
     end

@@ -39,6 +39,24 @@ class Invitation < ActiveRecord::Base
     :sms_description,
     :duration, to: :research_session
 
+
+  scope :today, -> { joins(:research_session).
+    where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day })
+  }
+
+  scope :future, -> { joins(:research_session).
+    where('research_sessions.start_datetime > ?',
+    Time.zone.today.end_of_day)
+  }
+
+  scope :past, -> { joins(:research_session).
+    where('research_sessions.start_datetime < ?',
+    Time.zone.today.beginning_of_day)
+  }
+
+  scope :upcoming, ->(d = 7) { joins(:research_session).
+    where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days})
+  }
   # invitations can move through states
   # necessary for text messaging bits in the future
   aasm do
@@ -98,7 +116,7 @@ class Invitation < ActiveRecord::Base
   end
 
   def send_invite_email
-    InvitationNotifier.invite(
+   ::PersonMailer.invite(
       email_address: person.email_address,
       invitation:  self,
       person: person
@@ -113,34 +131,27 @@ class Invitation < ActiveRecord::Base
   # these three could definitely be refactored. too much copy-paste
   # also rename for nomenclature convention
   def notify_about_confirmation
-    InvitationNotifier.confirm(email_address: user.email, invitation: self).deliver_later
+    ::PersonMailer.confirm(email_address: user.email, invitation: self).deliver_later
     case person.preferred_contact_method.upcase
     when 'SMS'
       ::InvitationConfirmSms.new(to: person, invitation: self).send
     when 'EMAIL'
-      InvitationNotifier.confirm(email_address: person.email_address, invitation: self).deliver_later
+      ::PersonMailer.confirm(email_address: person.email_address, invitation: self).deliver_later
     end
   end
 
   def notify_about_cancellation
-    InvitationNotifier.cancel(email_address: user.email, invitation: self).deliver_later
+    # notify the user
+    ::PersonMailer.cancel(email_address: user.email, invitation: self).deliver_later
+
     case person.preferred_contact_method.upcase
     when 'SMS'
       ::InvitationCancelSms.new(to: person, invitation: self).send
     when 'EMAIL'
-      InvitationNotifier.cancel(email_address: person.email_address, invitation: self).deliver_later
+      ::PersonMailer.cancel(email_address: person.email_address, invitation: self).deliver_later
     end
   end
 
-  def notify_about_reschedule
-    InvitationNotifier.reschedule(email_address: user.email, invitation: self).deliver_later
-    case person.preferred_contact_method.upcase
-    when 'SMS'
-      ::InvitationRescheduleSms.new(to: person, invitation: self).send
-    when 'EMAIL'
-      InvitationNotifier.reschedule(email_address: person.email_address, invitation: self).deliver_later
-    end
-  end
 
   def permitted_events
     aasm.events.map(&:name).map(&:to_s)

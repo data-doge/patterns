@@ -86,8 +86,8 @@ class User < ActiveRecord::Base
 
   def send_session_reminder
     return if research_sessions.for_today.size.zero?
-    ReservationNotifier.remind(
-      sessions:  research_sessions.for_today,
+    ::PersonMailer.remind(
+      sessions:  research_sessions.upcoming,
       person: email
     ).deliver_later
   end

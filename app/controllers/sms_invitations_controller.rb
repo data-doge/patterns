@@ -17,27 +17,16 @@ class SmsInvitationsController < ApplicationController
       # do the remove people thing.
       person.deactivate!('sms')
       person.save!
+      ::AdminMailer.deactivate(person: person).deliver_later
       ::RemoveSms.new(to: person).send
+
     elsif confirm? # confirmation for the days invitations
-      if !person.invitations.for_today_and_tomorrow.empty?
-        person.invitations.for_today_and_tomorrow.each(&:confirm!)
-      else
-        ::InvitationReminderSms.new(to: person, invitations: person.invitations.for_today).send
-      end
+      do_confirm
     elsif cancel?
-      if !person.invitations.for_today_and_tomorrow.empty?
-        person.invitations.for_today_and_tomorrow.each(&:cancel!)
-      else
-        ::InvitationReminderSms.new(to: person, invitations: person.invitations.for_today).send
-      end
-    elsif change?
-      if !person.invitations.for_today_and_tomorrow.empty?
-        person.invitations.for_today_and_tomorrow.each(&:reschedule!)
-      else
-        ::InvitationReminderSms.new(to: person, invitations: person.invitations.for_today).send
-      end
-    elsif calendar?
-      ::InvitationReminderSms.new(to: person, invitations: person.invitations.for_today_and_tomorrow).send
+      do_cancel
+    elsif info?
+      invitations = person.invitations.upcoming
+      ::InvitationReminderSms.new(to: person, invitations: ).send
     end
     # twilio wants an xml response.
     render text: '<?xml version="1.0" encoding="UTF-8" ?><Response></Response>'
@@ -61,7 +50,7 @@ class SmsInvitationsController < ApplicationController
 
     def send_new_invitation_notifications(person, invitation)
       ::InvitationSms.new(to: person, invitation: invitation).send
-      InvitationNotifier.notify(email_address: invitation.user.email, invitation: invitation).deliver_later
+      ::PersonMailer.notify(email_address: invitation.user.email, invitation: invitation).deliver_later
     end
 
     def send_decline_notifications(person, event)
@@ -78,19 +67,39 @@ class SmsInvitationsController < ApplicationController
 
     # perhaps a fuzzy_text here?
     def confirm?
-      message.downcase.include?('confirm')
+      if message.downcase =~ /^ok|confirm|yes$/
+        session[:confirm] = true
+      else
+        sessions[:confirm] =  false
+      end
     end
 
     def cancel?
-      message.downcase.include?('cancel')
+      if message.downcase =~ /^no|cancel|nah|can\'t$/
+        session[:cancel] = true
+      else
+        sessions[:cancel] =  false
+      end
     end
 
-    def change?
-      message.downcase.include?('change') || message.downcase.include?('reschedule')
+    def info?
+      message.downcase.include?('info')
     end
 
-    def calendar?
-      message.downcase.include?('calendar')
+    def do_cancel
+      if person.research_sessions.upcoming(100).size == 1
+        person.research_sessions.upcoming(100).first.cancel!
+      else
+        # which one do we want to cancel?
+      end
+    end
+
+    def do_confirm
+      if person.research_sessions.upcoming(100).size == 1
+        person.research_sessions.upcoming(100).first.confirm!
+      else
+        # which one do we want to confirm?
+      end
     end
 
     def remove?

@@ -73,7 +73,7 @@ class Person < ActiveRecord::Base
   after_update  :sendToMailChimp
   after_create  :sendToMailChimp
   after_create  :update_neighborhood
-  after_create  :send_notifications
+  after_create  :send_new_person_notifications
 
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -337,17 +337,17 @@ class Person < ActiveRecord::Base
   def self.send_all_reminders
     # this is where reservation_reminders
     # called by whenever in /config/schedule.rb
-    Person.all.find_each(&:send_reservation_reminder)
+    Person.all.find_each(&:send_invitation_reminder)
   end
 
-  def send_reservation_reminder
+  def send_invitation_reminder
     return if invitations.for_today_and_tomorrow.size.zero?
     case preferred_contact_method.upcase
     when 'SMS'
-      ::ReservationReminderSms.new(to: self, reservations: invitations.for_today_and_tomorrow).send
+      ::InvitationReminderSms.new(to: self, invitations: invitations.for_today_and_tomorrow).send
     when 'EMAIL'
-      ReservationNotifier.remind(
-        reservations:  invitations.for_today_and_tomorrow.to_a,
+      ::PersonMailer.remind(
+        invitations:  invitations.upcoming.to_a,
         email_address: email_address
       ).deliver_later
     end
@@ -368,10 +368,10 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def send_notifications
+  def send_new_person_notifications
     User.where(new_person_notification: true).find_each do |user|
       email = user.email_address
-      NewPersonMailer.notify(email_address: email, person: self).deliver_later
+      ::AdminMailer.new_person_notify(email_address: email, person: self).deliver_later
     end
   end
 

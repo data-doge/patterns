@@ -38,12 +38,15 @@ class ResearchSession < ActiveRecord::Base
     presence: true
 
   default_scope { includes(:invitations).order(:start_datetime)}
+
   scope :today, -> { where(start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day) }
+
   scope :future, -> { where('start_datetime > ?',
                       Time.zone.today.end_of_day) }
   scope :past, -> { where('start_datetime < ?',
                       Time.zone.today.beginning_of_day) }
 
+  scope :upcoming, ->(d = 7) { where(start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days)}
 
   def people_name_and_id
     people.map do |i|

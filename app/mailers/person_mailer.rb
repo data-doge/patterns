@@ -1,4 +1,4 @@
-class InvitationNotifier < ApplicationMailer
+class PersonMailer < ApplicationMailer
   def invite(email_address:, invitation:, person:)
     admin_email = ENV['MAILER_SENDER']
     @email_address = email_address
