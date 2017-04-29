@@ -63,16 +63,14 @@ class InvitationsController < ApplicationController
   def edit; end
 
   def event
-    if params[:event] != 'attend' # can set attendance in the past
-      render false && return unless @invitation.start_datetime > Time.current
-    end
     events = @invitation.aasm.events(permitted: true).map(&:name).map(&:to_s)
     event = events.detect { |a| a == params[:event] }
     if @invitation.send(event) && @invitation.save
       flash[:notice] = "#{event.capitalize} for #{@invitation.person.full_name}"
     else
-      flash[:alert] = 'Error'
+      flash[:alert] = 'Error, cannot update invitation'
     end
+
     respond_to do |format|
       # /sessions/:research_session_id/invitations_panel
       format.js { render text: "$('#dynamic-invitation-panel').load('/sessions/#{@invitation.research_session.id}/invitations_panel.html');" }

@@ -125,6 +125,8 @@ gem 'gsm_encoder'
 gem 'daemons'
 gem 'delayed_job_active_record'
 
+gem "delayed_job_web"
+
 # for generating unique tokens for Person
 gem 'has_secure_token'
 

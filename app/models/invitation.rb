@@ -70,9 +70,8 @@ class Invitation < ActiveRecord::Base
     state :cancelled # means that they cancelled ahead of time
     state :missed # means they didn't cancel
     state :attended
-    # state :rescheduled
 
-    event :invite, before_commit: :send_invitation do
+    event :invite, before_commit: :send_invitation, guard: :in_future? do
       transitions from: :created, to: :invited
     end
 
@@ -88,15 +87,12 @@ class Invitation < ActiveRecord::Base
       transitions from: %i[invited reminded confirmed], to: :cancelled
     end
 
-    # event :reschedule, after_commit: :notify_about_reschedule do
-    #   transitions from: %i[invited reminded confirmed], to: :rescheduled
-    # end
-
     event :attend do
       transitions to: :attended
     end
 
     event :miss do
+      # should this be able to transition from "created" ?
       transitions from: %i[invited reminded confirmed], to: :missed
     end
   end
@@ -156,7 +152,7 @@ class Invitation < ActiveRecord::Base
   end
 
   def permitted_events
-    aasm.events.map(&:name).map(&:to_s)
+    aasm.events.(permitted: true).map(&:name).map(&:to_s)
   end
 
   def permitted_states
@@ -167,6 +163,10 @@ class Invitation < ActiveRecord::Base
     permitted_events.each_with_index.map do |e, i|
       [permitted_states[i], e]
     end
+  end
+
+  def in_future?
+    Time.zone.now < start_datetime
   end
 
   def human_state

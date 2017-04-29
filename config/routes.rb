@@ -165,7 +165,7 @@ Logan::Application.routes.draw do
   end
   # post "people/create_sms"
 
-
+  match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
   root to: 'dashboard#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
