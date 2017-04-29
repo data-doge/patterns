@@ -17,7 +17,6 @@ class PersonMailer < ApplicationMailer
          bcc: admin_email,
          subject: @invitation.title,
          content_type: 'multipart/mixed')
-
   end
 
   def notify(email_address:, invitation:)

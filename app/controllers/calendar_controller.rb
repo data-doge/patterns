@@ -27,10 +27,10 @@ class CalendarController < ApplicationController
 
   def research_sessions # should be different for user and person, maybe?
     @research_sessions = visitor.
-                     research_sessions.includes(:invitations).
-                     where('start_datetime BETWEEN ? AND ?',
-                       cal_params[:start],
-                       cal_params[:end])
+                         research_sessions.includes(:invitations).
+                         where('start_datetime BETWEEN ? AND ?',
+                           cal_params[:start],
+                           cal_params[:end])
   end
 
   def show_actions

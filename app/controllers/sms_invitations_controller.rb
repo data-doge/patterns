@@ -3,6 +3,7 @@ class SmsInvitationsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   skip_before_action :authenticate_user!
   before_action :person
+
   def create
     save_twilio_message # see receive_text_controller
 
@@ -20,9 +21,7 @@ class SmsInvitationsController < ApplicationController
     elsif cancel?
       do_cancel
     elsif calendar?
-      # ten upcoming in the next 100 days. excessive.
-      invitations = person.invitations.upcoming(100).limit(10).to_a
-      ::InvitationReminderSms.new(to: @person, invitations: invitations).send
+      do_calendar
     end
     # twilio wants an xml response.
     render text: '<?xml version="1.0" encoding="UTF-8" ?><Response></Response>'
@@ -78,7 +77,7 @@ class SmsInvitationsController < ApplicationController
     end
 
     def cancel? # can't use the word "Cancel!!!"
-      #https://support.twilio.com/hc/en-us/articles/223134027-Twilio-support-for-STOP-BLOCK-and-CANCEL-SMS-STOP-filtering-
+      # https://support.twilio.com/hc/en-us/articles/223134027-Twilio-support-for-STOP-BLOCK-and-CANCEL-SMS-STOP-filtering-
       if message.downcase =~ /^no|nah|can\'t$/
         session[:cancel] = true
       elsif session[:cancel] # in a cancel session
@@ -107,7 +106,7 @@ class SmsInvitationsController < ApplicationController
         res = get_numbers_or_all
         case res
         when :all
-          inv.each{ |i| i.cancel! }
+          inv.each(&:cancel!)
           session[:cancel] = false
         when false
           ::CustomSms.new(to: @person, msg: 'Please enter either a number or "all" to cancel.').send
@@ -136,7 +135,7 @@ class SmsInvitationsController < ApplicationController
         res = get_numbers_or_all
         case res
         when :all
-          inv.each{ |i| i.confirm! }
+          inv.each(&:confirm!)
           session[:confirm] = false
         when false
           ::CustomSms.new(to: @person, msg: 'Please enter either a number or "all" to confirm.').send
@@ -150,6 +149,14 @@ class SmsInvitationsController < ApplicationController
         session[:confirm] =  true
         Rails.logger.info('starting confirming!')
       end
+    end
+
+    def do_calendar
+      session[:confirm] = false # ending previous sessions
+      session[:cancel] =  false
+      # ten upcoming in the next 100 days. excessive.
+      invitations = person.invitations.upcoming(100).limit(10).to_a
+      ::InvitationReminderSms.new(to: @person, invitations: invitations).send
     end
 
     def do_remove
