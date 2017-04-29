@@ -39,23 +39,26 @@ class Invitation < ActiveRecord::Base
     :sms_description,
     :duration, to: :research_session
 
-
-  scope :today, -> { joins(:research_session).
-    where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day })
+  scope :today, -> {
+    joins(:research_session).
+      where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day })
   }
 
-  scope :future, -> { joins(:research_session).
-    where('research_sessions.start_datetime > ?',
-    Time.zone.today.end_of_day)
+  scope :future, -> {
+    joins(:research_session).
+      where('research_sessions.start_datetime > ?',
+        Time.zone.today.end_of_day)
   }
 
-  scope :past, -> { joins(:research_session).
-    where('research_sessions.start_datetime < ?',
-    Time.zone.today.beginning_of_day)
+  scope :past, -> {
+    joins(:research_session).
+      where('research_sessions.start_datetime < ?',
+        Time.zone.today.beginning_of_day)
   }
 
-  scope :upcoming, ->(d = 7) { joins(:research_session).
-    where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days})
+  scope :upcoming, ->(d = 7) {
+    joins(:research_session).
+      where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days })
   }
   # invitations can move through states
   # necessary for text messaging bits in the future
@@ -67,7 +70,7 @@ class Invitation < ActiveRecord::Base
     state :cancelled # means that they cancelled ahead of time
     state :missed # means they didn't cancel
     state :attended
-    #state :rescheduled
+    # state :rescheduled
 
     event :invite, before_commit: :send_invitation do
       transitions from: :created, to: :invited
@@ -116,7 +119,7 @@ class Invitation < ActiveRecord::Base
   end
 
   def send_invite_email
-   ::PersonMailer.invite(
+    ::PersonMailer.invite(
       email_address: person.email_address,
       invitation:  self,
       person: person
@@ -151,7 +154,6 @@ class Invitation < ActiveRecord::Base
       ::PersonMailer.cancel(email_address: person.email_address, invitation: self).deliver_later
     end
   end
-
 
   def permitted_events
     aasm.events.map(&:name).map(&:to_s)

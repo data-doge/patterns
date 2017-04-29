@@ -89,6 +89,7 @@ class ResearchSessionsController < ApplicationController
         params[:start_datetime] = Time.zone.parse(params[:start_datetime])
       end
     end
+
     def research_session_params
       params.require(:research_session).permit(
         :description,

@@ -67,21 +67,20 @@ class InvitationsController < ApplicationController
       render false && return unless @invitation.start_datetime > Time.current
     end
     events = @invitation.aasm.events(permitted: true).map(&:name).map(&:to_s)
-    event = events.detect{|a| a == params[:event] }
+    event = events.detect { |a| a == params[:event] }
     if @invitation.send(event) && @invitation.save
       flash[:notice] = "#{event.capitalize} for #{@invitation.person.full_name}"
     else
-      flash[:alert] = "Error"
+      flash[:alert] = 'Error'
     end
     respond_to do |format|
       # /sessions/:research_session_id/invitations_panel
       format.js { render text: "$('#dynamic-invitation-panel').load('/sessions/#{@invitation.research_session.id}/invitations_panel.html');" }
-      format.json {
+      format.json do
         { invitation_id: @invitation.id, state: @invitation.aasm_state }
-      }
+      end
     end
   end
-
 
   # these are our methods for people and users to edit invitations
   def confirm
@@ -95,9 +94,9 @@ class InvitationsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to calendar_path(token: @visitor.token, invitation_id: @invitation.id) }
       format.js { render text: "$('#invitationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
-      format.json {
+      format.json do
         { invitation_id: @invitation.id, state: @invitation.aasm_state }
-      }
+      end
     end
   end
 
@@ -111,11 +110,13 @@ class InvitationsController < ApplicationController
     respond_to do |format|
       # where to redirect for person?
       format.html { redirect_to calendar_path(token: @visitor.token, invitation_id: @invitation.id) }
-      format.js { render text: "$('#invitationModal').modal('hide');
-        $('#calendar').fullCalendar( 'refetchEvents' );" }
-      format.json {
+      format.js do
+        render text: "$('#invitationModal').modal('hide');
+        $('#calendar').fullCalendar( 'refetchEvents' );"
+      end
+      format.json do
         { invitation_id: @invitation.id, state: @invitation.aasm_state }
-      }
+      end
     end
   end
 
@@ -142,14 +143,13 @@ class InvitationsController < ApplicationController
   end
 
   private
+
     def set_invitation
       @invitation ||= Invitation.find_by(id: params[:id])
     end
 
     def set_visitor
-      if params[:token].present?
-        @person = Person.find_by(token: params[:token])
-      end
+      @person = Person.find_by(token: params[:token]) if params[:token].present?
       # if we don't have a person, see if we have a user's token.
       # thus we can provide a feed without auth1
       visitor # sets our visitor object

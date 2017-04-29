@@ -4,7 +4,7 @@ class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy]
 
   GIFTABLE_TYPES = {
-    'Person' => Person,
+    'Person'     => Person,
     'Invitation' => Invitation
   }.freeze
   # GET /gift_cards
