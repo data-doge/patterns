@@ -11,28 +11,25 @@ class InvitationReminderSms < ApplicationSms
 
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def generate_res_msgs
-    msg = "You have #{res_count} invitation#{res_count > 1 ? 's': ''} soon.\n"
-    invitations.each do |r|
-      next if r.end_datetime < Time.current # don't remind people of past events
-      msg +=  "#{r.description} on #{r.start_datetime_human} for #{r.duration / 60} minutes with #{r.user.name} tel: #{r.user.phone_number} \n"
+    msg = "You have #{inv_count} session#{inv_count > 1 ? 's': ''} soon.\n"
+    invitations.each do |inv|
+      next if inv.end_datetime < Time.current # don't remind people of past events
+      msg +=  "#{inv.sms_description} on #{inv.start_datetime_human} for #{inv.duration / 60} minutes with #{inv.user.name} tel: #{inv.user.phone_number} \n"
     end
-    msg += "Reply 'Confirm' to confirm them all\n"
-    msg += "Reply 'Cancel' to cancel them all\n"
-    msg += "Reply 'Change' to request to reschedule\n"
-    msg += "Reply 'Calendar' to see your schedule\n"
-    msg += "You can always check online here:\n "
-    msg += "#{calendar_url(token: to.token)}\n"
+    msg += "Reply 'OK' to confirm\n"
+    msg += "Reply 'No' to cancel\n"
+    msg += "Reply 'Calendar' to see your upcoming sessions\n"
     msg += 'Thanks!'
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-  def res_count
+  def inv_count
     @invitations.size
   end
 
   def body
     if @invitations.blank?
-      %(You have no invitations for today or tomorrow! )
+      %(You have no upcoming sessions.)
     else
       generate_res_msgs
     end

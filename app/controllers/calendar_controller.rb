@@ -13,63 +13,24 @@ class CalendarController < ApplicationController
     redirect_to root_url unless visitor
   end
 
-  def feed
-    if visitor
-      # TODO: refactor into calendarable.
-      calendar = Icalendar::Calendar.new
+  def feed # TODO: refactor into calendarable.
+    calendar = Icalendar::Calendar.new
+    case visitor.class.to_s
+    when 'Person'
       visitor.invitations.each { |r| calendar.add_event(r.to_ics) }
+    when 'User'
       visitor.research_sessions.each { |e| calendar.add_event(e.to_ics) }
-      calendar.publish
-      render text: calendar.to_ical
-    else
-      redirect_to root_url
     end
+    calendar.publish
+    render text: calendar.to_ical
   end
 
-  def invitations # should be different for user and person, maybe?
-    if visitor
-      @invitations = visitor.
-                     invitations.joins(:research_session).
-                     where('research_session.date BETWEEN ? AND ?',
+  def research_sessions # should be different for user and person, maybe?
+    @research_sessions = visitor.
+                     research_sessions.includes(:invitations).
+                     where('start_datetime BETWEEN ? AND ?',
                        cal_params[:start],
                        cal_params[:end])
-    else
-      redirect_to root_url
-    end
-  end
-
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-  def event_slots
-    # events and their time slots.
-    # TODO: refactor into user and person models with the same interface
-    if visitor
-      events = visitor.
-               invitations.
-               includes(event: :time_slots).
-               where('date BETWEEN ? AND ?', cal_params[:start], cal_params[:end]).
-               map(&:event).compact
-      slots = []
-      events.each do |e|
-        if visitor.class.to_s == 'Person'
-          e.available_time_slots(visitor).each { |ts| slots.push ts }
-        else
-          e.available_time_slots.each { |ts| slots.push ts }
-        end
-      end
-      @objs = events + slots
-    else
-      redirect_to root_url
-    end
-  end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
-
-  def events
-    redirect_to root_url unless current_user
-    @events = current_user.
-              events.
-              joins(:event_invitation).
-              includes(:session).
-              where('session.date BETWEEN ? AND ?', cal_params[:start], cal_params[:end])
   end
 
   def show_actions

@@ -10,7 +10,7 @@ class IinvitationConfirmSms < ApplicationSms
   end
 
   def body
-    "You have confirmed a #{duration} minute interview for #{selected_time}, with #{invitation.user.name}. \nTheir number is #{invitation.user.phone_number}"
+    "You are confirmed a #{duration} minute session for #{selected_time}, with #{invitation.user.name}. \nTheir number is #{invitation.user.phone_number}"
   end
 
   def selected_time

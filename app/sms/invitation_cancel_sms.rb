@@ -10,14 +10,14 @@ class InvitationCancelSms < ApplicationSms
   end
 
   def body
-    "The #{duration} minute interview for #{selected_time}, with #{invitation.user.name} has been cancelled"
+    %Q(You have cancelled your session with #{usename} at #{selected_time}.\n Thanks for the heads-up!)
   end
 
   def selected_time
     invitation.start_datetime_human
   end
 
-  def duration
-    invitation.duration / 60
+  def username
+    invitation.user.name
   end
 end
