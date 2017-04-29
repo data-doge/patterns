@@ -1,29 +1,29 @@
 <p>Hi <% @invitations.first.person.first_name %>,</p>
-<p><%= @invitations.size %> interview<%= @invitations.size > 1 ? 's have' : ' has' %> been booked for you today.</p>
+<p><%= @invitations.size %> session<%= @invitations.size > 1 ? 's have' : ' has' %> are scheduled for you:</p>
 
 <% @invitations.each do |r| %>
-   %{<div class='invitation'>
-      <p><%= r.description %> on <%= r.to_weekday_and_time %> for <%= r.duration / 60 %> minutes \n with <%= r.user.name %> tel: <%= r.user.phone_number %>"</p>
-        <p>click to confirm, cancel or ask to reschedule below.</p>
+   <div class='invitation'>
+      <p><%= r.description %> on <%= r.start_datetime_human %> for <%= r.duration / 60 %> minutes \n with <%= r.user.name %> tel: <%= r.user.phone_number %>"</p>
+
         <ul>
           <li>
-            <%= link_to "Confirm", confirm_invitations_url(id:r.id,token:r.person.token) %>
+            <%= link_to "Confirm",
+                  remote_confirm_research_session_invitations_url(
+                    research_session_id: r.research_session.id,
+                    id:r.id,
+                    token:r.person.token) %>
 
           </li>
           <li>
-            <%= link_to "Cancel", cancel_invitations_url(id:r.id,token:r.person.token) %>
-          </li>
-          <li>
-            <%= link_to "Change", change_invitations_url(id:r.id,token:r.person.token) %>
+            <%= link_to "Cancel",
+                  remote_cancel_research_session_invitations_url(
+                    research_session_id: r.research_session.id,
+                    id:r.id,
+                    token:r.person.token) %>
+
           </li>
         </ul>
-      </div>  %>
+      </div>
 <% end %>
 
-<p>
-You can always check your schedule here: <%=link_to "Calendar",calendar_url(token: @invitations.first.person.token) %>
-</p>
-
-<p>Thanks!,</p>
-<p><%= ENV['TEAM_NAME'] %></p>
-
+<%= render partial: 'footer', locals: { person: @invitations.first.person } %>

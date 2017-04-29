@@ -118,6 +118,12 @@ class Person < ActiveRecord::Base
 
   ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number
 
+  def self.send_all_reminders
+    # this is where reservation_reminders
+    # called by whenever in /config/schedule.rb
+    Person.all.find_each(&:send_invitation_reminder)
+  end
+
   def signup_gc_sent
     signup_cards = gift_cards.where(reason: 1)
     return true unless signup_cards.empty?
@@ -125,7 +131,7 @@ class Person < ActiveRecord::Base
   end
 
   def gift_card_total
-    end_of_last_year = Date.today.beginning_of_year - 1.day
+    end_of_last_year = Time.zone.today.beginning_of_year - 1.day
     total = gift_cards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
     Money.new(total, 'USD')
   end
@@ -334,23 +340,8 @@ class Person < ActiveRecord::Base
     [address_1, address_2, city, state, postal_code].reject(&:blank?).join(', ')
   end
 
-  def self.send_all_reminders
-    # this is where reservation_reminders
-    # called by whenever in /config/schedule.rb
-    Person.all.find_each(&:send_invitation_reminder)
-  end
-
   def send_invitation_reminder
-    return if invitations.for_today_and_tomorrow.size.zero?
-    case preferred_contact_method.upcase
-    when 'SMS'
-      ::InvitationReminderSms.new(to: self, invitations: invitations.for_today_and_tomorrow).send
-    when 'EMAIL'
-      ::PersonMailer.remind(
-        invitations:  invitations.upcoming.to_a,
-        email_address: email_address
-      ).deliver_later
-    end
+    invitations.confirmable.upcoming(2, &:remind!)
   end
 
   def deactivate!(method = nil)

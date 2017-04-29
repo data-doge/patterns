@@ -84,13 +84,13 @@ class InvitationsController < ApplicationController
   def confirm
     # can't confirm invitation in the past!
     render false && return unless @invitation.start_datetime > Time.current
-    if @invitation.confirm && @invitation.save
+    if @invitation.confirm! && @invitation.save
       flash[:notice] = "You are confirmed for #{@invitation.start_datetime_human}, with #{@invitation.user.name}."
     else
       flash[:alert] = 'Error'
     end
     respond_to do |format|
-      format.html { redirect_to calendar_path(token: @visitor.token, invitation_id: @invitation.id) }
+      format.html { redirect_to root_url }
       format.js { render text: "$('#invitationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
       format.json do
         { invitation_id: @invitation.id, state: @invitation.aasm_state }
@@ -99,15 +99,15 @@ class InvitationsController < ApplicationController
   end
 
   def cancel
-    if @invitation.cancel
-      flash[:notice] = 'Cancelled'
+    if @invitation.cancel!
+      flash[:notice] = "Your session with #{@invitation.user.name} has been cancelled"
       @invitation.save
     else
       flash[:alert] = 'Error'
     end
     respond_to do |format|
       # where to redirect for person?
-      format.html { redirect_to calendar_path(token: @visitor.token, invitation_id: @invitation.id) }
+      format.html { redirect_to root_url }
       format.js do
         render text: "$('#invitationModal').modal('hide');
         $('#calendar').fullCalendar( 'refetchEvents' );"

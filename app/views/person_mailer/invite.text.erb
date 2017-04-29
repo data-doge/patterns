@@ -2,10 +2,16 @@ Hello <%= @person.first_name %>,
 
 <%= @invitation.description %>
 
+Click the link below to confirm:
+<%= remote_confirm_research_session_invitations_url(
+          research_session_id: @invitation.research_session.id,
+          id: @invitation.id,
+          token: @person.token) %>
 
-Thanks!,
-<%= ENV['TEAM_NAME'] %>
+To Cancel, click the link below:
+<%= remote_cancel_research_session_invitations_url(
+          research_session_id: @invitation.research_session.id,
+          id: @invitation.id,
+          token: @person.token) %>
 
-Do be removed from this list, just click this link:
-<%= public_person_deactivate_url(person_id: @person.id, token: @person.token) %>
-
+<%= render partial: 'footer', locals: { person: @person } %>

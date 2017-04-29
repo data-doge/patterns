@@ -60,6 +60,13 @@ class Invitation < ActiveRecord::Base
     joins(:research_session).
       where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days })
   }
+
+  scope :confirmable, -> {
+    where.not(aasm_state: %w[attended
+                             cancelled
+                             created
+                             missed])
+  }
   # invitations can move through states
   # necessary for text messaging bits in the future
   aasm do
@@ -76,7 +83,7 @@ class Invitation < ActiveRecord::Base
     end
 
     event :remind, before_commit: :send_reminder do
-      transitions from: :invited, to: :reminded
+      transitions from: %i[invited reminded], to: :reminded
     end
 
     event :confirm, after_commit: :notify_about_confirmation do
@@ -127,6 +134,18 @@ class Invitation < ActiveRecord::Base
     Delayed::Job.enqueue(SendInvitationsSmsJob.new(person, self))
   end
 
+  def send_reminder
+    case preferred_contact_method.upcase
+    when 'SMS'
+      ::InvitationReminderSms.new(to: self, invitations: inv).send
+    when 'EMAIL'
+      ::PersonMailer.remind(
+        invitations:  inv.to_a,
+        email_address: email_address
+      ).deliver_later
+    end
+  end
+
   # these three could definitely be refactored. too much copy-paste
   # also rename for nomenclature convention
   def notify_about_confirmation
@@ -152,7 +171,7 @@ class Invitation < ActiveRecord::Base
   end
 
   def permitted_events
-    aasm.events.(permitted: true).map(&:name).map(&:to_s)
+    aasm.events.call(permitted: true).map(&:name).map(&:to_s)
   end
 
   def permitted_states

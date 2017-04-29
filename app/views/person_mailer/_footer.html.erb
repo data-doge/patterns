@@ -1,0 +1,7 @@
+<br>
+<p>Thanks!,<p>
+<p><%= ENV['TEAM_NAME'] %></p>
+---------------------------------------------------
+<p>To be removed from this list, just click this link:<p><br>
+<%= link_to "Unsubscribe", public_person_deactivate_url(person_id: person.id, token: person.token) %>
+

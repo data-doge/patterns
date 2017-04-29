@@ -1,12 +1,24 @@
 <p>Hello <%= @person.first_name %>,</p>
 
-<p><%= @invitation.description %></p>
-<!--
-<p><%= link_to 'Please click to setup a time for your interview',
-           calendar_url(token: @person.token) %></p>
--->
-<p>Thanks!</p>
-<p><%= ENV['TEAM_NAME'] %></p>
+<p>
+You've been invited to join <%= @invitation.user.name %> on <%=@invitation.start_datetime_human %> for:
 
-<p>If you'd like to be removed, just <%= link_to "click here to unsubscribe.", public_person_deactivate_url(person_id: @person.id, token: @person.token) %></p>
+<%= @invitation.description %>
+</p>
+Please Confirm or Cancel below:
+<ul>
+  <li>
+    <%= link_to "Confirm", remote_confirm_research_session_invitations_url(
+          research_session_id: @invitation.research_session.id,
+          id: @invitation.id,
+          token: @person.token) %>
+  </li>
+  <li>
+    <%= link_to "Cancel", remote_cancel_research_session_invitations_url(
+          research_session_id: @invitation.research_session.id,
+          id: @invitation.id,
+          token: @person.token) %>
+  </li>
+</ul>
 
+<%= render partial: 'footer', locals: { person: @person } %>

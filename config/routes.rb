@@ -30,34 +30,14 @@ Logan::Application.routes.draw do
         post ':id/event/:event',
               to: 'invitations#event',
               as: :event
-        post ':id/attend/(:token)',
-              to: 'invitations#attend',
-              as: :attend
-        post ':id/invite/(:token)',
-              to: 'invitations#invite',
-              as: :invite
-        post ':id/remind/(:token)',
-              to: 'invitations#remind',
-              as: :remind
-        post ':id/confirm/(:token)',
-              to: 'invitations#confirm',
-              as: :confirm
-        post ':id/cancel/(:token)',
-              to: 'invitations#cancel',
-              as: :cancel
-        post ':id/miss/(:token)',
-              to: 'invitations#miss',
-              as: :miss
 
         get ':id/confirm/(:token)',
               to: 'invitations#confirm',
               as: :remote_confirm
+
         get ':id/cancel/(:token)',
               to: 'invitations#cancel',
               as: :remote_cancel
-        get ':id/change/(:token)',
-              to: 'invitations#change',
-              as: :remote_change
       end
       resources :comments, controller: 'comments'
     end
