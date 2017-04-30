@@ -10,7 +10,7 @@ class InvitationCancelSms < ApplicationSms
   end
 
   def body
-    %(You have cancelled your session with #{usename} at #{selected_time}.\n Thanks for the heads-up!)
+    %(You have cancelled your session with #{username} at #{selected_time}.\n Thanks for the heads-up!)
   end
 
   def selected_time

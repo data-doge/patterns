@@ -17,7 +17,6 @@ class InvitationReminderSms < ApplicationSms
       msg += "What: #{inv.sms_description}\n\n"
       msg += "When: #{inv.start_datetime_human}\n"
       msg += "Where: #{inv.location}\n"
-      msg += "For #{duration(inv)} minutes\n"
       msg += "With #{inv.user.name}, tel: #{inv.user.phone_number}\n"
       msg += "--------------------\n"
     end
@@ -32,13 +31,9 @@ class InvitationReminderSms < ApplicationSms
     @invitations.size
   end
 
-  def duration(inv)
-    (inv.duration / 60).to_i
-  end
-
   def body
     if @invitations.blank?
-      %(You have no upcoming sessions.)
+      %(You have no upcoming sessions. Reply 'Calendar' to check again!)
     else
       generate_res_msgs
     end

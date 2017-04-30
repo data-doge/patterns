@@ -1,20 +1,21 @@
 # TODO: needs a spec.
 # but a unit test would make coverage more robust
-class InvitationReminderSms < ApplicationSms
-  attr_reader :to, :invitations
+class MultiCancelSms < ApplicationSms
+  attr_reader :to, :invitations, :inv_hash
 
-  def initialize(to:, invitations:)
+  def initialize(to:, invitations:, inv_hash:)
     super
     @to = to
     @invitations = invitations
+    @inv_hash = inv_hash
   end
 
   def body
     msg = "You have #{inv_count} session#{inv_count > 1 ? 's': ''} soon.\n"
-    invitations.each_with_index do |inv, idx|
-      msg += "-----\n"
-      msg +=  "##{idx}) #{inv.start_datetime_human} with #{inv.user.name}\n"
-      msg += "-----\n"
+    invitations.each do |inv|
+      msg += "##{id_lookup(inv)}: #{inv.start_datetime_human}\n"
+      msg += "           with #{inv.user.name}\n"
+      msg += "-\n"
     end
 
     msg += "Cancel by replying with the # of the session\n"
@@ -27,4 +28,7 @@ class InvitationReminderSms < ApplicationSms
     @invitations.size
   end
 
+  def id_lookup(inv)
+    @inv_hash.key(inv.id)
+  end
 end

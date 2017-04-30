@@ -11,17 +11,23 @@ class SmsInvitationsController < ApplicationController
     send_error_notification && return unless @person
     PaperTrail.whodunnit = @person # auditing
     Rails.logger.info "#{person.full_name}: #{message}"
+    Rails.logger.info "cancel: #{session[:cancel]}"
+    Rails.logger.info "confirm: #{session[:confirm]}"
+    Rails.logger.info(session[:inv_hash])
+    Rails.logger.info("number_or_all_or_none: #{number_or_all_or_none}")
     #@person.verified = 'Verified'
     #@person.save
-    ::CustomSms.new(to: @person, msg: "cancel:#{session[:cancel]} confirm: #{session[:confirm]}").send
     # FIXME: this if else bundle needs a refactor badly.
     if remove?
       do_remove
-    elsif confirm? # confirmation for the days invitations
+    elsif calendar?
+      do_calendar
+    elsif confirm?
       do_confirm
     elsif cancel?
       do_cancel
-    elsif calendar?
+    else
+      ::InvalidOptionSms.new(to: @person).send
       do_calendar
     end
     # twilio wants an xml response.
@@ -36,16 +42,16 @@ class SmsInvitationsController < ApplicationController
       Emoji.replace_unicode_moji_with_name(str)
     end
 
-    def numbers_or_all_or_none
-      numbers = message.chars.select { |x| x =~ /\d+/ }
+    def number_or_all_or_none
+      number = message.chars.find { |x| x =~ /\d+/ }
       if message.downcase =~ /^all$/
         :all
       elsif message.downcase =~ /^none$/
         :none
-      elsif numbers.blank?
+      elsif number.blank?
         false
       else
-        numbers
+        number.to_i
       end
     end
 
@@ -67,10 +73,13 @@ class SmsInvitationsController < ApplicationController
     # perhaps a fuzzy_text here?
     def confirm?
       if message.downcase =~ /^ok$|^confirm$|^yes$/
+        Rails.logger.info('confirm? message hit')
         true
       elsif session[:confirm] == true # in a confirm session
+        Rails.logger.info('confirm? session hit')
         true
       else
+        Rails.logger.info('confirm? else and false')
         session[:confirm] =  false
         false
       end
@@ -94,6 +103,8 @@ class SmsInvitationsController < ApplicationController
       message.downcase =~ /^calendar$/
     end
 
+
+    # this is horrific.
     def do_cancel
       inv = @person.invitations.confirmable.upcoming(100).limit(9)
       if inv.size.zero?
@@ -104,58 +115,99 @@ class SmsInvitationsController < ApplicationController
         inv.first.cancel!
         session[:cancel] = false # end cancellation session
       elsif session[:cancel] # cancel session already started
-        res = numbers_or_all_or_none
-        case res
-        when :all
+        selected_invitation_id = number_or_all_or_none
+        if selected_invitation_id == :all
           inv.each(&:cancel!)
           session[:cancel] = false
-        when :none
+        elsif selected_invitation_id == :none
           session[:cancel] = false
-          ::CustomSms.new(to: @person, msg: "none cancel:#{session[:cancel]}").send
-        when false
+          ::CustomSms.new(to: @person, msg: "No changes made").send
+        elsif selected_invitation_id == false
           ::CustomSms.new(to: @person,
-                          msg: "cancel, Please enter either:\n a number\n 'all' to cancel all\n or 'none' to exit").send
-        when present?
-          res.each { |n| inv[n].cancel! }
-          session[:cancel] = false
+                          msg: "I didn't understand that.\n Please enter either:\n a number\n 'all' to cancel all\n or 'none' to exit").send
+        elsif selected_invitation_id.class == Fixnum
+          sid = selected_invitation_id
+          if session[:inv_hash].present? && session[:inv_hash][sid].present?
+            Invitation.find(session[:inv_hash][sid]).cancel!
+            session[:cancel] = false
+          else
+            ::CustomSms.new(to: @person,
+                          msg: "Sorry, I didn't understand that.").send
+            ::InvitationReminderSms.new(to: @person, invitations: inv)
+            session[:confirm] = false
+          end
         end
-      else # must send multi-invitation cancel message
-        ::MultiCancelSms.new(to: @person, invitations: inv).send
+      # must send multi-invitation cancel message
+      elsif inv.size > 1 && cancel? # it's our first cancel
+        inv_hash = create_inv_hash(inv)
+        session[:inv_hash] = inv_hash
+        ::MultiCancelSms.new(to: @person,
+                             invitations: inv,
+                             inv_hash: inv_hash).send
         session[:cancel] =  true
-        Rails.logger.info('starting cancelling!')
+
+      else
+        ::CustomSms.new(to: @person,
+                          msg: "Something went wrong. We'll be in touch.").send
       end
     end
 
+    # this is horrific.
     def do_confirm
+      Rails.logger.info("in confirm")
       inv = @person.invitations.confirmable.upcoming(100).limit(9)
       if inv.size.zero?
         ::CustomSms.new(to: @person, msg: 'You have no upcoming sessions.').send
         session[:confirm] = false
       elsif inv.size == 1
-        # this sends the notifications!
+        # this should send the notification!
+        Rails.logger.info('confirm only the one')
         inv.first.confirm!
         session[:confirm] =  false # end confirm session
-      elsif session[:confirm] # confirm session started
-        res = numbers_or_all_or_none
-        case res
-        when :all
+      elsif session[:confirm] == true# confirm session started
+        Rails.logger.info('in confirm session started')
+        selected_invitation = number_or_all_or_none
+        Rails.logger.info("selected_invitation: #{selected_invitation}")
+
+        if selected_invitation == :all
+          Rails.logger.info("in all")
           inv.each(&:confirm!)
           session[:confirm] = false
-        when :none
+        elsif selected_invitation == :none
+          Rails.logger.info('In None')
           session[:confirm] = false
-          ::CustomSms.new(to: @person, msg: "none confirm:#{session[:confirm]}").send
-        when false
+          ::CustomSms.new(to: @person, msg: "No changes made").send
+        elsif selected_invitation == false
+          Rails.logger.info('In false')
           ::CustomSms.new(to: @person,
-                          msg: "Please enter either:\n a number\n 'all' to confirm all\n or 'none' to exit").send
-        when present?
-          res.each { |n| inv[n].confirm! }
-          session[:confirm] = false
+                          msg: "I didn't understand that.\nPlease enter either:\n a number\n 'all' to confirm all\n or 'none' to exit").send
+        elsif selected_invitation.class == Fixnum
+          sid = selected_invitation
+          Rails.logger.info("sid is #{sid}")
+          if session[:inv_hash].present? && session[:inv_hash][sid].present?
+            Rails.logger.info("We have a hash for #{sid}:#{session[:inv_hash][sid]}")
+            i = Invitation.find(session[:inv_hash][sid])
+            Rails.logger.info(i)
+            i.confirm!
+            session[:confirm] = false
+          else
+            ::CustomSms.new(to: @person,
+                          msg: "Sorry, I didn't understand that.").send
+            ::InvitationReminderSms.new(to: @person, invitations: inv)
+            session[:confirm] = false
+          end
         end
-      else # must send multi-invitation confirm message
-        inv = person.invitations.upcoming(100).limit(9)
-        ::MultiConfirmSms.new(to: @person, invitations: inv).send
+      # must send multi-invitation confirm message
+      elsif inv.size > 1 && confirm? # it's our first multi confirm!
+        inv_hash = create_inv_hash(inv)
+        session[:inv_hash] = inv_hash
+        ::MultiConfirmSms.new(to: @person,
+                              invitations: inv,
+                              inv_hash: inv_hash).send
         session[:confirm] =  true
-        Rails.logger.info('starting confirming!')
+      else
+        ::CustomSms.new(to: @person,
+                          msg: "Sorry, something went wrong. We'll be in touch!").send
       end
     end
 
@@ -188,6 +240,13 @@ class SmsInvitationsController < ApplicationController
         end
       end
       false
+    end
+
+    def create_inv_hash(invitations)
+      inv_hash = {}
+      # people don't like to index by zero
+      invitations.each_with_index { |inv, idx| inv_hash[idx+1]=inv.id }
+      inv_hash
     end
 
     def sms_params

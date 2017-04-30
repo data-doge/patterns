@@ -14,7 +14,7 @@ class InvitationSms < ApplicationSms
     def body
       msg = "A #{duration} minute session has been scheduled:\n"
       msg += "When: #{selected_time}\n"
-      msg += "Where: #{invitation.location}}\n"
+      msg += "Where: #{invitation.location}\n"
       msg += "With: #{invitation.user.name}, \n"
       msg += "Tel: #{invitation.user.phone_number}\n."
       msg += "\n"
@@ -24,11 +24,11 @@ class InvitationSms < ApplicationSms
     end
 
     def selected_time
-      invitation.time_slot.start_datetime_human
+      invitation.start_datetime_human
     end
 
     def duration
-      (invitation.duration / 60).to_i
+      invitation.duration
     end
 
 end

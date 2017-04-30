@@ -79,28 +79,29 @@ class Invitation < ActiveRecord::Base
     state :missed # means they didn't cancel
     state :attended
 
-    event :invite, before_commit: :send_invitation, guard: :in_future? do
+    event :invite, after_commit: :send_invitation, guard: :in_future? do
       transitions from: :created, to: :invited
     end
 
-    event :remind, before_commit: :send_reminder do
+    event :remind, after_commit: :send_reminder, guard: :in_future? do
       transitions from: %i[invited reminded], to: :reminded
     end
 
-    event :confirm, after_commit: :notify_about_confirmation do
+    event :confirm, after_commit: :notify_about_confirmation, guard: :in_future? do
       transitions from: %i[invited reminded], to: :confirmed
     end
 
-    event :cancel, after_commit: :notify_about_cancellation do
+    event :cancel, after_commit: :notify_about_cancellation, guard: :in_future? do
       transitions from: %i[invited reminded confirmed], to: :cancelled
     end
 
     event :attend do
+      # can transition from anything to attended.
       transitions to: :attended
     end
 
-    event :miss do
-      # should this be able to transition from "created" ?
+    event :miss, guard: :in_past? do
+      # should this be able to transition from "attended" ?
       transitions from: %i[invited reminded confirmed], to: :missed
     end
   end
@@ -131,17 +132,16 @@ class Invitation < ActiveRecord::Base
   end
 
   def send_invite_sms
-    # we send a bunch at once, delay it. Plus this has extra logic
-    Delayed::Job.enqueue(SendInvitationsSmsJob.new(person, self))
+    ::InvitationSms.new(to: person, invitation: self).send
   end
 
   def send_reminder
     case preferred_contact_method.upcase
     when 'SMS'
-      ::InvitationReminderSms.new(to: self, invitations: inv).send
+      ::InvitationReminderSms.new(to: person, invitations: [self]).send
     when 'EMAIL'
       ::PersonMailer.remind(
-        invitations:  inv.to_a,
+        invitations:  [self],
         email_address: email_address
       ).deliver_later
     end
@@ -186,6 +186,10 @@ class Invitation < ActiveRecord::Base
   end
 
   def in_future?
+    Time.zone.now < start_datetime
+  end
+
+  def in_past?
     Time.zone.now < start_datetime
   end
 
