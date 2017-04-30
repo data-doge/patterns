@@ -11,9 +11,9 @@ class SmsInvitationsController < ApplicationController
     send_error_notification && return unless @person
     PaperTrail.whodunnit = @person # auditing
     Rails.logger.info "#{person.full_name}: #{message}"
-    @person.verified = 'Verified'
-    @person.save
-
+    #@person.verified = 'Verified'
+    #@person.save
+    ::CustomSms.new(to: @person, msg: "cancel:#{session[:cancel]} confirm: #{session[:confirm]}").send
     # FIXME: this if else bundle needs a refactor badly.
     if remove?
       do_remove
@@ -67,22 +67,24 @@ class SmsInvitationsController < ApplicationController
     # perhaps a fuzzy_text here?
     def confirm?
       if message.downcase =~ /^ok$|^confirm$|^yes$/
-        session[:confirm] = true
-      elsif session[:confirm] # in a confirm session
+        true
+      elsif session[:confirm] == true # in a confirm session
         true
       else
         session[:confirm] =  false
+        false
       end
     end
 
     def cancel? # can't use the word "Cancel!!!"
       # https://support.twilio.com/hc/en-us/articles/223134027-Twilio-support-for-STOP-BLOCK-and-CANCEL-SMS-STOP-filtering-
       if message.downcase =~ /^no$|^nah$|^can\'t$|^nope$/
-        session[:cancel] = true
-      elsif session[:cancel] # in a cancel session
+        true
+      elsif session[:cancel] == true # in a cancel session
         true
       else
         session[:cancel] =  false
+        false
       end
     end
 
@@ -109,10 +111,10 @@ class SmsInvitationsController < ApplicationController
           session[:cancel] = false
         when :none
           session[:cancel] = false
-          ::CustomSms.new(to: @person, msg: 'No changes made').send
+          ::CustomSms.new(to: @person, msg: "none cancel:#{session[:cancel]}").send
         when false
           ::CustomSms.new(to: @person,
-                          msg: "Please enter either:\n a number\n 'all' to cancel all\n or 'none' to exit").send
+                          msg: "cancel, Please enter either:\n a number\n 'all' to cancel all\n or 'none' to exit").send
         when present?
           res.each { |n| inv[n].cancel! }
           session[:cancel] = false
@@ -134,11 +136,14 @@ class SmsInvitationsController < ApplicationController
         inv.first.confirm!
         session[:confirm] =  false # end confirm session
       elsif session[:confirm] # confirm session started
-        res = get_numbers_or_all
+        res = numbers_or_all_or_none
         case res
         when :all
           inv.each(&:confirm!)
           session[:confirm] = false
+        when :none
+          session[:confirm] = false
+          ::CustomSms.new(to: @person, msg: "none confirm:#{session[:confirm]}").send
         when false
           ::CustomSms.new(to: @person,
                           msg: "Please enter either:\n a number\n 'all' to confirm all\n or 'none' to exit").send
@@ -156,7 +161,7 @@ class SmsInvitationsController < ApplicationController
 
     def do_calendar
       session[:confirm] = false # ending previous sessions
-      session[:cancel] =  false
+      session[:cancel]  = false
       # ten upcoming in the next 100 days. excessive.
       invitations = person.invitations.confirmable.upcoming(100).limit(10).to_a
       ::InvitationReminderSms.new(to: @person, invitations: invitations).send

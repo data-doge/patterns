@@ -11,7 +11,7 @@ class MultiConfirmSms < ApplicationSms
 
   def body
     msg = "You have #{inv_count} session#{inv_count > 1 ? 's': ''} soon.\n"
-    invitations.each_with_index do |inv, idx|
+    @invitations.each_with_index do |inv, idx|
       msg += "-----\n"
       msg += "##{idx}: #{inv.start_datetime_human}\n"
       msg += "          with #{inv.user.name}\n"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170430194736) do
+ActiveRecord::Schema.define(version: 20170430205151) do
 
   create_table "applications", force: :cascade do |t|
     t.string   "name",         limit: 255
@@ -268,7 +268,7 @@ ActiveRecord::Schema.define(version: 20170430194736) do
     t.string   "account_sid",        limit: 255
     t.string   "from",               limit: 255
     t.string   "to",                 limit: 255
-    t.string   "body",               limit: 255
+    t.text     "body",               limit: 65535
     t.string   "status",             limit: 255
     t.string   "error_code",         limit: 255
     t.string   "error_message",      limit: 255
