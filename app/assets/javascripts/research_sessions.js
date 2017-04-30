@@ -4,19 +4,9 @@ $(document).on('page:load ready', function(){
 
   //https://eonasdan.github.io/bootstrap-datetimepicker/
   $('#research_session_start_datetime').datetimepicker({
-    format: 'YYYY-MM-DD HH:mm'
+    format: 'YYYY-MM-DD HH:mm',
+    stepping: 15,
   });
-
-  $('#research_session_end_datetime').datetimepicker({
-    useCurrent: false,
-    format: 'YYYY-MM-DD HH:mm'
-  });
-
-  $('#research_session_start_datetime').on("dp.change", function (e) {
-    var new_end = moment(e.date).add(1, 'hours');
-    $('#research_session_end_datetime').data("DateTimePicker").minDate(new_end);
-  });
-
 
   // initialize bloodhound engine
   var searchSelector = 'input#invitees-typeahead';
@@ -30,6 +20,7 @@ $(document).on('page:load ready', function(){
         return $.inArray(suggestion.id,current_people) === -1;
     });
   };
+
 
   var bloodhound = new Bloodhound({
     datumTokenizer: function (d) {

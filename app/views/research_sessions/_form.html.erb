@@ -28,6 +28,12 @@
     </div>
   </div>
   <div class="control-group">
+    <%= f.label :location, 'Session Location', :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :location, placeholder: "leave empty for call", :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
     <%= f.label :description, 'Session description', :class => 'control-label' %>
     <div class="controls">
       <%= f.text_area :description, :class => 'text_area' %>
@@ -36,7 +42,7 @@
   <div class="control-group">
     <%= f.label :sms_description, 'SMS Session description', :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :sms_description, :class => 'text_area' %>
+      <%= f.text_area :sms_description,placeholder:'as short as possible', :class => 'text_area' %>
     </div>
   </div>
   <div class="control-group">
@@ -53,17 +59,17 @@
   </div>
   <h2>Time</h2>
 
-  <div class="control-group">
+  <div class="control-group" style="position: relative">
     <%= f.label :start_datetime, :class => 'control-label' %>
-    <div class="controls" style="position: relative">
+    <div class="controls">
       <%= f.text_field :start_datetime, :class => 'text_area' %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :end_datetime, :class => 'control-label' %>
-    <div class="controls" style="position: relative">
-      <%= f.text_field :end_datetime, :class => 'text_area' %>
+    <%= f.label :duration, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :duration, [15,30,45,60,75,90,105,130] %>
     </div>
   </div>
 

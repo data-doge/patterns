@@ -71,16 +71,6 @@ class GiftCardsController < ApplicationController
         format.json { render json: @gift_card.errors, status: :unprocessable_entity }
       end
     end
-
-    # respond_to do |format|
-    #   if @gift_card.save
-    #     format.html { redirect_to @gift_card, notice: 'Gift card was successfully created.' }
-    #     format.json { render action: 'show', status: :created, location: @gift_card }
-    #   else
-    #     format.html { render action: 'new' }
-    #     format.json { render json: @gift_card.errors, status: :unprocessable_entity }
-    #   end
-    # end
   end
   # rubocop:enable Metrics/MethodLength
 

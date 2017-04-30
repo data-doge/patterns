@@ -38,7 +38,11 @@ class ResearchSessionsController < ApplicationController
 
       Invitation.create(people) # auto associates
 
+      if @research_session.location.blank?
+        @research_session.location = "Call #{current_user.name} at #{current_user.phone_number}"
+      end
       @research_session.save
+
       # sends all of the invitations.
       @research_session.invitations.each(&:invite!)
 
@@ -51,7 +55,9 @@ class ResearchSessionsController < ApplicationController
   end
 
   def index
-    @research_sessions = ResearchSession.all.page(params[:page])
+    @s = ResearchSession.ransack(params[:q])
+
+    @research_sessions = @s.result(distinct: true).includes(:people,:tags).page(params[:page])
   end
 
   def show

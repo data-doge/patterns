@@ -1,7 +1,27 @@
 <%= render partial: 'layouts/research_sessions_menu' %>
-<h1> List of Sessions</h1>
+<%= search_form_for @s, class: 'form-inline' do |f| %>
+  <div class='pull-left'>
+    <%= f.label "Tags" %>
+    <%= f.text_field :ransack_tagged_with,
+                              class: 'tokenfield input-large',
+                              data: { search_url: '/taggings/search?type=ResearchSession&q=%QUERY',
+                                      submit_id: 'search-tag-hidden-input',
+                                      pre_populate: @s.ransack_tagged_with&.split(',')
+                                    }
+                            %>
+  </div>
+  <%= f.label "Title" %>
+  <%= f.search_field :title_cont %>
+
+  <%= f.label "Name" %>
+  <%= f.search_field :person_name_cont %>
+  <%= f.submit 'Search', class: 'btn btn-default' %>
+  <%= link_to "Clear Search", research_sessions_path, class: 'btn btn-default' %>
+<% end %>
+
 <div class="row">
   <div class="span12">
+    <h4>List of Sessions</h4>
     <table class="table table-striped">
       <thead>
         <tr>

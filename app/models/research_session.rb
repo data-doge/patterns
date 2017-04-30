@@ -27,13 +27,14 @@ class ResearchSession < ActiveRecord::Base
   has_many :invitations
   has_many :people, through: :invitations
   has_many :comments, as: :commentable, dependent: :destroy
+  before_create :update_missing_attributes
 
   accepts_nested_attributes_for :invitations, reject_if: :all_blank, allow_destroy: true
 
   validates :description,
     :title,
     :start_datetime,
-    :end_datetime,
+    :duration,
     :user_id,
     presence: true
 
@@ -52,6 +53,18 @@ class ResearchSession < ActiveRecord::Base
 
   scope :upcoming, ->(d = 7) { where(start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days) }
 
+  ransacker :person_name, formatter: proc { |v| v.mb_chars.downcase.to_s } do |parent|
+    Arel::Nodes::NamedFunction.new('lower',
+      [Arel::Nodes::NamedFunction.new('concat_ws',
+        [Arel::Nodes.build_quoted(' '), Person.table[:first_name], Person.table[:last_name]])])
+  end
+
+  scope :ransack_tagged_with, ->(*tags) { tagged_with(tags) }
+
+  def self.ransackable_scopes(_auth=nil)
+    %i[ransack_tagged_with]
+  end
+
   def people_name_and_id
     people.map do |i|
       { id: i.id,
@@ -64,4 +77,11 @@ class ResearchSession < ActiveRecord::Base
   def send_invitation_notifications
     invitations.where(aasm_state: 'created').find_each(&:invite!)
   end
+
+  private
+
+    def update_missing_attributes
+      self.end_datetime = self.start_datetime + self.duration.minutes
+    end
+
 end

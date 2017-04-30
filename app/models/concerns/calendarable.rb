@@ -52,10 +52,6 @@ module Calendarable
     add_alarm(e)
   end
 
-  def duration
-    (end_datetime-start_datetime)/1.minute
-  end
-
   def date
     start_datetime.to_date
   end

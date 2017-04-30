@@ -10,7 +10,14 @@ class IinvitationConfirmSms < ApplicationSms
   end
 
   def body
-    "You are confirmed a #{duration} minute session for #{selected_time}, with #{invitation.user.name}. \nTheir number is #{invitation.user.phone_number}"
+    msg = "You are confirmed! \n"
+    msg +="When: #{selected_time}\n"
+    msg +="Where: #{duration}\n"
+    msg +="Who: #{invitation.user.name}\n"
+    msg +="Phone: #{invitation.user.phone_number}\n"
+    msg += "\n"
+    msg += "Reply 'No' to cancel\n"
+    msg += "Reply 'Calendar' to see your upcoming sessions\n"
   end
 
   def selected_time
@@ -18,6 +25,6 @@ class IinvitationConfirmSms < ApplicationSms
   end
 
   def duration
-    invitation.duration / 60
+    (invitation.duration / 60).to_i
   end
 end

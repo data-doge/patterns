@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170427150558) do
+ActiveRecord::Schema.define(version: 20170430194736) do
 
   create_table "applications", force: :cascade do |t|
     t.string   "name",         limit: 255
@@ -194,7 +194,7 @@ ActiveRecord::Schema.define(version: 20170427150558) do
 
   create_table "research_sessions", force: :cascade do |t|
     t.string   "description",     limit: 255
-    t.integer  "buffer",          limit: 4,   default: 0, null: false
+    t.integer  "buffer",          limit: 4,   default: 0,  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id",         limit: 4
@@ -203,6 +203,8 @@ ActiveRecord::Schema.define(version: 20170427150558) do
     t.datetime "end_datetime"
     t.string   "sms_description", limit: 255
     t.integer  "session_type",    limit: 4,   default: 1
+    t.string   "location",        limit: 255
+    t.integer  "duration",        limit: 4,   default: 60
   end
 
   add_index "research_sessions", ["user_id"], name: "index_research_sessions_on_user_id", using: :btree

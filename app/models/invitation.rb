@@ -36,6 +36,7 @@ class Invitation < ActiveRecord::Base
     :end_datetime,
     :title,
     :description,
+    :location,
     :sms_description,
     :duration, to: :research_session
 

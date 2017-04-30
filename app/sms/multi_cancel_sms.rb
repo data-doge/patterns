@@ -12,12 +12,15 @@ class InvitationReminderSms < ApplicationSms
   def body
     msg = "You have #{inv_count} session#{inv_count > 1 ? 's': ''} soon.\n"
     invitations.each_with_index do |inv, idx|
+      msg += "-----\n"
       msg +=  "##{idx}) #{inv.start_datetime_human} with #{inv.user.name}\n"
+      msg += "-----\n"
     end
 
     msg += "Cancel by replying with the # of the session\n"
     msg += "like '1' to cancel session #1)\n"
-    msg += "or respond 'All' to cancel all."
+    msg += "Reply 'All' to cancel all.\n"
+    msg += "Reply 'None' to not cancel any.\n"
   end
 
   def inv_count

@@ -12,7 +12,15 @@ class InvitationSms < ApplicationSms
   private
 
     def body
-      "A #{duration} minute interview has been booked for:\n#{selected_time}\nWith: #{invitation.user.name}, \nTel: #{invitation.user.phone_number}\n.You'll get a reminder that morning."
+      msg = "A #{duration} minute session has been scheduled:\n"
+      msg += "When: #{selected_time}\n"
+      msg += "Where: #{invitation.location}}\n"
+      msg += "With: #{invitation.user.name}, \n"
+      msg += "Tel: #{invitation.user.phone_number}\n."
+      msg += "\n"
+      msg += "Reply 'OK' to confirm\n"
+      msg += "Reply 'No' to cancel\n"
+      msg += "Reply 'Calendar' to see your upcoming sessions\n"
     end
 
     def selected_time
@@ -20,7 +28,7 @@ class InvitationSms < ApplicationSms
     end
 
     def duration
-      invitation.duration / 60
+      (invitation.duration / 60).to_i
     end
 
 end

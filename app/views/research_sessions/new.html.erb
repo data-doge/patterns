@@ -2,13 +2,13 @@
 <h1>Invite people to a Session</h1>
 <div class='container'>
   <div class='row'>
-    <div class='col-md-4 pull-right'>
+    <div class='span6'>
+      <%= render 'form' %>
+    </div>
+    <div class='span6'>
       <%= render partial: 'cart/mini_view', locals: {
           people: Person.find(session[:cart])
           } %>
-    </div>
-    <div class='col-md-8 pull-left'>
-      <%= render 'form' %>
     </div>
   </div>
 </div>
