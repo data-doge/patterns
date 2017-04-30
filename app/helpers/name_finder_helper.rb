@@ -1,5 +1,6 @@
 module NameFinderHelper
-  def find_my_name(obj)
+  def find_name(obj)
+    return "None" if obj.nil?
     return obj.name if obj.respond_to?(:name)
     return obj.full_name if obj.respond_to?(:full_name)
     return obj.title if obj.respond_to?(:title)

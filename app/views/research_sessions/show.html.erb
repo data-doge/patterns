@@ -36,31 +36,34 @@ var research_session_id = <%= @research_session.id%>;
     <%= render partial: 'invitations_panel',
           locals: { invitations: @research_session.invitations } %>
   </div>
-  <div class="row">
-    <div class="span3">
-      <h3>Tags</h3>
-      <ul id="tag-list">
-      <%= render partial: 'taggings/tagging', collection: @research_session.taggings %>
-      </ul>
-      <%= render partial: 'taggings/tag_form', locals: { taggable_obj: @research_session } %>
-    </div>
-    <div class="span9">
-      <h3>Notes</h3>
-      <%= form_for([@research_session, Comment.new], remote: true) do |form| %>
-        <%= form.hidden_field :commentable_type, :value => 'ResearchSession' %>
-        <%= form.hidden_field :commentable_id, :value => @research_session.id %>
-        <%= form.text_area :content, rows: 6, class: "span9 input-block-level" %>
-        <%= form.submit 'Add note', :class => "btn" %>
-      <% end %>
+</div>
+<div class="row">
+  <div class="span4">
+    <h3>Tags</h3>
+    <ul id="tag-list">
+    <%= render partial: 'taggings/tagging', collection: @research_session.taggings %>
+    </ul>
+    <%= render partial: 'taggings/tag_form', locals: { taggable_obj: @research_session } %>
+  </div>
+  <div class='span1'>
+  </div>
+  <div class="span7">
+    <h3>Notes</h3>
+    <%= form_for([@research_session, Comment.new], remote: true) do |form| %>
+      <%= form.hidden_field :commentable_type, :value => 'ResearchSession' %>
+      <%= form.hidden_field :commentable_id, :value => @research_session.id %>
+      <%= form.text_area :content, rows: 6, class: "span7 input-block-level" %>
+      <%= form.submit 'Add note', :class => "btn" %>
+    <% end %>
 
-      <div id="comments">
-        <%= render partial: 'comments/embed',
-              collection: @research_session.comments.order("created_at DESC"),
-              as: :comment %>
-      </div>
+    <div id="comments">
+      <%= render partial: 'comments/embed',
+            collection: @research_session.comments.order("created_at DESC"),
+            as: :comment %>
     </div>
   </div>
 </div>
+
 
 <div class="row">
   <div class="span12">

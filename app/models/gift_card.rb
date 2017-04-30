@@ -34,6 +34,7 @@ class GiftCard < ActiveRecord::Base
     other: 5
   }
 
+  default_scope { order(id: :desc) }
   belongs_to :giftable, polymorphic: true, touch: true
   belongs_to :person
   belongs_to :user, foreign_key: :created_by
@@ -72,16 +73,6 @@ class GiftCard < ActiveRecord::Base
     return true if giftable.nil?
 
     giftable.respond_to?(:person_id) ? person_id == giftable.person_id : false
-  end
-
-  def giftable_name
-    return 'None' if giftable.nil?
-
-    if giftable.respond_to?(:full_name)
-      return giftable.full_name
-    elsif giftable.respond_to?(:full_name)
-      return giftable.title
-    end
   end
 
   def self.batch_create(post_content)

@@ -24,7 +24,10 @@
             <td><%= best_in_place user, :phone_number,
                       ok_button: 'Save',
                       cancel_button: 'Cancel' %></td>
-            <td><%= best_in_place user, :approved, as: :check_box %></td>
+            <td><%= best_in_place user,
+                      :approved,
+                      as: :checkbox,
+                      collection: {false: "No", true: "Yes"} %></td>
             <td><%= link_to 'Show', user %></td>
             <td><%= link_to 'Edit', edit_user_path(user) %></td>
             <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>

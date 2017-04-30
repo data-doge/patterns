@@ -51,11 +51,11 @@ class ResearchSessionsController < ApplicationController
   end
 
   def index
-    @research_sessions = ResearchSession.all.order(id: :desc).page(params[:page])
+    @research_sessions = ResearchSession.all.page(params[:page])
   end
 
   def show
-    @research_session =  ResearchSession.find(params[:id])
+    @research_session = ResearchSession.find(params[:id])
   end
 
   def invitations_panel
@@ -65,7 +65,16 @@ class ResearchSessionsController < ApplicationController
   end
 
   def update
-    # the usual
+    pry
+    respond_to do |format|
+      if @research_session.update(research_session_params)
+        format.html { redirect_to(@research_session, notice: 'Session was successfully updated.') }
+        format.json { respond_with_bip(@research_session) }
+      else
+        format.html { render :edit }
+        format.json { respond_with_bip(@research_session) }
+      end
+    end
   end
 
   def add_person
@@ -91,6 +100,9 @@ class ResearchSessionsController < ApplicationController
     end
 
     def research_session_params
+      # whoever created it, keeps it.
+      # only ownership idea that counts?
+      user_id = @research_session&.user_id ? @research_session.user_id : current_user.id
       params.require(:research_session).permit(
         :description,
         :sms_description,
@@ -100,7 +112,7 @@ class ResearchSessionsController < ApplicationController
         :buffer,
         :title,
         :user_id
-      ).merge(user_id: current_user.id).symbolize_keys
+      ).merge(user_id: user_id).symbolize_keys
     end
 
   # rubocop:enable Metrics/MethodLength

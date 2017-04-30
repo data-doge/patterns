@@ -19,8 +19,6 @@
         <dd><%= best_in_place @user,
                   :approved,
                   as: :checkbox,
-                  ok_button: 'Save',
-                  cancel_button: 'Cancel',
                   collection: {false: "No", true: "Yes"} %></dd>
         <dt>YTD Gift Card $</dt>
         <dd><%= @user.gift_card_total %></dd>
@@ -76,7 +74,7 @@
           <td><%= change.item_id %></td>
           <td><%=
             begin
-              link_to(find_my_name(change.item), url_for(change.item))
+              link_to(find_name(change.item), url_for(change.item))
             rescue NameError
               "none"
             end

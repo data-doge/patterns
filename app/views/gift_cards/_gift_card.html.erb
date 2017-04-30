@@ -4,7 +4,7 @@
 	<td><%= gift_card.person.full_name %></td>
   <td><%= gift_card.reason.titleize %></td>
   <td><%= if gift_card.giftable.present?
-            link_to(gift_card.giftable_name, url_for(gift_card.giftable))
+            link_to(find_name(gift_card.giftable), url_for(gift_card.giftable))
           else
             "None"
           end
