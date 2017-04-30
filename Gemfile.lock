@@ -169,6 +169,9 @@ GEM
       multi_json (>= 1.11.0)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
+    glyphicons-rails (0.1.2)
+      sass (~> 3.3)
+      sass-rails
     gsm_encoder (0.1.6)
     guard (2.14.1)
       formatador (>= 0.2.4)
@@ -544,6 +547,7 @@ DEPENDENCIES
   fast_blank
   flamegraph
   gibbon (~> 2.2.3)
+  glyphicons-rails
   gsm_encoder
   guard
   guard-bundler

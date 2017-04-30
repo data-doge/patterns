@@ -4,8 +4,8 @@ $(document).on('page:load ready', function(){
 
   //https://eonasdan.github.io/bootstrap-datetimepicker/
   $('#research_session_start_datetime').datetimepicker({
-    format: 'YYYY-MM-DD HH:mm',
-    stepping: 15,
+    format: 'YYYY-MM-DD hh:mm A',
+    stepping: 15
   });
 
   // initialize bloodhound engine

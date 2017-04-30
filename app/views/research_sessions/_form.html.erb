@@ -45,7 +45,7 @@
       <%= f.text_area :sms_description,placeholder:'as short as possible', :class => 'text_area' %>
     </div>
   </div>
-  <div class="control-group">
+  <!-- <div class="control-group">
     <%= f.label :tags,  "Tags", :class => 'control-label' %>
     <div class='controls'>
     <%= f.text_field :tag_list,
@@ -56,7 +56,7 @@
               }
       %>
     </div>
-  </div>
+  </div> -->
   <h2>Time</h2>
 
   <div class="control-group" style="position: relative">
@@ -67,7 +67,7 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :duration, :class => 'control-label' %>
+    <%= f.label "Duration in minutes", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :duration, [15,30,45,60,75,90,105,130] %>
     </div>

@@ -90,7 +90,7 @@ gem 'unicorn'
 # gem 'debugger'
 
 gem 'twitter-bootstrap-rails', '~> 2.2.0'
-
+gem 'glyphicons-rails'
 gem 'momentjs-rails'
 gem 'bootstrap3-datetimepicker-rails'
 # use tire for ElasticSearch integration
