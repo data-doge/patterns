@@ -1,0 +1,35 @@
+@import "glyphicons";
+
+.glyphicon-time{
+  @extend %glyphicon-time;
+}
+.glyphicon-chevron-up{
+  @extend %glyphicon-chevron-up;
+}
+.glyphicon-chevron-down{
+  @extend %glyphicon-chevron-down;
+}
+
+.glyphicon-chevron-left{
+ @extend %glyphicon-chevron-left;
+}
+
+.glyphicon-chevron-right{
+ @extend %glyphicon-chevron-right;
+}
+
+.glyphicon-calendar{
+ @extend %glyphicon-calendar;
+}
+
+.glyphicon-screenshot{
+  @extend %glyphicon-screenshot;
+}
+
+.glyphicon-trash{
+  @extend %glyphicon-trash;
+}
+
+.glyphicon-remove{
+  @extend %glyphicon-remove;
+}
