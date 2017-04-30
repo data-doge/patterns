@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
 
   has_many :research_sessions
   has_many :invitations, through: :research_sessions
+  has_many :gift_cards, foreign_key: :created_by
 
   phony_normalize :phone_number, default_country_code: 'US'
   phony_normalized_method :phone_number, default_country_code: 'US'
@@ -76,6 +77,12 @@ class User < ActiveRecord::Base
 
   def full_name # convienence for calendar view.
     name
+  end
+
+  def gift_card_total
+    end_of_last_year = Time.zone.today.beginning_of_year - 1.day
+    total = gift_cards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
+    Money.new(total, 'USD')
   end
 
   def self.send_all_reminders

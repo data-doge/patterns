@@ -71,9 +71,9 @@ Logan::Application.routes.draw do
 
   # post "twil", to: 'twilio_messages/#newtwil'
 
-  get 'taggings/create'
-  get 'taggings/destroy'
-  get 'taggings/search'
+  get 'taggings/create', as: :tag_create
+  get 'taggings/destroy', as: :tag_destroy
+  get 'taggings/search', as: :tag_search
 
   get 'mailchimp_export/index'
   get 'mailchimp_export/create'
@@ -86,11 +86,16 @@ Logan::Application.routes.draw do
   end
 
   resources :applications
-
-
   resources :programs
 
+  # weirdo stuff to get around devise. has to be a better way
+
   devise_for :users
+
+  scope "/admin" do
+    resources :users
+  end
+
   get 'dashboard/index'
   resources :submissions
 

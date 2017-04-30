@@ -37,7 +37,7 @@ class ResearchSession < ActiveRecord::Base
     :user_id,
     presence: true
 
-  default_scope { includes(:invitations).order(:start_datetime) }
+  default_scope { includes(:invitations).order(start_datetime: :desc) }
 
   scope :today, -> { where(start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day) }
 

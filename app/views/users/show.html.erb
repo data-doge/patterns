@@ -1,0 +1,91 @@
+<p id="notice"><%= notice %></p>
+<div class='row'>
+  <div class='span3'>
+    <div class="well">
+      <dl>
+        <dt>Name</dt>
+        <dd><%= best_in_place @user, :name,
+                      ok_button: 'Save',
+                      cancel_button: 'Cancel' %></dd>
+        <dt>email</dt>
+        <dd><%= best_in_place @user, :email_address,
+                      ok_button: 'Save',
+                      cancel_button: 'Cancel' %></dd>
+        <dt>Phone Number</dt>
+        <dd><%= best_in_place @user, :phone_number,
+                      ok_button: 'Save',
+                      cancel_button: 'Cancel' %></dd>
+        <dt>Approved</dt>
+        <dd><%= best_in_place @user,
+                  :approved,
+                  as: :checkbox,
+                  ok_button: 'Save',
+                  cancel_button: 'Cancel',
+                  collection: {false: "No", true: "Yes"} %></dd>
+        <dt>YTD Gift Card $</dt>
+        <dd><%= @user.gift_card_total %></dd>
+      </dl>
+    </div>
+    <%= link_to 'Back', users_path %> | <%= link_to 'Edit', edit_user_path(@user) %>
+  </div>
+  <div class='span9' style='overflow: auto, height:400px'>
+  <h3> Recent Sessions</h3>
+  <%= will_paginate @sessions, param_name: 'sessions_page',  remote: true ,renderer: BootstrapPagination::Rails %>
+    <table class="table table-striped" >
+      <thead>
+        <tr>
+          <th colspan="1">Title</th>
+          <th colspan="1">Date</th>
+          <th colspan="1">Invited</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @sessions.each do |session| %>
+        <tr>
+          <td><%= link_to session.title, session %> </td>
+          <td><%= session.start_datetime_human %> </td>
+          <td><%= session.invitations.invited.size %> </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class='row'>
+  <div class='span12'>
+  <h3>Recent actions</h3>
+  <%= will_paginate @changes,
+          remote: true,
+          param_name: 'changes_page',
+          renderer: BootstrapPagination::Rails %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="1">Type</th>
+          <th colspan="1">Id</th>
+          <th colspan="1">Link</th>
+          <th colspan="1">event</th>
+          <th colspan="3">changes</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @changes.each do |change| %>
+        <tr>
+          <td><%= change.item_type %></td>
+          <td><%= change.item_id %></td>
+          <td><%=
+            begin
+              link_to(find_my_name(change.item), url_for(change.item))
+            rescue NameError
+              "none"
+            end
+          %></td>
+          <td><%= change.event %></td>
+          <td><%= pp JSON.parse(change.object_changes) if change.object_changes %> </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
