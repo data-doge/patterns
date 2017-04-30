@@ -40,7 +40,7 @@ class ResearchSessionsController < ApplicationController
 
       @research_session.save
       # sends all of the invitations.
-      @research_session.invitations.each(&:invite)
+      @research_session.invitations.each(&:invite!)
 
       redirect_to research_session_path(@research_session)
     else

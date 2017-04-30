@@ -111,7 +111,8 @@ class SmsInvitationsController < ApplicationController
           session[:cancel] = false
           ::CustomSms.new(to: @person, msg: 'No changes made').send
         when false
-          ::CustomSms.new(to: @person, msg: 'Please enter either a number or "all" to cancel.').send
+          ::CustomSms.new(to: @person,
+                          msg: "Please enter either:\n a number\n 'all' to cancel all\n or 'none' to exit").send
         when present?
           res.each { |n| inv[n].cancel! }
           session[:cancel] = false
@@ -139,7 +140,8 @@ class SmsInvitationsController < ApplicationController
           inv.each(&:confirm!)
           session[:confirm] = false
         when false
-          ::CustomSms.new(to: @person, msg: 'Please enter either a number or "all" to confirm.').send
+          ::CustomSms.new(to: @person,
+                          msg: "Please enter either:\n a number\n 'all' to confirm all\n or 'none' to exit").send
         when present?
           res.each { |n| inv[n].confirm! }
           session[:confirm] = false

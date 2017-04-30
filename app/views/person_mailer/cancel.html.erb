@@ -1,6 +1,6 @@
 <p>Hi <% @invitation.person.first_name %>,</p>
 
-<p>Your interview <%= @invitation.start_datetime.to_weekday_and_time %> with <%= @invitation.user.name %>, phone number: <%=@invitation.user.phone_number %> has been cancelled.
+<p>Your interview <%= @invitation.start_datetime_human %> with <%= @invitation.user.name %>, phone number: <%=@invitation.user.phone_number %> has been cancelled.
 </p>
 
 <%= render partial: 'footer', locals: { person: @invitation.person } %>

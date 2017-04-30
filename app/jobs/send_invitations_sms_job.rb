@@ -21,30 +21,18 @@ class SendInvitationsSmsJob < Struct.new(:to, :invitation)
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 
   def perform
-    # step 1: check to see if we already have a context for the person
+    # TODO all texts should consider the persons' state with a ttl.
+    # step 1: check to see if we already have a conversation for the person
     #   yes: get ttl and re-enque for after ttl
     #   no: go to step 2
     # step 2: check if we are after hours
     #   yes: requeue for 8:30am
     #   no: set context with expire and send!
-
-    lock = Redis.current.get("invite_lock:#{to.id}")
-    if lock.nil? # && !time_requeue? # no lock, not too late
-      Rails.logger.info 'not locked!'
-
-      # this is where we lock. the invitation to this event.
-      Redis.current.setex("invite_lock:#{to.id}", 7200, invitation.id)
-
-      InvitationSms.new(to: to, session: session).send
-    elsif time_requeue?
-      Rails.logger.info 'after business hours'
+    if time_requeue?
       Delayed::Job.enqueue(SendInvitationsSmsJob.new(to, invitation), run_at: run_in_business_hours)
     else # person is locked, wait till the lock times out.
-      ttl = Redis.current.ttl("invite_lock:#{to.id}") # ttl is in seconds
-      Rails.logger.info "puts locked for #{ttl}"
-      Delayed::Job.enqueue(SendInvitationsSmsJob.new(to, invitation), run_at: ttl.seconds.from_now)
+      InvitationSms.new(to: to, invitation: invitation).send
     end
-    sleep(1) # twilio rate limiting.
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
