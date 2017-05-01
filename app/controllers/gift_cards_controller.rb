@@ -13,7 +13,7 @@ class GiftCardsController < ApplicationController
     @q_giftcards = GiftCard.ransack(params[:q])
     respond_to do |format|
       format.html do
-        @gift_cards = @q_giftcards.result.includes(:person).page(params[:page])
+        @gift_cards = @q_giftcards.result.includes(:person).order(id: :desc).page(params[:page])
         # @recent_signups = Person.no_signup_card.paginate(page: params[:page]).where('signup_at > :startdate', { startdate: 3.months.ago }).order('signup_at DESC')
       end
       format.csv do
@@ -32,7 +32,7 @@ class GiftCardsController < ApplicationController
       @q_recent_signups.created_at_date_gteq = 3.weeks.ago.strftime('%Y-%m-%d')
     end
 
-    @recent_signups = @q_recent_signups.result.page(params[:page_signups])
+    @recent_signups = @q_recent_signups.result.order(id: :desc).page(params[:page_signups])
 
     @new_gift_cards = []
     @recent_signups.length.times do
@@ -46,7 +46,7 @@ class GiftCardsController < ApplicationController
 
   # GET /gift_cards/new
   def new
-    @last_gift_card = GiftCard.last # default scope is id: :desc || GiftCard.new
+    @last_gift_card = GiftCard.last # default scope is id: :desc
     @gift_card = GiftCard.new
   end
 
@@ -104,7 +104,7 @@ class GiftCardsController < ApplicationController
     klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
     @giftable = klass.find(params[:giftable_id])
     @gift_card = GiftCard.new
-    @last_gift_card = GiftCard.last # default scope is id: :desc || GiftCard.new
+    @last_gift_card = GiftCard.last # default scope is id: :desc
     respond_to do |format|
       format.html
       format.js

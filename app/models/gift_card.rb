@@ -34,7 +34,6 @@ class GiftCard < ActiveRecord::Base
     other: 5
   }
 
-  default_scope { order(id: :desc) }
   belongs_to :giftable, polymorphic: true, touch: true
   belongs_to :person
   belongs_to :user, foreign_key: :created_by
