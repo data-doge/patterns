@@ -98,7 +98,7 @@ RSpec.describe GiftCardsController, type: :controller do
 
       it 'redirects to the created gift_card' do
         post :create, { gift_card: valid_attributes }
-        expect(response).to redirect_to(GiftCard.first)
+        expect(response).to redirect_to(GiftCard.last)
       end
     end
 
