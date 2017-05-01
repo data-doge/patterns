@@ -46,7 +46,7 @@
 class Person < ActiveRecord::Base
   has_paper_trail
 
-  acts_as_taggable # new, better tagging system
+  acts_as_taggable
 
   # include Searchable
   include ExternalDataMappings

@@ -106,19 +106,18 @@ class ResearchSessionsController < ApplicationController
     end
 
     def research_session_params
-      # whoever created it, keeps it.
-      # only ownership idea that counts?
-      user_id = @research_session&.user_id ? @research_session.user_id : current_user.id
       params.require(:research_session).permit(
         :description,
         :sms_description,
         :session_type,
+        :duration,
+        :location,
         :start_datetime,
         :end_datetime,
         :buffer,
         :title,
         :user_id
-      ).merge(user_id: user_id).symbolize_keys
+      ).symbolize_keys
     end
 
   # rubocop:enable Metrics/MethodLength

@@ -51,12 +51,17 @@ class PeopleController < ApplicationController
     @verified_types = Person.uniq.pluck(:verified).select(&:present?)
     # this could be cleaner...
     @people = if params[:tags].blank?
-                Person.paginate(page: params[:page]).order(sort_column + ' ' + sort_direction).where(active: true)
+                Person.paginate(page: params[:page]).
+                  order(sort_column + ' ' + sort_direction).
+                  where(active: true)
               else
                 tags =  params[:tags].split(',').map(&:strip)
                 @tags = ActsAsTaggableOn::Tag.where(name: tags)
 
-                Person.paginate(page: params[:page]).order(sort_column + ' ' + sort_direction).where(active: true).tagged_with(tags)
+                Person.paginate(page: params[:page]).
+                  order(sort_column + ' ' + sort_direction).
+                  where(active: true).
+                  tagged_with(tags,match_all: true)
               end
     @tags ||= []
   end

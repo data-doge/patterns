@@ -133,8 +133,7 @@ class SmsInvitationsController < ApplicationController
           else
             ::CustomSms.new(to: @person,
                           msg: "Sorry, I didn't understand that.").send
-            ::InvitationReminderSms.new(to: @person, invitations: inv)
-            session[:confirm] = false
+            session[:cancel] = true
           end
         end
       # must send multi-invitation cancel message
@@ -193,8 +192,7 @@ class SmsInvitationsController < ApplicationController
           else
             ::CustomSms.new(to: @person,
                           msg: "Sorry, I didn't understand that.").send
-            ::InvitationReminderSms.new(to: @person, invitations: inv)
-            session[:confirm] = false
+            session[:confirm] = true
           end
         end
       # must send multi-invitation confirm message

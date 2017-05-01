@@ -22,6 +22,13 @@
     </div>
   </div>
   <div class="control-group">
+  <%= f.label :user, :class =>'control-label' %>
+    <div class="controls">
+      <% users = User.all.map{|u| [u.name,u.id]} %>
+      <%= f.select :user_id, options_for_select(users, current_user.id) %>
+    </div>
+  </div>
+  <div class="control-group">
     <%= f.label :title, 'Session Title',  :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :title, placeholder: 'short and descriptive', :class => 'text_field' %>
