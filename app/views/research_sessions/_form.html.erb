@@ -1,0 +1,81 @@
+<%= form_for @research_session,
+             url: research_sessions_path,
+             method: :POST,
+             remote: false,
+             html: { class: 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :people, "People", :class => 'control-label' %>
+    <div class="controls">
+    <!--
+      the cart adds person_ids here.
+      adding a person doesn't remove them from the cart.
+      use the cocoon stuff here and session edit too.
+      cart should be in the session edit as well.
+     -->
+      <% f.fields_for :invitations do |inv| %>
+        <%= render 'nested_invitation_fields', f: inv %>
+      <% end %>
+      <%= link_to_add_association 'add person',
+            f, :invitations,
+            render_options: { wrapper: 'hidden' },
+            partial: 'nested_invitation_fields' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :title, 'Session Title',  :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, placeholder: 'short and descriptive', :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :location, 'Session Location', :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :location, placeholder: "leave empty for call", :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :description, 'Session description', :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :description, :class => 'text_area' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :sms_description, 'SMS Session description', :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :sms_description,placeholder:'as short as possible', :class => 'text_area' %>
+    </div>
+  </div>
+  <!-- <div class="control-group">
+    <%= f.label :tags,  "Tags", :class => 'control-label' %>
+    <div class='controls'>
+    <%= f.text_field :tag_list,
+        class: 'tokenfield input span4',
+        data: { search_url: '/taggings/search?type=ResearchSession&q=%QUERY',
+                submit_id: 'search-tag-hidden-input',
+                pre_populate: []
+              }
+      %>
+    </div>
+  </div> -->
+  <h2>Time</h2>
+
+  <div class="control-group" style="position: relative">
+    <%= f.label :start_datetime, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :start_datetime, :class => 'text_area' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label "Duration in minutes", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :duration, [15,30,45,60,75,90,105,130] %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit 'Send invitation', :class => 'btn btn-primary', :id => 'submit' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                people_path, :class => 'btn' %>
+  </div>
+<% end %>

@@ -57,14 +57,13 @@
           <dt>Interviews</dt>
           <dd><%= link_to "Calendar", calendar_path(token: @person.token) %></dd>
           <dt>Invitations</dt>
-          <dd><%= @person.event_invitations.size %></dd>
-          <dt>Reserved</dt>
-          <dd><%=@person.v2_reservations.size %></dd>
-          <dt>Attended</dt>
-          <dd><%= @person.v2_reservations.attended.size %></dd>
+          <dd><%= @person.invitations.invited.size %></dd>
+          <dt>Missed</dt>
+          <dd><%=@person.invitations.missed.size %></dd>
           <dt>Cancel</dt>
-          <dd><%= @person.v2_reservations.cancelled.size %> </dd>
-          <dd><%= best_in_place @person, :participation_type %></dd>
+          <dd><%= @person.invitations.cancelled.size %> </dd>
+          <dt>Attended</dt>
+          <dd><%= @person.invitations.attended.size %></dd>
         </dl>
       </div>
 
@@ -110,9 +109,15 @@
   </div>
 
   <div class="span6">
-    <h3>Location</h3>
-    <a href="https://maps.google.com?q=<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>" target="_blank" title="View in Google Maps"><img src="https://maps.googleapis.com/maps/api/staticmap?markers=|<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>&amp;zoom=14&amp;size=570x200&amp;sensor=false"></a>
-    <!-- <img src="https://maps.googleapis.com/maps/api/streetview?size=570x200&amp;location=<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>&amp;sensor=false"> -->
+    <div class='row'>
+      <h3>Location</h3>
+      <a href="https://maps.google.com?q=<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>" target="_blank" title="View in Google Maps"><img src="https://maps.googleapis.com/maps/api/staticmap?markers=|<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>&amp;zoom=14&amp;size=570x200&amp;sensor=false"></a>
+    </div>
+    <div class='row'>
+      <h3> Research Sessions</h3>
+      <%= render partial: 'research_sessions/mini_view',
+            locals: {person: @person} %>
+    </div>
   </div>
 </div>
 
@@ -127,7 +132,9 @@
     <% end %>
 
     <div id="comments">
-      <%= render partial: 'comment', collection: @person.comments.order("created_at DESC") %>
+      <%= render partial: 'comments/embed',
+            collection: @person.comments.order("created_at DESC"),
+            as: :comment %>
     </div>
   </div>
 

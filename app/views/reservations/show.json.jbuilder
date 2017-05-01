@@ -27,4 +27,4 @@
   <%= @reservation.attended_at %>
 </p>
 
-<%= link_to 'Back', v2_reservations_path %>
+<%= link_to 'Back', reservations_path %>

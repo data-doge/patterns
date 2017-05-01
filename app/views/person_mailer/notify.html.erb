@@ -1,0 +1,5 @@
+<p>Hi <% @invitation.person.first_name %>,</p>
+<p>An interview has been booked for <%= @invitation.start_datetime_human %> with <%= @invitation.user.name %>, phone number: <%=@invitation.user.phone_number %></p>
+
+
+<%= render partial: 'footer', locals: { person: @invitation.person } %>

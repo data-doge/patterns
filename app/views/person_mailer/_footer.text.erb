@@ -1,0 +1,7 @@
+
+Thanks!,
+<%= ENV['TEAM_NAME'] %>
+
+To be removed from this list, just click this link:
+<%= public_person_deactivate_url(person_id: person.id, token: person.token) %>
+

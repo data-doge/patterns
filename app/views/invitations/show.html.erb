@@ -1,0 +1,45 @@
+<%= render :partial => 'layouts/research_sessions_menu' %>
+<p>
+  <strong>Person:</strong>
+  <%= @invitation.person.full_name %>
+</p>
+
+<p>
+  <strong>Event:</strong>
+  <%= @invitation.title %>
+  </br>
+  <%= @invitation.description %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @invitation.aasm_state %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @invitation.user.name %>
+</p>
+
+<%= render partial: 'actions', locals: {invitation: @invitation}  %>
+
+</div>
+<br>
+
+<div class="row">
+  <div class="span6">
+    <h3>Notes</h3>
+    <%= form_for([@invitation, @comment], remote: true) do |form| %>
+      <%= form.hidden_field :commentable_type, :value => 'Invitation' %>
+      <%= form.hidden_field :commentable_id, :value => @invitation.id %>
+      <%= form.text_area :content, rows: 3, class: "span6 input-block-level" %>
+      <%= form.submit 'Add note', :class => "btn" %>
+    <% end %>
+
+    <div id="comments">
+      <%= render partial: 'comment', collection: @invitation.comments.order("created_at DESC") %>
+    </div>
+  </div>
+</div>
+
+<%= button_to 'Back', :back %>

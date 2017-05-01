@@ -1,0 +1,4 @@
+$("#modal-window").html("<%= j render partial: 'gift_cards/modal', locals: {giftable: @giftable} %>");
+  $("#new-expirationdate").mask("99/99",{placeholder:"MM/YY"});
+  $("#new-amount").mask("9?9?.99",{placeholder:"##.##"});
+  $("#new-cardnumber").mask("9999",{placeholder:"####"});

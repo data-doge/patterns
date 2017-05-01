@@ -1,0 +1,29 @@
+<p>Hi <% @invitations.first.person.first_name %>,</p>
+<p><%= @invitations.size %> session<%= @invitations.size > 1 ? 's have' : ' has' %> are scheduled for you:</p>
+
+<% @invitations.each do |r| %>
+   <div class='invitation'>
+      <p><%= r.description %> on <%= r.start_datetime_human %> for <%= r.duration / 60 %> minutes \n with <%= r.user.name %> tel: <%= r.user.phone_number %>"</p>
+
+        <ul>
+          <li>
+            <%= link_to "Confirm",
+                  remote_confirm_research_session_invitations_url(
+                    research_session_id: r.research_session.id,
+                    id:r.id,
+                    token:r.person.token) %>
+
+          </li>
+          <li>
+            <%= link_to "Cancel",
+                  remote_cancel_research_session_invitations_url(
+                    research_session_id: r.research_session.id,
+                    id:r.id,
+                    token:r.person.token) %>
+
+          </li>
+        </ul>
+      </div>
+<% end %>
+
+<%= render partial: 'footer', locals: { person: @invitations.first.person } %>

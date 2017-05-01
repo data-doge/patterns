@@ -1,0 +1,5 @@
+Hi <% @invitation.person.first_name %>,
+
+Your interview for <%= @invitation.start_datetime_human %> with <%= @invitation.user.name %> tel:<%= @invitation.user.phone_number %> has been cancelled.
+
+<%= render partial: 'footer', locals: { person: @invitation.person } %>

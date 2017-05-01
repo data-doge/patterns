@@ -3,6 +3,10 @@ require 'csv'
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy]
 
+  GIFTABLE_TYPES = {
+    'Person'     => Person,
+    'Invitation' => Invitation
+  }.freeze
   # GET /gift_cards
   # GET /gift_cards.csv
   def index
@@ -67,16 +71,6 @@ class GiftCardsController < ApplicationController
         format.json { render json: @gift_card.errors, status: :unprocessable_entity }
       end
     end
-
-    # respond_to do |format|
-    #   if @gift_card.save
-    #     format.html { redirect_to @gift_card, notice: 'Gift card was successfully created.' }
-    #     format.json { render action: 'show', status: :created, location: @gift_card }
-    #   else
-    #     format.html { render action: 'new' }
-    #     format.json { render json: @gift_card.errors, status: :unprocessable_entity }
-    #   end
-    # end
   end
   # rubocop:enable Metrics/MethodLength
 
@@ -98,11 +92,22 @@ class GiftCardsController < ApplicationController
   # DELETE /gift_cards/1.json
   def destroy
     @gift_card.destroy
-    @gift_card.person.reload
+    @gift_card.giftable.reload
     respond_to do |format|
       format.html { redirect_to :back }
       format.json { head :no_content }
       format.js {}
+    end
+  end
+
+  def modal
+    klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
+    @giftable = klass.find(params[:giftable_id])
+    @gift_card = GiftCard.new
+    @last_gift_card = GiftCard.last || GiftCard.new
+    respond_to do |format|
+      format.html
+      format.js
     end
   end
 

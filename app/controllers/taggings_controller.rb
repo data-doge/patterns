@@ -14,8 +14,8 @@
 class TaggingsController < ApplicationController
 
   TAGGABLE_TYPES = {
-    'Person'    => Person,
-    'V2::Event' => V2::Event
+    'Person'          => Person,
+    'ResearchSession' => ResearchSession
   }.freeze
 
   # FIXME: Refactor and re-enable cop
@@ -25,11 +25,11 @@ class TaggingsController < ApplicationController
     klass = TAGGABLE_TYPES.fetch(params[:taggable_type])
     res = false
     if klass && params[:tag].present?
-      obj = klass.find(params[:taggable_id])
+      obj = klass.includes(:tags, :taggings).find(params[:taggable_id])
       tag = params[:tag]
       # if we want owned tags. Not sure we do...
       # res = current_user.tag(obj,with: params[:tagging][:name])
-      unless obj.tag_list.include?(tag)
+      unless obj.tags.map(&:name).include?(tag)
         obj.tag_list.add(tag)
         res = obj.save
         found_tag = klass.tag_counts.find_by(name: tag)
@@ -71,6 +71,13 @@ class TaggingsController < ApplicationController
   # rubocop:enable Metrics/MethodLength
   def search
     klass = params[:type].blank? ? Person : TAGGABLE_TYPES.fetch(params[:type])
+
+    # this query is busted. waaaay too big. loads EVERY tag.
+    # potentially the solution is to
+    # search the tags only, THEN filter through taggings by taggable_type?
+    # tags = ActsAsTaggableOn::Tag.where('name like ?',"%#{params[:q]}%")
+    # taggings = ActsAsTaggableOn::Tagging.include(:tags).where(taggable_type: klass.to_s, tag_id: tags.map(&:id)).group(:tag_id).count(:tag_id)
+
     @tags = klass.tag_counts.where('name like ?', "%#{params[:q]}%").
             order(taggings_count: :desc)
 

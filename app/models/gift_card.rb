@@ -34,6 +34,7 @@ class GiftCard < ActiveRecord::Base
     other: 5
   }
 
+  default_scope { order(id: :desc) }
   belongs_to :giftable, polymorphic: true, touch: true
   belongs_to :person
   belongs_to :user, foreign_key: :created_by
@@ -63,15 +64,15 @@ class GiftCard < ActiveRecord::Base
   # Validation to limit 1 signup per person
   validates_uniqueness_of :reason, scope: :person_id, if: "reason == 'signup'"
 
+  validate :giftable_person_ownership
   # ransacker :created_at, type: :date do
   #   Arel.sql('date(created_at)')
   # end
 
-  def gifted_for
-    if giftable_id
-      klass = giftable_type.constantize
-      klass.find(giftable_id)
-    end
+  def giftable_person_ownership
+    return true if giftable.nil?
+
+    giftable.respond_to?(:person_id) ? person_id == giftable.person_id : false
   end
 
   def self.batch_create(post_content)

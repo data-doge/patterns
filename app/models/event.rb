@@ -19,7 +19,13 @@
 
 class Event < ActiveRecord::Base
 
-  validates_presence_of :name, :application_id, :location, :address, :starts_at, :ends_at, :description
+  validates_presence_of :name,
+    :application_id,
+    :location,
+    :address,
+    :start_datetime,
+    :end_datetime,
+    :description
 
   belongs_to :application
 
@@ -30,4 +36,7 @@ class Event < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
+  def title
+    name
+  end
 end

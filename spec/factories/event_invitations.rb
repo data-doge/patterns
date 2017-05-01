@@ -1,7 +1,7 @@
 require 'faker'
 
 FactoryGirl.define do
-  factory :event_invitation, class: V2::EventInvitation do
+  factory :event_invitation, class: Session do
     title 'event title'
     description 'Lorem ipsum for now'
     slot_length 15

@@ -41,8 +41,11 @@
         <td><%= gift_card.person_id %></td>
         <td><%= link_to "#{gift_card.person.full_name}", person_path(gift_card.person) %></td>
         <td><%= gift_card.reason.titleize %></td>
-        <td><%=
-        #link_to(url_for(gift_card.gifted_for)) if gift_card.gifted_for
+        <td><%= if gift_card.giftable.present?
+                  link_to(find_name(gift_card.giftable), url_for(gift_card.giftable))
+                else
+                  "None"
+                end
         %></td>
         <td><%= gift_card.batch_id %></td>
         <td><%= gift_card.proxy_id %></td>

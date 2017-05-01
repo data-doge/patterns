@@ -1,0 +1,13 @@
+Hello!
+Patterns Person Deactivated via: <%= person.deactivated_method %>
+Name: <%= @person.full_name %>
+Email: <%= @person.email_address %>
+Phone: <%= @person.phone_number %>
+
+Tags: <%= @person.tag_list.to_s %>
+
+<%= link_to 'More Info',
+         person_url(@person) %>
+
+Thanks!,
+<%= ENV['TEAM_NAME'] %>

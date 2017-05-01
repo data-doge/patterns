@@ -1,0 +1,42 @@
+<%= render :partial => 'layouts/research_sessions_menu' %>
+<h1>Listing Invitations</h1>
+<div class="row">
+  <div class="span12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Person</th>
+          <th>Event</th>
+          <th>Status</th>
+          <th>Created by</th>
+          <th>Time Slot</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @invitations.each do |invitation| %>
+          <tr>
+            <td><%= invitation.person.full_name %></td>
+            <td><%= invitation.research_session.title %></td>
+            <td><%= invitation.aasm_state %></td>
+            <td><%= invitation.user.name %></td>
+            <td><%= invitation.to_weekday_and_time %></td>
+            <td><%= link_to 'Show', invitation %></td>
+            <!-- <td><%= link_to 'Edit', edit_invitation_path(invitation) %></td> -->
+            <td><%= link_to 'Destroy', invitation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<br>
+
+<div class="row">
+  <div class="span12" style="text-align:center">
+    <%= will_paginate @invitations, :renderer => BootstrapPagination::Rails %>
+  </div>
+</div>

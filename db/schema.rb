@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170421190749) do
+ActiveRecord::Schema.define(version: 20170430205151) do
 
   create_table "applications", force: :cascade do |t|
     t.string   "name",         limit: 255
@@ -59,8 +59,8 @@ ActiveRecord::Schema.define(version: 20170421190749) do
   create_table "events", force: :cascade do |t|
     t.string   "name",           limit: 255
     t.text     "description",    limit: 65535
-    t.datetime "starts_at"
-    t.datetime "ends_at"
+    t.datetime "start_datetime"
+    t.datetime "end_datetime"
     t.text     "location",       limit: 65535
     t.text     "address",        limit: 65535
     t.integer  "capacity",       limit: 4
@@ -97,6 +97,17 @@ ActiveRecord::Schema.define(version: 20170421190749) do
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
   end
+
+  create_table "invitations", force: :cascade do |t|
+    t.integer  "person_id",           limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "research_session_id", limit: 4
+    t.string   "aasm_state",          limit: 255
+  end
+
+  add_index "invitations", ["person_id"], name: "index_invitations_on_person_id", using: :btree
+  add_index "invitations", ["research_session_id"], name: "index_invitations_on_research_session_id", using: :btree
 
   create_table "mailchimp_exports", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -181,6 +192,23 @@ ActiveRecord::Schema.define(version: 20170421190749) do
     t.integer  "updated_by",  limit: 4
   end
 
+  create_table "research_sessions", force: :cascade do |t|
+    t.string   "description",     limit: 255
+    t.integer  "buffer",          limit: 4,   default: 0,  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id",         limit: 4
+    t.string   "title",           limit: 255
+    t.datetime "start_datetime"
+    t.datetime "end_datetime"
+    t.string   "sms_description", limit: 255
+    t.integer  "session_type",    limit: 4,   default: 1
+    t.string   "location",        limit: 255
+    t.integer  "duration",        limit: 4,   default: 60
+  end
+
+  add_index "research_sessions", ["user_id"], name: "index_research_sessions_on_user_id", using: :btree
+
   create_table "reservations", force: :cascade do |t|
     t.integer  "person_id",    limit: 4
     t.integer  "event_id",     limit: 4
@@ -240,7 +268,7 @@ ActiveRecord::Schema.define(version: 20170421190749) do
     t.string   "account_sid",        limit: 255
     t.string   "from",               limit: 255
     t.string   "to",                 limit: 255
-    t.string   "body",               limit: 255
+    t.text     "body",               limit: 65535
     t.string   "status",             limit: 255
     t.string   "error_code",         limit: 255
     t.string   "error_message",      limit: 255
@@ -286,45 +314,6 @@ ActiveRecord::Schema.define(version: 20170421190749) do
     t.string   "token",                   limit: 255
     t.string   "phone_number",            limit: 255
     t.boolean  "new_person_notification",             default: false
-  end
-
-  create_table "v2_event_invitations", force: :cascade do |t|
-    t.integer  "v2_event_id", limit: 4
-    t.string   "people_ids",  limit: 255
-    t.string   "description", limit: 255
-    t.string   "slot_length", limit: 255
-    t.string   "date",        limit: 255
-    t.string   "start_time",  limit: 255
-    t.string   "end_time",    limit: 255
-    t.integer  "buffer",      limit: 4,   default: 0, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id",     limit: 4
-    t.string   "title",       limit: 255
-  end
-
-  create_table "v2_events", force: :cascade do |t|
-    t.integer  "user_id",     limit: 4
-    t.string   "description", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "v2_reservations", force: :cascade do |t|
-    t.integer  "time_slot_id",        limit: 4
-    t.integer  "person_id",           limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id",             limit: 4
-    t.integer  "event_id",            limit: 4
-    t.integer  "event_invitation_id", limit: 4
-    t.string   "aasm_state",          limit: 255
-  end
-
-  create_table "v2_time_slots", force: :cascade do |t|
-    t.integer  "event_id",   limit: 4
-    t.datetime "start_time"
-    t.datetime "end_time"
   end
 
   create_table "versions", force: :cascade do |t|

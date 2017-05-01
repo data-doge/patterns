@@ -50,7 +50,7 @@ feature 'Person responds to interview invitation over email' do
     sleep 1
     selected_time = first_slot.to_weekday_and_time
     @research_subject.reload
-    expect(@research_subject.v2_reservations.size).to eq(1)
+    expect(@research_subject.invitations.size).to eq(1)
     # expect(page).to have_content "An interview has been booked for #{selected_time}"
 
     admin_email = @event.user.email
@@ -102,7 +102,7 @@ feature 'Person responds to interview invitation over email' do
     wait_for_ajax
     sleep 1
     @research_subject.reload
-    expect(@research_subject.v2_reservations.size).to eq(0)
+    expect(@research_subject.invitations.size).to eq(0)
     # expect(page).to have_content "No time slot was selected, couldn't create the reservation"
   end
 end
@@ -123,7 +123,7 @@ def book_all_event_time_slots
   @event.reload
   d=[]
   @event.time_slots.each_with_index do |slot, i|
-    d << V2::Reservation.create(person: @event_invitation.invitees[i],
+    d << Invitation.create(person: @event_invitation.invitees[i],
                            time_slot: slot,
                            user: @event_invitation.user,
                            event: @event_invitation.event,

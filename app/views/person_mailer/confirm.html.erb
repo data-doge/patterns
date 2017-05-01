@@ -1,0 +1,6 @@
+<p>Hi <% @invitation.person.first_name %>,</p>
+<p>
+Your session at <%= @invitation.start_datetime_human %> with <%= @invitation.user.name %>, phone number: <%=@invitation.user.phone_number %> has been confirmed!
+</p>
+
+<%= render partial: 'footer', locals: { person: @invitation.person } %>

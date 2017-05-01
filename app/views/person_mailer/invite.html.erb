@@ -1,0 +1,24 @@
+<p>Hello <%= @person.first_name %>,</p>
+
+<p>
+You've been invited to join <%= @invitation.user.name %> on <%=@invitation.start_datetime_human %> for:
+
+<%= @invitation.description %>
+</p>
+Please Confirm or Cancel below:
+<ul>
+  <li>
+    <%= link_to "Confirm", remote_confirm_research_session_invitations_url(
+          research_session_id: @invitation.research_session.id,
+          id: @invitation.id,
+          token: @person.token) %>
+  </li>
+  <li>
+    <%= link_to "Cancel", remote_cancel_research_session_invitations_url(
+          research_session_id: @invitation.research_session.id,
+          id: @invitation.id,
+          token: @person.token) %>
+  </li>
+</ul>
+
+<%= render partial: 'footer', locals: { person: @person } %>

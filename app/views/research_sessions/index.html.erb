@@ -1,0 +1,67 @@
+<%= render partial: 'layouts/research_sessions_menu' %>
+<%= search_form_for @s, class: 'form-inline' do |f| %>
+  <div class='pull-left'>
+    <%= f.label "Tags" %>
+    <%= f.text_field :ransack_tagged_with,
+                              class: 'tokenfield input-large',
+                              data: { search_url: '/taggings/search?type=ResearchSession&q=%QUERY',
+                                      submit_id: 'search-tag-hidden-input',
+                                      pre_populate: @s.ransack_tagged_with&.split(',')
+                                    }
+                            %>
+  </div>
+  <%= f.label "Title" %>
+  <%= f.search_field :title_cont %>
+
+  <%= f.label "Name" %>
+  <%= f.search_field :person_name_cont %>
+  <%= f.submit 'Search', class: 'btn btn-default' %>
+  <%= link_to "Clear Search", research_sessions_path, class: 'btn btn-default' %>
+<% end %>
+
+<div class="row">
+  <div class="span12">
+    <h4>List of Sessions</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Starts at</th>
+          <th>Ends at</th>
+          <th>Created By</th>
+          <th>Number Invited:</th>
+          <th>Attended</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @research_sessions.each do |sesh| %>
+          <tr>
+            <td><%= link_to sesh.title, sesh %></td>
+            <td><%= sesh.description %></td>
+            <td><%= sesh.start_datetime.to_s :short %></td>
+            <td><%= sesh.end_datetime.to_s :short %></td>
+            <td><%= sesh.user.name %></td>
+            <td><%= sesh.people.count %></td>
+            <td><%= sesh.invitations.where(aasm_state:'attended').size %></td>
+            <!-- probably link to the reservations for this event -->
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12" style="text-align:center">
+    <%= will_paginate @research_sessions, :renderer => BootstrapPagination::Rails %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+    <p><%= link_to 'New Session', new_research_session_path %></p>
+  </div>
+</div>

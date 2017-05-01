@@ -69,10 +69,11 @@ class PeopleController < ApplicationController
     @last_gift_card = GiftCard.last
     @gift_card = GiftCard.new
     @reservation = Reservation.new person: @person
-    @tags = @person.tag_list
-    @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).where.not(wufoo_formid: nil)
+    @tags = @person.tags.map(&:name)
+    @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
     @twilio_wufoo_formids = @outgoingmessages.pluck(:wufoo_formid).uniq
     @twilio_wufoo_forms = TwilioWufoo.where(id: @twilio_wufoo_formids)
+    @allmessages =  TwilioMessage.where("to = :number or from = :number", number: @person.normalized_phone_number )
   end
 
   # GET /people/new
@@ -233,7 +234,7 @@ class PeopleController < ApplicationController
     respond_to do |format|
       if @person.with_user(current_user).update(person_params)
         format.html { redirect_to @person, notice: 'Person was successfully updated.' }
-        format.json { head :no_content }
+        format.json { respond_with_bip(@person) }
       else
         format.html { render action: 'edit' }
         format.json { render json: @person.errors, status: :unprocessable_entity }
@@ -255,7 +256,7 @@ class PeopleController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_person
-      @person = Person.find(params[:id])
+      @person = Person.includes(:tags, :taggings).find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

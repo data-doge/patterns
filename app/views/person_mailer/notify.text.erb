@@ -1,0 +1,4 @@
+Hi <% @invitation.person.first_name %>,
+An interview has been booked for <%= @invitation.start_datetime_human %> with <%= @invitation.user.name %> tel:<%= @invitation.user.phone_number %>
+
+<%= render partial: 'footer', locals: { person: @invitation.person } %>

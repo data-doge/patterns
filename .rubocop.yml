@@ -27,6 +27,9 @@ Style/AlignHash:
   EnforcedHashRocketStyle: table
   EnforcedLastArgumentHashStyle: always_ignore
 
+Style/Lambda:
+  Enabled: false
+
 Style/BracesAroundHashParameters:
   Enabled: false
 

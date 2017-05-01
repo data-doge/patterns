@@ -92,7 +92,7 @@ xdescribe V2::SmsReservationsController do
         let(:body) { "#{event.id}#{selected_number}" }
         let(:time_slot) { event.time_slots.first }
         let(:reservation) {
-          V2::Reservation.create(user: event_invitation.user,
+          Invitation.create(user: event_invitation.user,
                              event: event,
                              event_invitation: event_invitation,
                              time_slot: time_slot,
@@ -103,7 +103,7 @@ xdescribe V2::SmsReservationsController do
         it 'does not create a new reservation' do
           reservation.save
           subject
-          expect(V2::Reservation.count).to eq(1)
+          expect(Invitation.count).to eq(1)
           open_last_text_message_for research_subject.phone_number
           not_expected = "An interview has been booked for #{selected_time}"
           expect(current_text_message.body).to_not eql not_expected
@@ -127,7 +127,7 @@ xdescribe V2::SmsReservationsController do
       context 'confirming a reservation' do
         let(:body) { 'confirm' }
         let(:reservation) {
-          V2::Reservation.create(user: event_invitation.user,
+          Invitation.create(user: event_invitation.user,
                              event: event,
                              event_invitation: event_invitation,
                              time_slot: time_slot,
@@ -149,7 +149,7 @@ xdescribe V2::SmsReservationsController do
       context 'Cancelling a reservation' do
         let(:body) { 'cancel' }
         let(:reservation) {
-          V2::Reservation.create(user: event_invitation.user,
+          Invitation.create(user: event_invitation.user,
                              event: event,
                              event_invitation: event_invitation,
                              time_slot: time_slot,
@@ -169,7 +169,7 @@ xdescribe V2::SmsReservationsController do
       context 'Requesting the calendar' do
         let(:body) { 'Calendar' }
         let(:reservation) {
-          V2::Reservation.create(user: event_invitation.user,
+          Invitation.create(user: event_invitation.user,
                              event: event,
                              event_invitation: event_invitation,
                              time_slot: time_slot,
@@ -182,7 +182,7 @@ xdescribe V2::SmsReservationsController do
           subject
           research_subject.reload
           open_last_text_message_for research_subject.phone_number
-          res_count = research_subject.v2_reservations.for_today_and_tomorrow.size
+          res_count = research_subject.invitations.for_today_and_tomorrow.size
           msg = "You have #{res_count} reservation#{res_count >1 ? 's' : ''} soon."
           expect(current_text_message.body).to have_text(msg)
           Timecop.return

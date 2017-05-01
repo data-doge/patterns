@@ -77,6 +77,8 @@ GEM
     best_in_place (3.0.3)
       actionpack (>= 3.2)
       railties (>= 3.2)
+    bootstrap3-datetimepicker-rails (4.17.47)
+      momentjs-rails (>= 2.8.1)
     builder (3.2.3)
     bullet (5.5.1)
       activesupport (>= 3.0.0)
@@ -96,6 +98,7 @@ GEM
       launchy
     chronic (0.10.2)
     cliver (0.3.2)
+    cocoon (1.2.9)
     codeclimate-test-reporter (1.0.8)
       simplecov (<= 0.13)
     coderay (1.1.1)
@@ -121,6 +124,10 @@ GEM
     delayed_job_active_record (4.1.1)
       activerecord (>= 3.0, < 5.1)
       delayed_job (>= 3.0, < 5)
+    delayed_job_web (1.3)
+      activerecord (> 3.0.0)
+      delayed_job (> 2.0.3)
+      sinatra (>= 1.4.4)
     devise (4.1.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -162,6 +169,9 @@ GEM
       multi_json (>= 1.11.0)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
+    glyphicons-rails (0.1.2)
+      sass (~> 3.3)
+      sass-rails
     gsm_encoder (0.1.6)
     guard (2.14.1)
       formatador (>= 0.2.4)
@@ -238,6 +248,8 @@ GEM
     mocha (1.2.1)
       metaclass (~> 0.0.1)
     mock_redis (0.17.3)
+    momentjs-rails (2.17.1)
+      railties (>= 3.1)
     monetize (1.6.0)
       money (~> 6.8)
     money (6.8.4)
@@ -303,6 +315,8 @@ GEM
     rack (1.6.5)
     rack-mini-profiler (0.10.2)
       rack (>= 1.2.0)
+    rack-protection (1.5.3)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.8)
@@ -417,6 +431,10 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
+    sinatra (1.4.8)
+      rack (~> 1.5)
+      rack-protection (~> 1.4)
+      tilt (>= 1.3, < 3)
     sixarm_ruby_unaccent (1.1.1)
     skylight (1.2.1)
       activesupport (>= 3.0.0)
@@ -515,17 +533,20 @@ DEPENDENCIES
   annotate
   bcrypt_pbkdf
   best_in_place (~> 3.0.1)
+  bootstrap3-datetimepicker-rails
   bullet
   capistrano!
   capybara
   capybara-email
   capybara-screenshot
+  cocoon
   codeclimate-test-reporter (~> 1.0.0)
   coffee-rails
   coveralls
   daemons
   database_cleaner
   delayed_job_active_record
+  delayed_job_web
   devise (~> 4.1.0)
   emoji
   factory_girl_rails
@@ -533,6 +554,7 @@ DEPENDENCIES
   fast_blank
   flamegraph
   gibbon (~> 2.2.3)
+  glyphicons-rails
   gsm_encoder
   guard
   guard-bundler
@@ -555,6 +577,7 @@ DEPENDENCIES
   memory_test_fix
   mocha
   mock_redis
+  momentjs-rails
   money-rails
   mysql2
   newrelic_rpm

@@ -1,0 +1,8 @@
+<tr id='cart-<%= person.id %>'>
+  <td><%= link_to person.full_name, person_path(person.id) %></td>
+  <td><%= person.email_address %></td>
+  <td><%= person.phone_number %></td>
+  <td><%= person.preferred_contact_method %></td>
+  <td><%= person.tag_count_cache %></td>
+  <td><%= render partial: '/people/add_remove_cart', locals: {person: person} %></td>
+</tr>

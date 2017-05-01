@@ -36,6 +36,9 @@
 #  deactivated_method               :string(255)
 #  neighborhood                     :string(255)
 #  tag_count_cache                  :integer          default(0)
+#  cached_tag_list                  :string(255)
+#  referred_by                      :string(255)
+#  low_income                       :boolean
 #
 
 # FIXME: Refactor and re-enable cop
@@ -62,20 +65,15 @@ class Person < ActiveRecord::Base
   has_many :reservations, dependent: :destroy
   has_many :events, through: :reservations
 
-  # we don't really need a join model, exceptionally HABTM is more appropriate
-  # rubocop:disable Rails/HasAndBelongsToMany
-  has_and_belongs_to_many :event_invitations, class_name: '::V2::EventInvitation', join_table: :invitation_invitees_join_table
-  # rubocop:enable Rails/HasAndBelongsToMany
-
-  has_many :v2_reservations, class_name: '::V2::Reservation'
-  has_many :v2_events, through: :event_invitations, foreign_key: 'v2_event_id', source: :event
+  has_many :invitations
+  has_many :research_sessions, through: :invitations
 
   has_secure_token :token
 
   after_update  :sendToMailChimp
   after_create  :sendToMailChimp
   after_create  :update_neighborhood
-  after_create  :send_notifications
+  after_create  :send_new_person_notifications
 
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -120,6 +118,12 @@ class Person < ActiveRecord::Base
 
   ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number
 
+  def self.send_all_reminders
+    # this is where reservation_reminders
+    # called by whenever in /config/schedule.rb
+    Person.all.find_each(&:send_invitation_reminder)
+  end
+
   def signup_gc_sent
     signup_cards = gift_cards.where(reason: 1)
     return true unless signup_cards.empty?
@@ -127,7 +131,8 @@ class Person < ActiveRecord::Base
   end
 
   def gift_card_total
-    total = gift_cards.sum(:amount_cents)
+    end_of_last_year = Time.zone.today.beginning_of_year - 1.day
+    total = gift_cards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
     Money.new(total, 'USD')
   end
 
@@ -335,23 +340,8 @@ class Person < ActiveRecord::Base
     [address_1, address_2, city, state, postal_code].reject(&:blank?).join(', ')
   end
 
-  def self.send_all_reminders
-    # this is where reservation_reminders
-    # called by whenever in /config/schedule.rb
-    Person.all.find_each(&:send_reservation_reminder)
-  end
-
-  def send_reservation_reminder
-    return if v2_reservations.for_today_and_tomorrow.size.zero?
-    case preferred_contact_method.upcase
-    when 'SMS'
-      ::ReservationReminderSms.new(to: self, reservations: v2_reservations.for_today_and_tomorrow).send
-    when 'EMAIL'
-      ReservationNotifier.remind(
-        reservations:  v2_reservations.for_today_and_tomorrow.to_a,
-        email_address: email_address
-      ).deliver_later
-    end
+  def send_invitation_reminder
+    invitations.confirmable.upcoming(2, &:remind!)
   end
 
   def deactivate!(method = nil)
@@ -369,10 +359,10 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def send_notifications
+  def send_new_person_notifications
     User.where(new_person_notification: true).find_each do |user|
       email = user.email_address
-      NewPersonMailer.notify(email_address: email, person: self).deliver_later
+      ::AdminMailer.new_person_notify(email_address: email, person: self).deliver_later
     end
   end
 

@@ -1,0 +1,15 @@
+<tr id='cart-<%= person.id %>'>
+  <td><%= link_to person.full_name, person_path(person) %></td>
+  <td><%= person.preferred_contact_method %></td>
+  <td>
+    <a class='btn btn-mini add-to-session'
+       data-fullname='<%= person.full_name %>'
+       data-personid='<%= person.id %>'
+       id='add-<%= person.id%>'>add</a>
+  </td>
+  <td>
+    <%= render partial: '/people/add_remove_cart',
+          locals: {person: person}
+    %>
+  </td>
+</tr>

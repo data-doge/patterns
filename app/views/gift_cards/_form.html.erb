@@ -1,3 +1,10 @@
+<%
+  # wacky, I know. For more easily accesible modals
+  @gift_card ||= GiftCard.new
+  @last_gift_card ||= GiftCard.last
+  @giftable ||= giftable
+%>
+
 <%= form_for @gift_card do |f| %>
   <% if @gift_card.errors.any? %>
     <div id="error_explanation">
@@ -51,6 +58,10 @@
           GiftCard.reasons.keys.to_a,
           { prompt: "Reason", selected: @last_gift_card.reason } %>
   </div>
+  <% if @giftable.present? %>
+    <%= f.hidden_field :giftable_id, value: @giftable.id %>
+    <%= f.hidden_field :giftable_type, value: @giftable.class.to_s %>
+  <% end %>
   <div class="actions">
     <%= f.submit %>
   </div>

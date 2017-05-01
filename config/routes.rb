@@ -1,9 +1,8 @@
 Logan::Application.routes.draw do
   resources :gift_cards do
     collection do
-      get 'recent_signups',
-        action: :recent_signups,
-        as: :recent_signups
+      get 'recent_signups', action: :recent_signups, as: :recent_signups
+      get 'modal/:giftable_type/:giftable_id', action: :modal, as: :modal
     end
   end
 
@@ -14,38 +13,43 @@ Logan::Application.routes.draw do
     end
   end
 
-  namespace :v2 do
-    resources :event_invitations
-    resources :reservations do
-      collection do
-        post ':id/confirm/(:token)',
-              to: 'reservations#confirm',
-              as: :confirm
-        post ':id/cancel/(:token)',
-              to: 'reservations#cancel',
-              as: :cancel
-        post ':id/change/(:token)',
-              to: 'reservations#change',
-              as: :change
-        get ':id/confirm/(:token)',
-              to: 'reservations#confirm',
-              as: :remote_confirm
-        get ':id/cancel/(:token)',
-              to: 'reservations#cancel',
-              as: :remote_cancel
-        get ':id/change/(:token)',
-              to: 'reservations#change',
-              as: :remote_change
-      end
-      resources :comments, controller: '/comments'
-    end
-    resources :sms_reservations, only: [:create]
+  resources :invitations do
+    resources :comments, controller: 'comments'
   end
 
+  resources :research_sessions, path: :sessions, has_many: :invitations do
+    resources :comments, controller: 'comments'
+    get 'invitations_panel',
+      to: 'research_sessions#invitations_panel',
+      as: :invitations_panel
+    get 'add_person/:person_id',
+      to: 'research_sessions#add_person',
+      as: :add_person
+    resources :invitations do
+      collection do
+        post ':id/event/:event',
+              to: 'invitations#event',
+              as: :event
+
+        get ':id/confirm/(:token)',
+              to: 'invitations#confirm',
+              as: :remote_confirm
+
+        get ':id/cancel/(:token)',
+              to: 'invitations#cancel',
+              as: :remote_cancel
+      end
+      resources :comments, controller: 'comments'
+    end
+  end
+
+  resources :sms_invitations, only: [:create]
+
+
   # simple session based cart for storing people ids.
-  get 'v2/cart', to: 'v2/cart#index', as: :show_cart
-  get 'v2/cart/add/:person_id', to: 'v2/cart#add', as: :add_cart
-  get 'v2/cart/delete(/:person_id(/:all))', to: 'v2/cart#delete', as: :delete_cart
+  get 'cart', to: 'cart#index', as: :show_cart
+  get 'cart/add/:person_id', to: 'cart#add', as: :add_cart
+  get 'cart/delete(/:person_id(/:all))', to: 'cart#delete', as: :delete_cart
 
   get 'registration', to: 'public/people#new'
 
@@ -67,9 +71,9 @@ Logan::Application.routes.draw do
 
   # post "twil", to: 'twilio_messages/#newtwil'
 
-  get 'taggings/create'
-  get 'taggings/destroy'
-  get 'taggings/search'
+  get 'taggings/create', as: :tag_create
+  get 'taggings/destroy', as: :tag_destroy
+  get 'taggings/search', as: :tag_search
 
   get 'mailchimp_export/index'
   get 'mailchimp_export/create'
@@ -82,11 +86,16 @@ Logan::Application.routes.draw do
   end
 
   resources :applications
-
-
   resources :programs
 
+  # weirdo stuff to get around devise. has to be a better way
+
   devise_for :users
+
+  scope "/admin" do
+    resources :users
+  end
+
   get 'dashboard/index'
   resources :submissions
 
@@ -141,7 +150,7 @@ Logan::Application.routes.draw do
   end
   # post "people/create_sms"
 
-
+  match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
   root to: 'dashboard#index'
 
   # The priority is based upon order of creation: first created -> highest priority.

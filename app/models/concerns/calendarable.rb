@@ -1,7 +1,45 @@
 require 'active_support/concern'
 
+# to be "calendarable", must have or delegate to
+# start_datetime
+# end_datetime
+# description
+# title
+# a user or person
+
 module Calendarable
   extend ActiveSupport::Concern
+  # http://stackoverflow.com/questions/7323793/shared-scopes-via-module
+  # http://stackoverflow.com/questions/2682638/finding-records-that-overlap-a-range-in-rails
+  # rubocop:disable Lint/AmbiguousBlockAssociation
+  included do
+    # doesn't work if you delegate start_datetime etc.
+    # how do we fix?
+    scope :in_range, ->(range) {
+      where("(#{table_name}.start_datetime BETWEEN ? AND ? OR #{table_name}.end_datetime BETWEEN ? AND ?) OR (#{table_name}.start_datetime <= ? AND #{table_name}.end_datetime >= ?)", range.first, range.last, range.first, range.last, range.first, range.last)
+    }
+
+    scope :for_today, -> {
+      where("#{table_name}.start_datetime >= ? and #{table_name}.end_datetime <= ?",
+        Time.zone.now.beginning_of_day,
+        Time.zone.now.end_of_day)
+    }
+
+    scope :for_today_and_tomorrow, -> {
+      where("#{table_name}.start_datetime >= ? and #{table_name}.end_datetime <= ?",
+        Time.zone.now.beginning_of_day,
+        Time.zone.now.end_of_day + 1.day)
+    }
+  end
+  # rubocop:enable Lint/AmbiguousBlockAssociation
+
+  def not_overlap?(other)
+    !overlap?(other)
+  end
+
+  def overlap?(other)
+    ((start_datetime - other.end_datetime) * (other.start_datetime - end_datetime) >= 0)
+  end
 
   def to_ics
     e               = Icalendar::Event.new
@@ -14,15 +52,8 @@ module Calendarable
     add_alarm(e)
   end
 
-  # for the calendar display
-  def start_datetime
-    return start_time if start_time.class == ActiveSupport::TimeWithZone
-    date_plus_time(date, start_time)
-  end
-
-  def end_datetime
-    return end_time if end_time.class == ActiveSupport::TimeWithZone
-    date_plus_time(date, end_time)
+  def date
+    start_datetime.to_date
   end
 
   def to_time_and_weekday
@@ -37,7 +68,7 @@ module Calendarable
     "#{start_datetime.strftime('%l:%M%p, %a %b').lstrip} #{start_datetime.strftime('%d').to_i.ordinalize}"
   end
 
-  def slot_time_human
+  def duration_human
     "#{start_datetime.strftime('%l:%M%p').lstrip}-#{end_datetime.strftime('%l:%M%p, %a %b').lstrip} #{start_datetime.strftime('%d').to_i.ordinalize}"
   end
 
@@ -98,6 +129,6 @@ module Calendarable
 
     # must by reasonably unique
     def generate_ical_id
-      Digest::SHA1.hexdigest(id.to_s + start_time.to_s)
+      Digest::SHA1.hexdigest(id.to_s + start_datetime.to_s)
     end
 end

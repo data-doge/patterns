@@ -1,0 +1,75 @@
+<%= render :partial => 'layouts/research_sessions_menu' %>
+
+<% content_for :page_title, @research_session.title %>
+<script>
+var research_session_id = <%= @research_session.id%>;
+</script>
+<div class="page-header">
+  <h1><%= @research_session.title %></h1>
+</div>
+
+<div class="row">
+  <div class="span6">
+    <div class="well">
+      <dl>
+        <dt>Description</dt>
+        <dd><%= @research_session.description %>
+        <dt>SMS Description</dt>
+        <dd><%= @research_session.sms_description %>
+        <dt>Starts at</dt>
+        <dd><%= @research_session.start_datetime.to_s :short %></dd>
+        <dt>Ends at</dt>
+        <dd><%= @research_session.end_datetime.to_s :short %></dd>
+        <dt>Duration</dt>
+        <dd><%= @research_session.duration %> minutes</dd>
+        <dt>Creator</dt>
+        <dd><%= @research_session.user.name %></dd>
+        <dt>Invited</dt>
+        <dd><%= @research_session.invitations.size %></dd>
+        <dt>Attended</dt>
+        <dd><%= @research_session.invitations.where(aasm_state:'attended').size %></p>
+      </dl>
+    </div>
+  </div>
+  <!-- http://stackoverflow.com/questions/10539143/reloading-partial-in-an-rails-app -->
+  <div class="span6">
+    <h3>Invitees</h3>
+    <input id='invitees-typeahead' type="text" placeholder="People Search">
+    <%= render partial: 'invitations_panel',
+          locals: { invitations: @research_session.invitations } %>
+  </div>
+</div>
+<div class="row">
+  <div class="span4">
+    <h3>Tags</h3>
+    <ul id="tag-list">
+    <%= render partial: 'taggings/tagging', collection: @research_session.taggings %>
+    </ul>
+    <%= render partial: 'taggings/tag_form', locals: { taggable_obj: @research_session } %>
+  </div>
+  <div class='span1'>
+  </div>
+  <div class="span7">
+    <h3>Notes</h3>
+    <%= form_for([@research_session, Comment.new], remote: true) do |form| %>
+      <%= form.hidden_field :commentable_type, :value => 'ResearchSession' %>
+      <%= form.hidden_field :commentable_id, :value => @research_session.id %>
+      <%= form.text_area :content, rows: 6, class: "span7 input-block-level" %>
+      <%= form.submit 'Add note', :class => "btn" %>
+    <% end %>
+
+    <div id="comments">
+      <%= render partial: 'comments/embed',
+            collection: @research_session.comments.order("created_at DESC"),
+            as: :comment %>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="span12">
+    <%= link_to "Sessions", research_session_path, class: 'btn btn-default '%>
+    <%= link_to "Back", :back, class: 'btn'%>
+  </div>
+</div>

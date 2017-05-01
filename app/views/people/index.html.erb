@@ -3,7 +3,7 @@
   <div class="span2">
     <h1><%=t '.title', :default => "People" %></h1>
   </div>
-  <div class='span2'>
+  <div class='span3'>
    <label for="tags">Tags</label>
       <%= form_tag '/people', method: :get %>
       <%= text_field_tag :tags,
@@ -16,9 +16,13 @@
                                     pre_populate: @tags
                                   }
                           %>
+      <%= submit_tag "Search", :name => nil, :class => 'btn btn-primary' %>
   </div>
-  <div class="span3">
-    <%= submit_tag "Search", :name => nil, :class => "btn btn-primary pull-right" %>
+  <div class="span2">
+
+  </div>
+  <div class='span3'>
+    <%= link_to "New Person", new_person_path, :class => 'btn btn-small' %>
   </div>
 </div>
 
@@ -68,10 +72,10 @@
             <%= person.tag_count %>
             </td>
             <td>
-              <%= V2::EventInvitation.joins(:invitees).where(invitation_invitees_join_table: {person_id: person.id}).size %>
+              <%= person.invitations.size %>
             </td>
             <td>
-              <%= V2::Reservation.where(person_id: person.id).size %>
+              <%= person.invitations.where(aasm_state:'attended').size %>
             </td>
 
             <td>

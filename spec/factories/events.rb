@@ -35,7 +35,7 @@ FactoryGirl.define do
     trait :fully_booked do
       after(:create) do |event|
         event.time_slots.each do |slot|
-          V2::Reservation.create(person: FactoryGirl.create(:person),
+          Invitation.create(person: FactoryGirl.create(:person),
                                  time_slot: slot,
                                  event: event,
                                  event_invitation: event.event_invitation,

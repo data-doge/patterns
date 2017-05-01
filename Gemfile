@@ -19,6 +19,8 @@ gem 'mail', '2.6.3'
 
 gem 'ransack', github: 'activerecord-hackery/ransack'
 
+gem 'cocoon' # for nested forms
+
 group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
@@ -90,7 +92,9 @@ gem 'unicorn'
 # gem 'debugger'
 
 gem 'twitter-bootstrap-rails', '~> 2.2.0'
-
+gem 'glyphicons-rails'
+gem 'momentjs-rails'
+gem 'bootstrap3-datetimepicker-rails'
 # use tire for ElasticSearch integration
 # gem 'tire' # no longer needed
 
@@ -122,6 +126,8 @@ gem 'gsm_encoder'
 # use Delayed Job to queue messages
 gem 'daemons'
 gem 'delayed_job_active_record'
+
+gem "delayed_job_web"
 
 # for generating unique tokens for Person
 gem 'has_secure_token'
