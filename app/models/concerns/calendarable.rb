@@ -129,6 +129,6 @@ module Calendarable
 
     # must by reasonably unique
     def generate_ical_id
-      Digest::SHA1.hexdigest(id.to_s + start_time.to_s)
+      Digest::SHA1.hexdigest(id.to_s + start_datetime.to_s)
     end
 end
