@@ -1,6 +1,7 @@
 <% # TODO FIXME %>
 <% Rails.logger.warn("In the create.js.erb file") %>
 <% if @create_result %>
+  // this should be like the dynamic panel in research session.
   console.log("In Create_result if statement");
   $('#error-div').val("");
   $("<%= escape_javascript(render partial: 'gift_cards/gift_card', locals: { gift_card: @gift_card } ) %>").prependTo("#gift_cards");
@@ -21,11 +22,11 @@
   //$('#new-batchid').val('<%= @gift_card.batch_id %>');
   $('#new-cardnumber').val('');
   $('#new-proxyid').val('');
-  $('#<%= @gift_card.giftable&.id%>-gift-card-count').text('<%= @gift_card.giftable&.gift_cards&.size%>');
-  //$('#new-amount').val('<%= @gift_card.amount %>');
-  //$('#new-reason').val('<%= @gift_card.reason %>');
-  //$('#new-expirationdate').val('<%= @gift_card.expiration_date %>');
+  $('#new-amount').val('<%= @gift_card.amount %>');
+  $('#new-reason').val('<%= @gift_card.reason %>');
+  $('#new-expirationdate').val('<%= @gift_card.expiration_date %>');
 
+  $('#<%= @gift_card.giftable&.id%>-gift-card-count').text('<%= @gift_card.giftable&.gift_cards&.size%>');
 <% else %>
     console.log("In Create_result else statement");
 
