@@ -46,7 +46,7 @@ class GiftCardsController < ApplicationController
 
   # GET /gift_cards/new
   def new
-    @last_gift_card = GiftCard.last || GiftCard.new
+    @last_gift_card = GiftCard.first # default scope is id: :desc || GiftCard.new
     @gift_card = GiftCard.new
   end
 
@@ -104,7 +104,7 @@ class GiftCardsController < ApplicationController
     klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
     @giftable = klass.find(params[:giftable_id])
     @gift_card = GiftCard.new
-    @last_gift_card = GiftCard.last || GiftCard.new
+    @last_gift_card = GiftCard.first # default scope is id: :desc || GiftCard.new
     respond_to do |format|
       format.html
       format.js

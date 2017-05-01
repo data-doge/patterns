@@ -1,7 +1,7 @@
 <%
   # wacky, I know. For more easily accesible modals
   @gift_card ||= GiftCard.new
-  @last_gift_card ||= GiftCard.last
+  @last_gift_card ||= GiftCard.first # default scope is id: :desc
   @giftable ||= giftable
 %>
 
