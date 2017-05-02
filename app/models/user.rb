@@ -45,6 +45,8 @@ class User < ActiveRecord::Base
 
   has_secure_token # for calendar feeds
 
+  scope :upcoming_sessions, -> (d = 7) { joins(:research_sessions).merge(ResearchSession.upcoming(d))
+  }
   # for sanity's sake
   alias_attribute :email_address, :email
 
@@ -88,14 +90,14 @@ class User < ActiveRecord::Base
   def self.send_all_reminders
     # this is where reservation_reminders
     # called by whenever in /config/schedule.rb
-    User.all.find_each(&:send_session_reminder)
+    User.upcoming_sessions(1).find_each(&:send_session_reminder)
   end
 
   def send_session_reminder
-    return if research_sessions.for_today.size.zero?
-    ::PersonMailer.remind(
-      sessions:  research_sessions.upcoming,
-      person: email
+    sessions = research_sessions.upcoming(1).map(&:id)
+    ::UserMailer.session_reminder(
+      session_ids: sessions,
+      user_id: id
     ).deliver_later
   end
 end

@@ -62,6 +62,10 @@ class Invitation < ActiveRecord::Base
       where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days })
   }
 
+  scope :remindable, -> {
+    where(aasm_state: %w[invited reminded confirmed])
+  }
+
   scope :confirmable, -> {
     where.not(aasm_state: %w[attended
                              cancelled
@@ -104,6 +108,10 @@ class Invitation < ActiveRecord::Base
       # should this be able to transition from "attended" ?
       transitions from: %i[invited reminded confirmed], to: :missed
     end
+  end
+
+  def self.send_reminders
+    Invitation.upcoming(1).remindable.find_each(&:remind!)
   end
 
   def owner_or_invitee?(person_or_user)
