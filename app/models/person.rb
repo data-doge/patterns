@@ -341,7 +341,7 @@ class Person < ActiveRecord::Base
   end
 
   def send_invitation_reminder
-    invitations.remindable.upcoming(2, &:remind!)
+    invitations.remindable.upcoming(2).each(&:remind!)
   end
 
   def deactivate!(method = nil)
