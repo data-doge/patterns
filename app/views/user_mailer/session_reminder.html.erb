@@ -1,11 +1,11 @@
 Hi <%= @user.name %>
-
-Upcoming sessions:
+<br><br>
+Upcoming sessions:<br>
 <% @sessions.each do |session| %>
-
-<%= session.title %>
-<%= session.start_datetime_human %> at <%= session.location %>
-<%= url_for(session) %>
-
+<br>
+<%= session.title %>:<br>
+<%= session.start_datetime_human %> at <%= session.location %><br>
+<%= url_for(session) %><br>
+<br><br>
 <% end %>
 
