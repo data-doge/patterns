@@ -362,7 +362,7 @@ class Person < ActiveRecord::Base
   def send_new_person_notifications
     User.where(new_person_notification: true).find_each do |user|
       email = user.email_address
-      ::AdminMailer.new_person_notify(email_address: email, person: self).deliver_later
+      ::UserMailer.new_person_notify(email_address: email, person: self).deliver_later
     end
   end
 
