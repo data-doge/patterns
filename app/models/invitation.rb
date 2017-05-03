@@ -144,7 +144,7 @@ class Invitation < ActiveRecord::Base
   end
 
   def send_reminder
-    case preferred_contact_method.upcase
+    case person.preferred_contact_method.upcase
     when 'SMS'
       ::InvitationReminderSms.new(to: person, invitations: [self]).send
     when 'EMAIL'
