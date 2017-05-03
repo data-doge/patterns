@@ -93,11 +93,19 @@ class GiftCard < ActiveRecord::Base
   # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
-      csv_column_names =  ['Gift Card ID', 'Batch ID', 'Gift Card Number', 'Expiration Date', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email']
+      csv_column_names =  ['Gift Card ID', 'Batch ID','Proxy ID', 'Gift Card Number', 'Expiration Date', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email']
       csv << csv_column_names
       all.find_each do |gift_card|
         this_person = gift_card.person
-        row_items = [gift_card.id, gift_card.batch_id, gift_card.gift_card_number,  gift_card.expiration_date, gift_card.reason.titleize, this_person.id || '', this_person.full_name || '', this_person.address_fields_to_sentence || '']
+        row_items = [gift_card.id,
+                     gift_card.batch_id,
+                     gift_card.proxy_id,
+                     gift_card.gift_card_number || '',
+                     gift_card.expiration_date,
+                     gift_card.reason.titleize,
+                     this_person.id || '',
+                     this_person.full_name || '',
+                     this_person.address_fields_to_sentence || '']
         if this_person.phone_number.present?
           row_items.push(this_person.phone_number.phony_formatted(format: :national, spaces: '-'))
         else
