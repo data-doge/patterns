@@ -341,7 +341,24 @@ class Person < ActiveRecord::Base
   end
 
   def send_invitation_reminder
-    invitations.remindable.upcoming(2, &:remind!)
+    # called by whenever in /config/schedule.rb
+    invs = invitations.remindable.upcoming(2)
+    case preferred_contact_method.upcase
+    when 'SMS'
+      ::InvitationReminderSms.new(to: person, invitations: invs).send
+    when 'EMAIL'
+      ::PersonMailer.remind(
+        invitations:  invs,
+        email_address: email_address
+      ).deliver_later
+    end
+
+    invs.each do |inv|
+      if %w(reminded, invited).include? inv.aasm_state
+        inv.aasm_state = 'reminded'
+        inv.save
+      end
+    end
   end
 
   def deactivate!(method = nil)

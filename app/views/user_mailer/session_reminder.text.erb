@@ -3,8 +3,11 @@ Hi <%= @user.name %>
 Upcoming sessions:
 <% @sessions.each do |session| %>
 
-<%= session.start_datetime_human %> at <%= session.location %>
-<%= url_for(session) %>
+  <%= session.title %>:
+  <%= session.start_datetime_human %> at <%= session.location %>
+  Invited: <%= session.invitations.where(aasm_state: %w(invited reminded)).size %>
+  Confirmed:<%= session.invitations.where(aasm_state: 'confirmed').size %>
 
+  <%= url_for(session) %>
 <% end %>
 

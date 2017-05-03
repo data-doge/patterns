@@ -3,7 +3,7 @@ $(document).on('ready page:load',function() {
   // interacts with cocoon to do nested forms
   // does both big and mini-cart
 
-  var added_person={};
+  added_person={};
 
     // initialize bloodhound engine
   var searchSelector = 'input#cart-typeahead';
