@@ -137,6 +137,7 @@ Logan::Application.routes.draw do
   post 'search/export_ransack'
   post 'search/export' # send search results elsewhere, i.e. Mailchimp
   post 'search/exportTwilio'
+  post 'email', to: 'email#inbound'
 
   get 'mailchimp_exports/index'
 

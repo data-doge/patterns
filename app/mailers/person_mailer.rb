@@ -4,6 +4,7 @@ class PersonMailer < ApplicationMailer
   # http://stackoverflow.com/questions/27514552/how-to-get-rsvp-buttons-through-icalendar-gem
   # I beleive we will likely have to have inbound email for it to work
   def invite(invitation:, person:)
+    Rails.logger.info("inviting #{person.full_name} to #{invitation.id}")
     @person = person
     @email_address = @person.email_address
     @invitation = invitation
@@ -17,6 +18,7 @@ class PersonMailer < ApplicationMailer
   end
 
   def remind(email_address:, invitations:)
+    Rails.logger.info("reminding #{email_address} of #{invitation.id}")
     @email_address = email_address
     @invitations = invitations
 
