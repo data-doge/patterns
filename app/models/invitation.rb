@@ -150,7 +150,7 @@ class Invitation < ActiveRecord::Base
     when 'EMAIL'
       ::PersonMailer.remind(
         invitations:  [self],
-        email_address: email_address
+        email_address: person.email_address
       ).deliver_later
     end
   end
