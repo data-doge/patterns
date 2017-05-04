@@ -14,7 +14,6 @@ class PersonMailer < ApplicationMailer
 
     mail(to: email_address,
          from: admin_email,
-         bcc: admin_email,
          subject: @invitation.title,
          content_type: 'multipart/mixed')
   end
@@ -28,7 +27,6 @@ class PersonMailer < ApplicationMailer
 
     mail(to: email_address,
          from: invitation.user.email,
-         bcc: bcc_or_nil(email_address, invitation),
          subject: 'Interview scheduled',
          content_type: 'multipart/mixed')
   end
@@ -39,7 +37,6 @@ class PersonMailer < ApplicationMailer
 
     mail(to: email_address,
          from: ENV['MAILER_SENDER'],
-         bcc: bcc_or_nil(email_address, invitations.first),
          subject: 'Today\'s Interview Reminders',
          content_type: 'multipart/mixed')
   end
@@ -50,7 +47,6 @@ class PersonMailer < ApplicationMailer
 
     mail(to: email_address,
          from: ENV['MAILER_SENDER'],
-         bcc: bcc_or_nil(email_address, invitation),
          subject: "Canceled: #{invitation.start_datetime_human}",
          content_type: 'multipart/mixed')
   end
@@ -61,7 +57,6 @@ class PersonMailer < ApplicationMailer
 
     mail(to: email_address,
          from: ENV['MAILER_SENDER'],
-         bcc: bcc_or_nil(email_address, invitation),
          subject: "Confirmed: #{invitation.start_datetime_human}",
          content_type: 'multipart/mixed')
   end
@@ -75,7 +70,7 @@ class PersonMailer < ApplicationMailer
 
     def generate_ical(invitation)
       cal = Icalendar::Calendar.new
-      cal.add_event(invitation.to_ical)
+      cal.add_event(invitation.to_ics)
       cal.publish
       cal.to_ical
     end
