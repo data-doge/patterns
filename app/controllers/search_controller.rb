@@ -10,7 +10,7 @@ class SearchController < ApplicationController
     @q = Person.ransack(params[:q])
     @results = @q.result.includes(:tags).page(params[:page])
 
-    @tags = params[:tags].blank? ? '[]' : params[:tags]
+    @tags = params[:tags].blank? ? '[]' : params[:tags].split(',')
 
     @participation_list = Person.uniq.pluck(:participation_type) # Need to better define these
     @verified_list = Person.uniq.pluck(:verified)
