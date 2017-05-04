@@ -354,7 +354,7 @@ class Person < ActiveRecord::Base
     end
 
     invs.each do |inv|
-      if %w(reminded, invited).include? inv.aasm_state
+      if inv.aasm_state == 'invited'
         inv.aasm_state = 'reminded'
         inv.save
       end
