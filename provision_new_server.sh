@@ -16,6 +16,7 @@ then
 fi
 
 ARG1=${1:-'production'}
+ARG2=${2:-'secretpassword'}
 echo "setting up $ARG1 environment on this server";
 
 
@@ -25,7 +26,9 @@ echo "$ARG1" > /etc/hostname
 echo "MYSQL_USER=root" >> /etc/environment
 echo "MYSQL_PASSWORD=password" >> /etc/environment
 echo "MYSQL_HOST=localhost" >> /etc/environment
+echo "DJ_PASSWORD=$ARG2" >> /etc/environment
 echo "127.0.0.1 $ARG1" >> /etc/hosts
+
 source /etc/environment;
 
 apt-get update && apt-get dist-upgrade -y
