@@ -1,4 +1,5 @@
 class InboxController < ApplicationController
+  skip_before_action :authenticate_user!
   include Mandrill::Rails::WebHookProcessor
 
   # To completely ignore unhandled events (not even logging), uncomment this line
@@ -10,7 +11,7 @@ class InboxController < ApplicationController
   # To enable authentication, uncomment this line and set your API key.
   # It is recommended you pull your API keys from environment settings,
   # or use some other means to avoid committing the API keys in your source code.
-  authenticate_with_mandrill_keys! ENV['MAILCHIMP_WEBHOOK_SECRET_KEY']
+  authenticate_with_mandrill_keys! ENV['MANDRILL_WEBHOOK_SECRET_KEY']
 
   def handle_inbound(event_payload)
     head(:ok)
