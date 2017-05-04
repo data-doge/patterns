@@ -15,5 +15,15 @@ class InboxController < ApplicationController
 
   def handle_inbound(event_payload)
     head(:ok)
+    msg =event_payload.msg
+
+    from = msg.from
+    text = msg.text
+    subject = msg.subject
+    mail(to: ENV['MAILER_SENDER'],
+         from: from,
+         subject: subject,
+         body: text).deliver_later
+
   end
 end
