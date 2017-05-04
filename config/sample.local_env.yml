@@ -42,3 +42,4 @@ SIGNUP_ERROR_MESSAGE: "If you are having trouble email smarziano@cct.org or text
 WIT_ACCESS_TOKEN: ''
 WIT_APP_ID: ''
 WEB_CONCURRENCY: '4'
+DJ_PASSWORD: supersecretpasswordofdoom
