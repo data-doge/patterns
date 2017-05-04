@@ -20,10 +20,7 @@ class InboxController < ApplicationController
     from = msg['from_email']
     text = msg['text']
     subject = msg['subject']
-    mail(to: ENV['MAILER_SENDER'],
-         from: from,
-         subject: subject,
-         body: text).deliver_later
+    ::AdminMailer.inbound_email(from: from, subject: subject, text: text).deliver_later
 
   end
 end
