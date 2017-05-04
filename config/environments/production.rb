@@ -45,8 +45,6 @@ Logan::Application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
-
-
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
 
@@ -79,9 +77,9 @@ Logan::Application.configure do
 
   # Set to :debug to see everything in the log.
   config.log_level = :info
-  #config.lograge.enabled = true
-  # Use default logging formatter so that PID and timestamp are not suppressed.
-  #config.log_formatter = ::Logger::Formatter.new
+  config.lograge.enabled = true
+  config.log_file = 'log/production.log'
+  config.logger = ActiveSupport::Logger.new(config.log_file)
 
   # Analytics
   config.google_analytics_enabled = true

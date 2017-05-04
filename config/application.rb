@@ -45,11 +45,6 @@ module Logan
       end
     end
 
-    #removes double logging
-    if ENV["RAILS_LOG_TO_STDOUT"] == "true" && defined?(Rake)
-      config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
-    end
-
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = ENV['TIME_ZONE'] || "Central Time (US & Canada)"
