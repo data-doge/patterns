@@ -13,7 +13,7 @@ gem 'redis' # ephemeral storage and caching
 gem 'redis-rails' # for session store
 gem 'validates_overlap' # to ensure we don't double book people
 
-gem 'rails_12factor'
+#gem 'rails_12factor' # don't need this. yet. soon!
 
 gem 'mail', '2.6.3'
 

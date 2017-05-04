@@ -78,8 +78,6 @@ Logan::Application.configure do
   # Set to :debug to see everything in the log.
   config.log_level = :info
   config.lograge.enabled = true
-  config.log_file = 'log/production.log'
-  config.logger = ActiveSupport::Logger.new(config.log_file)
 
   # Analytics
   config.google_analytics_enabled = true
