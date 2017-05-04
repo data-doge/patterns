@@ -8,7 +8,7 @@ require 'yaml'
 require 'time'
 require 'tzinfo'
 
-path = File.expand_path(File.dirname(File.dirname(__FILE__)))
+path = "/var/www/logan-#{rails_env}/current/"
 
 env_file = "#{path}/config/local_env.yml"
 defaults = "#{path}/config/sample.local_env.yml"
