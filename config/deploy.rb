@@ -22,7 +22,7 @@ set(:deploy_to) { "/var/www/#{application}" }
 set :deploy_via, :remote_cache
 set :use_sudo, false
 set :user, 'logan'
-
+set :keep_releases, 10
 set :stages, %w(production staging)
 set :default_stage, 'staging'
 
@@ -43,7 +43,7 @@ set :ssh_options, { forward_agent: true }
 before  'deploy:finalize_update', "deploy:create_shared_directories", 'deploy:link_db_config', 'deploy:link_env_var'
 # before  'deploy:finalize_update', 'deploy:link_db_config', 'deploy:link_env_var'
 
-after   'deploy:finalize_update', 'deploy:create_binstubs', 'deploy:migrate', 'deploy:generate_delayed_job','deploy:reload_nginx'
+after   'deploy:finalize_update', 'deploy:create_binstubs', 'deploy:migrate', 'deploy:generate_delayed_job','deploy:reload_nginx', 'deploy:cleanup'
 
 
 namespace :deploy do
