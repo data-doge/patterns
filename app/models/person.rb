@@ -110,7 +110,7 @@ class Person < ActiveRecord::Base
         [Arel::Nodes.build_quoted(' '), parent.table[:first_name], parent.table[:last_name]])])
   end
 
-  scope :ransack_tagged_with, ->(*tags) { tagged_with(tags) }
+  scope :ransack_tagged_with, ->(*tags) { tagged_with(tags, match_all: true) }
 
   def self.ransackable_scopes(_auth_object = nil)
     %i[no_signup_card ransack_tagged_with]

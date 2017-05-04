@@ -26,7 +26,7 @@ class TaggingsController < ApplicationController
     res = false
     if klass && params[:tag].present?
       obj = klass.includes(:tags, :taggings).find(params[:taggable_id])
-      tag = params[:tag]
+      tag = params[:tag].downcase
       # if we want owned tags. Not sure we do...
       # res = current_user.tag(obj,with: params[:tagging][:name])
       unless obj.tags.map(&:name).include?(tag)
@@ -78,7 +78,7 @@ class TaggingsController < ApplicationController
     # tags = ActsAsTaggableOn::Tag.where('name like ?',"%#{params[:q]}%")
     # taggings = ActsAsTaggableOn::Tagging.include(:tags).where(taggable_type: klass.to_s, tag_id: tags.map(&:id)).group(:tag_id).count(:tag_id)
 
-    @tags = klass.tag_counts.where('name like ?', "%#{params[:q]}%").
+    @tags = klass.tag_counts.where('name like ?', "%#{params[:q].downcase}%").
             order(taggings_count: :desc)
 
     # the methods=> :value is needed for tokenfield.
