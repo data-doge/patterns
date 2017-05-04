@@ -100,7 +100,7 @@ namespace :deploy do
 
   # rewrite binstubs
   task :create_binstubs do
-    run "cd #{latest_release.shellescape} && bundle binstubs unicorn"
+    run "cd #{latest_release.shellescape} && bundle binstubs unicorn --force --path ./bin"
   end
 
   task :generate_delayed_job do
