@@ -60,7 +60,6 @@ group :production do
   gem 'newrelic_rpm'
   gem 'skylight'
   gem 'lograge'
-  gem 'remote_syslog_logger'
 end
 
 # Gems used only for assets and not required
