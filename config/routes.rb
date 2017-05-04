@@ -1,4 +1,5 @@
 Logan::Application.routes.draw do
+  resource :inbox, :controller => 'inbox', :only => [:show,:create]
   resources :gift_cards do
     collection do
       get 'recent_signups', action: :recent_signups, as: :recent_signups
@@ -137,7 +138,7 @@ Logan::Application.routes.draw do
   post 'search/export_ransack'
   post 'search/export' # send search results elsewhere, i.e. Mailchimp
   post 'search/exportTwilio'
-  post 'email', to: 'email#inbound'
+
 
   get 'mailchimp_exports/index'
 
