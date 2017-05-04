@@ -17,9 +17,9 @@ class InboxController < ApplicationController
     head(:ok)
     msg =event_payload.msg
 
-    from = msg.from
-    text = msg.text
-    subject = msg.subject
+    from = msg['from_email']
+    text = msg['text']
+    subject = msg['subject']
     mail(to: ENV['MAILER_SENDER'],
          from: from,
          subject: subject,
