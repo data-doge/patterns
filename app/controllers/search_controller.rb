@@ -7,10 +7,16 @@ class SearchController < ApplicationController
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/BlockLength
   def index_ransack
+
+    if params[:q].present? && params[:q][:ransack_tagged_with].present?
+      t = params[:q][:ransack_tagged_with].split(',').map(&:strip)
+      @tags = Person.tag_counts.where(name:t).order(taggings_count: :desc)
+    else
+      @tags = []
+
+    end
     @q = Person.ransack(params[:q])
     @results = @q.result.includes(:tags).page(params[:page])
-
-    @tags = params[:tags].blank? ? '[]' : params[:tags].split(',')
 
     @participation_list = Person.uniq.pluck(:participation_type) # Need to better define these
     @verified_list = Person.uniq.pluck(:verified)

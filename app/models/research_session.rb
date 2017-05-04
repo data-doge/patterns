@@ -59,7 +59,7 @@ class ResearchSession < ActiveRecord::Base
         [Arel::Nodes.build_quoted(' '), Person.table[:first_name], Person.table[:last_name]])])
   end
 
-  scope :ransack_tagged_with, ->(*tags) { tagged_with(tags, match_all: true) }
+  scope :ransack_tagged_with, ->(*tags) { tagged_with(tags) }
 
   def self.ransackable_scopes(_auth=nil)
     %i[ransack_tagged_with]

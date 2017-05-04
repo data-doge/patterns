@@ -52,9 +52,9 @@
     <%= f.label "Tags" %>
     <%= f.text_field :ransack_tagged_with,
                             class: 'tokenfield input-large span5',
-                            data: { search_url: '/taggings/search?q=%QUERY',
+                            data: { search_url: '/taggings/search?type=Person&q=%QUERY',
                                     submit_id: 'search-tag-hidden-input',
-                                    pre_populate: @tags
+                                    pre_populate: @tags.to_json(methods: %i[value label type])
                                   }
                           %>
     <%= f.label :participation_type_in %>

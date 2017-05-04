@@ -61,7 +61,7 @@ class PeopleController < ApplicationController
                 Person.paginate(page: params[:page]).
                   order(sort_column + ' ' + sort_direction).
                   where(active: true).
-                  tagged_with(tags,match_all: true)
+                  tagged_with(tags)
               end
     @tags ||= []
   end
