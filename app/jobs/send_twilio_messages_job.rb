@@ -43,7 +43,7 @@ class SendTwilioMessagesJob < Struct.new(:messages, :phone_numbers, :smsCampaign
         if message.present?
           begin
             renderer = ERB.new(message)
-            message = renderer.result.strip
+            message = renderer.result(binding).strip
 
             @outgoing = TwilioMessage.new
             @outgoing.to = phone_number.gsub('+1', '').delete('-')
