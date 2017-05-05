@@ -1,6 +1,6 @@
 class AdminMailer < ApplicationMailer
   def deactivate(person:)
-    admin_email = ENV['MAILER_SENDER']
+    admin_email = ENV['MAIL_ADMIN']
     @person = person
     mail(to: admin_email,
          from: admin_email,
@@ -8,8 +8,8 @@ class AdminMailer < ApplicationMailer
   end
 
   def inbound_email(from:,subject:,text:)
-    mail(to: ENV['MAILER_SENDER'],
-         from: from,
+    mail(to: ENV['MAIL_ADMIN'],
+         reply_to: from,
          subject: subject,
          body: text)
 
