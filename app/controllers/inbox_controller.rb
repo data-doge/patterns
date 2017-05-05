@@ -18,9 +18,10 @@ class InboxController < ApplicationController
     msg =event_payload.msg
 
     from = msg['from_email']
-    text = msg['text']
-    subject = msg['subject']
-    ::AdminMailer.inbound_email(from: from, subject: subject, text: text).deliver_later
-
+    if Person.find_by(email_address: from)
+      text = msg['text']
+      subject = msg['subject']
+      ::AdminMailer.inbound_email(from: from, subject: subject, text: text).deliver_later
+    end
   end
 end
