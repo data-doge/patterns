@@ -3,7 +3,7 @@
 
 <% @invitations.each do |r| %>
    <div class='invitation'>
-      <p><%= r.description %> on <%= r.start_datetime_human %> for <%= r.duration / 60 %> minutes \n with <%= r.user.name %> tel: <%= r.user.phone_number %>"</p>
+      <p><%= r.description %> on <%= r.start_datetime_human %> for <%= r.duration %> minutes <br> with <%= r.user.name %> tel: <%= r.user.phone_number %>"</p>
 
         <ul>
           <li>

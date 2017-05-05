@@ -4,7 +4,7 @@ Hi <% @invitations.first.person.first_name %>,
 
 <% @invitations.each do |r| %>
 
-<%= r.description %> on <%=r.to_weekday_and_time %> for <%= r.duration / 60 %>minutes \n with <%= r.user.name %> tel: <%= r.user.phone_number %>
+<%= r.description %> on <%=r.to_weekday_and_time %> for <%= r.duration %>minutes \n with <%= r.user.name %> tel: <%= r.user.phone_number %>
 
 To Confirm, click the link below:
 <%= remote_confirm_research_session_invitations_url(
