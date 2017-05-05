@@ -133,7 +133,6 @@ class Invitation < ActiveRecord::Base
 
   def send_invite_email
     ::PersonMailer.invite(
-      email_address: person.email_address,
       invitation:  self,
       person: person
     ).deliver_later
@@ -148,7 +147,7 @@ class Invitation < ActiveRecord::Base
     when 'SMS'
       ::InvitationReminderSms.new(to: person, invitations: [self]).send
     when 'EMAIL'
-      ::PersonMailer.remind(invitations: [self], email_address: person.email_address).deliver_later
+      ::PersonMailer.remind(invitations: [self], email_address: person.email_address).deliver_now
     end
   end
 

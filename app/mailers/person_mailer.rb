@@ -18,7 +18,7 @@ class PersonMailer < ApplicationMailer
   end
 
   def remind(email_address:, invitations:)
-    Rails.logger.info("reminding #{email_address} of #{invitation.id}")
+    Rails.logger.info("reminding #{email_address} of #{invitations.size}")
     @email_address = email_address
     @invitations = invitations
 
