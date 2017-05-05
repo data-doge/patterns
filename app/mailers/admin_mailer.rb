@@ -7,10 +7,10 @@ class AdminMailer < ApplicationMailer
          subject: "Deactivated: #{person.full_name}")
   end
 
-  def inbound_email(from:,subject:,text:)
+  def inbound_email(from:, subject:, text:)
     mail(to: ENV['MAIL_ADMIN'],
          reply_to: from,
-         subject: subject,
+         subject: "from: #{from}, subj:#{subject}",
          body: text)
 
   end
