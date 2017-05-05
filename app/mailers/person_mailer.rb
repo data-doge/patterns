@@ -23,8 +23,7 @@ class PersonMailer < ApplicationMailer
     @invitations = invitations
 
     mail(to: @email_address,
-         subject: 'Today\'s Interview Reminders',
-         content_type: 'multipart/mixed')
+         subject: 'Today\'s Interview Reminders')
   end
 
   def cancel(email_address:, invitation:)
@@ -32,8 +31,7 @@ class PersonMailer < ApplicationMailer
     @invitation = invitation
 
     mail(to: @email_address,
-         subject: "Canceled: #{invitation.start_datetime_human}",
-         content_type: 'multipart/mixed')
+         subject: "Canceled: #{invitation.start_datetime_human}")
   end
 
   def confirm(email_address:, invitation:)
@@ -41,8 +39,7 @@ class PersonMailer < ApplicationMailer
     @invitation = invitation
 
     mail(to: email_address,
-         subject: "Confirmed: #{invitation.start_datetime_human}",
-         content_type: 'multipart/mixed')
+         subject: "Confirmed: #{invitation.start_datetime_human}")
   end
 
   private
