@@ -37,7 +37,7 @@ class SendTwilioMessagesJob < Struct.new(:messages, :phone_numbers, :smsCampaign
       Rails.logger.warn "[TwilioSender#perform] phone_numbers is nil - #{phone_numbers}"
     end
     phone_numbers.each do |phone_number|
-      @person = Person.find(phone_number: phone_number)
+      @person = Person.find_by(phone_number: phone_number)
       phone_number = phone_number.strip.gsub('+1', '').delete('-')
       messages.each do |message|
         if message.present?
