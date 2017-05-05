@@ -31,12 +31,15 @@ class ResearchSessionsController < ApplicationController
       # need to handle case when the invitation is invalid
       # i.e. timing overlaps, etc.
       i_params = params['research_session']['invitations_attributes']
-      people = i_params.values.map do |v|
-        { person_id: v['person_id'],
-          research_session_id: @research_session.id }
-      end
 
-      Invitation.create(people) # auto associates
+      if i_params.present?
+        people = i_params.values.map do |v|
+          { person_id: v['person_id'],
+            research_session_id: @research_session.id }
+        end
+
+        Invitation.create(people) # auto associates
+      end
 
       if @research_session.location.blank?
         @research_session.location = "Call #{current_user.name} at #{current_user.phone_number}"
