@@ -21,15 +21,6 @@ GIT
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
 
-GIT
-  remote: https://github.com/cromulus/glyphicons-rails
-  revision: cb21afbee8266783c2a0ba53fa95b06ade94d3b2
-  branch: rails4_pipeline
-  specs:
-    glyphicons-rails (0.1.2)
-      sass (~> 3.3)
-      sass-rails
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -178,6 +169,9 @@ GEM
       multi_json (>= 1.11.0)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
+    glyphicons-rails (0.1.2)
+      sass (~> 3.3)
+      sass-rails
     gsm_encoder (0.1.6)
     guard (2.14.1)
       formatador (>= 0.2.4)
@@ -554,7 +548,7 @@ DEPENDENCIES
   fast_blank
   flamegraph
   gibbon (~> 2.2.3)
-  glyphicons-rails!
+  glyphicons-rails
   gsm_encoder
   guard
   guard-bundler
