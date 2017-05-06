@@ -3,6 +3,7 @@ DEVISE_PEPPER: 'f3998fdf09b95a8ca3e895d0dafaa78e410eed53cc02341d25f521071a43a9d9
 WUFOO_HANDSHAKE_KEY: ""
 TWILIO_API_SID: ""
 TWILIO_AUTH_TOKEN: ""
+TWILIO_SIGNUP_NUMBER: ""
 TWILIO_SIGNUP_VERIFICATION_NUMBER: ""
 TWILIO_SURVEY_NUMBER: ""
 TWILIO_SCHEDULING_NUMBER: ""
@@ -34,10 +35,10 @@ SITE_NAME: 'Patterns'
 GROUP_NAME: 'CUTGroup'
 GOOGLE_ANALYTICS_ID: 'UA-37739534-12'
 NEW_RELIC_LICENSE_KEY: '09577a43a0ccb7a9ae0cfe80ce8e70f13949b9e1'
-VERIFICATION_SMS_MESSAGE: 'Thank you for verifying your account. We will be in touch soon.'
-SIGNUP_EMAIL_MESSAGE: 'You are now signed up for the Design Insight Group. When new tests come up, you will receive an email from dig@brl.nyc with details.'
-SIGNUP_SMS_MESSAGE: 'You are now signed up for the Design Insight Group. When export new tests come up, you will receive a text from 718-215-0665 or 917-909-5763 export with more details.'
-SIGNUP_ERROR_MESSAGE: 'If you are having trouble email dig@brl.nyc and you will be contacted soon.'
+VERIFICATION_SMS_MESSAGE: 'Thank you for verifying your account. We will mail you your $5 VISA gift card right away.'
+SIGNUP_EMAIL_MESSAGE: "You are now signed up for CUTGroup! Your $5 gift card will be in the mail. When new tests come up, you'll receive an email from smarziano@cct.org with details."
+SIGNUP_SMS_MESSAGE: "You are now signed up for CUTGroup! Your $5 gift card will be in the mail. When new tests come up, you'll receive a text from 773-747-6239 with more details."
+SIGNUP_ERROR_MESSAGE: "If you are having trouble email smarziano@cct.org or text '98765' and you will be contacted later."
+WIT_ACCESS_TOKEN: ''
+WIT_APP_ID: ''
 WEB_CONCURRENCY: '4'
-DJ_PASSWORD: supersecretpasswordofdoom
-MANDRILL_WEBHOOK_SECRET_KEY: ''

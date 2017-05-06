@@ -25,6 +25,7 @@ echo "RAILS_ENV=$ARG1" >> /etc/environment
 echo "$ARG1" > /etc/hostname
 echo "MYSQL_USER=root" >> /etc/environment
 echo "MYSQL_PASSWORD=password" >> /etc/environment
+echo "MYSQL_PWD=password" >> /etc/environment
 echo "MYSQL_HOST=localhost" >> /etc/environment
 echo "DJ_PASSWORD=$ARG2" >> /etc/environment
 echo "127.0.0.1 $ARG1" >> /etc/hosts
@@ -34,20 +35,20 @@ source /etc/environment;
 apt-get update && apt-get dist-upgrade -y
 apt-get install -y python-software-properties software-properties-common
 apt-add-repository -y ppa:nginx/development
+add-apt-repository ppa:certbot/certbot
 
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password'
 
-apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nginx gpgv2 ruby-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev
+apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nginx gpgv2 ruby-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev certbot
 
 mysqladmin -ppassword create `echo $RAILS_ENV`
 openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 2048
 
 # stop nginx for letsencrypt initial setup
 service nginx stop
-cd /root
-git clone https://github.com/letsencrypt/letsencrypt
-/root/letsencrypt/letsencrypt-auto certonly --standalone --agree-tos --email blueridgelabs@robinhood.org -d patterns.brl.nyc
+
+certbot certonly --standalone --agree-tos --email blueridgelabs@robinhood.org -d patterns.brl.nyc
 
 service nginx start
 
@@ -56,20 +57,16 @@ if [ -f /etc/nginx/sites-enabled/default ];
 then
    rm /etc/nginx/sites-enabled/default
 fi
-
 # use the nginx config in our repo
 rm /etc/nginx/sites_enabled/logan.conf;
 ln -s /var/www/logan-`echo $RAILS_ENV`/current/config/server_conf/`echo $RAILS_ENV`_nginx.conf  /etc/nginx/sites-enabled/logan.conf;
 
 
-# weekly ssl cert update
-cat >/etc/cron.weekly/letsencrypt.sh <<EOL
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:$PATH
-source /etc/environment;
-/root/letsencrypt/letsencrypt-auto certonly --webroot -w /var/www/logan-`echo $RAILS_ENV`/current/public --agree-tos --email blueridgelabs@robinhood.org -d patterns.brl.nyc
+# daily nginx restart for new certs
+cat >/etc/cron.daily/nginx_restart.sh <<EOL
 service nginx restart
 EOL
-chmod +x /etc/cron.weekly/letsencrypt.sh
+chmod +x /etc/cron.daily/nginx_restart.sh
 
 # setting up regular backups
 # cat >/etc/cron.d/patterns_backup.sh <<EOL
