@@ -12,7 +12,7 @@
         <dl>
 
           <dt>Verified?</dt>
-          <dd><%= best_in_place @person, :verified %></dd>
+          <dd><%= best_in_place @person, :verified, as: :select, collection: @verified_types.map{|p| [p,p]} %></dd>
 
           <dt>Low Income?</dt>
           <dd><%= best_in_place @person, :low_income, as: :checkbox, collection: {false: "No", true: "Yes"} %></dd>
