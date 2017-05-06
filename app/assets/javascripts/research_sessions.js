@@ -6,7 +6,6 @@ $(document).on('page:load ready', function(){
   $('#research_session_start_datetime').datetimepicker({
     format: 'YYYY-MM-DD hh:mm A',
     stepping: 15,
-    minDate:moment().add(1,'days'), // can't schedule for today!
     maxDate: moment().add(60, 'days') // 30 days from the current day
   });
 
