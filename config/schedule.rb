@@ -10,6 +10,11 @@ require 'tzinfo'
 
 
 path = "/var/www/logan-#{ENV['RAILS_ENV']}/current"
+
+unless File.exist?(path)
+  path = File.expand_path(File.dirname(File.dirname(__FILE__)))
+end
+
 env_file = "#{path}/config/local_env.yml"
 defaults = "#{path}/config/sample.local_env.yml"
 

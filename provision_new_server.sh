@@ -89,7 +89,7 @@ if [ $? -eq 0 ]; then
   echo "logan exists, skipping user creation"
 else
   useradd -m -s /bin/bash logan;
-  su - logan
+  su - logan;
   mkdir -p ~/.ssh/
   # maybe get the keys from github?:
   # https://developer.github.com/v3/repos/keys/
@@ -109,6 +109,7 @@ EOL
   source /home/logan/.rvm/scripts/rvm
   rvm install 2.3.4
   rvm use 2.3.4@`echo $RAILS_ENV` --create
+  echo -e "\n\n\n" | ssh-keygen -t rsa # make keys
   rvm @global do gem install backup bundler rake whenever
   ln -s /var/www/logan-`echo $RAILS_ENV`/current `echo $RAILS_ENV`
   exit # back to root.
@@ -121,6 +122,8 @@ chown -R logan:logan /var/www/logan*
 
 #we've provisioned this server
 touch /etc/provisioned
+
+# ensure github has deploy keys for your server
 
 # now run:
 # cap staging deploy:setup
