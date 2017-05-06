@@ -164,7 +164,7 @@ class Person < ActiveRecord::Base
   end
 
   def tag_count
-    tags.size
+    cached_tag_list.split(',').size
   end
 
   def submission_values
