@@ -76,6 +76,10 @@ class SendTwilioMessagesJob < Struct.new(:messages, :phone_numbers, :smsCampaign
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/BlockLength
 
+  def max_run_time
+    120.minutes
+  end
+
   def before(job); end
 
   def after(job); end
