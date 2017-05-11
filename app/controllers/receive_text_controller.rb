@@ -93,7 +93,12 @@ class ReceiveTextController < ApplicationController
     @incoming.error_code = params[:ErrorCode]
     @incoming.error_message = params[:ErrorMessage]
     @incoming.direction = 'incoming-twiml'
-    @incoming.save
+
+    begin
+      @incoming.save
+    rescue Mysql2::Error => e
+      Airbrake.notify(e)
+    end
 
     @twiliowufoo = TwilioWufoo.where('twilio_keyword = ? AND status = ?', params[:Body].strip.upcase, true).first
 
