@@ -1,4 +1,3 @@
-require 'airbrake/delayed_job'
 Airbrake.configure do |config|
   config.host = ENV['AIRBRAKE_HOST']
   config.project_id = 4 # required, but any positive integer works
