@@ -74,7 +74,7 @@ class ReceiveTextController < ApplicationController
     session['form_type'] ||= ''
     session['end_message'] ||= ''
 
-    message_body = Emoji.replace_unicode_moji_with_name(params['Body'].strip)
+    message_body = params['Body'].strip
     sms_count = session['counter']
     fields = ''
     # if (session["formid"].is_a?(String) )
