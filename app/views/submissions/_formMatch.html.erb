@@ -2,7 +2,11 @@
   <div class="span6">
     <%= form_for @submission do |f| %>
       <fieldset>
-        <legend>Submission <%= @submission.id %>: <%= link_to @submission.person.full_name, @submission.person %></legend>
+        <legend>Submission <%= @submission.id %>:
+          <% if @submission.person.present? %>
+            <%= link_to @submission.person.full_name, @submission.person %>
+           %>
+        </legend>
         <% if @submission.errors.any? %>
           <div id="error_explanation" class="alert alert-error">
             <ul>
