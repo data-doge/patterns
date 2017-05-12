@@ -32,6 +32,32 @@
     <% end %>
   </div>
   <div class="span6">
+      <% @person = @submission.person %>
+      <dl>
+          <dt>Phone</dt>
+          <dd><%= best_in_place @person, :phone_number, display_with: :number_to_phone %></dd>
+
+          <dt>Email</dt>
+          <dd><%= best_in_place @person, :email_address %></dd>
+
+          <dt>Preferred Contact Method</dt>
+
+          <dd><%= best_in_place @person, :preferred_contact_method, as: :select, collection: [['SMS','SMS'], ['EMAIL','EMAIL']] %></dd>
+          <dt>Voted in last election?</dt>
+          <dd><%= best_in_place @person, :voted, as: :select, :collection => %w(YES NO) %></dd>
+
+          <dt>Ever called 311?</dt>
+          <dd><%= best_in_place @person, :called_311, as: :select, :collection => %w(YES NO) %></dd>
+
+          <dt>Facebook</dt>
+          <dd>link to facebook</dd>
+
+          <dt>Twitter</dt>
+          <dd>link to twitter</dd>
+
+          <dt>Signup at</dt>
+          <dd><%= @person.signup_at ? @person.signup_at.to_s(:long) : 'unknown' %></dd>
+        </dl>
       <legend>Add Tags for <%= link_to @submission.person.full_name, @submission.person %></legend>
         <ul id="tag-list">
         <%= render partial: 'taggings/tagging', collection: @submission.person.taggings %>

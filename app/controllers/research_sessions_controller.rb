@@ -47,7 +47,9 @@ class ResearchSessionsController < ApplicationController
       @research_session.save
 
       # sends all of the invitations.
-      @research_session.invitations.each(&:invite!)
+      if params[:send_invites][:boolean_attribute] != 'false'
+        @research_session.invitations.each(&:invite!)
+      end
 
       redirect_to research_session_path(@research_session)
     else

@@ -52,18 +52,7 @@
       <%= f.text_area :sms_description,placeholder:'as short as possible', :class => 'text_area' %>
     </div>
   </div>
-  <!-- <div class="control-group">
-    <%= f.label :tags,  "Tags", :class => 'control-label' %>
-    <div class='controls'>
-    <%= f.text_field :tag_list,
-        class: 'tokenfield input span4',
-        data: { search_url: '/taggings/search?type=ResearchSession&q=%QUERY',
-                submit_id: 'search-tag-hidden-input',
-                pre_populate: []
-              }
-      %>
-    </div>
-  </div> -->
+
   <h2>Time</h2>
 
   <div class="control-group" style="position: relative">
@@ -80,9 +69,17 @@
     </div>
   </div>
 
+  <div class="control-group">
+    <%= f.label "Send Invitations?", :class => 'control-label' %>
+    <label class="controls toggle-check">
+      <%= check_box :send_invites, 'boolean_attribute', {class: 'toggle-check-input hidden'}, 'true', 'false' %>
+      <span class="toggle-check-text"></span>
+    </label>
+  </div>
+
   <div class="form-actions">
-    <%= f.submit 'Send invitation', :class => 'btn btn-primary', :id => 'submit' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                people_path, :class => 'btn' %>
+    <%= f.submit 'Create', class: 'btn btn-primary', id: 'submit', data: {confirm: "Are you sure?"} %>
+    <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+                people_path, class: 'btn' %>
   </div>
 <% end %>
