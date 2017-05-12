@@ -102,7 +102,7 @@ class Person < ActiveRecord::Base
   scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM gift_cards where gift_cards.reason = 1)') }
   scope :signup_card_needed, -> { joins(:gift_cards).where('gift_cards.reason !=1') }
 
-  default_scope :active, -> { where(active: true) }
+  default_scope { where(active: true) }
 
   self.per_page = 15
 
