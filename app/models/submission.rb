@@ -90,6 +90,14 @@ class Submission < ActiveRecord::Base
     nil
   end
 
+  def submission_hash
+    sub_hash = {}
+    fields.each do |field_id, _desc|
+      sub_hash[s.field_label(field_id)]=s.field_value(field_id)
+    end
+    sub_hash
+  end
+
   def submission_values
     # return the field values in a nice format for search indexing
     fields.collect { |field_id, _desc| field_value(field_id) }.join(' ')

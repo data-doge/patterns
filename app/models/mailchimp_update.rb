@@ -17,7 +17,7 @@ class MailchimpUpdate < ActiveRecord::Base
   after_save :update_person
   self.per_page = 15
 
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:disable Metrics/MethodLength
   def update_person
     Rails.logger.info("[ MailchimpUpdate#updatePerson ] email = #{email} update_type = #{update_type}")
 
@@ -25,19 +25,13 @@ class MailchimpUpdate < ActiveRecord::Base
       if update_type == 'unsubscribe'
         person.tag_list.add(update_type)
         person.deactivate!
-
-
-        content = "MailChimp Webhook Update: #{update_type} because reason = #{reason} at #{fired_at}"
-        @comment = Comment.create(content: content,
-                                  commentable_type: 'Person',
-                                  commentable_id: person.id)
-      else
-        content = "MailChimp Webhook Update: #{update_type} because reason = #{reason} at #{fired_at}"
-        @comment = Comment.create(content: content,
-                                commentable_type: 'Person',
-                                commentable_id: person.id)
       end
+
+      content = "MailChimp Webhook Update: #{update_type} because reason = #{reason} at #{fired_at}"
+      Comment.create(content: content,
+                     commentable_type: 'Person',
+                     commentable_id: person.id)
     end
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength
 end
