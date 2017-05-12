@@ -132,6 +132,10 @@ class Person < ActiveRecord::Base
     false
   end
 
+  def verified?
+    verified&.start_with?('Verified')
+  end
+
   def gift_card_total
     end_of_last_year = Time.zone.today.beginning_of_year - 1.day
     total = gift_cards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
@@ -363,11 +367,19 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def deactivate!(method = nil)
+  def deactivate!(type = nil)
     self.active = false
     self.deactivated_at = Time.current
-    self.deactivated_method = method if method
+    self.deactivated_method = type if type
+    if email_address.present? && verified? && type != 'mailchimp_api'
+      gibbon = Gibbon::Request.new
+      gibbon.lists(ENV['MAILCHIMP_LIST_ID']).members(md5_email).update(body: { status: 'unsubscribed' })
+    end
     save!
+  end
+
+  def md5_email
+    Digest::MD5.hexdigest(email_address.downcase) if email_address.present?
   end
 
   def update_neighborhood

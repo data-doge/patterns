@@ -144,7 +144,7 @@ class TwilioMessagesController < ApplicationController
       @twilio_message.signup_verify = 'Verified'
       message = 'That you for verifying your account.'
       this_person = Person.find_by phone_number: params[:From]
-      this_person.verified = 'True'
+      this_person.verified = 'Verified'
       this_person.save
     elsif params[:Body] == 'Remove me'
       @twilio_message.signup_verify = 'Cancelled'

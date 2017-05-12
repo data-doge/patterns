@@ -24,7 +24,7 @@ class MailchimpUpdate < ActiveRecord::Base
     Person.where(email_address: email).find_each do |person|
       if update_type == 'unsubscribe'
         person.tag_list.add(update_type)
-        person.deactivate!
+        person.deactivate!('mailchimp_api')
       end
 
       content = "MailChimp Webhook Update: #{update_type} because reason = #{reason} at #{fired_at}"
