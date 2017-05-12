@@ -5,7 +5,7 @@
         <legend>Submission <%= @submission.id %>:
           <% if @submission.person.present? %>
             <%= link_to @submission.person.full_name, @submission.person %>
-           %>
+          <% end %>
         </legend>
         <% if @submission.errors.any? %>
           <div id="error_explanation" class="alert alert-error">
