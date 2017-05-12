@@ -17,18 +17,6 @@
           <dt>Low Income?</dt>
           <dd><%= best_in_place @person, :low_income, as: :checkbox, collection: {false: "No", true: "Yes"} %></dd>
 
-          <dt>Address</dt>
-          <dd><%= address_fields_to_sentence(@person) %></dd>
-
-          <dt>Ward</dt>
-          <dd><% if @person.geography_id.present? %> <%= link_to @person.geography_id, search_index_path(adv: 1, geography_id: @person.geography_id ) %><% end %></dd>
-
-          <dt>Neighborhood</dt>
-          <dd><%= best_in_place @person, :neighborhood %></dd>
-
-          <dt>Referred by?</dt>
-          <dd><%= best_in_place @person, :referred_by %></dd>
-
           <dt>Primary device</dt>
           <dd><%= best_in_place @person,:primary_device_description %> <span class='muted'>
           (<%= best_in_place @person, :primary_device_id, as: :select, collection:  Logan::Application.config.device_mappings.collect{|i| [i.last, i.first]}  %>)</span> </dd>
@@ -53,10 +41,13 @@
 
           <dt>Preferred participation method</dt>
           <dd><%= best_in_place @person, :participation_type, as: :select, collection: %w(in-person remote) %></dd>
+          <dt>Voted in last election?</dt>
+          <dd><%= best_in_place @person, :voted, as: :select, :collection => %w(YES NO) %></dd>
 
-          <dt>Interviews</dt>
-          <dd><%= link_to "Calendar", calendar_path(token: @person.token) %></dd>
-          <dt>Invitations</dt>
+          <dt>Ever called 311?</dt>
+          <dd><%= best_in_place @person, :called_311, as: :select, :collection => %w(YES NO) %></dd>
+
+          <dt>Session Invitations</dt>
           <dd><%= @person.invitations.invited.size %></dd>
           <dt>Missed</dt>
           <dd><%=@person.invitations.missed.size %></dd>
@@ -78,20 +69,18 @@
           <dd><%= best_in_place @person, :email_address %></dd>
 
           <dt>Preferred Contact Method</dt>
-
           <dd><%= best_in_place @person, :preferred_contact_method, as: :select, collection: [['SMS','SMS'], ['EMAIL','EMAIL']] %></dd>
-          <dt>Voted in last election?</dt>
-          <dd><%= best_in_place @person, :voted, as: :select, :collection => %w(YES NO) %></dd>
+          <dt>Address</dt>
+          <dd><%= address_fields_to_sentence(@person) %></dd>
 
-          <dt>Ever called 311?</dt>
-          <dd><%= best_in_place @person, :called_311, as: :select, :collection => %w(YES NO) %></dd>
+          <dt>Ward</dt>
+          <dd><% if @person.geography_id.present? %> <%= link_to @person.geography_id, search_index_path(adv: 1, geography_id: @person.geography_id ) %><% end %></dd>
 
-          <dt>Facebook</dt>
-          <dd>link to facebook</dd>
+          <dt>Neighborhood</dt>
+          <dd><%= best_in_place @person, :neighborhood %></dd>
 
-          <dt>Twitter</dt>
-          <dd>link to twitter</dd>
-
+          <dt>Referred by?</dt>
+          <dd><%= best_in_place @person, :referred_by %></dd>
           <dt>Signup at</dt>
           <dd><%= @person.signup_at ? @person.signup_at.to_s(:long) : 'unknown' %></dd>
         </dl>
@@ -246,9 +235,18 @@
         <th>Content</th>
       </tr>
       <% for submission in @person.submissions %>
-      <a id="submission-<%= submission.id %>"></a>
-      <tr>
-        <td><strong><%= submission.form_name %></strong><br/>Form Type: <%= submission.form_type %><br/><span title="<%= submission.created_at %>"><%= time_ago_in_words submission.created_at %> ago</span><br/><span class="" style="font-size:small; color:#ccc; font-style:italic"><%= submission.ip_addr %></span></td>
+
+      <tr id="submission-<%= submission.id %>">
+        <td>
+          <strong><%= link_to submission.form_name,edit_submission_path(submission) %></strong>
+          <br/>Form Type: <%= submission.form_type %><br/>
+          <span title="<%= submission.created_at %>"><%= time_ago_in_words submission.created_at %> ago</span>
+          <br/>
+          <span class="" style="font-size:small; color:#ccc; font-style:italic">
+            <%= submission.ip_addr %>
+
+          </span>
+        </td>
         <td>
           <table class="table table-striped">
             <% for field_id,field_desc in submission.fields do %>

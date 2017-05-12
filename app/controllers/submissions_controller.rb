@@ -45,6 +45,22 @@ class SubmissionsController < ApplicationController
     end
   end
 
+  # DELETE /people/1
+  # DELETE /people/1.json
+  def destroy
+    @submission = Submission.find(params[:id])
+
+    if @submission.delete
+      flash[:notice] = "#{@submission.id} deleted"
+    else
+      flash[:error] = "something went wrong"
+    end
+
+    respond_to do |format|
+      format.html { redirect_to submissions_url }
+      format.json { head :no_content }
+    end
+  end
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
   #
