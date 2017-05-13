@@ -340,11 +340,7 @@ class Person < ActiveRecord::Base
     self.active = false
     self.deactivated_at = Time.current
     self.deactivated_method = type if type
-    if verified? && type != 'mailchimp_api'
-      job = Delayed::Job.enqueue MailchimpUpdateJob.new(id, 'unsubscribe')
-      job.save
-    end
-    save!
+    save! # sends background mailchimp update
   end
 
   def md5_email
