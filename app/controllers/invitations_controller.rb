@@ -21,9 +21,8 @@ class InvitationsController < ApplicationController
   before_action :set_visitor, only: %i[show confirm cancel]
   before_action :set_invitation
   # need a before action here for authentication of invitation changes
-  def new
-    #   @person = Person.find_by(token: person_params[:token])
 
+  def new
     @user = current_user
     @research_session = ResearchSession.find(params[:research_session_id])
     @invitation = Invitation.new
@@ -90,8 +89,7 @@ class InvitationsController < ApplicationController
       flash[:alert] = 'Error'
     end
     respond_to do |format|
-      format.html { redirect_to root_url }
-      format.js { render text: "$('#invitationModal').modal('hide'); $('#calendar').fullCalendar( 'refetchEvents' );" }
+      format.html {}
       format.json do
         { invitation_id: @invitation.id, state: @invitation.aasm_state }
       end
@@ -107,11 +105,7 @@ class InvitationsController < ApplicationController
     end
     respond_to do |format|
       # where to redirect for person?
-      format.html { redirect_to root_url }
-      format.js do
-        render text: "$('#invitationModal').modal('hide');
-        $('#calendar').fullCalendar( 'refetchEvents' );"
-      end
+      format.html {}
       format.json do
         { invitation_id: @invitation.id, state: @invitation.aasm_state }
       end
