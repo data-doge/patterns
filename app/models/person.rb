@@ -231,43 +231,12 @@ class Person < ActiveRecord::Base
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Rails/TimeZone
 
-  # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Style/MethodName, Metrics/BlockNesting, Style/VariableName, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  #
-  def sendToMailChimp
-    if email_address.present?
-      if verified.present?
-        if verified.start_with?('Verified')
-          begin
-            gibbon = Gibbon::Request.new
-            mailchimpSend = gibbon.lists(Logan::Application.config.cut_group_mailchimp_list_id).members(Digest::MD5.hexdigest(email_address.downcase)).upsert(
-              body: { email_address: email_address.downcase,
-                      status: 'subscribed',
-                      merge_fields: { FNAME: first_name || '',
-                                      LNAME: last_name || '',
-                                      MMERGE3: geography_id || '',
-                                      MMERGE4: postal_code || '',
-                                      MMERGE5: participation_type || '',
-                                      MMERGE6: voted || '',
-                                      MMERGE7: called_311 || '',
-                                      MMERGE8: primary_device_description || '',
-                                      MMERGE9: secondary_device_id || '',
-                                      MMERGE10: secondary_device_description || '',
-                                      MMERGE11: primary_connection_id || '',
-                                      MMERGE12: primary_connection_description || '',
-                                      MMERGE13: primary_device_id || '',
-                                      MMERGE14: preferred_contact_method || '' } }
-            )
 
-            Rails.logger.info("[People->sendToMailChimp] Sent #{id} to Mailchimp: #{mailchimpSend}")
-          rescue Gibbon::MailChimpError => e
-            Rails.logger.fatal("[People->sendToMailChimp] fatal error sending #{id} to Mailchimp: #{e.message}")
-          end
-        end
-      end
-    end
+  def sendToMailChimp
+    status = active? ? 'subscribed' : 'unsubscribed'
+    Delayed::Job.enqueue(MailchimpUpdateJob.new(id,status)).save
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/MethodName, Metrics/BlockNesting, Style/VariableName, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
 
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity
@@ -371,9 +340,9 @@ class Person < ActiveRecord::Base
     self.active = false
     self.deactivated_at = Time.current
     self.deactivated_method = type if type
-    if email_address.present? && verified? && type != 'mailchimp_api'
-      gibbon = Gibbon::Request.new
-      gibbon.lists(ENV['MAILCHIMP_LIST_ID']).members(md5_email).update(body: { status: 'unsubscribed' })
+    if verified? && type != 'mailchimp_api'
+      job = Delayed::Job.enqueue MailchimpUpdateJob.new(id, 'unsubscribe')
+      job.save
     end
     save!
   end

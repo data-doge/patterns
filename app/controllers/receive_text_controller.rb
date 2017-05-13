@@ -7,6 +7,8 @@ class ReceiveTextController < ApplicationController
   skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user!
 
+  # TODO: cache wufoo forms, background save submissions.
+
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   #
