@@ -1,5 +1,5 @@
 # rubocop:disable Style/StructInheritance
-class MailchimpSaveJob < Struct.new(:id, :status)
+class MailchimpUpdateJob < Struct.new(:id, :status)
 
   def enqueue(job)
     Rails.logger.info '[MailchimpSave] job enqueued'
@@ -7,7 +7,7 @@ class MailchimpSaveJob < Struct.new(:id, :status)
   end
 
   def perform
-    person = Person.find(id)
+    person = Person.unscoped.find 295
     if person.email_address.present? && person.verified?
       begin
         gibbon = Gibbon::Request.new
