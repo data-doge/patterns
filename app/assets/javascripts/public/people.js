@@ -20,6 +20,9 @@ people_ready = function() {
       "person[postal_code]":{
         zipcodeUS: true,
         required: true
+      },
+      'age_range':{
+        required: true
       }
     }//,
     // errorPlacement: function(error, element) {

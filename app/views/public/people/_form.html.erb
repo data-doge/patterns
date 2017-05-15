@@ -118,11 +118,15 @@
   <% else  # end BRL exclusion %>
   <div class="control-group">
   <label class="control-label" for="person_age_range">Age:</label>
-    <%= select_tag :age_range, options_for_select([["10-17", "10-17"],
+    <%= select_tag :age_range, options_for_select([
+                              ['How old are you?',''],
+                              ["10-17", "10-17"],
                               ["18-25", "18-25"],
                               ["26-40", "26-40"],
                               ["41-60", "41-60"],
-                              ["61+", "61+"]]), :class => 'text_field' %>
+                              ["61+", "61+"]]),
+                              class: 'text_field',
+                              selected: 'How old are you?' %>
   </div>
   <div class="control-group">
     <%= f.label :postal_code, :class => 'control-label' %>
