@@ -1,5 +1,7 @@
 <div class="page-header">
   <h1>Editing submission</h1>
+  <%= link_to "Next", edit_submission_path(@submission.next), class: 'btn btn-mini'%>
+  <%= link_to "Previous", edit_submission_path(@submission.prev), class: 'btn btn-mini'%>
 </div>
 
 <%= render 'formMatch' %>

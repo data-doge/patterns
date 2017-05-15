@@ -33,6 +33,15 @@ class Submission < ActiveRecord::Base
 
   self.per_page = 15
 
+
+  def next
+    Submission.where("id > ?", id).first || Submission.last
+  end
+
+  def prev
+    Submission.where("id < ?", id).last || Submission.first
+  end
+
   def fields
     # return the set of fields that make up a submission
     #  { field_id => 'field description' }
