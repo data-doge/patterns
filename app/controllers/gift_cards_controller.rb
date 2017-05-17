@@ -111,6 +111,13 @@ class GiftCardsController < ApplicationController
     end
   end
 
+  def activate
+    @gift_card = GiftCard.where(active: false).last
+    respond_to do |format|
+      format.xml
+    end
+  end
+
   private
 
     # Use callbacks to share common setup or constraints between actions.
