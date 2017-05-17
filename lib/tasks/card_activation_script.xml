@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Pause length="27"/>
+    <!-- card number -->
+    <Play digits="4853980057961081#"></Play>
+    <Pause length="18"/>
+    <Play digits="1234#"></Play>
+    <Pause length="18"/>
+    <Play digits="1234#"></Play>
+    <Pause length="10"/>
+    <!-- security code -->
+    <Play digits="371#"></Play>
+    <Pause length="30 "/>
+</Response>
