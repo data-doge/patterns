@@ -152,7 +152,7 @@ Logan::Application.routes.draw do
   end
   # post "people/create_sms"
 
-  get 'gift_cards/activate',
+  get 'activate',
     to: 'gift_cards#activate',
     defaults: { format: 'xml' }
 

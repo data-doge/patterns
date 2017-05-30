@@ -8,7 +8,7 @@ csv = CSV.parse(csv_text, :headers => true)
 csv.each do |row|
   number = row['number']
   code   = row['code']
-  url = "https://#{ENV['PRODUCTION_SERVER']}/gift_cards/activate.xml?number=#{number}&code=#{code}"
+  url = "https://#{ENV['PRODUCTION_SERVER']}/activate.xml?number=#{number}&code=#{code}"
   @call = @client.account.calls.create(
     from: ENV['TWILIO_SCHEDULING_NUMBER'],   # From your Twilio number
     to: '+18663008288', # BOA activation number
