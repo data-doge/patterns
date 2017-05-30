@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+#
 
 module ApplicationHelper
   def simple_time_select_options

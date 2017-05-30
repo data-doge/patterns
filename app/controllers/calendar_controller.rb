@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+#
 
 # FIXME: Refactor and re-enable cop
 # rubocop:disable ClassLength

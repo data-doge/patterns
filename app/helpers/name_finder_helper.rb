@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+#
 
 module NameFinderHelper
   def find_name(obj)

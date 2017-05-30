@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+#
 
 # rubocop:disable Style/StructInheritance
 class TagPersonJob < Struct.new(:id, :tags)

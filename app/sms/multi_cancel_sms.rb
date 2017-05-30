@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+
 
 # TODO: needs a spec.
 # but a unit test would make coverage more robust

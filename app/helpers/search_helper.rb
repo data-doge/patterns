@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+#
 
 module SearchHelper
 
@@ -10,7 +10,7 @@ module SearchHelper
     terms.any? ? highlight(value.to_s, terms) : value
   end
 
-  # frozen_string_literal: true
+  #
   def action
     if action_name == 'advanced_search'
       :post

@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+#
 
 # == Schema Information
 #
@@ -100,7 +100,7 @@ class GiftCard < ActiveRecord::Base
       all.find_each do |gift_card|
         this_person = gift_card.person
         row_items = [gift_card.id,
-                     giftcard.created_at.to_s(:rfc822),
+                     gift_card.created_at.to_s(:rfc822),
                      gift_card.batch_id,
                      gift_card.proxy_id,
                      gift_card.gift_card_number || '',
