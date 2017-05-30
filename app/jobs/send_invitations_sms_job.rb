@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/jobs/twilio/send_messages.rb
 #
 # module TwilioSender
@@ -18,10 +20,9 @@ class SendInvitationsSmsJob < Struct.new(:to, :invitation)
   end
 
   # FIXME: Refactor and Enable Cops!
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
 
   def perform
-    # TODO all texts should consider the persons' state with a ttl.
+    # TODO: all texts should consider the persons' state with a ttl.
     # step 1: check to see if we already have a conversation for the person
     #   yes: get ttl and re-enque for after ttl
     #   no: go to step 2

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InboxController < ApplicationController
   skip_before_action :authenticate_user!
   include Mandrill::Rails::WebHookProcessor

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Public::PeopleController < ApplicationController
   layout false
   after_action :allow_iframe

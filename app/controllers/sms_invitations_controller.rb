@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # FIXME: Refactor
 class SmsInvitationsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
@@ -15,8 +17,8 @@ class SmsInvitationsController < ApplicationController
     Rails.logger.info "confirm: #{session[:confirm]}"
     Rails.logger.info(session[:inv_hash])
     Rails.logger.info("number_or_all_or_none: #{number_or_all_or_none}")
-    #@person.verified = 'Verified'
-    #@person.save
+    # @person.verified = 'Verified'
+    # @person.save
     # FIXME: this if else bundle needs a refactor badly.
     if remove?
       do_remove
@@ -103,7 +105,6 @@ class SmsInvitationsController < ApplicationController
       message.downcase =~ /^calendar$/
     end
 
-
     # this is horrific.
     def do_cancel
       inv = @person.invitations.confirmable.upcoming(100).limit(9)
@@ -121,11 +122,11 @@ class SmsInvitationsController < ApplicationController
           session[:cancel] = false
         elsif selected_invitation_id == :none
           session[:cancel] = false
-          ::CustomSms.new(to: @person, msg: "No changes made").send
+          ::CustomSms.new(to: @person, msg: 'No changes made').send
         elsif selected_invitation_id == false
           ::CustomSms.new(to: @person,
                           msg: "I didn't understand that.\n Please enter either:\n a number\n 'all' to cancel all\n or 'none' to exit").send
-        elsif selected_invitation_id.class == Fixnum
+        elsif selected_invitation_id.class == Integer
           sid = selected_invitation_id
           if session[:inv_hash].present? && session[:inv_hash][sid].present?
             Invitation.find(session[:inv_hash][sid]).cancel!
@@ -153,7 +154,7 @@ class SmsInvitationsController < ApplicationController
 
     # this is horrific.
     def do_confirm
-      Rails.logger.info("in confirm")
+      Rails.logger.info('in confirm')
       inv = @person.invitations.confirmable.upcoming(100).limit(9)
       if inv.size.zero?
         ::CustomSms.new(to: @person, msg: 'You have no upcoming sessions.').send
@@ -163,24 +164,24 @@ class SmsInvitationsController < ApplicationController
         Rails.logger.info('confirm only the one')
         inv.first.confirm!
         session[:confirm] =  false # end confirm session
-      elsif session[:confirm] == true# confirm session started
+      elsif session[:confirm] == true # confirm session started
         Rails.logger.info('in confirm session started')
         selected_invitation = number_or_all_or_none
         Rails.logger.info("selected_invitation: #{selected_invitation}")
 
         if selected_invitation == :all
-          Rails.logger.info("in all")
+          Rails.logger.info('in all')
           inv.each(&:confirm!)
           session[:confirm] = false
         elsif selected_invitation == :none
           Rails.logger.info('In None')
           session[:confirm] = false
-          ::CustomSms.new(to: @person, msg: "No changes made").send
+          ::CustomSms.new(to: @person, msg: 'No changes made').send
         elsif selected_invitation == false
           Rails.logger.info('In false')
           ::CustomSms.new(to: @person,
                           msg: "I didn't understand that.\nPlease enter either:\n a number\n 'all' to confirm all\n or 'none' to exit").send
-        elsif selected_invitation.class == Fixnum
+        elsif selected_invitation.class == Integer
           sid = selected_invitation
           Rails.logger.info("sid is #{sid}")
           if session[:inv_hash].present? && session[:inv_hash][sid].present?

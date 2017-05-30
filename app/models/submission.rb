@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: submissions
@@ -33,13 +35,12 @@ class Submission < ActiveRecord::Base
 
   self.per_page = 15
 
-
   def next
-    Submission.where("id > ?", id).first || Submission.last
+    Submission.where('id > ?', id).first || Submission.last
   end
 
   def prev
-    Submission.where("id < ?", id).last || Submission.first
+    Submission.where('id < ?', id).last || Submission.first
   end
 
   def fields

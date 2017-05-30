@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdminMailer < ApplicationMailer
   def deactivate(person:)
     admin_email = ENV['MAIL_ADMIN']
@@ -12,6 +14,5 @@ class AdminMailer < ApplicationMailer
          reply_to: from,
          subject: "from: #{from}, subj:#{subject}",
          body: text)
-
   end
 end

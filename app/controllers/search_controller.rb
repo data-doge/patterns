@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'csv'
 # rubocop:disable ClassLength
 class SearchController < ApplicationController
@@ -7,10 +9,9 @@ class SearchController < ApplicationController
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/BlockLength
   def index_ransack
-
     if params[:q].present? && params[:q][:ransack_tagged_with].present?
       t = params[:q][:ransack_tagged_with].split(',').map(&:strip)
-      @tags = Person.tag_counts.where(name:t).order(taggings_count: :desc)
+      @tags = Person.tag_counts.where(name: t).order(taggings_count: :desc)
     else
       @tags = []
 

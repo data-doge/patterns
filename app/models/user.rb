@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -45,7 +47,8 @@ class User < ActiveRecord::Base
 
   has_secure_token # for calendar feeds
 
-  scope :upcoming_sessions, -> (d = 7) { joins(:research_sessions).merge(ResearchSession.upcoming(d))
+  scope :upcoming_sessions, ->(d = 7) {
+    joins(:research_sessions).merge(ResearchSession.upcoming(d))
   }
   # for sanity's sake
   alias_attribute :email_address, :email
@@ -92,7 +95,7 @@ class User < ActiveRecord::Base
     # called by whenever in /config/schedule.rb
     User.upcoming_sessions(1).find_each do |u|
       sessions = u.upcoming_sessions(1)
-      unless sessions.blank?
+      if sessions.present?
         session_ids = sessions.map(&:id)
         ::UserMailer.session_reminder(user_id: u.id, session_ids: session_ids)
       end

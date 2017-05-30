@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: people
@@ -37,10 +39,10 @@
 # rubocop:disable ClassLength
 class PeopleController < ApplicationController
 
-  before_action :set_person, only: %i(show edit update destroy)
+  before_action :set_person, only: %i[show edit update destroy]
 
   skip_before_action :authenticate_user!, if: :should_skip_janky_auth?
-  skip_before_action :verify_authenticity_token, only: %i(create create_sms)
+  skip_before_action :verify_authenticity_token, only: %i[create create_sms]
   helper_method :sort_column, :sort_direction
 
   # GET /people
@@ -79,7 +81,7 @@ class PeopleController < ApplicationController
     @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
     @twilio_wufoo_formids = @outgoingmessages.pluck(:wufoo_formid).uniq
     @twilio_wufoo_forms = TwilioWufoo.where(id: @twilio_wufoo_formids)
-    @allmessages =  TwilioMessage.where("to = :number or from = :number", number: @person.normalized_phone_number )
+    @allmessages =  TwilioMessage.where('to = :number or from = :number', number: @person.normalized_phone_number)
   end
 
   # GET /people/new
@@ -292,7 +294,7 @@ class PeopleController < ApplicationController
         :phone_number,
         :participation_type,
         :preferred_contact_method,
-        gift_cards_attributes: %i(
+        gift_cards_attributes: %i[
           gift_card_number
           expiration_date
           person_id
@@ -302,7 +304,7 @@ class PeopleController < ApplicationController
           amount
           giftable_id
           giftable_type
-        ))
+        ])
     end
     # rubocop:enable Metrics/MethodLength
 
@@ -318,7 +320,7 @@ class PeopleController < ApplicationController
 
     # currently busted. gotta figre out why never descending
     def sort_direction
-      %w(asc desc).include?(params[:direction]) ? params[:direction] : 'desc'
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
     end
 
 end

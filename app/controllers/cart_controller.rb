@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CartController < ApplicationController
   include ApplicationHelper
   before_action :cart_init

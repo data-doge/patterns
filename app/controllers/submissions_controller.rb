@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: submissions
@@ -53,7 +55,7 @@ class SubmissionsController < ApplicationController
     if @submission.delete
       flash[:notice] = "#{@submission.id} deleted"
     else
-      flash[:error] = "something went wrong"
+      flash[:error] = 'something went wrong'
     end
 
     respond_to do |format|
@@ -61,6 +63,7 @@ class SubmissionsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
   #

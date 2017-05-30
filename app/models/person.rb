@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: people
@@ -231,12 +233,10 @@ class Person < ActiveRecord::Base
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Rails/TimeZone
 
-
   def sendToMailChimp
     status = active? ? 'subscribed' : 'unsubscribed'
-    Delayed::Job.enqueue(MailchimpUpdateJob.new(id,status)).save
+    Delayed::Job.enqueue(MailchimpUpdateJob.new(id, status)).save
   end
-
 
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity
