@@ -114,8 +114,8 @@ class GiftCardsController < ApplicationController
   end
 
   def activate
-    @card_number = params[:number].gsub(/[^0-9]/, '')
-    @secure_code = params[:code].gsub(/[^0-9]/, '')
+    @card_number = params[:number]&.gsub(/[^0-9]/, '')
+    @secure_code = params[:code]&.gsub(/[^0-9]/, '')
     respond_to do |format|
       format.xml
     end
