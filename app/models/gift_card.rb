@@ -93,11 +93,12 @@ class GiftCard < ActiveRecord::Base
   # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
-      csv_column_names =  ['Gift Card ID', 'Batch ID','Proxy ID', 'Gift Card Number', 'Expiration Date', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email']
+      csv_column_names =  ['Gift Card ID', 'Sign Out Date', 'Batch ID', 'Proxy ID', 'Gift Card Number', 'Expiration Date', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email']
       csv << csv_column_names
       all.find_each do |gift_card|
         this_person = gift_card.person
         row_items = [gift_card.id,
+                     giftcard.created_at.to_s(:rfc822),
                      gift_card.batch_id,
                      gift_card.proxy_id,
                      gift_card.gift_card_number || '',
