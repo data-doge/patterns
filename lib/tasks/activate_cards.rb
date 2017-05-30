@@ -16,4 +16,3 @@ csv.each do |row|
     url: url,
     method: "GET" )
 end
-
