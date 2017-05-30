@@ -2,13 +2,13 @@
 <Response>
     <Pause length="27"/>
     <!-- card number -->
-    <Play digits="<%= @gift_card.card_number %>#"></Play>
+    <Play digits="<%= @card_number %>#"></Play>
     <Pause length="18"/>
     <Play digits="1234#"></Play>
     <Pause length="18"/>
     <Play digits="1234#"></Play>
     <Pause length="10"/>
     <!-- security code -->
-    <Play digits="<%= @gift_card.secure_code %>#"></Play>
+    <Play digits="<%= @secure_code %>#"></Play>
     <Pause length="30 "/>
 </Response>

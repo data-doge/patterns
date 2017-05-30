@@ -2,11 +2,13 @@ require 'csv'
 
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy]
+  skip_before_action :authenticate_user!, only: :activate
 
   GIFTABLE_TYPES = {
     'Person'     => Person,
     'Invitation' => Invitation
   }.freeze
+
   # GET /gift_cards
   # GET /gift_cards.csv
   def index
@@ -112,7 +114,8 @@ class GiftCardsController < ApplicationController
   end
 
   def activate
-    @gift_card = GiftCard.where(active: false).last
+    @card_number = params[:number]
+    @secure_code = params[:code]
     respond_to do |format|
       format.xml
     end
