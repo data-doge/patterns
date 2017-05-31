@@ -9,11 +9,11 @@ csv.each do |row|
   number = row['number']
   code   = row['code']
   next if code.nil?
-  url = "https://#{ENV['PRODUCTION_SERVER']}/activate/#{number}/#{code}.xml"
+  url = "https://#{ENV['PRODUCTION_SERVER']}/activate/#{number.chop}/#{code.to_s.chop}.xml"
   @call = @client.account.calls.create(
     from: ENV['TWILIO_SCHEDULING_NUMBER'],   # From your Twilio number
     to: '+18663008288', # BOA activation number
     # Fetch instructions from this URL when the call connects
     url: url,
-    method: "POST" )
+    method: "GET" )
 end
