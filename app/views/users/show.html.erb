@@ -82,7 +82,7 @@
             end
           %></td>
           <td><%= change.event %></td>
-          <td><%= pp JSON.parse(change.object_changes) if change.object_changes %> </td>
+          <td><%= ap JSON.parse(change.object_changes) if change.object_changes %> </td>
         </tr>
         <% end %>
       </tbody>

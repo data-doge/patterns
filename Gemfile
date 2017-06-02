@@ -23,6 +23,8 @@ gem 'cocoon' # for nested forms
 
 gem 'mandrill-rails' # for inbound email
 
+gem 'awesome_print' # for printing awesomely
+
 group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
