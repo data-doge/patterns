@@ -126,6 +126,7 @@ class Invitation < ActiveRecord::Base
 
   def send_invitation
     Rails.logger.info("sent invitation for inv:#{id}")
+
     case person.preferred_contact_method.upcase
     when 'SMS'
       send_invite_sms
@@ -147,6 +148,7 @@ class Invitation < ActiveRecord::Base
 
   def send_reminder
     Rails.logger.info("sent reminder for inv:#{id}")
+
     case person.preferred_contact_method.upcase
     when 'SMS'
       ::InvitationReminderSms.new(to: person, invitations: [self]).send
@@ -159,6 +161,7 @@ class Invitation < ActiveRecord::Base
   # also rename for nomenclature convention
   def notify_about_confirmation
     Rails.logger.info("confirm for inv:#{id}")
+
     ::PersonMailer.confirm(email_address: user.email, invitation: self).deliver_later
     case person.preferred_contact_method.upcase
     when 'SMS'
@@ -171,6 +174,7 @@ class Invitation < ActiveRecord::Base
   def notify_about_cancellation
     # notify the user
     Rails.logger.info("cancel for inv:#{id}")
+
     ::PersonMailer.cancel(email_address: user.email, invitation: self).deliver_later
 
     case person.preferred_contact_method.upcase
