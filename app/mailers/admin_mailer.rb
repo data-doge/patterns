@@ -1,5 +1,3 @@
-#
-
 class AdminMailer < ApplicationMailer
   def deactivate(person:)
     admin_email = ENV['MAIL_ADMIN']

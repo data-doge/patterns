@@ -1,11 +1,9 @@
-#
-
 class InboxController < ApplicationController
   skip_before_action :authenticate_user!
   include Mandrill::Rails::WebHookProcessor
 
   # To completely ignore unhandled events (not even logging), uncomment this line
-  # ignore_unhandled_events!
+  ignore_unhandled_events!
 
   # If you want unhandled events to raise a hard exception, uncomment this line
   # unhandled_events_raise_exceptions!
@@ -17,7 +15,7 @@ class InboxController < ApplicationController
 
   def handle_inbound(event_payload)
     head(:ok)
-    msg =event_payload.msg
+    msg = event_payload.msg
 
     from = msg['from_email']
     if Person.find_by(email_address: from) || User.find_by(email_address: from)
