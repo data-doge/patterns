@@ -1,5 +1,3 @@
-#
-
 # == Schema Information
 #
 # Table name: people
@@ -340,6 +338,7 @@ class Person < ActiveRecord::Base
     self.active = false
     self.deactivated_at = Time.current
     self.deactivated_method = type if type
+
     save! # sends background mailchimp update
   end
 

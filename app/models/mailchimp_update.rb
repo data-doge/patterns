@@ -1,5 +1,3 @@
-#
-
 # == Schema Information
 #
 # Table name: mailchimp_updates

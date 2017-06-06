@@ -85,19 +85,19 @@ class Invitation < ActiveRecord::Base
     state :missed # means they didn't cancel
     state :attended
 
-    event :invite, after_transaction: :send_invitation, guard: :in_future? do
+    event :invite, after_commit: :send_invitation, guard: :in_future? do
       transitions from: :created, to: :invited
     end
 
-    event :remind, after_transaction: :send_reminder, guard: :in_future? do
+    event :remind, after_commit: :send_reminder, guard: :in_future? do
       transitions from: %i[invited reminded confirmed], to: :reminded
     end
 
-    event :confirm, after_transaction: :notify_about_confirmation, guard: :in_future? do
+    event :confirm, after_commit: :notify_about_confirmation, guard: :in_future? do
       transitions from: %i[confirmed invited reminded], to: :confirmed
     end
 
-    event :cancel, after_transaction: :notify_about_cancellation, guard: :in_future? do
+    event :cancel, after_commit: :notify_about_cancellation, guard: :in_future? do
       transitions from: %i[invited cancel reminded confirmed], to: :cancelled
     end
 
