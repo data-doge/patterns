@@ -32,7 +32,7 @@ class MailchimpUpdateJob < Struct.new(:id, :status)
                           MMERGE14: person.preferred_contact_method || '' }
         })
 
-        Rails.logger.info("[People->sendToMailChimp] Sent #{person.id} to Mailchimp: #{mailchimpSend}")
+        Rails.logger.info("[People->sendToMailChimp] Sent #{person.id} to Mailchimp")
       rescue Gibbon::MailChimpError => e
         Rails.logger.fatal("[People->sendToMailChimp] fatal error sending #{person.id} to Mailchimp: #{e.message}")
       end
