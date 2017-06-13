@@ -32,9 +32,13 @@
                    %>
 
           <%= form.text_field :proxy_id,
-                  placeholder: "ProxyID",
+                  placeholder: "Proxy/Sequence",
                   class: 'input-mini',
                   id: "new-proxyid" %>
+          <%= form.text_field :gift_card_number,
+                  placeholder: "Card #",
+                  class: 'input-mini',
+                  id: "new-cardnumber" %>
           <%= form.text_field :batch_id,
                   placeholder: "BatchID",
                   class: 'input-mini',
