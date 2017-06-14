@@ -91,12 +91,12 @@ class Person < ActiveRecord::Base
   # phony validations and normalization
   phony_normalize :phone_number, default_country_code: 'US'
 
-  validates :phone_number, presence: true, length: { in: 9..15 },
-    unless: proc { |person| person.email_address.present? }
+  # validates :phone_number, presence: true, length: { in: 9..15 },
+  #   unless: proc { |person| person.email_address.present? }
   validates :phone_number, allow_blank: true, uniqueness: true
 
-  validates :email_address, presence: true,
-    unless: proc { |person| person.phone_number.present? }
+  # validates :email_address, presence: true,
+  #   unless: proc { |person| person.phone_number.present? }
   validates :email_address, email: true, allow_blank: true, uniqueness: true
 
   scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM gift_cards where gift_cards.reason = 1)') }
