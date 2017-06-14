@@ -10,5 +10,6 @@
     <Pause length="10"/>
     <!-- security code -->
     <Play digits="<%= @secure_code %>#"></Play>
-    <Pause length="30"/>
+    <Record timeout="5" maxLength="60" trim="trim-silence" transcribe="true"/>
+    <Hangup/>
 </Response>
