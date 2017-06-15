@@ -29,4 +29,9 @@ while not_completed == true
   sleep 5 if not_completed == true
 end
 # how to get a transcription
-#call.recordings.list.first.transcriptions.list.first.transcription_text
+@calls.each do |card_number,call|
+  transcript = call&.recordings&.list&.first&.transcriptions&.list&.first&.transcription_text
+  if transcript.nil? || !transcript.include?('your card now has been activated')
+    puts "card not activated: #{card_number}"
+  end
+end
