@@ -19,4 +19,14 @@ csv.each do |row|
     url: url,
     method: "GET" )
 end
-
+not_completed = true
+while not_completed == true
+  not_completed = false
+  @calls.each do |k,v|
+    v.update
+    not_completed = true if v.status != 'completed'
+  end
+  sleep 5 if not_completed == true
+end
+# how to get a transcription
+#call.recordings.list.first.transcriptions.list.first.transcription_text
