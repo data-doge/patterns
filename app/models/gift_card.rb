@@ -24,6 +24,7 @@
 require 'csv'
 
 class GiftCard < ActiveRecord::Base
+  has_paper_trail
   page 20
   monetize :amount_cents
 
