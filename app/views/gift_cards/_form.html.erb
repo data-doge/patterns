@@ -23,7 +23,7 @@
     <%= f.text_field :batch_id,
           class: 'input-mini',
           placeholder: '4321',
-          value: @last_gift_card.batch_id %>
+          value: @gift_card.batch_id %>
   </div>
   <div class="field">
     <%= f.label "proxy/sequence" %><br>
@@ -38,7 +38,7 @@
     <%= f.label :expiration_date %><br>
     <%= f.text_field :expiration_date,
           class: 'input-mini',
-          value: @last_gift_card.expiration_date  %>
+          value: @gift_card.expiration_date  %>
   </div>
   <div class="field">
     <%= f.label :person_id %><br>
@@ -56,7 +56,7 @@
     <%= f.label :reason %><br>
     <%= f.select :reason,
           GiftCard.reasons.keys.to_a,
-          { prompt: "Reason", selected: @last_gift_card.reason } %>
+          { prompt: "Reason", selected: @gift_card.reason } %>
   </div>
   <% if @gift_card.giftable.present? %>
     <%= f.hidden_field :giftable_id, value: @gift_card.giftable_id %>
