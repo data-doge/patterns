@@ -9,14 +9,14 @@ csv = CSV.parse(csv_text, :headers => true)
 csv.each do |row|
   number = row['number']
   code   = row['code']
-  next if code.nil?
+  next if code.nil? && number.nil?
   if code.length != 3
     puts "invalid code: #{number},#{code}"
     next
   end
 
   cc = CreditCardValidations::Detector.new(number)
-  unless cc.valid?(:visa) && cc.valid_luhn?
+  unless cc.valid? && cc.valid_luhn?
     puts "invalid credit card number: #{number},#{code}"
   end
 
