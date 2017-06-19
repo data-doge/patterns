@@ -25,6 +25,8 @@ gem 'mandrill-rails' # for inbound email
 
 gem 'awesome_print' # for printing awesomely
 
+gem 'credit_card_validations' # for activating cards
+
 group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.

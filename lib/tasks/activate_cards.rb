@@ -10,6 +10,16 @@ csv.each do |row|
   number = row['number']
   code   = row['code']
   next if code.nil?
+  if code.length != 3
+    puts "invalid code: #{number},#{code}"
+    next
+  end
+
+  cc = CreditCardValidations::Detector.new(number)
+  unless cc.valid?(:visa) && cc.valid_luhn?
+    puts "invalid credit card number: #{number},#{code}"
+  end
+
   url = "https://#{ENV['PRODUCTION_SERVER']}/activate/#{number.to_s}/#{code.to_s}.xml"
 
   @calls[number] = @client.account.calls.create(
