@@ -3,7 +3,7 @@ require_relative "../../config/environment"
 require 'csv'
 @client = Twilio::REST::Client.new(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN'])
 
-csv_text = File.read('cards.csv')
+csv_text = File.read('../../cards.csv')
 csv = CSV.parse(csv_text, :headers => true)
 @calls = {}
 csv.each do |row|
@@ -36,7 +36,10 @@ while not_completed == true
     v.update
     not_completed = true if v.status != 'completed'
   end
-  sleep 5 if not_completed == true
+  if not_completed == true
+    puts "not done yet, sleeping"
+    sleep 10
+  end
 end
 # how to get a transcription
 @calls.each do |card_number,call|
