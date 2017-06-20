@@ -8,6 +8,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th colspan="1">ChangeId</th>
           <th colspan="1">Type</th>
           <th colspan="1">User</th>
           <th colspan="1">Object</th>
@@ -19,6 +20,7 @@
       <tbody>
         <% @changes.each do |change| %>
         <tr>
+          <td><%= change.id %></td>
           <td><%= change.item_type %></td>
           <td><%= link_to(User.find(change.whodunnit).name, user_path(change.whodunnit)) if change.whodunnit %></td>
           <td><%=
