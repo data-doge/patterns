@@ -29,16 +29,36 @@ csv.each do |row|
     url: url,
     method: "GET" )
 end
+
 not_completed = true
 while not_completed == true
   not_completed = false
   @calls.each do |k,v|
     v.update
-    not_completed = true if v.status != 'completed'
-  end
-  if not_completed == true
-    puts "not done yet, sleeping"
-    sleep 10
+
+    if v.status != 'completed'
+      not_completed = true
+      puts v.status
+    end
+
+    if v.status == 'no-answer'
+      row = csv.find {|c| c['number'] == k }
+      number = row['number']
+      code = row['code']
+      url = "https://#{ENV['PRODUCTION_SERVER']}/activate/#{number.to_s}/#{code.to_s}.xml"
+
+      @calls[number] = @client.account.calls.create(
+        from: ENV['TWILIO_SCHEDULING_NUMBER'],   # From your Twilio number
+        to: '+18663008288', # BOA activation number
+        # Fetch instructions from this URL when the call connects
+        url: url,
+        method: "GET" )
+      puts "calling again for #{number}, #{code}"
+    end
+    if not_completed == true
+      puts "not done yet, sleeping"
+      sleep 10
+    end
   end
 end
 # how to get a transcription
