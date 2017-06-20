@@ -99,7 +99,7 @@ class GiftCard < ActiveRecord::Base
       csv_column_names =  ['Gift Card ID', 'Sign Out Date', 'Batch ID', 'Proxy ID', 'Gift Card Number', 'Expiration Date', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email','Notes']
       csv << csv_column_names
       all.find_each do |gift_card|
-        this_person = Person.unscopped.find gift_card.person_id
+        this_person = Person.unscoped.find gift_card.person_id
         row_items = [gift_card.id,
                      gift_card.created_at.to_s(:rfc822),
                      gift_card.batch_id,

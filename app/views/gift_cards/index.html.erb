@@ -39,7 +39,7 @@
       <tr id="gift_card-<%= gift_card.id%>">
         <td><%= gift_card.id %></td>
         <td><%= gift_card.person_id %></td>
-        <% person = Person.unscopped.find(gift_card.person_id) %>
+        <% person = Person.unscoped.find(gift_card.person_id) %>
         <td><%= link_to "#{person.full_name}", person_path(person) %></td>
         <td><%= gift_card.reason.titleize %></td>
         <td><%= if gift_card.giftable.present?
