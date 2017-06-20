@@ -95,6 +95,7 @@ Logan::Application.routes.draw do
 
   scope "/admin" do
     resources :users
+    get 'changes', to: 'users#changes', as: :user_changes
   end
 
   get 'dashboard/index'

@@ -27,6 +27,10 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit; end
 
+  def changes
+    @changes = PaperTrail::Version.order('id desc').page(params[:page])
+  end
+
   # POST /users
   def create
     @user = User.new(user_params)
