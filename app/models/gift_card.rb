@@ -52,7 +52,7 @@ class GiftCard < ActiveRecord::Base
   validates_length_of :proxy_id, minimum: 2, maximum: 7, unless: proc { |c| c.proxy_id.blank? }
 
   validates_uniqueness_of :proxy_id,
-    scope: [:batch_id, :card_number],
+    scope: [:batch_id, :gift_card_number],
     unless: proc { |c| c.proxy_id.blank? }
 
   validates_uniqueness_of :gift_card_number,
