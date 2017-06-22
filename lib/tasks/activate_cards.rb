@@ -34,9 +34,8 @@ not_completed = true
 while not_completed == true
   not_completed = false
   @calls.each do |k,v|
-    v.update
-
     if v.status != 'completed'
+      v.update
       not_completed = true
       puts v.status
     end
@@ -64,6 +63,7 @@ end
 # how to get a transcription
 @calls.each do |card_number,call|
   transcript = call&.recordings&.list&.first&.transcriptions&.list&.first&.transcription_text
+  # "Your pin has been created your card has been activated"
   if transcript.nil? || !transcript.include?('your card now has been activated')
     puts "card not activated: #{card_number}"
   end

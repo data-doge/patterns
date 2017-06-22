@@ -10,6 +10,7 @@
     <Pause length="10"/>
     <!-- security code -->
     <Play digits="<%= @secure_code %>#"></Play>
-    <Record timeout="5" maxLength="15" trim="trim-silence" transcribe="true"/>
+    <!-- "Your pin has been created your card has been activated"-->
+    <Record timeout="5" maxLength="6" trim="trim-silence" transcribe="true"/>
     <Hangup/>
 </Response>
