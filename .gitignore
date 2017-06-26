@@ -46,3 +46,6 @@ screenshot*
 
 /config/skylight.yml
 Todo.txt
+
+# ignoring cards to activate
+cards.csv
