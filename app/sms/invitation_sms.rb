@@ -15,6 +15,7 @@ class InvitationSms < ApplicationSms
 
     def body
       msg = "A #{duration} minute session has been scheduled:\n"
+      msg += "#{invitation.sms_description}\n"
       msg += "When: #{selected_time}\n"
       msg += "Where: #{invitation.location}\n"
       msg += "With: #{invitation.user.name}, \n"

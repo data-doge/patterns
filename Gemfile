@@ -27,6 +27,8 @@ gem 'awesome_print' # for printing awesomely
 
 gem 'credit_card_validations' # for activating cards
 
+gem 'fuzzy_match' # for sms command fuzzy matching
+
 group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
