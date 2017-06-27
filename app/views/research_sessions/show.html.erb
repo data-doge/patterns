@@ -16,6 +16,8 @@ var research_session_id = <%= @research_session.id%>;
         <dd><%= @research_session.description %>
         <dt>SMS Description</dt>
         <dd><%= @research_session.sms_description %>
+        <dt>Location</dt>
+        <dd><%= @research_session.location %>
         <dt>Starts at</dt>
         <dd><%= @research_session.start_datetime.to_s :short %></dd>
         <dt>Ends at</dt>

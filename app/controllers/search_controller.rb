@@ -1,5 +1,3 @@
-#
-
 require 'csv'
 # rubocop:disable ClassLength
 class SearchController < ApplicationController

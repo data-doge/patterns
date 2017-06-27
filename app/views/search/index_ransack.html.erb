@@ -22,31 +22,18 @@
     <%= f.label :phone_number_cont %>
     <%= f.search_field :phone_number_cont %>
 
-    <%= f.label :address_1_cont %>
-    <%= f.search_field :address_1_cont %>
-
     <%= f.label :postal_code_start %>
     <%= f.search_field :postal_code_start %>
-
-    <%= f.label :postal_code_not_start %>
-    <%= f.search_field :postal_code_not_start %>
 
     <%= f.label :preferred_contact_method_cont %>
     <%= f.select :preferred_contact_method_cont, [["Email", 'EMAIL'], ["SMS", 'SMS']], {include_blank: true}, {:class => "input" } %>
   </div>
 
   <div class="span3">
-    <%= f.label :primary_device_id_in %>
-    <%= f.select :primary_device_id_in, [[human_device_type_name(0),0],[ human_device_type_name(1),1], [human_device_type_name(2),2], [ human_device_type_name(3),  3]], {include_blank: true}, {:multiple => true,  :class => "multiple", :size => '4' } %>
-
-    <%= f.label :primary_device_description_cont %>
-    <%= f.search_field :primary_device_description_cont %>
-
-    <%= f.label :primary_connection_id_in %>
-    <%= f.select :primary_connection_id_in, [[human_connection_type_name(0),0],[ human_connection_type_name(1),1], [human_connection_type_name(4),4], [ human_connection_type_name(3),  3], [human_connection_type_name(2), 2]], {include_blank: true}, {:multiple => true,  :class => "multiple", :size => '5' } %>
-
-    <%= f.label :primary_connection_description_cont %>
-    <%= f.search_field :primary_connection_description_cont %>
+    <%= f.label :verified_eq_any %>
+    <%= f.select :verified_eq_any, @verified_list, {include_blank: true}, {:class => "input" }  %>
+    <%= f.label :notes_cont %>
+    <%= f.search_field :comments_cont %>
   </div>
   <div class="span5">
     <%= f.label "Tags" %>
@@ -57,17 +44,25 @@
                                     pre_populate: @tags.to_json(methods: %i[value label type])
                                   }
                           %>
-    <%= f.label :participation_type_in %>
-    <%= f.select :participation_type_in, @participation_list, {include_blank: true}, { multiple: true, size: @participation_list.count + 1 } %>
-
     <label for='gift_cards_gift_card_number_cont'>Gift card number contains</label>
     <%= f.search_field :gift_cards_gift_card_number_cont %>
     <label for='additional'>&nbsp;</label>
     <span data-toggle="collapse" data-target="#additional-options"  class="btn btn-default">Click to Show Additional Options</span>
       <div class="collapse" id="additional-options">
-        <%= f.label :verified_eq_any %>
-        <%= f.select :verified_eq_any, @verified_list, {include_blank: true}, { multiple: true, size: @verified_list.count + 1 } %>
+        <%= f.label :participation_type_in %>
+        <%= f.select :participation_type_in, @participation_list, {include_blank: true}, { multiple: true, size: @participation_list.count + 1 } %>
 
+        <%= f.label :primary_device_id_in %>
+        <%= f.select :primary_device_id_in, [[human_device_type_name(0),0],[ human_device_type_name(1),1], [human_device_type_name(2),2], [ human_device_type_name(3),  3]], {include_blank: true}, {:multiple => true,  :class => "multiple", :size => '4' } %>
+
+        <%= f.label :primary_device_description_cont %>
+        <%= f.search_field :primary_device_description_cont %>
+
+        <%= f.label :primary_connection_id_in %>
+        <%= f.select :primary_connection_id_in, [[human_connection_type_name(0),0],[ human_connection_type_name(1),1], [human_connection_type_name(4),4], [ human_connection_type_name(3),  3], [human_connection_type_name(2), 2]], {include_blank: true}, {:multiple => true,  :class => "multiple", :size => '5' } %>
+
+        <%= f.label :primary_connection_description_cont %>
+        <%= f.search_field :primary_connection_description_cont %>
         <%= f.label :submissions_raw_content_cont %>
         <%= f.search_field :submissions_raw_content_cont %>
       </div>
@@ -98,7 +93,6 @@ Search Parameters:
     </p>
     <table class="table table-striped">
       <% @results.each_with_index do |result, idx| %>
-      <% next unless Person.find_by(id: result.id) %>
       <tr>
         <td class="span4">
           <strong><%= link_to "#{result.first_name} #{result.last_name}", person_path(:id => result.id) %></strong>

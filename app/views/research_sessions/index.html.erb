@@ -1,6 +1,5 @@
 <%= render partial: 'layouts/research_sessions_menu' %>
-<%= search_form_for @s, class: 'form-inline' do |f| %>
-  <div class='pull-left'>
+<%= search_form_for @s do |f| %>
     <%= f.label "Tags" %>
     <%= f.text_field :ransack_tagged_with,
                               class: 'tokenfield input-large',
@@ -9,28 +8,33 @@
                                       pre_populate: @s.ransack_tagged_with&.split(',')
                                     }
                             %>
-  </div>
+
   <%= f.label "Title" %>
   <%= f.search_field :title_cont %>
-
-  <%= f.label "Name" %>
+  <%= f.label "Person's Name" %>
   <%= f.search_field :person_name_cont %>
-  <%= f.submit 'Search', class: 'btn btn-default' %>
-  <%= link_to "Clear Search", research_sessions_path, class: 'btn btn-default' %>
+  <%= f.label "User" %>
+  <%= f.select :user_name_cont, User.all.map(&:name), {include_blank: true} %>
+  <%= f.submit 'Search', class: 'btn btn-small' %>
+  <%= link_to "Clear", research_sessions_path, class: 'btn btn-small' %>
 <% end %>
-
+<div class="row">
+  <div class="span12" style="text-align:center">
+    <%= will_paginate @research_sessions, :renderer => BootstrapPagination::Rails %>
+  </div>
+</div>
 <div class="row">
   <div class="span12">
     <h4>List of Sessions</h4>
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Location</th>
+          <th><%= sort_link(@q, :title) %></th>
+          <th><%= sort_link(@q, :description) %></th>
+          <th><%= sort_link(@q, :location) %></th>
           <th>Starts at</th>
-          <th>Duration</th>
-          <th>Created By</th>
+          <th><%= sort_link(@q, :duration) %></th>
+          <th><%= sort_link(@q, :created_by) %></th>
           <th>Number Invited:</th>
           <th>Attended</th>
         </tr>

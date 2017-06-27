@@ -4,7 +4,8 @@
       <th>Name</th>
       <th>Action</th>
       <th>Current State</th>
-      <th>Gift Cards</th>
+      <th>Gift Card #</th>
+      <th>Add Cards</th>
     </tr>
     <% for invitation in @research_session.invitations.includes(:person) do %>
       <tr>
@@ -20,6 +21,15 @@
                   'data-toggle' =>  "modal",
                   'data-target' => '#modal-window',
                   id: "#{invitation.id}-gift-card-count"}  %>
+        </td>
+        <td>
+        <%= link_to "+",
+              modal_gift_cards_path(invitation.class.to_s, invitation.id),
+                {:remote => true,
+                  'data-toggle' =>  "modal",
+                  'data-target' => '#modal-window',
+                  id: "#{invitation.id}-gift-card-count",
+                  class: 'btn btn-mini'} %>
         </td>
       </tr>
     <% end %>

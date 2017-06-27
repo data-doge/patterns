@@ -56,6 +56,7 @@ class Person < ActiveRecord::Base
   phony_normalized_method :phone_number, default_country_code: 'US'
 
   has_many :comments, as: :commentable, dependent: :destroy
+
   has_many :submissions, dependent: :destroy
 
   has_many :gift_cards
@@ -118,6 +119,8 @@ class Person < ActiveRecord::Base
     %i[no_signup_card ransack_tagged_with]
   end
 
+
+  ransack_alias :comments, :comments_content
   ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number
 
   def self.send_all_reminders

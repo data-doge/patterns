@@ -90,11 +90,11 @@ class Invitation < ActiveRecord::Base
     end
 
     event :remind, after_commit: :send_reminder, guard: :in_future? do
-      transitions from: %i[invited reminded confirmed], to: :reminded
+      transitions from: %i[invited reminded], to: :reminded
     end
 
     event :confirm, after_commit: :notify_about_confirmation, guard: :in_future? do
-      transitions from: %i[confirmed invited reminded], to: :confirmed
+      transitions from: %i[confirmed invited reminded confirmed], to: :confirmed
     end
 
     event :cancel, after_commit: :notify_about_cancellation, guard: :in_future? do

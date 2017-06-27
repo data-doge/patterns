@@ -95,6 +95,21 @@
         </ul>
         <%= render partial: 'taggings/tag_form', locals: {taggable_obj: @person}%>
       </div>
+      <div class='span6'>
+        <h3>Communications</h3>
+          <%= form_for([@person, @comms], remote: true) do |form| %>
+            <%= form.hidden_field :commentable_type, :value => 'Person-comms' %>
+            <%= form.hidden_field :commentable_id, :value => @person.id %>
+            <%= form.text_area :content, rows: 3, class: "span6 input-block-level" %>
+            <%= form.submit 'Add comms', :class => "btn" %>
+          <% end %>
+
+        <div id="comments">
+          <%= render partial: 'comments/embed',
+            collection: @person.communications.order("created_at DESC"),
+            as: :comment %>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -131,7 +146,7 @@
 
 
   <div class="span6" id="person-events">
-  <h3>Communications</h3>
+  <h3>Surveys</h3>
   <table class="table">
     <tr>
         <th>Campaign Name</th>
