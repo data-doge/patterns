@@ -102,7 +102,7 @@ class SmsInvitationsController < ApplicationController
     # can't use the word info!
     # https://support.twilio.com/hc/en-us/articles/223134027-Twilio-support-for-STOP-BLOCK-and-CANCEL-SMS-STOP-filtering-
     def calendar?
-      message.downcase =~ /^calendar$/
+      FuzzyMatch.new(['calendar']).find(message.downcase).present?
     end
 
     # this is horrific.
