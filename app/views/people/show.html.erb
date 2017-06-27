@@ -95,9 +95,6 @@
         </ul>
         <%= render partial: 'taggings/tag_form', locals: {taggable_obj: @person}%>
       </div>
-      <div class='span6'>
-
-      </div>
     </div>
   </div>
 
@@ -107,9 +104,17 @@
       <a href="https://maps.google.com?q=<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>" target="_blank" title="View in Google Maps"><img src="https://maps.googleapis.com/maps/api/staticmap?markers=|<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>&amp;zoom=14&amp;size=570x200&amp;sensor=false"></a>
     </div>
     <div class='row'>
-      <h3> Research Sessions</h3>
-      <%= render partial: 'research_sessions/mini_view',
+      <div class='span6'>
+        <h3> Research Sessions</h3>
+        <%= render partial: 'research_sessions/mini_view',
             locals: {person: @person} %>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='span6'>
+        <h3>Activity</h3>
+        <div>Comms activity will live here.</div>
+      </div>
     </div>
   </div>
 </div>
