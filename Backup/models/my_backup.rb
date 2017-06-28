@@ -92,9 +92,9 @@ Model.new(:my_backup, 'Description for my_backup') do
   # Local (Copy) [Storage]
   #
   store_with Local do |local|
-    local.path       = '~/backups/'
-    local.keep       = 5
-    # local.keep       = Time.now - 2592000 # Remove all backups older than 1 month.
+    local.path       = '/var/www/logan-production/shared/backups'
+    local.keep       = 500
+    local.keep       = Time.now - 2592000 # Remove all backups older than 1 month.
   end
 
   ##
