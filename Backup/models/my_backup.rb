@@ -108,19 +108,19 @@ Model.new(:my_backup, 'Description for my_backup') do
   # The default delivery method for Mail Notifiers is 'SMTP'.
   # See the documentation for other delivery options.
   #
-  notify_by Mail do |mail|
-    mail.on_success           = false
-    mail.on_warning           = true
-    mail.on_failure           = true
+  # notify_by Mail do |mail|
+  #   mail.on_success           = false
+  #   mail.on_warning           = true
+  #   mail.on_failure           = true
 
-    mail.from                 = ENV['MAILER_SENDER']
-    mail.to                   = ENV['MAIL_ADMIN']
-    mail.address              = ENV['SMTP_HOST']
-    mail.port                 = ENV['SMTP_PORT']
-    mail.domain               = ENV["#{ENV['RAILS_ENV'].upcase}_SERVER"]
-    mail.user_name            = ENV['SMTP_USERNAME']
-    mail.password             = ENV['SMTP_PASSWORD']
-    mail.authentication       = 'plain'
-    mail.encryption           = :starttls
-  end
+  #   mail.from                 = ENV['MAILER_SENDER']
+  #   mail.to                   = ENV['MAIL_ADMIN']
+  #   mail.address              = ENV['SMTP_HOST']
+  #   mail.port                 = ENV['SMTP_PORT']
+  #   mail.domain               = ENV["#{ENV['RAILS_ENV'].upcase}_SERVER"]
+  #   mail.user_name            = ENV['SMTP_USERNAME']
+  #   mail.password             = ENV['SMTP_PASSWORD']
+  #   mail.authentication       = 'plain'
+  #   mail.encryption           = :starttls
+  # end
 end

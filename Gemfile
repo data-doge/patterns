@@ -164,6 +164,7 @@ gem 'aasm'
 
 # cron jobs for backups and sending reminders
 gem 'whenever', require: false
+gem 'backup', require: false
 
 # handling emoji!
 gem 'emoji'
