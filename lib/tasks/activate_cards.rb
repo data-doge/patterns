@@ -30,17 +30,18 @@ csv.each do |row|
     method: "GET" )
 end
 
-not_completed = true
-while not_completed == true
-  not_completed = false
+@not_completed = true
+while @not_completed == true
+  @not_completed = false
   @calls.each do |k,v|
     if v.status != 'completed'
       v.update
-      not_completed = true
+      @not_completed = true
       puts v.status
     end
 
     if v.status == 'no-answer'
+      @not_completed = true
       row = csv.find {|c| c['number'] == k }
       number = row['number']
       code = row['code']
@@ -64,7 +65,7 @@ end
 @calls.each do |card_number,call|
   transcript = call&.recordings&.list&.first&.transcriptions&.list&.first&.transcription_text
   # "Your pin has been created your card has been activated"
-  if transcript.nil? || !transcript.include?('your card now has been activated')
+  if transcript.nil? || !transcript.include?('Your pin has been created')
     puts "card not activated: #{card_number}"
   end
 end

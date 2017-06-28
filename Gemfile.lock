@@ -102,6 +102,8 @@ GEM
     cocoon (1.2.10)
     codeclimate-test-reporter (1.0.8)
       simplecov (<= 0.13)
+    codemirror-rails (5.16.0)
+      railties (>= 3.0, < 6.0)
     coderay (1.1.1)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
@@ -223,6 +225,18 @@ GEM
     jquery-validation-rails (1.16.0)
     json (2.1.0)
     jwt (1.5.6)
+    kaminari (1.0.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.0.1)
+      kaminari-activerecord (= 1.0.1)
+      kaminari-core (= 1.0.1)
+    kaminari-actionview (1.0.1)
+      actionview
+      kaminari-core (= 1.0.1)
+    kaminari-activerecord (1.0.1)
+      activerecord
+      kaminari-core (= 1.0.1)
+    kaminari-core (1.0.1)
     kgio (2.11.0)
     launchy (2.4.3)
       addressable (~> 2.3)
@@ -346,6 +360,13 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
+    rails_db (1.6.0)
+      codemirror-rails
+      kaminari
+      rails (>= 3.1.0)
+      ransack
+      simple_form
+      terminal-table
     railties (4.2.8)
       actionpack (= 4.2.8)
       activesupport (= 4.2.8)
@@ -429,6 +450,9 @@ GEM
     shellany (0.0.1)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
+    simple_form (3.5.0)
+      actionpack (> 4, < 5.2)
+      activemodel (> 4, < 5.2)
     simplecov (0.12.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -455,6 +479,8 @@ GEM
     stackprof (0.2.10)
     term-ansicolor (1.6.0)
       tins (~> 1.0)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
       ref
@@ -597,6 +623,7 @@ DEPENDENCIES
   quiet_assets
   rack-mini-profiler
   rails (~> 4.2.0)
+  rails_db
   ransack!
   rbnacl
   rbnacl-libsodium
