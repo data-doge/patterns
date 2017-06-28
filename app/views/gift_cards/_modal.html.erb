@@ -59,7 +59,10 @@
         <%= render partial: 'gift_cards/mini_view',
               locals: { gift_cards: @giftable.gift_cards } %>
       </div> <!-- modal body end -->
-      <div class="modal-footer"><a href="#" class="btn">Close</a></div>
+      <div class="modal-footer">
+        <a href="#" class="btn close" data-dismiss="modal" aria-hidden="true">  Close
+        </a>
+      </div>
     </div>
   </div>
 </div>
