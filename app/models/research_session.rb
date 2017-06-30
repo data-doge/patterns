@@ -55,13 +55,10 @@ class ResearchSession < ActiveRecord::Base
 
   scope :upcoming, ->(d = 7) { where(start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days) }
 
-  ransacker :person_name, formatter: proc { |v| v.mb_chars.downcase.to_s } do |_parent|
-    Arel::Nodes::NamedFunction.new('lower',
-      [Arel::Nodes::NamedFunction.new('concat_ws',
-        [Arel::Nodes.build_quoted(' '), Person.table[:first_name], Person.table[:last_name]])])
-  end
 
   scope :ransack_tagged_with, ->(*tags) { tagged_with(tags) }
+
+  ransack_alias :comments, :comments_content
 
   def self.ransackable_scopes(_auth = nil)
     %i[ransack_tagged_with]

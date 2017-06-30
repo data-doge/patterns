@@ -62,7 +62,7 @@ class ResearchSessionsController < ApplicationController
   def index
     @s = ResearchSession.ransack(params[:q])
 
-    @research_sessions = @s.result(distinct: true).includes(:people, :tags).page(params[:page])
+    @research_sessions = @s.result(distinct: true).includes(:people, :tags, :user).page(params[:page])
   end
 
   def show

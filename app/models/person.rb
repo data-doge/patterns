@@ -119,7 +119,6 @@ class Person < ActiveRecord::Base
     %i[no_signup_card ransack_tagged_with]
   end
 
-
   ransack_alias :comments, :comments_content
   ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number
 

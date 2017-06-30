@@ -10,9 +10,11 @@
                             %>
 
   <%= f.label "Title" %>
-  <%= f.search_field :title_cont %>
+  <%= f.search_field :title_or_description_cont %>
+  <%= f.label "Notes" %>
+  <%= f.search_field :comments_cont %>
   <%= f.label "Person's Name" %>
-  <%= f.search_field :person_name_cont %>
+  <%= f.search_field :people_full_name_cont %>
   <%= f.label "User" %>
   <%= f.select :user_name_cont, User.all.map(&:name), {include_blank: true} %>
   <%= f.submit 'Search', class: 'btn btn-small' %>
