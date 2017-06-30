@@ -1,6 +1,10 @@
 <%= render :partial => 'layouts/research_sessions_menu' %>
-<h3> People in cart</h3>
+<h3> People in Pool</h3>
+<%= link_to "Remove All", delete_cart_path({all: true}),
+                            class: "btn btn-mini",
+                            remote: true, method: :get %>
 <input id='cart-typeahead' type="text" placeholder="People Search">
+
 <div class="row">
   <div class="span12">
     <table class="table table-striped">
@@ -22,8 +26,6 @@
 </div>
 <div class='row'>
   <div class='span1'>
-    <%= link_to "Delete all", delete_cart_path({all: true}),
-                            class: "btn btn-mini",
-                            remote: true, method: :get %>
+
   </div>
 </div>

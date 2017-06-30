@@ -43,9 +43,9 @@
                 <a href="#" class="dropdown-toggle brl" data-toggle="dropdown"><span class='badge' id='cart-size'><%= (session[:cart] ||= []).size %></span>&nbsp;Sessions<b class="caret brl"></b></a>
                 <ul class="dropdown-menu">
                   <!-- <li><%= link_to "Calendar", calendar_path %></li> -->
-                  <li><%= link_to "Invite", new_research_session_path %></li>
-                  <li><%= link_to "Sessions", research_sessions_path %></li>
-                  <li><%= link_to "Cart", show_cart_path %></li>
+                  <li><%= link_to "New Session", new_research_session_path %></li>
+                  <li><%= link_to "Session List", research_sessions_path %></li>
+                  <li><%= link_to "People Pool", show_cart_path %></li>
                 </ul>
               </li>
 
