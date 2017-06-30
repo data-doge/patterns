@@ -55,10 +55,10 @@ while @not_completed == true
         method: "GET" )
       puts "calling again for #{number}, #{code}"
     end
-    if not_completed == true
-      puts "not done yet, sleeping"
-      sleep 10
-    end
+  end
+  if @not_completed == true
+    puts "not done yet, sleeping"
+    sleep 10
   end
 end
 # how to get a transcription
