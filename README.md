@@ -4,6 +4,11 @@ Kimball
 
 Kimball is an application to manage people that are involved with the Smart Chicago CUTGroup.
 
+NOTE: 
+-----------
+Currently specs and tests are waaay out of date. 
+
+
 Features
 --------
 
