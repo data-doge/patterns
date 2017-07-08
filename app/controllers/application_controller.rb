@@ -26,6 +26,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_cart
+    current_user.current_cart(session[:cart_id])
+  end
+
   def flash_to_headers
     return unless request.xhr?
     response.headers['X-Message'] = flash_message if flash_message

@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   has_many :research_sessions
   has_many :invitations, through: :research_sessions
   has_many :gift_cards, foreign_key: :created_by
+  has_many :carts
 
   phony_normalize :phone_number, default_country_code: 'US'
   phony_normalized_method :phone_number, default_country_code: 'US'
@@ -108,5 +109,13 @@ class User < ActiveRecord::Base
       session_ids: sessions,
       user_id: id
     ).deliver_later
+  end
+
+  def current_cart(cart_id)
+    @cart = if Cart.exists? id: cart_id, user_id: id
+              Cart.find_by(id: cart_id, user_id: id)
+            else
+              Cart.find_or_create_by(user_id: id, name: 'default')
+            end
   end
 end

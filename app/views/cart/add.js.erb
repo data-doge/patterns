@@ -1,17 +1,14 @@
 <% @added.each do |add| %>
-  <% if @type.present? %>
-    $('#<%= @type %>-cart').append("<%= j render partial: "cart/#{@type}_item", locals: {person: Person.find(add)} %>");
-    $('.add-to-session').on('click',function(el){
-      added_person = {  full_name: $(this).data('fullname'),
-                        person_id: $(this).data('personid')};
-      $('a.add_fields').click();
-      $('input#cart-typeahead').val('');
-    })
-
-  <% end %>
+  $('#<%= @type %>-cart').append("<%= j render partial: "cart/#{@type}_item", locals: {person: Person.find(add)} %>");
+  $('.add-to-session').on('click',function(el){
+    added_person = {  full_name: $(this).data('fullname'),
+                      person_id: $(this).data('personid')};
+    $('a.add_fields').click();
+    $('input#cart-typeahead').val('');
+  })
   $('#<%= add %>-cart-delete').show();
   $('#<%= add %>-cart-add').hide();
 <% end %>
 
-$('#cart-size').html('<%= (session[:cart] ||= []).size %>');
+$('#cart-size').html('<%= @cart.people_ids.size %>');
 

@@ -10,6 +10,10 @@ module ApplicationHelper
     options_for_select(options)
   end
 
+  def current_cart
+    current_user.current_cart(session[:cart_id])
+  end
+
   def nav_bar(classes = 'nav navbar-nav')
     content_tag(:ul, class: classes) do
       yield

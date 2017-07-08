@@ -3,4 +3,4 @@
   $('#<%= delete %>-cart-add').show();
   $('#cart-<%= delete %>').remove();
 <% end %>
-$('#cart-size').html('<%= (session[:cart] ||= []).size %>');
+$('#cart-size').html('<%= @cart.people_ids.size %>');

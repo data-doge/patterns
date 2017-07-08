@@ -52,6 +52,9 @@ Logan::Application.routes.draw do
   get 'cart/add/:person_id', to: 'cart#add', as: :add_cart
   get 'cart/delete(/:person_id(/:all))', to: 'cart#delete', as: :delete_cart
 
+  get 'carts/all', to: 'cart#carts', as: :all_carts
+  post 'carts/change/:name', to: 'cart#change', as: :change_cart
+  post 'carts/delete/:name', to: 'cart#delete_cart', as: :cart_delete
   get 'registration', to: 'public/people#new'
 
   resources :twilio_wufoos
