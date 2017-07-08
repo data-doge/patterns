@@ -23,6 +23,7 @@ Logan::Application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -33,6 +34,7 @@ Logan::Application.configure do
 
   # Debug mode disables concatenation and preprocessing of assets.
   config.assets.debug = true
+  config.assets.quiet = true
 
   config.middleware.use Rack::TwilioWebhookAuthentication, ENV['TWILIO_AUTH_TOKEN'], '/receive_text/index'
 
@@ -44,6 +46,8 @@ Logan::Application.configure do
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
+
+  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true

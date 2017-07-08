@@ -1,0 +1,42 @@
+<%= tag.h1 'Advanced People Search' %>
+
+
+<div class='advanced_search'>
+
+  <%= search_form_for(
+      @search,
+      url: advanced_search_path,
+      html: { method: :post }
+    ) do |f| %>
+
+    <% setup_search_form(f) %>
+
+    <%= tag.fieldset do %>
+      <%= tag.legend 'Sorting' %>
+      <%= f.sort_fields do |s| %>
+        <%= render 'sort_fields', f: s %>
+      <% end %>
+      <%= button_to_add_fields(f, :sort) %>
+    <% end %>
+
+    <%= tag.fieldset do %>
+      <%= tag.legend 'Condition Groups' %>
+      <%= f.grouping_fields do |g| %>
+        <%= render 'grouping_fields', f: g %>
+      <% end %>
+      <%= button_to_add_fields(f, :grouping) %>
+    <% end %>
+
+    <%= display_distinct_label_and_check_box %>
+    <%= f.submit class: 'btn btn--invert' %>
+  <% end %>
+
+  <%= render 'results' %>
+
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    <%= yield :document_ready %>
+  });
+</script>

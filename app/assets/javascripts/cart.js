@@ -3,7 +3,7 @@ $(document).on('ready page:load',function() {
   // interacts with cocoon to do nested forms
   // does both big and mini-cart
 
-  added_person={};
+  added_person = {};
 
     // initialize bloodhound engine
   var searchSelector = 'input#cart-typeahead';
@@ -59,6 +59,7 @@ $(document).on('ready page:load',function() {
 
 
   if ($('#mini-cart').length != 0) {
+    $(".add_fields").hide();
     $('.add-to-session').on('click',function(el){
       added_person = {  full_name: $(this).data('fullname'),
                         person_id: $(this).data('personid')};
@@ -83,5 +84,5 @@ $(document).on('ready page:load',function() {
       });
     });
   }
-  $(".add_fields").hide();
+
 });

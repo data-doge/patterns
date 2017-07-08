@@ -50,7 +50,7 @@ class PeopleController < ApplicationController
 
   # rubocop:disable Metrics/AbcSize
   def index
-    @verified_types = Person.uniq.pluck(:verified).select(&:present?)
+    @verified_types = Person.pluck(:verified).uniq.select(&:present?)
     # this could be cleaner...
     @people = if params[:tags].blank?
                 Person.paginate(page: params[:page]).
@@ -77,7 +77,7 @@ class PeopleController < ApplicationController
     @last_gift_card = GiftCard.last # default scope is id: :desc
     @gift_card = GiftCard.new
     @reservation = Reservation.new person: @person
-    @verified_types = Person.uniq.pluck(:verified).select(&:present?)
+    @verified_types = Person.pluck(:verified).uniq.select(&:present?)
     @tags = @person.tags.map(&:name)
     @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
     @twilio_wufoo_formids = @outgoingmessages.pluck(:wufoo_formid).uniq
