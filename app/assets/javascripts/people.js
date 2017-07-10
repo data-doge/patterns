@@ -45,7 +45,13 @@ $(document).on('ready page:load', function () {
   $(searchSelector).typeahead(null, {
     name: 'Tags',
     displayKey: 'name',
-    source: bloodhound.ttAdapter()
+    source: bloodhound.ttAdapter(),
+    templates: {
+            empty: "Enter to add tag",
+            suggestion: function(data) {
+              return "<div>" + data.name + ' - <span class="badge">' + data.count + "</badge></div>";
+            }
+          }
   });
 
   //submits the tag once selected from the typeahead

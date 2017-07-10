@@ -103,13 +103,19 @@ $(document).on('ready page:load', function() {
       typeahead: [
         null, {
           source: bloodhound.ttAdapter(),
-          display: 'name',
+          //display: 'name',
           displayKey: 'name',
           showAutocompleteOnFocus: true,
-          limit: 20
+          limit: 20,
+          templates: {
+            empty: "Not Found",
+            suggestion: function(data) {
+              return "<div>" + data.name + ' - <span class="badge">' + data.count + "</badge></div>";
+            }
+          }
         }
       ]
-    })
+    });
 
     // a little style. delayed, because reasons. that's why.
     $( '.tokenfield' ).delay( 800 ).css('border', '1px solid #cccccc');
