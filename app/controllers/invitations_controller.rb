@@ -73,7 +73,7 @@ class InvitationsController < ApplicationController
 
     respond_to do |format|
       # /sessions/:research_session_id/invitations_panel
-      format.js { render text: "$('#dynamic-invitation-panel').load('/sessions/#{@invitation.research_session.id}/invitations_panel.html');" }
+      format.js
       format.json do
         { invitation_id: @invitation.id, state: @invitation.aasm_state }
       end
