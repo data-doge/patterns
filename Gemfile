@@ -31,9 +31,7 @@ gem 'fuzzy_match' # for sms command fuzzy matching
 
 gem 'rails_db' #for data-wonky fellows
 
-gem 'rbnacl' # for modern ssh keys
-gem 'rbnacl-libsodium' # same as above
-gem 'bcrypt_pbkdf' # same as above
+
 
 group :development do
   # gem 'capistrano'
@@ -43,6 +41,9 @@ group :development do
   gem 'capistrano', git: 'git://github.com/capistrano/capistrano.git', tag: 'v2.15.4'
 
   gem 'rvm-capistrano', require: false
+  gem 'rbnacl', '~> 4.0.0' # for modern ssh keys
+  gem 'rbnacl-libsodium' # same as above
+  gem 'bcrypt_pbkdf' # same as above
   # this whole group makes finding performance issues much friendlier
   gem 'flamegraph'
   gem 'memory_profiler'
