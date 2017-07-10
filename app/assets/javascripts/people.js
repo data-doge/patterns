@@ -5,6 +5,9 @@ $(document).on('ready page:load', function () {
 
   //filters out tags that are already in the list
   var filter = function(suggestions) {
+    $.each(suggestions, function(k, v) {
+        v["value"] = v["name"];
+    });
     var current_tags = $('#tag-list li').map(function(index,el){
       return el.children[0].text;
     });
