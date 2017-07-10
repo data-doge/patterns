@@ -31,14 +31,17 @@ gem 'fuzzy_match' # for sms command fuzzy matching
 
 gem 'rails_db' #for data-wonky fellows
 
+gem 'rbnacl' # for modern ssh keys
+gem 'rbnacl-libsodium' # same as above
+gem 'bcrypt_pbkdf' # same as above
+
 group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
   # src: https://github.com/capistrano/capistrano/pull/412
-  gem 'bcrypt_pbkdf' # same as above
+
   gem 'capistrano', git: 'git://github.com/capistrano/capistrano.git', tag: 'v2.15.4'
-  gem 'rbnacl' # for modern ssh keys
-  gem 'rbnacl-libsodium' # same as above
+
   gem 'rvm-capistrano', require: false
   # this whole group makes finding performance issues much friendlier
   gem 'flamegraph'
