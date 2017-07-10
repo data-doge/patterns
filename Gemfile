@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.3.4'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.2.0'
+gem 'rails', '~> 5.1.0'
 
 gem 'airbrake', '~> 5.0'
 # gem 'pg' # soooooon!
@@ -60,10 +60,10 @@ group :development do
   gem 'web-console'
 
   # silences logging of requests for assets
-  gem 'quiet_assets'
+  #gem 'quiet_assets'
 
   # enabling us to deploy via travis and encrypted keys!
-  gem 'travis'
+  #gem 'travis'
 end
 
 group :production do
@@ -89,7 +89,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.0.1'
+gem 'jbuilder'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -100,6 +100,7 @@ gem 'unicorn'
 # To use debugger
 # gem 'debugger'
 
+# https://coderwall.com/p/fnfdgw/useful-regular-expressions-to-update-to-bootstrap-3
 gem 'twitter-bootstrap-rails', '~> 2.2.0'
 gem 'glyphicons-rails'
 gem 'momentjs-rails'
@@ -118,10 +119,10 @@ gem 'health_check'
 gem 'holder_rails'
 
 # use devise for auth/identity
-gem 'devise', '~>4.1.0'
+gem 'devise'
 
 # use gibbon for easy Mailchimp API access
-gem 'gibbon', '~> 2.2.3'
+gem 'gibbon'
 
 # use twilio-ruby for twilio
 gem 'twilio-ruby'
@@ -164,7 +165,7 @@ gem 'aasm'
 
 # cron jobs for backups and sending reminders
 gem 'whenever', require: false
-gem 'backup', require: false
+#gem 'backup', require: false
 
 # handling emoji!
 gem 'emoji'

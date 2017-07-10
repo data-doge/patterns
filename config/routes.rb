@@ -142,7 +142,8 @@ Logan::Application.routes.draw do
   post 'search/export_ransack'
   post 'search/export' # send search results elsewhere, i.e. Mailchimp
   post 'search/exportTwilio'
-
+  get  'search/advanced', to: 'search#advanced', as: :advanced_search
+  post  'search/advanced', to: 'search#advanced', as: :advanced_search_post
 
   get 'mailchimp_exports/index'
 

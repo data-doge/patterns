@@ -4,6 +4,9 @@ class SearchController < ApplicationController
 
   include PeopleHelper
   include GsmHelper
+  include SearchHelper
+
+
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/BlockLength
   def index_ransack
@@ -17,8 +20,10 @@ class SearchController < ApplicationController
     @q = Person.ransack(params[:q])
     @results = @q.result.includes(:tags).page(params[:page])
 
-    @participation_list = Person.uniq.pluck(:participation_type) # Need to better define these
-    @verified_list = Person.uniq.pluck(:verified)
+
+    # Need to better define these
+    @participation_list = Person.pluck(:participation_type).uniq
+    @verified_list = Person.pluck(:verified).uniq
     @mailchimp_result = 'Mailchimp export not attempted with this search'
 
     respond_to do |format|
@@ -152,7 +157,21 @@ class SearchController < ApplicationController
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/MethodName, Style/VariableName
 
+  def advanced
+    @search = ransack_params
+    @search.build_grouping unless @search.groupings.any?
+    @people  = ransack_result
+  end
+
   private
+
+    def ransack_params
+      Person.includes(:tags,:comments).ransack(params[:q])
+    end
+
+    def ransack_result
+      @search.result(distinct: user_wants_distinct_results?)
+    end
 
     # lotta params...
     # rubocop:disable Metrics/MethodLength,

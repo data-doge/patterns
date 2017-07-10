@@ -1,5 +1,3 @@
-//All time is converted to seconds for easier comparison
-
 $(document).on('page:load ready', function(){
 
   //https://eonasdan.github.io/bootstrap-datetimepicker/
