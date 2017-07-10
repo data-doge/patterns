@@ -122,7 +122,7 @@ class ResearchSessionsController < ApplicationController
         :buffer,
         :title,
         :user_id
-      ).symbolize_keys
+      ).to_h.symbolize_keys
     end
 
   # rubocop:enable Metrics/MethodLength

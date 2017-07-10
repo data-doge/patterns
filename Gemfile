@@ -188,7 +188,9 @@ gem 'money-rails'
 gem 'maskedinput-rails'
 
 # the standard rails tagging library
-gem 'acts-as-taggable-on', '~> 4.0'
+#gem 'acts-as-taggable-on', '~> 4.0'
+gem "acts_as_taggable_on", git: 'https://github.com/ProGM/acts-as-taggable-on.git', branch: 'fix-caching-tag-list-on-bug'
+
 
 group :test do
   # mock tests w/mocha
