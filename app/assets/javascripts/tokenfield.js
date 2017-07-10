@@ -1,4 +1,4 @@
-$(document).on('ready page:load',function() {
+$(document).on('ready page:load', function() {
   // this is used on search and on interview/event_invitation
   // can't create new tokens with this.
 
@@ -10,8 +10,8 @@ $(document).on('ready page:load',function() {
     var bloodhound, filter, tokenSelector, cached_suggestions;
     var searchUrl, prePopulate;
 
-    searchUrl    = $("[data-search-url]").data().searchUrl.toString();
-    prePopulate  = $("[data-pre-populate]").data().prePopulate;
+    searchUrl = $("[data-search-url]").data().searchUrl.toString();
+    prePopulate = $("[data-pre-populate]").data().prePopulate;
 
     // untill we get em, we save em.
     cached_suggestions = [];
@@ -33,25 +33,25 @@ $(document).on('ready page:load',function() {
 
       // can't add a token not in the sugestions
       // this is a very rudimentary cache.
-      if (prePopulate!=='') {
+      if (prePopulate !== '') {
         cached_suggestions = cached_suggestions.concat();
       }
       suggestion_values = cached_suggestions.map(function(e,i) {
         return e.name.toString();
       });
 
-      if ($.inArray(event_value,suggestion_values) === -1) {
+      if ($.inArray(event_value, suggestion_values) === -1) {
 
         should_prevent_default = true;
       }
       // failed the tests above
-      if(should_prevent_default === true){
+      if (should_prevent_default === true) {
         event.preventDefault();
       }
     });
 
     // make tokens from typeahead selections
-    $(tokenSelector).on('typeahead:selected typeahead:autocomplete', function (e,datum){
+    $(tokenSelector).on('typeahead:selected typeahead:autocomplete', function(e,datum) {
       $(tokenSelector).tokenfield('createTokensFromInput');
     });
 
@@ -64,7 +64,7 @@ $(document).on('ready page:load',function() {
 
       var current, filtered, results;
       // using names here, not values
-      current = $(tokenSelector).tokenfield('getTokens').map(function(e,i) {
+      current = $(tokenSelector).tokenfield('getTokens').map(function(e, i) {
         return e.name;
       });
 
@@ -82,7 +82,7 @@ $(document).on('ready page:load',function() {
       remote: {
         url: searchUrl,
         wildcard: '%QUERY',
-        limit: 20,
+        limit: 40,
         filter: filter,
         cache: false
       }
@@ -91,8 +91,8 @@ $(document).on('ready page:load',function() {
     bloodhound.initialize();
 
     // preventing enter from submitting form
-    $(tokenSelector).keydown(function(event){
-      if(event.keyCode === 13) {
+    $(tokenSelector).keydown(function(event) {
+      if (event.keyCode === 13) {
         event.preventDefault();
         return true;
       }
@@ -105,21 +105,22 @@ $(document).on('ready page:load',function() {
           source: bloodhound.ttAdapter(),
           display: 'name',
           displayKey: 'name',
-          showAutocompleteOnFocus: true
+          showAutocompleteOnFocus: true,
+          limit: 20
         }
       ]
     })
 
     // a little style. delayed, because reasons. that's why.
-    $('.tokenfield').delay( 800 ).css('border','1px solid #cccccc');
-    $('.tokenfield').delay( 800 ).css('border-radius','5px');
+    $( '.tokenfield' ).delay( 800 ).css('border', '1px solid #cccccc');
+    $( '.tokenfield' ).delay( 800 ).css('border-radius', '5px');
 
-    var prepopulate_tokens = function(tokens){
+    var prepopulate_tokens = function(tokens)  {
       cached_suggestions = tokens;
       $.each(tokens, function(k, v) {
           v["value"] = v["name"];
       });
-      $(tokenSelector).tokenfield('setTokens',tokens)
+      $(tokenSelector).tokenfield('setTokens', tokens)
     }
 
     if (typeof prePopulate !== 'undefined' && prePopulate != '') {
