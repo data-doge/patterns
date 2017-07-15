@@ -240,3 +240,12 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = "/my_engine/users/auth"
 end
+
+#Fail2ban
+Warden::Manager.before_failure do |env, opts|
+  if opts[:action] == 'unauthenticated' and opts[:attempted_path] == '/users/sign_in'
+    ip = env['action_dispatch.remote_ip'] || env['REMOTE_ADDR']
+    user = env['action_dispatch.request.parameters']['user']['email'] rescue 'unknown'
+    Rails.logger.error "Failed login for '#{user}' from #{ip} at #{Time.now.utc.iso8601}"
+  end
+end
