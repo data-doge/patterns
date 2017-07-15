@@ -1,5 +1,6 @@
 require 'bundler/capistrano'
 require 'capistrano/ext/multistage'
+set :whenever_command, 'bundle exec whenever'
 require 'whenever/capistrano'
 require 'rvm/capistrano'
 require 'rvm/capistrano/gem_install_uninstall'
