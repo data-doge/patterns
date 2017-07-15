@@ -1,4 +1,4 @@
-class AddFieldsToPerson < ActiveRecord::Migration
+class AddFieldsToPerson < ActiveRecord::Migration[4.2]
 
   def change
     add_column :people, :signup_ip,   :string

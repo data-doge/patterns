@@ -1,4 +1,4 @@
-class CreateMailchimpExports < ActiveRecord::Migration
+class CreateMailchimpExports < ActiveRecord::Migration[4.2]
 
   def change
     create_table :mailchimp_exports do |t|

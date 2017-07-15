@@ -1,4 +1,4 @@
-class AddCreatedByUpdatedByToModels < ActiveRecord::Migration
+class AddCreatedByUpdatedByToModels < ActiveRecord::Migration[4.2]
 
   def change
     add_column :applications, :created_by, :integer

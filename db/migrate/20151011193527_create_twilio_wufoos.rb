@@ -1,4 +1,4 @@
-class CreateTwilioWufoos < ActiveRecord::Migration
+class CreateTwilioWufoos < ActiveRecord::Migration[4.2]
 
   def change
     create_table :twilio_wufoos do |t|

@@ -1,4 +1,4 @@
-class AddEndMessageToTwilioWufoos < ActiveRecord::Migration
+class AddEndMessageToTwilioWufoos < ActiveRecord::Migration[4.2]
 
   def change
     add_column :twilio_wufoos, :end_message, :string

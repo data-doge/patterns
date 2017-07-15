@@ -1,4 +1,4 @@
-class ChangeProxyIdToString < ActiveRecord::Migration
+class ChangeProxyIdToString < ActiveRecord::Migration[4.2]
   def change
     change_column :gift_cards, :proxy_id, :string
   end

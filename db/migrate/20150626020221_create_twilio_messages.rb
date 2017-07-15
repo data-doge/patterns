@@ -1,4 +1,4 @@
-class CreateTwilioMessages < ActiveRecord::Migration
+class CreateTwilioMessages < ActiveRecord::Migration[4.2]
 
   def change
     create_table :twilio_messages do |t|

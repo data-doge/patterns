@@ -1,4 +1,4 @@
-class ChangeToActsAsTaggable < ActiveRecord::Migration
+class ChangeToActsAsTaggable < ActiveRecord::Migration[4.2]
   def change
     rename_table :tags, :old_tags
     rename_table :taggings, :old_taggings

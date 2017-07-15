@@ -1,4 +1,4 @@
-class Changeenumonresearchsessions < ActiveRecord::Migration
+class Changeenumonresearchsessions < ActiveRecord::Migration[4.2]
   def change
     rename_column :research_sessions, :type, :session_type
   end

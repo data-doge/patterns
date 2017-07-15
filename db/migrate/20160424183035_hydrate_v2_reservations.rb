@@ -1,4 +1,4 @@
-class HydrateV2Reservations < ActiveRecord::Migration
+class HydrateV2Reservations < ActiveRecord::Migration[4.2]
   def change
     add_column :v2_reservations, :user_id, :integer
     add_column :v2_reservations, :event_id, :integer

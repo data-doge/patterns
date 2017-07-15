@@ -45,6 +45,7 @@ apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-serve
 mysqladmin -ppassword create `echo $RAILS_ENV`
 openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 2048
 
+
 # stop nginx for letsencrypt initial setup
 service nginx stop
 
@@ -79,6 +80,8 @@ service cron restart
 #passwordless sudo for logan, or else we can't install rvm
 echo 'logan ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/logan
 mkdir -p /var/www/logan-`echo $RAILS_ENV`
+mkdir -p /var/www/logan-`echo $RAILS_ENV`/shared/
+mkdir -p /var/www/logan-`echo $RAILS_ENV`/shared/
 
 # creating the logan user.
 getent passwd logan  > /dev/null

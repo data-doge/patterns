@@ -1,4 +1,4 @@
-class RenamingV2EventsToResearchSessions < ActiveRecord::Migration
+class RenamingV2EventsToResearchSessions < ActiveRecord::Migration[4.2]
   def change
     rename_table :v2_event_invitations, :research_sessions
     rename_table :v2_reservations, :invitations

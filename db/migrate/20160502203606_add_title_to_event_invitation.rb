@@ -1,4 +1,4 @@
-class AddTitleToEventInvitation < ActiveRecord::Migration
+class AddTitleToEventInvitation < ActiveRecord::Migration[4.2]
   def change
     add_column :v2_event_invitations, :title, :string
   end

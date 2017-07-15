@@ -1,4 +1,4 @@
-class CreateMailchimpUpdates < ActiveRecord::Migration
+class CreateMailchimpUpdates < ActiveRecord::Migration[4.2]
   def change
     create_table :mailchimp_updates do |t|
       t.text :raw_content

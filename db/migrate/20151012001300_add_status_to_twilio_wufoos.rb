@@ -1,4 +1,4 @@
-class AddStatusToTwilioWufoos < ActiveRecord::Migration
+class AddStatusToTwilioWufoos < ActiveRecord::Migration[4.2]
 
   def change
     add_column :twilio_wufoos, :status, :boolean, null: false, default: false

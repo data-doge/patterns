@@ -1,4 +1,4 @@
-class CreateInvitationInviteesJoinTable < ActiveRecord::Migration
+class CreateInvitationInviteesJoinTable < ActiveRecord::Migration[4.2]
   def change
     create_table :invitation_invitees_join_table do |t|
       t.references :person

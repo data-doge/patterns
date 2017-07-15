@@ -1,4 +1,4 @@
-class AddIndicesForResearchAndInvitations < ActiveRecord::Migration
+class AddIndicesForResearchAndInvitations < ActiveRecord::Migration[4.2]
   def change
     add_index :invitations, :person_id
     add_index :invitations, :research_session_id

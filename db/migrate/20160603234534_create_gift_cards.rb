@@ -1,4 +1,4 @@
-class CreateGiftCards < ActiveRecord::Migration
+class CreateGiftCards < ActiveRecord::Migration[4.2]
   def change
     create_table :gift_cards do |t|
       t.integer :last_four

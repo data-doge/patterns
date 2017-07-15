@@ -1,4 +1,4 @@
-class CreateV2TimeSlots < ActiveRecord::Migration
+class CreateV2TimeSlots < ActiveRecord::Migration[4.2]
   def change
     create_table :v2_time_slots do |t|
       t.integer  :event_id
