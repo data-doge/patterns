@@ -96,7 +96,7 @@ class ResearchSessionsController < ApplicationController
       flash[:notice] = "#{Person.find(inv.person_id).full_name} added to session!"
     end
     respond_to do |format|
-      format.js { render text: "$('#dynamic-invitation-panel').load('/sessions/#{@research_session.id}/invitations_panel.html');" }
+      format.js
     end
   end
 
