@@ -101,7 +101,7 @@ class GiftCard < ActiveRecord::Base
       all.find_each do |gift_card|
         this_person = Person.unscoped.find gift_card.person_id
         row_items = [gift_card.id,
-                     gift_card.user.name
+                     gift_card.user.name,
                      gift_card.created_at.to_s(:rfc822),
                      gift_card.batch_id.to_s,
                      gift_card.proxy_id.to_s,
