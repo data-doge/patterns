@@ -41,7 +41,7 @@
                             class: 'tokenfield input-large span5',
                             data: { search_url: '/taggings/search?type=Person&q=%QUERY',
                                     submit_id: 'search-tag-hidden-input',
-                                    pre_populate: @tags.to_json(methods: %i[value label type])
+                                    pre_populate: @tags.to_json
                                   }
                           %>
     <label for='gift_cards_gift_card_number_cont'>Gift card number contains</label>
