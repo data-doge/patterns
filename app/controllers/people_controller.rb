@@ -319,7 +319,6 @@ class PeopleController < ApplicationController
       Person.column_names.include?(params[:sort]) ? params[:sort] : 'people.id'
     end
 
-    # currently busted. gotta figre out why never descending
     def sort_direction
       %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
     end

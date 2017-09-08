@@ -3,7 +3,7 @@ require_relative "../../config/environment"
 require 'csv'
 @client = Twilio::REST::Client.new(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN'])
 
-csv_text = File.read('../../cards.csv')
+csv_text = File.read('cards.csv')
 csv = CSV.parse(csv_text, :headers => true)
 @calls = {}
 csv.each do |row|

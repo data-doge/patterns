@@ -5,6 +5,7 @@ require 'csv'
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy]
   skip_before_action :authenticate_user!, only: :activate
+  helper_method :sort_column, :sort_direction
 
   GIFTABLE_TYPES = {
     'Person'     => Person,
@@ -122,6 +123,14 @@ class GiftCardsController < ApplicationController
     respond_to do |format|
       format.xml
     end
+  end
+
+  def sort_column
+    GiftCard.column_names.include?(params[:sort]) ? params[:sort] : 'people.id'
+  end
+
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
   end
 
   private
