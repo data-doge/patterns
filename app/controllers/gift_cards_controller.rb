@@ -16,6 +16,7 @@ class GiftCardsController < ApplicationController
   # GET /gift_cards.csv
   def index
     @q_giftcards = GiftCard.ransack(params[:q])
+    @q_giftcards.sorts = [sort_column + ' ' + sort_direction] if @q_giftcards.sorts.empty?
     respond_to do |format|
       format.html do
         @gift_cards = @q_giftcards.result.includes(:person).order(id: :desc).page(params[:page])
