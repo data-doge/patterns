@@ -26,7 +26,7 @@ class TaggingsController < ApplicationController
   def create
     klass = TAGGABLE_TYPES.fetch(params[:taggable_type])
     res = false
-    if klass && params[:tag].present?
+    if klass && params[:tag].present? && !params[:tag].blank?
       obj = klass.includes(:tags, :taggings).find(params[:taggable_id])
       tag = params[:tag].downcase
       # if we want owned tags. Not sure we do...
