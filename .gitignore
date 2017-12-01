@@ -49,3 +49,8 @@ Todo.txt
 
 # ignoring cards to activate
 cards.csv
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
