@@ -22,13 +22,13 @@ class Public::PeopleController < ApplicationController
 
   def update
     @person = Person.find_by(token: update_params[:token])
-    if @person
+    if @person && update_params[:person_id].to_i == @person&.id
       tags = update_params[:tags].split(',')
       @person.tag_list.add(tags)
       @person.save
-      render json:{success: true}
+      render json: { success: true }
     else
-      render json:{success: false}
+      render json: { success: false }
     end
 
   end
@@ -70,7 +70,7 @@ class Public::PeopleController < ApplicationController
   private
 
     def update_params
-      params.permit(:token, :tags)
+      params.permit(:person_id, :token, :tags)
     end
 
     def d_params
