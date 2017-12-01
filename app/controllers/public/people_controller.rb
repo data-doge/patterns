@@ -26,7 +26,11 @@ class Public::PeopleController < ApplicationController
       tags = update_params[:tags].split(',')
       @person.tag_list.add(tags)
       @person.save
+      render json:{success: true}
+    else
+      render json:{success: false}
     end
+
   end
 
   # POST /people
