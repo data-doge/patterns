@@ -10,6 +10,7 @@ Logan::Application.routes.draw do
   resources :mailchimp_updates
   namespace :public do
     resources :people, only: [:new, :create, :deactivate] do
+      post '/update/:token', to: 'people#update', as: :update
       get '/deactivate/:token', to:'people#deactivate', as: :deactivate
     end
   end

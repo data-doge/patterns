@@ -20,6 +20,15 @@ class Public::PeopleController < ApplicationController
     @person = ::Person.new
   end
 
+  def update
+    @person = Person.find_by(token: update_params[:token])
+    if @person
+      tags = update_params[:tags].split(',')
+      @person.tag_list.add(tags)
+      @person.save
+    end
+  end
+
   # POST /people
   # rubocop:disable Metrics/MethodLength
   def create
@@ -43,7 +52,7 @@ class Public::PeopleController < ApplicationController
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   def deactivate
-    @person =Person.find_by(token: d_params[:token])
+    @person = Person.find_by(token: d_params[:token])
 
     if @person && @person.id == d_params[:person_id].to_i
       @person.deactivate!('email')
@@ -55,6 +64,10 @@ class Public::PeopleController < ApplicationController
   end
 
   private
+
+    def update_params
+      params.permit(:token, :tags)
+    end
 
     def d_params
       params.permit(:person_id, :token)
