@@ -7,8 +7,8 @@ csv_text = File.read('cards.csv')
 csv = CSV.parse(csv_text, :headers => true)
 @calls = {}
 csv.each do |row|
-  number = row['number']
-  code   = row['code']
+  number = row[0]
+  code   = row[1]
   next if code.nil? && number.nil?
   if code.length != 3
     puts "invalid code: #{number},#{code}"
