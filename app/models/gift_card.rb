@@ -64,12 +64,16 @@ class GiftCard < ActiveRecord::Base
     unless: proc { |c| c.gift_card_number.blank? }
 
   # Validation to limit 1 signup per person
-  validates_uniqueness_of :reason, scope: :person_id, if: "reason == 'signup'"
+  validates_uniqueness_of :reason, scope: :person_id, if: :reason_is_signup?
 
   validate :giftable_person_ownership
   # ransacker :created_at, type: :date do
   #   Arel.sql('date(created_at)')
   # end
+
+  def reason_is_signup?
+    reason == 'signup'
+  end
 
   def giftable_person_ownership
     return true if giftable.nil?
