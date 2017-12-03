@@ -10,7 +10,7 @@ class RapidproUpdateJob < Struct.new(:id)
   # otherwise use uuid. this will allow changes to phone numbers.
   # additionally, it means we only need one worker.
   def perform
-    person = Person.where(id: id).where.not(phone_number: nil)
+    person = Person.where(id: id).where.not(phone_number: nil).first
     base_url = 'https://rapidpro.brl.nyc/api/v2/contacts.json'
 
     body = { name: person.full_name, language: 'eng', groups: [], fields: {} }
