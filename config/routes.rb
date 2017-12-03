@@ -10,7 +10,6 @@ Logan::Application.routes.draw do
   resources :mailchimp_updates
   namespace :public do
     resources :people, only: [:new, :create, :deactivate] do
-      post '/update/:token', to: 'people#update', as: :update
       get '/deactivate/:token', to:'people#deactivate', as: :deactivate
     end
   end
@@ -57,6 +56,8 @@ Logan::Application.routes.draw do
   post 'carts/change/:name', to: 'cart#change', as: :change_cart
   post 'carts/delete/:name', to: 'cart#delete_cart', as: :cart_delete
   get 'registration', to: 'public/people#new'
+
+  post '/update_tags/:token/', to: 'people#update_tags', as: :update_tags
 
   resources :twilio_wufoos
 

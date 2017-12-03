@@ -20,9 +20,14 @@ class Public::PeopleController < ApplicationController
     @person = ::Person.new
   end
 
-  def update
-    @person = Person.find_by(token: update_params[:token])
-    if @person && update_params[:person_id].to_i == @person&.id
+  def update_tags
+    if ENV['WUFOO_HANDSHAKE_KEY'] != update_params[:token]
+      redirect_to root_path
+    end
+
+    phone_number = PhonyRails.normalize_number(update_params[:phone_number])
+    @person = Person.find_by(phone_number: phone_number)
+    if @person
       tags = update_params[:tags].split(',')
       @person.tag_list.add(tags)
       @person.save
@@ -30,7 +35,6 @@ class Public::PeopleController < ApplicationController
     else
       render json: { success: false }
     end
-
   end
 
   # POST /people
@@ -70,7 +74,7 @@ class Public::PeopleController < ApplicationController
   private
 
     def update_params
-      params.permit(:person_id, :token, :tags)
+      params.permit(:phone_number,:tags,:token)
     end
 
     def d_params
