@@ -15,8 +15,8 @@ class RapidproDeleteJob < Struct.new(:id)
       res = HTTParty.delete(url, headers: headers)
 
       person.update_column(:rapidpro_uuid, nil) # skip callbacks
-
-      raise 'error' if res.code != 200
+      return if res.code == 404 # not found
+      raise 'error' if res.code != 204 # success
     end
   end
 
