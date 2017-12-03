@@ -243,7 +243,7 @@ class Person < ActiveRecord::Base
   end
 
   def deleteFromRapidPro
-    Delayed::Job.enqueue(RapidproDeleteJob.new(id)).save
+    Delayed::Job.enqueue(RapidproDeleteJob.new(id)).save unless self.active
   end
 
   def updateRapidPro
