@@ -25,11 +25,12 @@ class RapidProCreateJob < Struct.new(:id)
                   # patterns_token: person.token,
                   # patterns_id: person.id
                 }}.to_json)
-    case res.code
-    when 400 # this person already exists in rapidpro
-      Delayed::Job.enqueue(RapidProUpdateJob.new(id)).save
-    else
-      raise "error"
+      case res.code
+      when 400 # this person already exists in rapidpro
+        Delayed::Job.enqueue(RapidProUpdateJob.new(id)).save
+      else
+        raise "error"
+      end
     end
   end
 
