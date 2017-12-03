@@ -57,8 +57,8 @@ Logan::Application.routes.draw do
   post 'carts/delete/:name', to: 'cart#delete_cart', as: :cart_delete
   get 'registration', to: 'public/people#new'
 
-  post 'update_tags/:token/', to: 'people#update_tags', as: :update_tags_post
-  get 'update_tags/:token/', to: 'people#update_tags', as: :update_tags_get
+  post 'update_tags/:token/', to: 'public/people#update_tags', as: :update_tags_post
+  get 'update_tags/:token/', to: 'public/people#update_tags', as: :update_tags_get
 
   resources :twilio_wufoos
 
@@ -74,7 +74,7 @@ Logan::Application.routes.draw do
   post 'receive_text/index', defaults: { format: 'xml' }
   post 'receive_text/smssignup', defaults: { format: 'xml' }
 
-  # post "twilio_messages/updatestatus", to: 'twilio_messages/#updatestatus'
+  post "twilio_messages/updatestatus", to: 'twilio_messages/#updatestatus'
 
   # post "twil", to: 'twilio_messages/#newtwil'
 
