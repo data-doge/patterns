@@ -25,11 +25,12 @@ class RapidProUpdateJob < Struct.new(:id)
                   # patterns_token: person.token,
                   # patterns_id: person.id
                 }}.to_json)
-    case res.code
-    when 404 # this person doesn't exist in rapidpro, create them
-      Delayed::Job.enqueue(RapidProCreateJob.new(id)).save
-    else
-      raise "error"
+      case res.code
+      when 404 # this person doesn't exist in rapidpro, create them
+        Delayed::Job.enqueue(RapidProCreateJob.new(id)).save
+      else
+        raise "error"
+      end
     end
   end
 
@@ -40,5 +41,6 @@ class RapidProUpdateJob < Struct.new(:id)
   def reschedule_at(current_time, attempts)
     current_time + (5 * attempts).seconds
   end
+
 end
 # rubocop:enable Style/StructInheritance
