@@ -40,7 +40,7 @@ class MailchimpUpdateJob < Struct.new(:id, :status)
       HTTParty.post('https://rapidpro.brl.nyc/api/v2/contacts.json',
         headers: { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
                    'Content-Type'=> 'application/json' },
-        body: { name: person.first_name + ' '+ person.last_name,
+        body: { name: person.full_name,
                 urns: ["tel:#{person.phone_number}"],
                 language: 'eng',
                 groups: [],
