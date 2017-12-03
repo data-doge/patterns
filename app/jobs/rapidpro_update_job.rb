@@ -50,14 +50,17 @@ class RapidproUpdateJob < Struct.new(:id)
       res = HTTParty.post(url, headers: headers, body: body.to_json)
 
       case res.code
-      when 201 || 204 || 200 # new person in rapidpro
+      when 201 # new person in rapidpro
         if person.rapidpro_uuid.blank?
           # update column to skip callbacks
           person.update_column(:rapidpro_uuid, res.parsed_response['uuid'])
         end
       when 429 # throttled
         self.retry_delay = res.headers['retry-after'].to_i
+      when 200 # happy response
+        return true
       else
+        puts res.code
         raise 'error'
       end
     end
