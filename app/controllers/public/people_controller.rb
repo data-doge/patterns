@@ -21,7 +21,7 @@ class Public::PeopleController < ApplicationController
   end
 
   def update_tags
-    if ENV['WUFOO_HANDSHAKE_KEY'] != update_params[:token]
+    if ENV['RAPIDPRO_KEY'] != update_params[:token]
       redirect_to root_path
     end
 
