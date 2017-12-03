@@ -247,7 +247,7 @@ class Person < ActiveRecord::Base
   end
 
   def updateRapidPro
-    Delayed::Job.enqueue(RapidproUpdateJob.new(id)).save unless self.active
+    Delayed::Job.enqueue(RapidproUpdateJob.new(id)).save if self.active
   end
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity
