@@ -49,7 +49,7 @@ after   'deploy:finalize_update', 'deploy:create_binstubs', 'deploy:migrate', 'd
 
 namespace :deploy do
   task :start do
-    run "cd #{current_path} && `./bin/unicorn_rails -c config/unicorn.rb -E #{rails_env.to_s.shellescape} -D`"
+    run "cd #{current_path} && `bundle exec unicorn_rails -c config/unicorn.rb -E #{rails_env.to_s.shellescape} -D`"
   end
 
   task :stop do
