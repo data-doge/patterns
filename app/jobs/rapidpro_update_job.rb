@@ -11,6 +11,8 @@ class RapidproUpdateJob < Struct.new(:id)
   # additionally, it means we only need one worker.
   def perform
     person = Person.where(id: id).where.not(phone_number: nil).first
+    return if person.nil?
+
     base_url = 'https://rapidpro.brl.nyc/api/v2/contacts.json'
 
     body = { name: person.full_name, language: 'eng', groups: [], fields: {} }
