@@ -6,32 +6,36 @@ class RapidProUpdateJob < Struct.new(:id)
     job.save!
   end
 
+  # works like so, if person has no rapidpro uuid, we post with phone,
+  # otherwise use uuid. this will allow changes to phone numbers.
+  # additionally, it means we only need one worker.
   def perform
-    person = Person.find id
-    if person&.phone_number.present?
-      urn = CGI::escape("tel:#{person.phone_number}")
-      res = HTTParty.post("https://rapidpro.brl.nyc/api/v2/contacts.json?urn=#{urn}",
-        headers: { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
-                   'Content-Type'=> 'application/json' },
-        body: { name: person.full_name,
-                language: 'eng',
-                groups: [],
-                fields: {
-                  # first_name: person.first_name,
-                  # last_name: person.last_name,
-                  # email_address: person.email_address,
-                  # zip_code: person.postal_code,
-                  # neighborhood: person.neighborhood,
-                  # patterns_token: person.token,
-                  # patterns_id: person.id
-                }}.to_json)
-      case res.code
-      when 404 # this person doesn't exist in rapidpro, create them
-        Delayed::Job.enqueue(RapidProCreateJob.new(id)).save
-      else
-        raise "error"
-      end
+    person = Person.where(id: id).not(phone_number: nil)
+    base_url = 'https://rapidpro.brl.nyc/api/v2/contacts.json'
+
+    body = { name: person.full_name, language: 'eng', groups: [], fields: {} }
+    # eventual fields: # first_name: person.first_name,
+                # last_name: person.last_name,
+                # email_address: person.email_address,
+                # zip_code: person.postal_code,
+                # neighborhood: person.neighborhood,
+                # patterns_token: person.token,
+                # patterns_id: person.id
+
+    urn = "tel:#{person.phone_number}"
+    if person&.rapidpro_uuid.present?
+      url = base_url + "?uuid=#{person.rapidpro_uuid}"
+      body[:urns] = [urn]
+    else # person doesn't yet exist in rapidpro
+      cgi_urn = CGI::escape(urn)
+      url = base_url + "?urn=#{cgi_urn}"
     end
+
+    headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
+                'Content-Type'  => 'application/json' }
+
+    res = HTTParty.post(url, headers: headers, body: body.to_json)
+
   end
 
   def max_attempts

@@ -75,7 +75,7 @@ class Person < ActiveRecord::Base
   after_update  :updateRapidPro
 
   after_create  :sendToMailChimp
-  after_create  :sendToRapidPro
+  after_create  :updateRapidPro
 
   after_create  :update_neighborhood
   after_create  :send_new_person_notifications
@@ -242,12 +242,12 @@ class Person < ActiveRecord::Base
     Delayed::Job.enqueue(MailchimpUpdateJob.new(id, status)).save
   end
 
-  def sendToRapidPro
-    Delayed::Job.enqueue(RapidProCreateJob.new(id)).save
+  def deleteFromRapidPro
+    Delayed::Job.enqueue(RapidProDeleteJob.new(id)).save
   end
 
   def updateRapidPro
-    Delayed::Job.enqueue(RapidProUpdateJob.new(id)).save
+    Delayed::Job.enqueue(RapidProUpdateJob.new(id)).save unless self.active
   end
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity
@@ -353,6 +353,7 @@ class Person < ActiveRecord::Base
     self.deactivated_method = type if type
 
     save! # sends background mailchimp update
+    deleteFromRapidPro #remove from rapidpro
   end
 
   def md5_email

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170708170809) do
+ActiveRecord::Schema.define(version: 20171203201338) do
 
   create_table "activities", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.integer "trackable_id"
@@ -203,6 +203,7 @@ ActiveRecord::Schema.define(version: 20170708170809) do
     t.string "cached_tag_list"
     t.string "referred_by"
     t.boolean "low_income"
+    t.string "rapidpro_uuid"
   end
 
   create_table "programs", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
