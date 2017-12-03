@@ -24,23 +24,24 @@ class RapidproUpdateJob < Struct.new(:id)
 
     urn = "tel:#{person.phone_number}"
 
-    if person&.rapidpro_uuid.present?
+    if person&.rapidpro_uuid.present? # already created in rapidpro
       url = base_url + "?uuid=#{person.rapidpro_uuid}"
-      body[:urns] = [urn]
+      body[:urns] = [urn] # adds new phone number if need be.
     else # person doesn't yet exist in rapidpro
       cgi_urn = CGI::escape(urn)
-      url = base_url + "?urn=#{cgi_urn}"
+      url = base_url + "?urn=#{cgi_urn}" # uses phone number to identify.
     end
 
     headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
                 'Content-Type'  => 'application/json' }
 
     res = HTTParty.post(url, headers: headers, body: body.to_json)
-    if res.code == 200
-      response = res.parsed_response
 
+    if res.code == 200
       # skip callbacks
-      person.update_column(:rapidpro_uuid, response['uuid'])
+      if person.rapidpro_uuid.blank?
+        person.update_column(:rapidpro_uuid, res.parsed_response['uuid'])
+      end
     end
   end
 
