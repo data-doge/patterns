@@ -1,5 +1,10 @@
 # rubocop:disable Style/StructInheritance
 class RapidproDeleteJob < Struct.new(:id)
+  attr_accessor :retry_delay
+
+  def initialize
+    self.retry_delay = 5 # default retry delay
+  end
 
   def enqueue(job)
     Rails.logger.info '[RapidProDelete] job enqueued'
@@ -14,18 +19,28 @@ class RapidproDeleteJob < Struct.new(:id)
       url = "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}"
       res = HTTParty.delete(url, headers: headers)
 
-      person.update_column(:rapidpro_uuid, nil) # skip callbacks
-      return if res.code == 404 # not found
-      raise 'error' if res.code != 204 # success
+
+      case res.code
+      when 404
+        return false
+      when 204 || 201 || 200 # successful delete
+        person.update_column(:rapidpro_uuid, nil) # skip callbacks
+        return true
+      when 429
+        self.retry_delay = res.headers['retry-after'].to_i
+        raise 'error'
+      else
+        raise 'error'
+      end
     end
   end
 
   def max_attempts
-    5
+    15
   end
 
   def reschedule_at(current_time, attempts)
-    current_time + (5 * attempts).seconds
+    current_time + (retry_delay + attempts).seconds
   end
 end
 # rubocop:enable Style/StructInheritance

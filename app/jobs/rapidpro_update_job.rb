@@ -1,5 +1,11 @@
 # rubocop:disable Style/StructInheritance
 class RapidproUpdateJob < Struct.new(:id)
+  attr_accessor :retry_delay
+
+  def initialize
+    self.retry_delay = 5 # default retry delay
+  end
+
 
   def enqueue(job)
     Rails.logger.info '[RapidProUpdate] job enqueued'
@@ -11,7 +17,7 @@ class RapidproUpdateJob < Struct.new(:id)
   # additionally, it means we only need one worker.
   def perform
     person = Person.where(id: id).where.not(phone_number: nil).first
-    return if person.nil?
+    return if person.nil? || person.phone_number.blank?
 
     base_url = 'https://rapidpro.brl.nyc/api/v2/contacts.json'
 
@@ -39,23 +45,25 @@ class RapidproUpdateJob < Struct.new(:id)
 
     res = HTTParty.post(url, headers: headers, body: body.to_json)
 
-    if res.code == 201
-      # skip callbacks
+    case res.code
+    when 201 || 204 || 200 # new person in rapidpro
       if person.rapidpro_uuid.blank?
+        # update column to skip callbacks
         person.update_column(:rapidpro_uuid, res.parsed_response['uuid'])
       end
-    elsif res.code != 200
+    when 429 # throttled
+      self.retry_delay = res.headers['retry-after'].to_i
+    else
       raise 'error'
     end
-
   end
 
   def max_attempts
-    5
+    15
   end
 
   def reschedule_at(current_time, attempts)
-    current_time + (5 * attempts).seconds
+    current_time + (retry_delay + attemps).seconds
   end
 
 end
