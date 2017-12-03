@@ -37,12 +37,15 @@ class RapidproUpdateJob < Struct.new(:id)
 
     res = HTTParty.post(url, headers: headers, body: body.to_json)
 
-    if res.code == 200
+    if res.code == 201
       # skip callbacks
       if person.rapidpro_uuid.blank?
         person.update_column(:rapidpro_uuid, res.parsed_response['uuid'])
       end
+    elsif res.code != 200
+      raise 'error'
     end
+
   end
 
   def max_attempts
