@@ -1,8 +1,10 @@
 # rubocop:disable Style/StructInheritance
 class RapidproUpdateJob < Struct.new(:id)
   attr_accessor :retry_delay
+  attr_accessor :id
 
-  def initialize
+  def initialize(id)
+    self.id = id
     self.retry_delay = 5 # default retry delay
   end
 
