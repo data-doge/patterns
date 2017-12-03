@@ -1,5 +1,5 @@
 # rubocop:disable Style/StructInheritance
-class RapidProUpdateJob < Struct.new(:id)
+class RapidproUpdateJob < Struct.new(:id)
 
   def enqueue(job)
     Rails.logger.info '[RapidProUpdate] job enqueued'
@@ -15,14 +15,15 @@ class RapidProUpdateJob < Struct.new(:id)
 
     body = { name: person.full_name, language: 'eng', groups: [], fields: {} }
     # eventual fields: # first_name: person.first_name,
-                # last_name: person.last_name,
-                # email_address: person.email_address,
-                # zip_code: person.postal_code,
-                # neighborhood: person.neighborhood,
-                # patterns_token: person.token,
-                # patterns_id: person.id
+    # last_name: person.last_name,
+    # email_address: person.email_address,
+    # zip_code: person.postal_code,
+    # neighborhood: person.neighborhood,
+    # patterns_token: person.token,
+    # patterns_id: person.id
 
     urn = "tel:#{person.phone_number}"
+
     if person&.rapidpro_uuid.present?
       url = base_url + "?uuid=#{person.rapidpro_uuid}"
       body[:urns] = [urn]
@@ -35,7 +36,12 @@ class RapidProUpdateJob < Struct.new(:id)
                 'Content-Type'  => 'application/json' }
 
     res = HTTParty.post(url, headers: headers, body: body.to_json)
+    if res.code == 200
+      response = res.parsed_response
 
+      # skip callbacks
+      person.update_column(:rapidpro_uuid, response['uuid'])
+    end
   end
 
   def max_attempts

@@ -1,5 +1,5 @@
 # rubocop:disable Style/StructInheritance
-class RapidProDeleteJob < Struct.new(:id)
+class RapidproDeleteJob < Struct.new(:id)
 
   def enqueue(job)
     Rails.logger.info '[RapidProDelete] job enqueued'
@@ -13,6 +13,9 @@ class RapidProDeleteJob < Struct.new(:id)
                   'Content-Type'  => 'application/json' }
       url = "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}"
       res = HTTParty.delete(url, headers: headers)
+
+      person.update_column(:rapidpro_uuid, nil) # skip callbacks
+
       raise 'error' if res.code != 200
     end
   end
