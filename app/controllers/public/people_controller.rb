@@ -33,20 +33,20 @@ class Public::PeopleController < ApplicationController
       PaperTrail.whodunnit = @current_user
 
       if update_params[:tags].present?
-        tags = update_params.delete(:tags)
+        tags = update_params[:tags]
         tags = tags.split(',') if tags.include?(',')
         @person.tag_list.add(tags)
       end
 
       if update_params[:note].present?
-        comment =  update_params.delete(:note)
+        comment = update_params[:note]
         Comment.create(content: comment,
                        user_id: @current_user.id,
                        commentable_type: 'Person',
                        commentable_id: @person.id)
       end
 
-      @person.update_attributes(update_params)
+      @person.update_attributes(update_params.except(:tags, :note))
       @person.save
       render json: { success: true }
     else
