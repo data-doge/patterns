@@ -34,7 +34,8 @@ class Public::PeopleController < ApplicationController
 
       if update_params[:tags].present?
         tags = update_params.delete(:tags)
-        @person.tag_list.add(tags.split(','))
+        tags = tags.split(',') if tags.include?(',')
+        @person.tag_list.add(tags)
       end
 
       if update_params[:note].present?
