@@ -22,6 +22,8 @@
                   collection: {false: "No", true: "Yes"} %></dd>
         <dt>YTD Gift Card $</dt>
         <dd><%= @user.gift_card_total %></dd>
+        <dt>API Token</dt>
+        <dd><%= @user.token %></dd>
         <dt>Session Calendar</dt>
         <dd> <%= link_to "Add Sessions to your calendar", controller: 'calendar', action: :feed, token: @user.token, protocol: 'webcal', format: :ics %></dd>
       </dl>

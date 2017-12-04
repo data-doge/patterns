@@ -72,10 +72,10 @@ class Person < ActiveRecord::Base
   has_secure_token :token
 
   after_update  :sendToMailChimp
-  after_update  :updateRapidPro
+  after_update  :updateRapidPro if ENV['RAILS_ENV'] == 'production'
 
   after_create  :sendToMailChimp
-  after_create  :updateRapidPro
+  after_create  :updateRapidPro if ENV['RAILS_ENV'] == 'production'
 
   after_create  :update_neighborhood
   after_create  :send_new_person_notifications

@@ -20,17 +20,40 @@ class Public::PeopleController < ApplicationController
     @person = ::Person.new
   end
 
-  def update_tags
-    if ENV['RAPIDPRO_KEY'] != update_params[:token]
-      redirect_to root_path
+  def show
+    find_user_or_redirect_to_root
+    if @person
+      render json: @person.to_json
+    else
+      render json: { success: false }
     end
+  end
+
+  def update
+    find_user_or_redirect_to_root
+    PaperTrail.whodunnit = @current_user
 
     phone_number = PhonyRails.normalize_number(update_params[:phone_number])
+    redirect_to root_path unless phone_number
     @person = Person.find_by(phone_number: phone_number)
+
     if @person
-      tags = update_params[:tags].split(',')
-      @person.tag_list.add(tags)
-      @person.save
+      if update_params[:tags].present?
+        tags = update_params.delete(:tags)
+        @person.tag_list.add(tags.split(','))
+      end
+
+      if update_params[:note].present?
+        comment =  update_params.delete(:note)
+        Comment.create(content: comment,
+                       user_id: @current_user.id,
+                       commentable_type: 'Person',
+                       commentable_id: @person.id)
+      end
+
+      @person.update_attributes(update_params)
+    end
+    if @person&.save
       render json: { success: true }
     else
       render json: { success: false }
@@ -74,7 +97,12 @@ class Public::PeopleController < ApplicationController
   private
 
     def update_params
-      params.permit(:phone_number, :tags, :token, :note)
+      person_attributes = Person.attribute_names.map(&:to_sym)
+      %i[id created_at signup_at updated_at cached_tag_list].each do |del|
+        person_attributes.delete_at(person_attributes.index(del))
+      end
+      person_attributes += %i[phone_number tags note]
+      params.permit(person_attributes)
     end
 
     def d_params
@@ -110,5 +138,17 @@ class Public::PeopleController < ApplicationController
 
     def allow_iframe
       response.headers.except! 'X-Frame-Options'
+    end
+
+    def find_user_or_redirect_to_root
+      if request.headers['AUTHORIZATION'].present?
+        @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
+
+        phone = PhonyRails.normalize_number(update_params[:phone_number])
+        @person = Person.find_by(phone_number: phone)
+        redirect_to root_path if @current_user.nil? || @person.nil?
+      else
+        redirect_to root_path
+      end
     end
 end

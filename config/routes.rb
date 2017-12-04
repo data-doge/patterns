@@ -57,8 +57,10 @@ Logan::Application.routes.draw do
   post 'carts/delete/:name', to: 'cart#delete_cart', as: :cart_delete
   get 'registration', to: 'public/people#new'
 
-  post 'update_tags/:token/', to: 'public/people#update_tags', as: :update_tags_post
-  get 'update_tags/:token/', to: 'public/people#update_tags', as: :update_tags_get
+  post '/api/update_person', to: 'public/people#update', as: :update_post
+  get '/api/update_person', to: 'public/people#update', as: :update_get
+
+  get '/api/show', to: 'public/people#show', as: :public_show_person
 
   resources :twilio_wufoos
 
