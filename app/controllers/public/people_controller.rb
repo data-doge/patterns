@@ -141,17 +141,15 @@ class Public::PeopleController < ApplicationController
     end
 
     def find_user_or_redirect_to_root
-      if request.headers['AUTHORIZATION'].present?
+      if request.headers['AUTHORIZATION'].present? && update_params[:phone_number].present?
         @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
-
-        return redirect_to root_path if update_params[:phone_number].blank?
 
         phone = PhonyRails.normalize_number(update_params[:phone_number])
         @person = Person.find_by(phone_number: phone)
 
-        return redirect_to root_path if @current_user.nil? || @person.nil?
+        return render json: { success: false } if @current_user.nil? || @person.nil?
       else
-        return redirect_to root_path
+        return render json: { success: false }
       end
     end
 end
