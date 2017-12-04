@@ -24,7 +24,7 @@ class Public::PeopleController < ApplicationController
     if find_user_and_person
       render json: @person.to_json
     else
-      render json: { success: false }
+      render json: { success: false }, status: 404
     end
   end
 
@@ -36,21 +36,23 @@ class Public::PeopleController < ApplicationController
         tags = update_params[:tags]
         tags = tags.split(',') if tags.include?(',')
         @person.tag_list.add(tags)
+        @person.save
       end
 
       if update_params[:note].present?
-        comment = update_params[:note]
-        Comment.create(content: comment,
+        Comment.create(content: update_params[:note],
                        user_id: @current_user.id,
                        commentable_type: 'Person',
                        commentable_id: @person.id)
       end
 
-      @person.update_attributes(update_params.except(:tags, :note))
+      to_update = update_params.except(:tags, :note)
+      @person.update_attributes(to_update)
+
       @person.save
       render json: { success: true }
     else
-      render json: { success: false }
+      render json: { success: false }, status: 404
     end
   end
 
