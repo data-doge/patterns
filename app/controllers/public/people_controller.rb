@@ -34,7 +34,7 @@ class Public::PeopleController < ApplicationController
     PaperTrail.whodunnit = @current_user
 
     phone_number = PhonyRails.normalize_number(update_params[:phone_number])
-    redirect_to root_path unless phone_number
+
     @person = Person.find_by(phone_number: phone_number)
 
     if @person
@@ -144,11 +144,14 @@ class Public::PeopleController < ApplicationController
       if request.headers['AUTHORIZATION'].present?
         @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
 
+        return redirect_to root_path if update_params[:phone_number].blank?
+
         phone = PhonyRails.normalize_number(update_params[:phone_number])
         @person = Person.find_by(phone_number: phone)
-        redirect_to root_path if @current_user.nil? || @person.nil?
+
+        return redirect_to root_path if @current_user.nil? || @person.nil?
       else
-        redirect_to root_path
+        return redirect_to root_path
       end
     end
 end
