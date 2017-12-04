@@ -147,9 +147,11 @@ class Public::PeopleController < ApplicationController
         phone = PhonyRails.normalize_number(update_params[:phone_number])
         @person = Person.find_by(phone_number: phone)
 
-        return render json: { success: false } if @current_user.nil? || @person.nil?
+        if @current_user.nil? || @person.nil?
+          render json: { success: false } and return
+        end
       else
-        return render json: { success: false }
+        render json: { success: false } and return
       end
     end
 end
