@@ -21,7 +21,7 @@ class Public::PeopleController < ApplicationController
   end
 
   def show
-    if find_user_or_redirect_to_root
+    if find_user_and_person
       render json: @person.to_json
     else
       render json: { success: false }
@@ -29,7 +29,7 @@ class Public::PeopleController < ApplicationController
   end
 
   def update
-    if find_user_or_redirect_to_root
+    if find_user_and_person
       PaperTrail.whodunnit = @current_user
 
       if update_params[:tags].present?
@@ -133,7 +133,7 @@ class Public::PeopleController < ApplicationController
       response.headers.except! 'X-Frame-Options'
     end
 
-    def find_user_or_redirect_to_root
+    def find_user_and_person
       if request.headers['AUTHORIZATION'].present? && update_params[:phone_number].present?
         @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
 
