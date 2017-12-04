@@ -74,7 +74,7 @@ class Public::PeopleController < ApplicationController
   private
 
     def update_params
-      params.permit(:phone_number,:tags,:token)
+      params.permit(:phone_number, :tags, :token, :note)
     end
 
     def d_params

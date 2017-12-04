@@ -24,7 +24,11 @@ class RapidproUpdateJob < Struct.new(:id)
     if person.phone_number.present?
       base_url = 'https://rapidpro.brl.nyc/api/v2/contacts.json'
 
-      body = { name: person.full_name, language: 'eng', groups: [], fields: {} }
+      body = { name: person.full_name,
+               first_name: person.first_name,
+               language: 'eng',
+               groups: [],
+               fields: {} }
       # eventual fields: # first_name: person.first_name,
       # last_name: person.last_name,
       # email_address: person.email_address,
