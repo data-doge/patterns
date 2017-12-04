@@ -21,8 +21,7 @@ class Public::PeopleController < ApplicationController
   end
 
   def show
-    find_user_or_redirect_to_root
-    if @person
+    if find_user_or_redirect_to_root
       render json: @person.to_json
     else
       render json: { success: false }
@@ -30,14 +29,9 @@ class Public::PeopleController < ApplicationController
   end
 
   def update
-    find_user_or_redirect_to_root
-    PaperTrail.whodunnit = @current_user
+    if find_user_or_redirect_to_root
+      PaperTrail.whodunnit = @current_user
 
-    phone_number = PhonyRails.normalize_number(update_params[:phone_number])
-
-    @person = Person.find_by(phone_number: phone_number)
-
-    if @person
       if update_params[:tags].present?
         tags = update_params.delete(:tags)
         @person.tag_list.add(tags.split(','))
@@ -52,8 +46,7 @@ class Public::PeopleController < ApplicationController
       end
 
       @person.update_attributes(update_params)
-    end
-    if @person&.save
+      @person.save
       render json: { success: true }
     else
       render json: { success: false }
@@ -101,7 +94,7 @@ class Public::PeopleController < ApplicationController
       %i[id created_at signup_at updated_at cached_tag_list].each do |del|
         person_attributes.delete_at(person_attributes.index(del))
       end
-      person_attributes += %i[phone_number tags note]
+      person_attributes += %i[tags note]
       params.permit(person_attributes)
     end
 
@@ -148,10 +141,12 @@ class Public::PeopleController < ApplicationController
         @person = Person.find_by(phone_number: phone)
 
         if @current_user.nil? || @person.nil?
-          render json: { success: false } and return
+          false
+        else
+          true
         end
       else
-        render json: { success: false } and return
+        false
       end
     end
 end
