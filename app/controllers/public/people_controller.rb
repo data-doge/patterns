@@ -64,7 +64,8 @@ class Public::PeopleController < ApplicationController
         @person = ::Person.new(api_create_params.except(:tags))
         @person.signup_at = Time.current
         if params[:tags].present?
-          @person.tag_list.add(api_create_params[:tags], parse: true)
+          tags = api_create_params[:tags].gsub('_', ' ').split(',')
+          @person.tag_list.add(tags)
         end
         output[:success] = @person.save ? true : false
       end
