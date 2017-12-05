@@ -60,6 +60,7 @@ Logan::Application.routes.draw do
   post '/api/update_person', to: 'public/people#update', as: :update_post
   get '/api/update_person', to: 'public/people#update', as: :update_get
 
+  post '/api/create_person', to: 'public/people#api_create', as: :api_create
   get '/api/show', to: 'public/people#show', as: :public_show_person
 
   resources :twilio_wufoos

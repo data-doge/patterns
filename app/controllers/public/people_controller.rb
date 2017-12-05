@@ -56,6 +56,23 @@ class Public::PeopleController < ApplicationController
     end
   end
 
+  def api_create
+    output = { success: false }
+    if request.headers['AUTHORIZATION'].present?
+      @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
+      if @current_user.present?
+        @person = ::Person.new(api_create_params.except(:tags))
+        @person.signup_at = Time.current
+        if params[:tags].present?
+          @person.tag_list.add(api_create_params[:tags], parse: true)
+        end
+        output[:success] = @person.save ? true : false
+      end
+    end
+    http_code = output[:success] ? 201 : 401
+    render json: output, status: http_code
+  end
+
   # POST /people
   # rubocop:disable Metrics/MethodLength
   def create
@@ -91,6 +108,18 @@ class Public::PeopleController < ApplicationController
   end
 
   private
+
+    def api_create_params
+      params.permit(:tags,
+                    :first_name,
+                    :last_name,
+                    :preferred_contact_method,
+                    :postal_code,
+                    :email_address,
+                    :low_income,
+                    :phone_number,
+                    :rapidpro_uuid)
+    end
 
     def update_params
       person_attributes = Person.attribute_names.map(&:to_sym)
@@ -128,7 +157,8 @@ class Public::PeopleController < ApplicationController
         :secondary_connection_id,
         :secondary_connection_description,
         :participation_type,
-        :referred_by)
+        :referred_by,
+        :tags)
     end
     # rubocop:enable Metrics/MethodLength
 
