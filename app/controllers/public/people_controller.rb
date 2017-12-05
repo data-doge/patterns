@@ -34,7 +34,7 @@ class Public::PeopleController < ApplicationController
 
       if update_params[:tags].present?
         tags = update_params[:tags]
-        tags = tags.gzub('_', ' ').split(',')
+        tags = tags.gsub('_', ' ').split(',')
         @person.tag_list.add(tags)
         @person.save
       end
