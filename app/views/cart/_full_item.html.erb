@@ -3,6 +3,6 @@
   <td><%= person.email_address %></td>
   <td><%= person.phone_number %></td>
   <td><%= person.preferred_contact_method %></td>
-  <td><%= person.cached_tag_list.split(",").size %></td>
+  <td><%= person.tag_list.size %></td>
   <td><%= render partial: '/people/add_remove_cart', locals: {person: person} %></td>
 </tr>

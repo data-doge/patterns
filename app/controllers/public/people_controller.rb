@@ -94,7 +94,7 @@ class Public::PeopleController < ApplicationController
 
     def update_params
       person_attributes = Person.attribute_names.map(&:to_sym)
-      %i[id created_at signup_at updated_at cached_tag_list].each do |del|
+      %i[id created_at signup_at updated_at].each do |del|
         person_attributes.delete_at(person_attributes.index(del))
       end
       person_attributes += %i[tags note]
