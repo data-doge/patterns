@@ -118,7 +118,8 @@ class Public::PeopleController < ApplicationController
                     :email_address,
                     :low_income,
                     :phone_number,
-                    :rapidpro_uuid)
+                    :rapidpro_uuid,
+                    :verified)
     end
 
     def update_params
