@@ -26,9 +26,7 @@ class RapidproUpdateJob < Struct.new(:id)
 
       body = { name: person.full_name,
                first_name: person.first_name,
-               language: 'eng',
-               groups: [],
-               fields: {} }
+               language: 'eng'}
       # eventual fields: # first_name: person.first_name,
       # last_name: person.last_name,
       # email_address: person.email_address,
@@ -43,6 +41,7 @@ class RapidproUpdateJob < Struct.new(:id)
         url = base_url + "?uuid=#{person.rapidpro_uuid}"
         body[:urns] = [urn] # adds new phone number if need be.
         body[:urns] << "mailto:#{person.email_address}" if person.email_address.present?
+        body[:groups] = ['DIG']
       else # person doesn't yet exist in rapidpro
         cgi_urn = CGI::escape(urn)
         url = base_url + "?urn=#{cgi_urn}" # uses phone number to identify.
