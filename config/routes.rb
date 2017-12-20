@@ -19,6 +19,7 @@ Logan::Application.routes.draw do
   end
 
   resources :research_sessions, path: :sessions, has_many: :invitations do
+    post 'clone/:id', to: 'research_sessions#clone'
     resources :comments, controller: 'comments'
     get 'invitations_panel',
       to: 'research_sessions#invitations_panel',
