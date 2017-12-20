@@ -23,8 +23,8 @@ class ResearchSessionsController < ApplicationController
   end
 
   def clone
-    @research_session = ResearchSession.find(params[:id]) # find original object
-    @research_session = ResearchSession.new(@prescription.attributes) # initialize duplicate (not saved)
+    @research_session = ResearchSession.find(params[:research_session_id]) # find original object
+    @research_session = ResearchSession.new(@research_session.attributes) # initialize duplicate (not saved)
     render :new # render same view as "new", but with @prescription attributes already filled in
   end
 
