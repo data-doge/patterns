@@ -12,22 +12,22 @@ $(document).on('page:load ready', function(){
 
   //filters out tags that are already in the list
   var filter = function(suggestions) {
-    var current_people = $('.invitees a').map(function(index,el){
-      return Number(el.id.replace(/^(person-)/,''));
+    var current_people = $('.invitees a').map(function(index, el){
+      return Number(el.id.replace(/^(person-)/, ''));
     });
     return $.grep(suggestions, function(suggestion) {
-        return $.inArray(suggestion.id,current_people) === -1;
+        return $.inArray(suggestion.id, current_people) === -1;
     });
   };
 
 
   var bloodhound = new Bloodhound({
-    datumTokenizer: function (d) {
+    datumTokenizer: function(d) {
       return Bloodhound.tokenizers.whitespace(d.value);
     },
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     remote: {
-      url:'/search/index_ransack.json?q[nav_bar_search_cont]=%QUERY',
+      url: '/search/index_ransack.json?q[nav_bar_search_cont]=%QUERY',
       wildcard: '%QUERY',
       filter: filter,
       limit: 20,
@@ -50,12 +50,11 @@ $(document).on('page:load ready', function(){
       cart_type = 'mini'
     };
 
-    $.ajax({
-      url: '/sessions/'+research_session_id+'/add_person/'+datum.id,
-      data: {type: cart_type },
-      dataType: "script",
-      success: function(){
+    $.getScript({
+      url: '/sessions/' + research_session_id + '/add_person/' + datum.id,
+      success: function() {
         $(searchSelector).val('');
+        $('#dynamic-invitation-panel').load('/sessions/' + research_session_id + '/invitations_panel.html');
       }
     })
   });

@@ -1,6 +1,7 @@
 <table class="table table-hover invitees" id='dynamic-invitation-panel' >
   <tbody>
     <tr>
+      <th>Remove</th>
       <th>Name</th>
       <th>Action</th>
       <th>Current State</th>
@@ -9,6 +10,7 @@
     </tr>
     <% for invitation in @research_session.invitations.includes(:person) do %>
       <tr>
+        <td><%= link_to "X", research_session_remove_person_path(invitation.person), remote: true, class: 'btn btn-danger btn-mini' %> </td>
         <td><%= link_to invitation.person.full_name, person_path(invitation.person), id: "person-#{invitation.person.id}" %></td>
         <td>
           <%= render partial: 'invitations/actions', locals: {invitation: invitation} %>
@@ -32,7 +34,7 @@
                   class: 'btn btn-mini'} %>
         </td>
       </tr>
-    <% end if @research_session.invitations.size > 0%>
+    <% end if @research_session.invitations.size > 0 %>
   </tbody>
 </table>
 <div id="modal-window" class="modal hide" role="dialog" aria-labelledby="GiftCardModal" aria-hidden="true"></div>

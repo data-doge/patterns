@@ -27,6 +27,10 @@ Logan::Application.routes.draw do
     get 'add_person/:person_id',
       to: 'research_sessions#add_person',
       as: :add_person
+    get 'remove_person/:person_id',
+      to: 'research_sessions#remove_person',
+      as: :remove_person
+
     resources :invitations do
       collection do
         post ':id/event/:event',

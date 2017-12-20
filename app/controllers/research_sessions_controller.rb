@@ -93,6 +93,18 @@ class ResearchSessionsController < ApplicationController
     end
   end
 
+  def remove_person
+    @research_session =  ResearchSession.find(params[:research_session_id])
+    inv = @research_session.invitations.find_by(person_id: params[:person_id])
+    inv.delete
+    if @research_session.save
+      flash[:notice] = "#{Person.find(inv.person_id).full_name} removed from session!"
+    end
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def add_person
     @research_session =  ResearchSession.find(params[:research_session_id])
     state = params[:invited].present? ? params[:invited] : 'created'
@@ -103,6 +115,7 @@ class ResearchSessionsController < ApplicationController
     end
     respond_to do |format|
       format.js
+      format.html
     end
   end
 
