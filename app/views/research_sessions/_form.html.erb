@@ -70,6 +70,19 @@
   </div>
 
   <div class="control-group">
+    <%= f.label "Tags", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :tags,
+                            class: 'tokenfield input-large span5',
+                            data: { search_url: '/taggings/search?type=ResearchSession&q=%QUERY',
+                                    submit_id: 'search-tag-hidden-input',
+                                    pre_populate: @tags.to_json
+                                  }
+                          %>
+
+    </div>
+  </div>
+  <div class="control-group">
     <%= f.label "Send Invitations?", :class => 'control-label' %>
     <label class="controls toggle-check">
       <%= check_box :send_invites, 'boolean_attribute', {class: 'toggle-check-input hidden'}, 'true', 'false' %>
@@ -78,7 +91,6 @@
   </div>
 
   <div class="form-actions">
-    <%= f.hidden_field :tags, value: @tags, id: 'tags' %>
     <%= f.submit 'Create', class: 'btn btn-primary', id: 'submit', data: {confirm: "Are you sure?"} %>
     <%= link_to t('.cancel', default: t("helpers.links.cancel")),
                 people_path, class: 'btn' %>
