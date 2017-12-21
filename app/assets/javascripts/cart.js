@@ -48,39 +48,55 @@ $(document).on('ready page:load',function() {
     };
 
     $.ajax({
-      url: '/cart/add/'+datum.id,
+      url: '/cart/add/' + datum.id,
       data: {type: cart_type },
       dataType: "script",
-      success: function(){
+      success: function() {
         $(searchSelector).val('');
       }
-    })
+    });
   });
 
 
   if ($('#mini-cart').length != 0) {
     $(".add_fields").hide();
-    $('.add-to-session').on('click',function(el){
-      added_person = {  full_name: $(this).data('fullname'),
+    $('.add-to-session').on('click', function(el) {
+
+      added_person = {full_name: $(this).data('fullname'),
                         person_id: $(this).data('personid')};
       $('a.add_fields').click();
-    })
+    });
 
-    $('form').on('cocoon:after-insert', function(e,inserted_item) {
-      //console.log(added_person);
-      $(inserted_item).find('.person-name').each(function(){
+    $('form').on('cocoon:before-insert', function(e, insertedItem) {
+      var pid = added_person.person_id;
+      // horrible, horrible hack to prevent duplicates. why?
+      window.inserted_people = window.inserted_people || [];
+      if ($.inArray(pid, window.inserted_people) === -1) {
+        window.inserted_people.push(pid);
+      } else {
+        e.preventDefault();
+      }
+    });
+
+    $('form').on('cocoon:after-insert', function(e, inserted_item) {
+      $(inserted_item).find('.person-name').each(function() {
         $(this).text(added_person.full_name);
       });
 
-      $(inserted_item).find('input[type=hidden]').each(function(){
+      $(inserted_item).find('input[type=hidden]').each(function() {
         $(this).val(added_person.person_id);
-        $('.add-to-session#add-'+added_person.person_id).hide();
+        $('.add-to-session#add-' + added_person.person_id).hide();
       });
     });
 
     $('form').on('cocoon:before-remove', function(e,removed_item) {
-      $(removed_item).find('input[type=hidden]').each(function(){
-        $('.add-to-session#add-'+$(this).val()).show();
+      // horrible hack continues
+      window.inserted_people = jQuery.grep(window.inserted_people, function(value) {
+        return value != $(removed_item).find('input[type=hidden]').val();
+      });
+
+      $(removed_item).find('input[type=hidden]').each(function() {
+        $('.add-to-session#add-' + $(this).val()).show();
       });
     });
   }
