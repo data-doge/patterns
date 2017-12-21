@@ -10,7 +10,7 @@
     </tr>
     <% for invitation in @research_session.invitations.includes(:person) do %>
       <tr>
-        <td><%= link_to "X", research_session_remove_person_path(invitation.person), remote: true, class: 'btn btn-danger btn-mini' %> </td>
+        <td><%= link_to "X", research_session_remove_person_path(@research_session, invitation.person), remote: true, class: 'btn btn-danger btn-mini' %> </td>
         <td><%= link_to invitation.person.full_name, person_path(invitation.person), id: "person-#{invitation.person.id}" %></td>
         <td>
           <%= render partial: 'invitations/actions', locals: {invitation: invitation} %>
