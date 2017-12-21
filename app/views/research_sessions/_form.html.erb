@@ -31,7 +31,7 @@
   <div class="control-group">
   <%= f.label :user, :class =>'control-label' %>
     <div class="controls">
-      <% users = User.all.map{|u| [u.name,u.id]} %>
+      <% users = User.where(approved: true).all.map{|u| [u.name,u.id]} %>
       <%= f.select :user_id, options_for_select(users, current_user.id) %>
     </div>
   </div>
