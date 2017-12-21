@@ -22,6 +22,14 @@
     </div>
   </div>
   <div class="control-group">
+      <%= f.label :people, "Manage", :class => 'control-label' %>
+      <div class="controls">
+
+        <a href='#' onclick="$('.add-to-session').click();" class='btn btn-mini'>Add All</a>
+        <a href='#' onclick="$('.remove_fields').click();" class='btn btn-mini btn-danger'>Remove All</a>
+      </div>
+    </div>
+  <div class="control-group">
   <%= f.label :user, :class =>'control-label' %>
     <div class="controls">
       <% users = User.all.map{|u| [u.name,u.id]} %>
