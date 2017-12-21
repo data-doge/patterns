@@ -10,8 +10,8 @@ $(document).on('ready page:load', function() {
     var bloodhound, filter, tokenSelector, cached_suggestions;
     var searchUrl, prePopulate;
 
-    searchUrl = $("[data-search-url]").data().searchUrl.toString();
-    prePopulate = $("[data-pre-populate]").data().prePopulate;
+    searchUrl = $('[data-search-url]').data().searchUrl.toString();
+    prePopulate = $('[data-pre-populate]').data().prePopulate;
 
     // untill we get em, we save em.
     cached_suggestions = [];
@@ -20,9 +20,9 @@ $(document).on('ready page:load', function() {
     $(tokenSelector).on('tokenfield:createtoken', function(event) {
 
       var existingTokens = $(this).tokenfield('getTokens');
-      var should_prevent_default =  false
+      var should_prevent_default = false;
       var event_value = event.attrs.value.toString();
-      var attrs = event.attrs
+      var attrs = event.attrs;
       // can't add the same tag twice
       $.each(existingTokens, function(index, token) {
         if (token.value.toString() === event_value) {
@@ -36,7 +36,7 @@ $(document).on('ready page:load', function() {
       if (prePopulate !== '') {
         cached_suggestions = cached_suggestions.concat();
       }
-      suggestion_values = cached_suggestions.map(function(e,i) {
+      suggestion_values = cached_suggestions.map(function(e, i) {
         return e.name.toString();
       });
 
@@ -108,9 +108,9 @@ $(document).on('ready page:load', function() {
           showAutocompleteOnFocus: true,
           limit: 20,
           templates: {
-            empty: "Not Found",
+            empty: 'Not Found',
             suggestion: function(data) {
-              return "<div>" + data.name + ' - <span class="badge">' + data.count + "</badge></div>";
+              return '<div>' + data.name + ' - <span class="badge">' + data.count + '</badge></div>';
             }
           }
         }
@@ -118,16 +118,16 @@ $(document).on('ready page:load', function() {
     });
 
     // a little style. delayed, because reasons. that's why.
-    $( '.tokenfield' ).delay( 800 ).css('border', '1px solid #cccccc');
-    $( '.tokenfield' ).delay( 800 ).css('border-radius', '5px');
+    $('.tokenfield').delay(800).css('border', '1px solid #cccccc');
+    $('.tokenfield').delay(800).css('border-radius', '5px');
 
     var prepopulate_tokens = function(tokens)  {
       cached_suggestions = tokens;
       $.each(tokens, function(k, v) {
-          v["value"] = v["name"];
+          v['value'] = v['name'];
       });
-      $(tokenSelector).tokenfield('setTokens', tokens)
-    }
+      $(tokenSelector).tokenfield('setTokens', tokens);
+    };
 
     if (typeof prePopulate !== 'undefined' && prePopulate != '') {
      console.log(prePopulate);

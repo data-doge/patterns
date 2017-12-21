@@ -78,6 +78,7 @@
   </div>
 
   <div class="form-actions">
+    <%= f.hidden_field :tags, value: @tags, id: 'tags' %>
     <%= f.submit 'Create', class: 'btn btn-primary', id: 'submit', data: {confirm: "Are you sure?"} %>
     <%= link_to t('.cancel', default: t("helpers.links.cancel")),
                 people_path, class: 'btn' %>

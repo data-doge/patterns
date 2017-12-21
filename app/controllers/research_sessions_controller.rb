@@ -25,7 +25,8 @@ class ResearchSessionsController < ApplicationController
 
   def clone
     @research_session = ResearchSession.find(params[:research_session_id]) # find original object
-    @tags = @research_session.tags
+    @tags = @research_session.tag_list.to_s
+
     @research_session = ResearchSession.new(@research_session.attributes) # initialize duplicate (not saved)
     render :new # render same view as "new", but with @prescription attributes already filled in
   end
@@ -33,8 +34,9 @@ class ResearchSessionsController < ApplicationController
   def create
     @research_session = ResearchSession.new(research_session_params)
     if @research_session.save
-
-      @research_session.tag_list.add(params['tags'])
+      if params['research_session']['tags'].present?
+        @research_session.tag_list.add(params['research_session']['tags'], parse: true)
+      end
 
       # need to handle case when the invitation is invalid
       # i.e. timing overlaps, etc.
@@ -123,6 +125,11 @@ class ResearchSessionsController < ApplicationController
 
   private
 
+    # def hydrate_tags(rs_params)
+    #   tags = ActsAsTaggableOn::Tag.find_by(name: rs_params[:tag].split(','))
+    #   rs_params[:tags] = tags
+    # end
+
     def parse_dates
       if params[:end_datetime].present? && params[:start_datetime].present?
         params[:end_datetime] = Time.zone.parse(params[:end_datetime])
@@ -141,9 +148,9 @@ class ResearchSessionsController < ApplicationController
         :end_datetime,
         :buffer,
         :title,
-        :user_id,
-        :tags
+        :user_id
       ).to_h.symbolize_keys
+
     end
 
   # rubocop:enable Metrics/MethodLength
