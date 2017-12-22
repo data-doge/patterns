@@ -99,7 +99,7 @@ class GiftCardsController < ApplicationController
   def destroy
     giftable = @gift_card.giftable
     @gift_card.destroy
-    giftable&.reload
+    giftable&.reload # weirdo.
     respond_to do |format|
       format.html { redirect_to :back }
       format.json { head :no_content }

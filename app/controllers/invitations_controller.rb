@@ -67,8 +67,8 @@ class InvitationsController < ApplicationController
     events = @invitation.aasm.events(permitted: true).map(&:name).map(&:to_s)
     event = events.detect { |a| a == params[:event] }
 
-    if @invitation.send('may_' + event+ '?')
-      @invitation.send(event + '!') && @invitation.save
+    if @invitation.send("may_#{event}?")
+      @invitation.send("#{event}!") && @invitation.save
       flash[:notice] = "#{event.capitalize} for #{@invitation.person.full_name}"
     elsif @invitation.errors.empty?
       flash[:alert] = 'Error, cannot update invitation'
