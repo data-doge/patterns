@@ -100,9 +100,13 @@ class ResearchSessionsController < ApplicationController
   def remove_person
     @research_session =  ResearchSession.find(params[:research_session_id])
     inv = @research_session.invitations.find_by(person_id: params[:person_id])
-    inv.delete
-    if @research_session.save
-      flash[:notice] = "#{Person.find(inv.person_id).full_name} removed from session!"
+    if inv.gift_cards.size > 0
+      flash[:error] = "Can't remove #{Person.find(inv.person_id).full_name}, they have a gift card for this session, remove the gift card first"
+    else
+      inv.delete
+      if @research_session.save
+        flash[:notice] = "#{Person.find(inv.person_id).full_name} removed from session!"
+      end
     end
     respond_to do |format|
       format.js

@@ -207,6 +207,10 @@ class Invitation < ActiveRecord::Base
     Time.zone.now > start_datetime
   end
 
+  def can_gift_card?
+
+  end
+
   def human_state
     case aasm_state
     when 'created' || 'reminded'

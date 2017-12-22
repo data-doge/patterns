@@ -17,12 +17,7 @@
         </td>
         <td><%= invitation.aasm_state %></td>
         <td>
-          <%= link_to invitation.gift_cards.size,
-                modal_gift_cards_path(invitation.class.to_s,invitation.id),
-                {:remote => true,
-                  'data-toggle' =>  "modal",
-                  'data-target' => '#modal-window',
-                  id: "#{invitation.id}-gift-card-count"}  %>
+          <%= invitation.gift_cards.size %>
         </td>
         <td>
         <%= link_to "+",
@@ -31,7 +26,7 @@
                   'data-toggle' =>  "modal",
                   'data-target' => '#modal-window',
                   id: "#{invitation.id}-gift-card-count",
-                  class: 'btn btn-mini'} %>
+                  class: 'btn btn-mini'} unless invitation.missed? %>
         </td>
       </tr>
     <% end if @research_session.invitations.size > 0 %>
