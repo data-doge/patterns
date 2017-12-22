@@ -108,7 +108,7 @@ class Invitation < ActiveRecord::Base
 
     event :miss, guard: :in_past? do
       # should this be able to transition from "attended" ?
-      transitions from: %i[invited reminded confirmed], to: :missed
+      transitions from: %i[created invited reminded confirmed], to: :missed
     end
   end
 
@@ -204,7 +204,7 @@ class Invitation < ActiveRecord::Base
   end
 
   def in_past?
-    Time.zone.now < start_datetime
+    Time.zone.now > start_datetime
   end
 
   def human_state
