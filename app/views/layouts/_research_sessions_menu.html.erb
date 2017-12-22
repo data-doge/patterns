@@ -1,6 +1,8 @@
-<%= nav_bar('nav nav-tabs') do %>
-  <!--  <%= nav_link('Calendar', calendar_path, class: 'presentation') %> -->
-  <%= nav_link('New Session', new_research_session_path, class: 'presentation') %>
-  <%= nav_link('Session List', research_sessions_path, class: 'presentation') %>
-  <%= nav_link("People Pool <span class='badge cart-size'>#{current_cart.people_ids.size} </span>".html_safe, show_cart_path, class: 'presentation')  %>
+<% nav_bar('nav nav-tabs') do %>
+  <% nav_link('Calendar', calendar_path, class: 'presentation') %>
+  <% nav_link('New Session', new_research_session_path, class: 'presentation') %>
+  <% nav_link('Session List', research_sessions_path, class: 'presentation') %>
+  <% nav_link("People Pool <span class='badge cart-size'>#{current_cart.people_ids.size} </span>".html_safe, show_cart_path, class: 'presentation')  %>
 <% end %>
+
+<!-- No output here. don't need this now. maybe later?  -->
