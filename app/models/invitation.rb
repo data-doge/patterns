@@ -15,7 +15,7 @@
 #
 
 # FIXME: Refactor and re-enable cop
-class Invitation < ApplicationRecord
+class Invitation < ActiveRecord::Base
   has_paper_trail
 
   include AASM
