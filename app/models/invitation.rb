@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 # == Schema Information
@@ -13,7 +15,7 @@
 #
 
 # FIXME: Refactor and re-enable cop
-class Invitation < ActiveRecord::Base
+class Invitation < ApplicationRecord
   has_paper_trail
 
   include AASM
@@ -106,9 +108,17 @@ class Invitation < ActiveRecord::Base
       transitions to: :attended
     end
 
-    event :miss, guard: :in_past? do
+    event :miss, guard: :can_miss? do
       # should this be able to transition from "attended" ?
       transitions from: %i[created invited reminded confirmed], to: :missed
+
+      error do |_e|
+        if gift_cards.empty?
+          errors.add(:base, "Can't set to miss with gift cards. Delete them first")
+        elsif in_past?
+          errors.add(:base, "Event isn't in the past. Maybe delete invitation?")
+        end
+      end
     end
   end
 
@@ -199,16 +209,16 @@ class Invitation < ActiveRecord::Base
     end
   end
 
+  def can_miss?
+    in_past? && gift_cards.empty?
+  end
+
   def in_future?
     Time.zone.now < start_datetime
   end
 
   def in_past?
     Time.zone.now > start_datetime
-  end
-
-  def can_gift_card?
-
   end
 
   def human_state
