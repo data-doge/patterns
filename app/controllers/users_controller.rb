@@ -33,7 +33,7 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    @user = User.new(user_params)
+    @user = User.new(user_create_params)
 
     if @user.save
       redirect_to @user, notice: 'User was successfully created.'
@@ -74,6 +74,15 @@ class UsersController < ApplicationController
         :approved,
         :phone_number,
         :email_address)
+    end
+
+    def user_create_params
+      params.require(:user).permit(:name,
+        :approved,
+        :phone_number,
+        :email_address,
+        :password,
+        :password_confirmation)
     end
 
 end
