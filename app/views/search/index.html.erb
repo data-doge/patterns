@@ -77,7 +77,7 @@
       <div class="collapse" id="additional-options">
         <label for="verified">Verified?</label>
         <%= select_tag :verified,
-             options_for_select([[nil,nil]] + Person.uniq.pluck(:verified), selected: params[:verified]), :class => "input" %>
+             options_for_select([[nil,nil]] + Person.pluck(:verified).uniq.compact!, selected: params[:verified]), :class => "input" %>
 
         <label for="geography_id">Ward</label>
         <%= text_field_tag :geography_id, params[:geography_id], :class => "input-small" %>

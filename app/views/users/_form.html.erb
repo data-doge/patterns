@@ -29,6 +29,18 @@
     </div>
   </div>
   <div class="control-group">
+    <%= f.label :password, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :password, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :password_confirmation, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :password_confirmation, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
     <%= f.label :approved, :class => 'control-label' %>
     <div class="controls">
       <%= f.check_box :approved, :class => 'check_box' %>
