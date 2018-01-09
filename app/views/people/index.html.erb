@@ -31,7 +31,11 @@
     <p class="pull-right"><%= Person.count %> people are members of the CUTGroup.</p>
   </div>
 </div>
-
+<div class="row">
+  <div class="span12" style="text-align:center">
+    <%= will_paginate @people, :renderer => BootstrapPagination::Rails %>
+  </div>
+</div>
 <div class="row">
   <div class="span12">
     <table class="table table-striped">
