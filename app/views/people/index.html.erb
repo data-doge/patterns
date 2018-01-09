@@ -2,6 +2,7 @@
 <div class="row page-header">
   <div class="span2">
     <h1><%=t '.title', :default => "People" %></h1>
+    <h5 class="pull-left"><%= Person.count %></h5>
   </div>
   <div class='span3'>
    <label for="tags">Tags</label>
@@ -26,11 +27,6 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="span12">
-    <p class="pull-right"><%= Person.count %> people are members of the CUTGroup.</p>
-  </div>
-</div>
 <div class="row">
   <div class="span12" style="text-align:center">
     <%= will_paginate @people, :renderer => BootstrapPagination::Rails %>
