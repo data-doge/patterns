@@ -107,7 +107,7 @@ Search Parameters:
           Phone: <% if (result.phone_number.present?) %><%= search_result_field result.phone_number.phony_formatted(format: :national, spaces: '-') , :phone_number %><% else %> <%= search_result_field result.phone_number, :phone_number %><% end %><br/>
           Email: <%= search_result_field result.email_address, :email_address %><br/>
           Verified?: <%= search_result_field result.verified, :verified %>
-
+          Gift Card Count: <%= search_result_field result.gift_card_count, :gift_card_count %>
         </td>
         <td class="span4">
           Primary Device: <%= search_result_field result.primary_device_description, :device_description %> (<%= search_result_field human_device_type_name(result.primary_device_id), :device_id_type %>)<br>

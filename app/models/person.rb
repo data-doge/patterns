@@ -148,6 +148,10 @@ class Person < ActiveRecord::Base
     Money.new(total, 'USD')
   end
 
+  def gift_card_count
+    gift_cards.size
+  end
+
   WUFOO_FIELD_MAPPING = {
     'Field1'   => :first_name,
     'Field2'   => :last_name,
