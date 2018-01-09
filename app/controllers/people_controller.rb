@@ -99,7 +99,7 @@ class PeopleController < ApplicationController
     @person.deactivate!('admin_interface')
     flash[:notice] = "#{@person.full_name} deactivated"
     respond_to do |format|
-      format.js { render text: "$('#person-#{@person.id}').remove()" }
+      format.js
       format.html { redirect_to people_path }
     end
   end
