@@ -25,7 +25,7 @@ class ResearchSessionsController < ApplicationController
 
   def clone
     @research_session = ResearchSession.find(params[:research_session_id]) # find original object
-    @tags = @research_session.tags
+    @tags = @research_session.tags.empty? ? [] : @research_session.tags
 
     @research_session = ResearchSession.new(@research_session.attributes) # initialize duplicate (not saved)
     render :new # render same view as "new", but with @prescription attributes already filled in
@@ -35,7 +35,10 @@ class ResearchSessionsController < ApplicationController
     @research_session = ResearchSession.new(research_session_params)
     if @research_session.save
       if params['research_session']['tags'].present?
-        @research_session.tag_list.add(params['research_session']['tags'], parse: true)
+        tags = params['research_session']['tags']
+        if tags != 'research_session[tags]'
+          @research_session.tag_list.add(tags, parse: true)
+        end
       end
 
       # need to handle case when the invitation is invalid
