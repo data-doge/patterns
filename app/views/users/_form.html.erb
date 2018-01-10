@@ -29,6 +29,12 @@
     </div>
   </div>
   <div class="control-group">
+    <%= f.label :team, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.collection_select :team_id, Team.all, :id, :name %>
+    </div>
+  </div>
+  <div class="control-group">
     <%= f.label :password, :class => 'control-label' %>
     <div class="controls">
       <%= f.password_field :password, :class => 'text_field' %>
