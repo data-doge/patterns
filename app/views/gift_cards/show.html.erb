@@ -37,12 +37,25 @@
 
 <p>
   <strong>Team:</strong>
-  <%= @gift_card&.team&.name || '' %>
+  <%= best_in_place @gift_card, :team_id,
+                      as: :select,
+                      collection: Team.all.inject({}){ |acc,el|
+                        acc[el.id]=el.name
+                        acc
+                      },
+                      ok_button: 'Save',
+                      cancel_button: 'Cancel' %></dd>
 </p>
 
 <p>
   <strong>Finance Code:</strong>
-  <%= @gift_card&.finance_code || '' %>
+  <%= best_in_place @gift_card, :finance_code,
+                      as: :select,
+                      collection: { 'BRL'=> 'BRL',
+                                    'CATA'=>'CATA',
+                                    'FELL'=>'FELL'},
+                      ok_button: 'Save',
+                      cancel_button: 'Cancel' %></dd>
 </p>
 
 <p>

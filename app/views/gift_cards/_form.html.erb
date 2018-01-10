@@ -52,6 +52,18 @@
     <%= f.label :created_by %><br>
     <%= f.collection_select :created_by, User.all, :id, :name%>
   </div>
+  <div class="control-group">
+    <%= f.label :finance_code, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :finance_code, options_for_select([[@gift_card.finance_code, @gift_card.finance_code], "BRL", "CATA", "FELL"])%>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :team, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.collection_select :team_id, Team.all, :id, :name %>
+    </div>
+  </div>
   <div class="field">
     <%= f.label :reason %><br>
     <%= f.select :reason,
