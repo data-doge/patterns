@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   before_action :is_admin?
   # GET /users
   def index
-    @users = User.all.order('approved desc')
+    @users = User.order('approved desc').paginate(page: params[:page])
   end
 
   # GET /users/1
@@ -40,10 +40,6 @@ class UsersController < ApplicationController
     else
       render :new
     end
-  end
-
-  def set_team
-
   end
 
   # PATCH/PUT /users/1
