@@ -40,6 +40,8 @@ class GiftCard < ActiveRecord::Base
   belongs_to :giftable, polymorphic: true, touch: true
   belongs_to :person
   belongs_to :user, foreign_key: :created_by
+
+
   validates_presence_of :amount
   validates_presence_of :reason
   validates_presence_of :batch_id
@@ -76,9 +78,15 @@ class GiftCard < ActiveRecord::Base
   end
 
   def giftable_person_ownership
+    # if there is no giftable object, means this card was given directly. no invitation/session, etc.
     return true if giftable.nil?
 
     giftable.respond_to?(:person_id) ? person_id == giftable.person_id : false
+  end
+
+  def research_session
+    return nil if giftable.nil? && giftable_type != 'Invitation'
+    giftable&.research_session # double check unnecessary, but I like it.
   end
 
   def self.batch_create(post_content)
@@ -100,18 +108,18 @@ class GiftCard < ActiveRecord::Base
   # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
-      csv_column_names =  ['Gift Card ID', 'Given By', 'Sign Out Date', 'Batch ID', 'Proxy/Sequence ID', 'Amount', 'Gift Card Number', 'Expiration Date', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
+      csv_column_names =  ['Gift Card ID', 'Given By', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
       csv << csv_column_names
       all.find_each do |gift_card|
         this_person = Person.unscoped.find gift_card.person_id
         row_items = [gift_card.id,
                      gift_card.user.name,
+                     gift_card.research_session&.title || '',
+                     gift_card.research_session&.created_at&.to_date&.to_s || '',
                      gift_card.created_at.to_s(:rfc822),
                      gift_card.batch_id.to_s,
                      gift_card.proxy_id.to_s,
                      gift_card.amount.to_s,
-                     gift_card.gift_card_number || '',
-                     gift_card.expiration_date,
                      gift_card.reason.titleize,
                      this_person.id || '',
                      this_person.full_name || '',

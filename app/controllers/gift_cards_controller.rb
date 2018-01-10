@@ -19,11 +19,11 @@ class GiftCardsController < ApplicationController
     @q_giftcards.sorts = [sort_column + ' ' + sort_direction] if @q_giftcards.sorts.empty?
     respond_to do |format|
       format.html do
-        @gift_cards = @q_giftcards.result.includes(:person).order(id: :desc).page(params[:page])
+        @gift_cards = @q_giftcards.result.includes(:person, :giftable).order(id: :desc).page(params[:page])
         # @recent_signups = Person.no_signup_card.paginate(page: params[:page]).where('signup_at > :startdate', { startdate: 3.months.ago }).order('signup_at DESC')
       end
       format.csv do
-        @gift_cards = @q_giftcards.result.includes(:person)
+        @gift_cards = @q_giftcards.result.includes(:person, :giftable)
         send_data @gift_cards.export_csv,  filename: "GiftCards-#{Time.zone.today}.csv"
       end
     end
