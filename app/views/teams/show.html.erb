@@ -1,9 +1,4 @@
-<p id="notice"><%= notice %></p>
 <%= render partial: 'layouts/admin_menu' %>
-
-
-
-<p id="notice"><%= notice %></p>
 <div class='row'>
   <div class='span3'>
     <div class="well">
@@ -14,6 +9,8 @@
                       cancel_button: 'Cancel' %></dd>
         <dt>Finance Code</dt>
         <dd><%= best_in_place @team, :finance_code,
+                      as: :select,
+                      collection: {'BRL'=>'BRL','CATA'=>'CATA','FELL'=>'FELL'},
                       ok_button: 'Save',
                       cancel_button: 'Cancel' %></dd>
         <dt>Description</dt>
