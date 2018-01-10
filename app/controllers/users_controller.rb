@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   before_action :is_admin?
   # GET /users
   def index
-    @users = User.all.order('approved')
+    @users = User.all.order('approved desc')
   end
 
   # GET /users/1
