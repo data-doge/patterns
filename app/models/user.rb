@@ -42,6 +42,7 @@ class User < ActiveRecord::Base
   has_many :invitations, through: :research_sessions
   has_many :gift_cards, foreign_key: :created_by
   has_many :carts
+  belongs_to :team
 
   phony_normalize :phone_number, default_country_code: 'US'
   phony_normalized_method :phone_number, default_country_code: 'US'
@@ -69,6 +70,10 @@ class User < ActiveRecord::Base
     else
       super # Use whatever other message
     end
+  end
+
+  def admin?
+    new_person_notification
   end
 
   def approve!

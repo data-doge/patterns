@@ -36,6 +36,16 @@
 </p>
 
 <p>
+  <strong>Team:</strong>
+  <%= @gift_card&.team&.name || '' %>
+</p>
+
+<p>
+  <strong>Finance Code:</strong>
+  <%= @gift_card&.finance_code || '' %>
+</p>
+
+<p>
   <strong>Reason:</strong>
   <%= @gift_card.reason %>
 </p>

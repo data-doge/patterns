@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171222141316) do
+ActiveRecord::Schema.define(version: 20180110193520) do
 
   create_table "activities", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.integer "trackable_id"
@@ -111,6 +111,8 @@ ActiveRecord::Schema.define(version: 20171222141316) do
     t.string "proxy_id"
     t.boolean "active", default: false
     t.string "secure_code"
+    t.bigint "team_id"
+    t.string "finance_code"
     t.index ["giftable_type", "giftable_id"], name: "index_gift_cards_on_giftable_type_and_giftable_id"
     t.index ["reason"], name: "gift_reason_index"
   end
@@ -279,6 +281,14 @@ ActiveRecord::Schema.define(version: 20171222141316) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  create_table "teams", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string "name"
+    t.string "finance_code"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "twilio_messages", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "message_sid"
     t.datetime "date_created"
@@ -333,6 +343,8 @@ ActiveRecord::Schema.define(version: 20171222141316) do
     t.string "token"
     t.string "phone_number"
     t.boolean "new_person_notification", default: false
+    t.bigint "team_id"
+    t.index ["team_id"], name: "fk_rails_b2bbf87303"
   end
 
   create_table "versions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
@@ -346,4 +358,5 @@ ActiveRecord::Schema.define(version: 20171222141316) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "users", "teams"
 end

@@ -68,6 +68,9 @@ class GiftCardsController < ApplicationController
     respond_to do |format|
       if @create_result
         @total = @gift_card.person.blank? ? @gift_card.amount : @gift_card.person.gift_card_total
+        @gift_card.finance_code = current_user&.team&.finance_code
+        @gift_card.team = current_user&.team
+        @gift_card.save
         format.js {}
         format.json {}
         format.html { redirect_to @gift_card, notice: 'Gift Card was successfully created.'  }

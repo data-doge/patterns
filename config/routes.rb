@@ -1,4 +1,5 @@
 Logan::Application.routes.draw do
+
   resource :inbox, :controller => 'inbox', :only => [:show,:create]
   resources :gift_cards do
     collection do
@@ -108,6 +109,7 @@ Logan::Application.routes.draw do
   devise_for :users
 
   scope "/admin" do
+    resources :teams
     resources :users
     get 'changes', to: 'users#changes', as: :user_changes
   end

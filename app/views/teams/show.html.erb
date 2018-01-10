@@ -1,49 +1,53 @@
 <p id="notice"><%= notice %></p>
+<%= render partial: 'layouts/admin_menu' %>
+
+
+
+<p id="notice"><%= notice %></p>
 <div class='row'>
   <div class='span3'>
     <div class="well">
       <dl>
         <dt>Name</dt>
-        <dd><%= best_in_place @user, :name,
+        <dd><%= best_in_place @team, :name,
                       ok_button: 'Save',
                       cancel_button: 'Cancel' %></dd>
-        <dt>Team</dt>
-        <%= best_in_place @user, :team_id,
-                      as: :select,
-                      collection: Team.all.inject({}){ |acc,el|
-                        acc[el.id]=el.name
-                        acc
-                      },
+        <dt>Finance Code</dt>
+        <dd><%= best_in_place @team, :finance_code,
                       ok_button: 'Save',
                       cancel_button: 'Cancel' %></dd>
-        <dd>
-        </dd>
-        <dt>email</dt>
-        <dd><%= best_in_place @user, :email_address,
+        <dt>Description</dt>
+        <dd><%= best_in_place @team, :description,
                       ok_button: 'Save',
                       cancel_button: 'Cancel' %></dd>
-        <dt>Phone Number</dt>
-        <dd><%= best_in_place @user, :phone_number,
-                      ok_button: 'Save',
-                      cancel_button: 'Cancel' %></dd>
-        <dt>Approved</dt>
-        <dd><%= best_in_place @user,
-                  :approved,
-                  as: :checkbox,
-                  collection: {false: "No", true: "Yes"} %></dd>
+
         <dt>YTD Gift Card $</dt>
-        <dd><%= @user.gift_card_total %></dd>
-        <dt>API Token</dt>
-        <dd><%= @user.token %></dd>
-        <dt>Session Calendar</dt>
-        <dd> <%= link_to "Add Sessions to your calendar", controller: 'calendar', action: :feed, token: @user.token, protocol: 'webcal', format: :ics %></dd>
+        <dd><%= @team.gift_card_total %></dd>
+
       </dl>
     </div>
-    <%= link_to 'Back', users_path %> | <%= link_to 'Edit', edit_user_path(@user) %>
+
   </div>
-  <div class='span9' style='overflow: auto, height:400px'>
+  <div class='span3'>
+    <table class="table table-striped" >
+      <thead>
+        <th>Users</th>
+      </thead>
+      <tbody>
+        <% @team.users.each do |user| %>
+        <tr>
+          <td> <%=link_to user.name, user_path(user) %> </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class='span6' style='overflow: auto, height:400px'>
   <h3> Recent Sessions</h3>
-  <%= will_paginate @sessions, param_name: 'sessions_page',  remote: true ,renderer: BootstrapPagination::Rails %>
+   <%= will_paginate @sessions,
+          remote: true,
+          param_name: 'sessions_page',
+          renderer: BootstrapPagination::Rails %>
     <table class="table table-striped" >
       <thead>
         <tr>
@@ -67,7 +71,7 @@
 <div class='row'>
   <div class='span12'>
   <h3>Recent actions</h3>
-  <%= will_paginate @changes,
+   <%= will_paginate @changes,
           remote: true,
           param_name: 'changes_page',
           renderer: BootstrapPagination::Rails %>
@@ -103,3 +107,5 @@
     </table>
   </div>
 </div>
+<%= link_to 'Edit', edit_team_path(@team), class: 'btn' %> |
+<%= link_to 'Back', teams_path, class: 'btn' %>

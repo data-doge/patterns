@@ -1,11 +1,11 @@
 
 
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update destroy]
-
+  before_action :set_user, only: %i[show edit update destroy set_team]
+  before_action :is_admin?
   # GET /users
   def index
-    @users = User.all
+    @users = User.all.order('approved')
   end
 
   # GET /users/1
@@ -42,6 +42,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def set_team
+
+  end
+
   # PATCH/PUT /users/1
   def update
     respond_to do |format|
@@ -73,7 +77,12 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name,
         :approved,
         :phone_number,
-        :email_address)
+        :email_address,
+        :team_id)
+    end
+
+    def is_admin?
+      redirect_to root_url unless @current_user.admin?
     end
 
     def user_create_params

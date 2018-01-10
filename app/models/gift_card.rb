@@ -40,7 +40,7 @@ class GiftCard < ActiveRecord::Base
   belongs_to :giftable, polymorphic: true, touch: true
   belongs_to :person
   belongs_to :user, foreign_key: :created_by
-
+  belongs_to :team
 
   validates_presence_of :amount
   validates_presence_of :reason
@@ -108,12 +108,14 @@ class GiftCard < ActiveRecord::Base
   # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
-      csv_column_names =  ['Gift Card ID', 'Given By', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
+      csv_column_names =  ['Gift Card ID', 'Given By', 'Team','FinanceCode','Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
       csv << csv_column_names
       all.find_each do |gift_card|
         this_person = Person.unscoped.find gift_card.person_id
         row_items = [gift_card.id,
                      gift_card.user.name,
+                     gift_card.team&.name || '',
+                     gift_card.team&.finance_code || '',
                      gift_card.research_session&.title || '',
                      gift_card.research_session&.created_at&.to_date&.to_s || '',
                      gift_card.created_at.to_s(:rfc822),
