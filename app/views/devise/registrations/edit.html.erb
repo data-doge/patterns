@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="span12">
+  <div class="span6">
     <h1>Edit profile</h1>
 
     <%= form_for(resource, :as => resource_name, :url => user_registration_path, :html => { :method => :put }) do |f| %>
@@ -29,5 +29,20 @@
 
 
     <% end %>
+  </div>
+  <div class='span6'>
+    <h1>Details</h1>
+    <div class="well">
+      <dl>
+        <dt>Team</dt>
+        <dd><%= resource&.team&.name %></dd>
+        <dt>Personal Gift Card Total</dt>
+        <dd><%= resource.gift_card_total %></dd>
+        <dt>Current Team Gift Cards</dt>
+        <dd><%= resource&.team&.gift_card_total || "$0.00" %></dd>
+        <dt><%= link_to "Research Sessions", research_sessions_path(q:{user_name_cont: resource.name}) %></dt>
+        <dd><%= link_to resource.research_sessions.size, research_sessions_path(q:{user_name_cont: resource.name}) %></dd>
+      </dl>
+    </div>
   </div>
 </div>
