@@ -179,7 +179,8 @@ gem 'paper_trail'
 gem 'paper_trail-globalid'
 
 gem 'fast_blank' # blank? rewritten in c
-# gem 'faster_path' # soon! path, rewitted in rust. requires rust compiler
+
+gem 'faster_path' if !`which rustc`.empty?
 
 # storing money with money-rails
 gem 'money-rails'

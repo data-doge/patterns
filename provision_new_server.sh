@@ -34,6 +34,12 @@ source /etc/environment;
 
 apt-get update && apt-get dist-upgrade -y
 apt-get install -y python-software-properties software-properties-common
+
+#installing rust
+curl https://sh.rustup.rs -sSf  > /tmp/rustup.sh
+chmod +x /tmp/rustup.sh
+/tmp/rustup.sh -y
+
 apt-add-repository -y ppa:nginx/development
 add-apt-repository ppa:certbot/certbot
 
