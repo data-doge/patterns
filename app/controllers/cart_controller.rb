@@ -1,4 +1,4 @@
-#
+# frozen_string_literal: true
 
 class CartController < ApplicationController
   include ApplicationHelper
@@ -6,11 +6,11 @@ class CartController < ApplicationController
 
   # Index
   def index
-    @people_ids = @cart.people_ids
-    @people = Person.where(id: @people_ids)
+    @people = @cart.people
+    
     respond_to do |format|
       format.html {  @people }
-      format.json { render json: @people_ids }
+      format.json { render json: @people.map(&:id) }
     end
   end
 
@@ -19,14 +19,14 @@ class CartController < ApplicationController
     people = Person.where(id: cart_params[:person_id])
     @added = []
     people.each do |person|
-      @added << person.id unless @cart.people_ids.include? person.id
-      @cart.people_ids << person.id
+      @added << person.id unless @cart.people.include? person
+      @cart.people << person
     end
     @cart.save
     respond_to do |format|
       format.js
-      format.json { render json: @cart.people_ids }
-      format.html { render json: @cart.people_ids }
+      format.json { render json: @cart.people.map(&:id) }
+      format.html { render json: @cart.people.map(&:id) }
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -35,18 +35,19 @@ class CartController < ApplicationController
   # rubocop:disable Metrics/MethodLength
   def delete
     if cart_params[:person_id].blank?
-      @deleted = @cart.people_ids
-      @cart.people_ids = []
+      @deleted = @cart.people.map(&:id)
+      @cart.people = []
     else
       @deleted = [cart_params[:person_id]]
-      @cart.people_ids.delete(cart_params[:person_id].to_i)
+      person = Person.find(cart_params[:person_id])
+      @cart.people.delete(person) if person.present?
     end
     @cart.save
 
     respond_to do |format|
       format.js
-      format.json { render json: session[:cart].to_json }
-      format.html { render json: session[:cart].to_json }
+      format.json { render json: @cart.to_json }
+      format.html { render json: @cart.to_json }
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -77,7 +78,7 @@ class CartController < ApplicationController
   private
 
     def cart_params
-      params.permit(:person_id, :all, :type, :name, :id)
+      params.permit(:person_id, :all, :type, :name, :id, :user)
     end
 
     def cart_init
