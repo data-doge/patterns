@@ -134,7 +134,7 @@ class GiftCardsController < ApplicationController
   #   # sets card to active
   # end
 
-  def check
+  def card_check
     @card_number = params[:number]&.gsub(/[^0-9]/, '')
     @valid =  CreditCardValidations::Luhn.valid?(@card_number)
     @secure_code = params[:code]&.gsub(/[^0-9]/, '') # three digits

@@ -179,11 +179,11 @@ Logan::Application.routes.draw do
     defaults: { format: 'xml' }
 
   get 'card_check/:number/:code/:expiration',
-    to: 'gift_cards#check',
+    to: 'gift_cards#card_check',
     defaults: { format: 'xml' }
 
-  check 'card_check/:number/:code/:expiration',
-    to: 'gift_cards#check',
+  post 'card_check/:number/:code/:expiration',
+    to: 'gift_cards#card_check',
     defaults: { format: 'xml' }
 
   match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
