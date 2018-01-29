@@ -5,7 +5,7 @@
     <Pause length="9"/>
     <Play digits="<%= @secure_code %>#"></Play>
     <Pause length="4"/>
-    <Play digits="<%= @expiration_date %>#"></Play>
+    <Play digits="<%= @expiration %>#"></Play>
     <!-- "Your pin has been created your card has been activated"-->
     <!-- <Gather hint="please hold while we access your account as of <%= Date.current.to_s :long %> the available balance on this account is dollars and cents." > -->
     <Record timeout="3" maxLength="6" trim="trim-silence" transcribe="true"/>
