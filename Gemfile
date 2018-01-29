@@ -158,6 +158,9 @@ gem 'best_in_place', '~> 3.0.1'
 # validation for new persons on the public page.
 gem 'jquery-validation-rails'
 
+# to validate gift card numbers
+gem 'credit_card_validations'
+
 # for automatically populating tags
 gem 'twitter-typeahead-rails'
 

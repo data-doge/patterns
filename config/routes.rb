@@ -178,6 +178,14 @@ Logan::Application.routes.draw do
     to: 'gift_cards#activate',
     defaults: { format: 'xml' }
 
+  get 'card_check/:number/:code/:expiration',
+    to: 'gift_cards#check',
+    defaults: { format: 'xml' }
+
+  check 'card_check/:number/:code/:expiration',
+    to: 'gift_cards#check',
+    defaults: { format: 'xml' }
+
   match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
 
   root to: 'dashboard#index'

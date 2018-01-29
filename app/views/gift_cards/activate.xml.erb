@@ -11,6 +11,7 @@
     <!-- security code -->
     <Play digits="<%= @secure_code %>#"></Play>
     <!-- "Your pin has been created your card has been activated"-->
+    <!-- Should be a gather that pings an endpoint-->
     <Record timeout="5" maxLength="6" trim="trim-silence" transcribe="true"/>
     <Hangup/>
 </Response>
