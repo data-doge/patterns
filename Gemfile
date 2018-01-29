@@ -25,8 +25,6 @@ gem 'mandrill-rails' # for inbound email
 
 gem 'awesome_print' # for printing awesomely
 
-gem 'credit_card_validations' # for activating cards
-
 gem 'fuzzy_match' # for sms command fuzzy matching
 
 gem 'rails_db' #for data-wonky fellows
