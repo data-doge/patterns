@@ -129,7 +129,7 @@ gem 'devise'
 gem 'gibbon'
 
 # use twilio-ruby for twilio
-gem 'twilio-ruby'
+gem 'twilio-ruby', '~> 4.13.0'
 
 # use Wuparty for wufoo
 gem 'wuparty'

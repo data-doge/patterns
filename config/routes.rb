@@ -174,6 +174,9 @@ Logan::Application.routes.draw do
     to: 'gift_cards#activate',
     defaults: { format: 'xml' }
 
+  post 'activate/:number/:code',
+    to: 'gift_cards#activate',
+    defaults: { format: 'xml' }
 
   match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
 
