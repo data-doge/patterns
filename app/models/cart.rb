@@ -17,7 +17,8 @@ class Cart < ActiveRecord::Base
   # before_save :dedupe_people_ids
 
   validates :name, uniqueness: true
-
+  # keep current cart in carts_users,
+  # add validation that it must be unique on scope of user.
   def owner
     user
   end

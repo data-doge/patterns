@@ -54,12 +54,12 @@ class CartController < ApplicationController
 
   def carts
     current_user.reload
-    @carts = current_user.carts.map { |c| { id: c.id, name: c.name }}
+    @carts = current_user.carts
 
     respond_to do |format|
       # format.js
-      format.json { render json: @carts }
-      format.html { render json: @carts }
+      format.json { render json: @carts.to_json }
+      format.html
     end
   end
 
