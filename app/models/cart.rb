@@ -13,7 +13,7 @@
 
 # should be renamed to pool...
 class Cart < ApplicationRecord
-  #belongs_to :user
+  belongs_to :user
 
   has_many :carts_people, dependent: :destroy
   has_many :carts_users, dependent: :destroy

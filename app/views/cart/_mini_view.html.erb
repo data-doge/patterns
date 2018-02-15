@@ -1,4 +1,14 @@
+<span id='cart_mini_view'>
     <h3> People in Pool</h3>
+    <%= select_tag "cart",
+              options_from_collection_for_select(current_user.carts,'id','name_and_count'),
+              prompt: "#{current_cart.name}: #{current_cart.people.count}",
+              data:{
+                remote: true,
+                url: change_cart_index_path(format: :js),
+                method: 'post'
+              }
+              %>
     <input id='cart-typeahead' type="text" placeholder="People Search">
     <table class="table table-striped">
       <thead>
@@ -15,3 +25,4 @@
     </thread>
   </table>
 
+</span>

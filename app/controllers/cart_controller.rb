@@ -2,7 +2,7 @@
 
 class CartController < ApplicationController
   include ApplicationHelper
-  before_action :cart_init
+  before_action :cart_init, except: :change_cart
 
   # Index
   def show
@@ -40,7 +40,7 @@ class CartController < ApplicationController
 
   def update
     respond_to do |format|
-      if @cart.update(cart_params)
+      if @cart.update(cart_update_params)
         format.html { redirect_to cart_path(@cart), notice: 'Gift card was successfully updated.' }
         format.json { head :no_content }
       else
@@ -115,9 +115,9 @@ class CartController < ApplicationController
   
 
   def change_cart
-    @cart = Cart.find cart_params[:id]
+    @cart = Cart.find(params[:cart]) || current_cart
+    pry
     current_user.current_cart = @cart
-    cart_init
     respond_to do |format|
       # format.js
       format.json do
@@ -125,6 +125,7 @@ class CartController < ApplicationController
                        cart_id: @cart.id,
                        cart_name: cart_name }
       end
+      format.js {render layout: false}
     end
   end
 
@@ -161,6 +162,16 @@ class CartController < ApplicationController
   end
 
   private
+
+    def cart_update_params
+      params.require(:cart).permit(:description,
+                                   :name,
+                                   :id,
+                                   :user_id,
+                                   :user,
+                                   :person,
+                                   :person_id)
+    end
 
     def cart_params
       params.permit(:person_id,

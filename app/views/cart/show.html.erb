@@ -1,31 +1,8 @@
 <%= render :partial => 'layouts/research_sessions_menu' %>
-<h3>Pool: <%= select_tag "cart",
-              options_from_collection_for_select(current_user.carts,'id','name_and_count'),
-              prompt: "#{@cart.name}: #{@cart.people.count}",
-              onchange: raw("location.href='#{cart_index_path}/'+this.options[this.selectedIndex].value")%></h3>
-<%= link_to "Remove All", delete_person_cart_index_path({all: true}),
-                            class: "btn btn-mini",
-                            remote: true, method: :get %>
-<div class="row">
-  <div class="span6">
+<div class='row'>
+  <div class='span6'>
     <input id='cart-typeahead' type="text" placeholder="People Search">
-  </div>
-  <div class="span6">
-    <h4> Add users to the cart</h4>
-    <%= select_tag "user_id", 
-          options_from_collection_for_select(@selectable_users, "id", "name"),
-          include_blank: true,
-          data: {
-            remote: true,
-            method: 'post',
-            url: add_user_cart_index_path()
-          }
-    %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="span6">
+    
     <table class="table table-striped">
       <thead>
         <tr>
@@ -41,23 +18,38 @@
         <%= render partial: 'cart/full_item', collection: @people, as: :person %>
       </tbody>
     </table>
+    <%= link_to "Remove All", delete_person_cart_index_path({all: true}),
+                            class: "btn btn-mini",
+                            remote: true, method: :get %>
   </div>
-  <div class="span4 offset1">
-    <h4>Users</h4>
-    <!--  dropdown select to add users-->
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Remove</th>
-          
-        </tr>
-      </thead>
-      <tbody id='users-list'>
-        <%= render partial: 'cart/cart_user', collection: @users, as: :user %>
-      </tbody>
-    </table>
-  </div> 
+  <div class='span5 offset1'>
+    <div class='well'>
+
+      <dl>
+        <dt>Pool Selector</dt>
+        <dd> <%= select_tag "cart",
+              options_from_collection_for_select(current_user.carts,'id','name_and_count'),
+              prompt: "#{@cart.name}: #{@cart.people.count}",
+              data:{
+                remote: true,
+                url: change_cart_index_path(format: :js),
+                method: 'post'
+              }
+              %>
+        </dd>
+        <dt>description:</dt>
+        <dd><%= best_in_place @cart, :description %></dd>
+        <dt>Created By:</dt>
+        <dd><%= link_to @cart.user.name, @cart.user %></dd>
+        <dt>Created On:</dt>
+        <dd><%= @cart.created_at.to_s %></dd>
+        <dt>Last Updated:</dt>
+        <dd><%= @cart.updated_at.to_s %></dd>
+        <dt>New Pool</dt>
+        <dd><%= button_to "New Pool",new_cart_path %> </dd>
+      </dl>
+    </div>
+  </div>
 </div>
 <div class="row">
   <div class="span6">
@@ -75,4 +67,32 @@
             as: :comment %>
     </div>
   </div>
+  <div class="span5 offset1">
+    
+    <h4>Add users to the cart</h4>
+    <%= select_tag "user_id", 
+          options_from_collection_for_select(@selectable_users, "id", "name"),
+          include_blank: true,
+          data: {
+            remote: true,
+            method: 'post',
+            url: add_user_cart_index_path()
+          }
+    %>
+  
+    <h4>Users</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Remove</th>
+          
+        </tr>
+      </thead>
+      <tbody id='users-list'>
+        <%= render partial: 'cart/cart_user', collection: @users, as: :user %>
+      </tbody>
+    </table>
+  </div> 
+</div>
 

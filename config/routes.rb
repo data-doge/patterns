@@ -63,7 +63,8 @@ Logan::Application.routes.draw do
       post 'add_user(/:user_id)', to: 'cart#add_user', as: :add_user
       post 'delete_user/:user_id', to: 'cart#delete_user', as: :delete_user
 
-      post 'change/:id', to: 'cart#change_cart', as: :change
+      post '(:id)/change', to: 'cart#change_cart', as: :change
+      get 'change(/:id)', to: 'cart#change_cart', as: :change_get
       
     end
     resources :comments, controller: 'comments'
