@@ -1,4 +1,4 @@
-json.array!(@results) do |result|
+json.array! @results do |result|
   json.extract! result, :id,
                         :first_name,
                         :last_name,

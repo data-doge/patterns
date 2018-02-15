@@ -84,7 +84,6 @@ class CartController < ApplicationController
     def cart_init
       @type = cart_params[:type].blank? ? 'full' : cart_params[:type]
 
-      @cart = current_user.current_cart(session[:cart_id])
-      session[:cart_id] = @cart.id
+      @cart = current_user.current_cart
     end
 end

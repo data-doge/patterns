@@ -27,9 +27,6 @@
 #  updated_at         :datetime
 #
 
-require 'twilio-ruby'
-require 'csv'
-
 # FIXME: Refactor and re-enable cop
 # rubocop:disable ClassLength
 class TwilioMessagesController < ApplicationController

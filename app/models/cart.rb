@@ -44,6 +44,10 @@ class Cart < ApplicationRecord
     users << User.find(user_id)
   end
 
+  def people_ids
+    people.map(&:id)
+  end
+
   private
 
     # def set_owner_as_user

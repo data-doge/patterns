@@ -1,8 +1,8 @@
 <!-- event invitation scheduling handling. -->
 <%
   #this should be refactored out, as this is a tight loop
-  cart = current_user.current_cart(session[:cart_id])
-  in_cart = cart.people_ids.include?(person.id)
+  cart = current_user.current_cart
+  in_cart = cart.people.include?(person)
   add_button_class = in_cart ? 'hide' : ''
   remove_button_class = in_cart ? '' : 'hide'
 %>

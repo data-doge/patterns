@@ -1,7 +1,3 @@
-
-
-require 'csv'
-
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy]
   skip_before_action :authenticate_user!, only: [:activate, :card_check]

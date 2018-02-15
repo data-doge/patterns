@@ -24,8 +24,6 @@
 #  finance_code     :string(255)
 #
 
-require 'csv'
-
 class GiftCard < ActiveRecord::Base
   has_paper_trail
   page 20

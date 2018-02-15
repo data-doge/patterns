@@ -11,7 +11,7 @@ module ApplicationHelper
   end
 
   def current_cart
-    current_user.current_cart(session[:cart_id])
+    current_user.current_cart
   end
 
   def nav_bar(classes = 'nav navbar-nav')
