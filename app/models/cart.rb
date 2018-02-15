@@ -32,6 +32,10 @@ class Cart < ApplicationRecord
     user
   end
 
+  def name_and_count
+    "#{name}: #{people.count}"
+  end
+
   def current_cart_for?
     carts_users.includes(:user).select(&:current_cart)&.map(&:user)
   end

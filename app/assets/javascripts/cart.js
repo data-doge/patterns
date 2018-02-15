@@ -101,4 +101,25 @@ $(document).on('ready page:load',function() {
     });
   }
 
+
+
+
+// loading for turbolinks etc.
+if ($('#new_cart').length >0) {
+  var cart_validator;
+  cart_validator = function() {
+    console.log('foobar');
+    $("#new_cart").validate({
+      rules: {
+        "input#name": {
+          required: true,
+          remote: "/cart/check_name"
+        }
+      }
+     });
+   };
+  $(document).on('page:load ready', cart_validator);
+}
+
+
 });

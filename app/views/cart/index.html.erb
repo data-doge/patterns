@@ -1,0 +1,31 @@
+<%= render :partial => 'layouts/research_sessions_menu' %>
+<h3> All Carts
+<div class="row">
+  <div class="span6">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>people</th>
+          <th>users</th>
+          <th>Add/Remove</th>
+        </tr>
+      </thead>
+      <tbody id='all-cart'>
+        <% @carts.each do |cart| %>
+        <tr id='cart-<%= cart.id %>'>
+          <td><%= cart.name %></td>
+          <td><%= cart.people.size %></td>
+          <td><%= cart.users.size %></td>
+          <td><% if cart.users.include?(current_user) %>
+            <%= button_to "remove", delete_user_cart_index_path(current_user.id), remote: true %>
+            <% else %>
+            <%= button_to "add", add_user_cart_index_path(current_user.id), remote: true %>
+            <% end %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

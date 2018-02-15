@@ -1,0 +1,2 @@
+$('#users-list').append("<%= j render partial: "cart/cart_user", locals: {user: @user} %>");
+$('#user_id option[value="<%=@user.id%>"]').remove();

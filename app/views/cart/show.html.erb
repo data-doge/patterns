@@ -1,0 +1,78 @@
+<%= render :partial => 'layouts/research_sessions_menu' %>
+<h3>Pool: <%= select_tag "cart",
+              options_from_collection_for_select(current_user.carts,'id','name_and_count'),
+              prompt: "#{@cart.name}: #{@cart.people.count}",
+              onchange: raw("location.href='#{cart_index_path}/'+this.options[this.selectedIndex].value")%></h3>
+<%= link_to "Remove All", delete_person_cart_index_path({all: true}),
+                            class: "btn btn-mini",
+                            remote: true, method: :get %>
+<div class="row">
+  <div class="span6">
+    <input id='cart-typeahead' type="text" placeholder="People Search">
+  </div>
+  <div class="span6">
+    <h4> Add users to the cart</h4>
+    <%= select_tag "user_id", 
+          options_from_collection_for_select(@selectable_users, "id", "name"),
+          include_blank: true,
+          data: {
+            remote: true,
+            method: 'post',
+            url: add_user_cart_index_path()
+          }
+    %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span6">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email address</th>
+          <th>Phone number</th>
+          <th>Preferred Contact Method</th>
+          <th>Tag Count</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody id='full-cart'>
+        <%= render partial: 'cart/full_item', collection: @people, as: :person %>
+      </tbody>
+    </table>
+  </div>
+  <div class="span4 offset1">
+    <h4>Users</h4>
+    <!--  dropdown select to add users-->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Remove</th>
+          
+        </tr>
+      </thead>
+      <tbody id='users-list'>
+        <%= render partial: 'cart/cart_user', collection: @users, as: :user %>
+      </tbody>
+    </table>
+  </div> 
+</div>
+<div class="row">
+  <div class="span6">
+    <h3>Notes</h3>
+    <%= form_for([@cart, @comment], remote: true) do |form| %>
+      <%= form.hidden_field :commentable_type, :value => 'Cart' %>
+      <%= form.hidden_field :commentable_id, :value => @cart.id %>
+      <%= form.text_area :content, rows: 3, class: "span6 input-block-level" %>
+      <%= form.submit 'Add note', :class => "btn" %>
+    <% end %>
+
+    <div id="comments">
+      <%= render partial: 'comments/embed',
+            collection: @cart.comments.order("created_at DESC"),
+            as: :comment %>
+    </div>
+  </div>
+

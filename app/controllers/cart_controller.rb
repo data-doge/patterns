@@ -16,10 +16,32 @@ class CartController < ApplicationController
     end
   end
 
+  def new
+    @cart = Cart.new
+  end
+
+  def create
+    @cart = Cart.new(cart_params)
+    @cart.user_id = current_user.id
+    @cart.users << current_user
+    @create_result = @cart.save
+    respond_to do |format|
+      if @create_result
+        format.js {}
+        format.json {}
+        format.html { redirect_to @cart, notice: 'Pool was successfully created.'  }
+      else
+        format.js {}
+        format.html { render action: 'new' }
+        format.json { render json: @cart.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def update
     respond_to do |format|
       if @cart.update(cart_params)
-        format.html { redirect_to show_cart_path(@cart), notice: 'Gift card was successfully updated.' }
+        format.html { redirect_to cart_path(@cart), notice: 'Gift card was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -66,9 +88,10 @@ class CartController < ApplicationController
   end
   # rubocop:enable Metrics/MethodLength
 
-  def carts
+
+  def index
     current_user.reload
-    @carts = current_user.carts
+    @carts = Cart.includes(:users).all
 
     respond_to do |format|
       # format.js
@@ -76,6 +99,20 @@ class CartController < ApplicationController
       format.html
     end
   end
+
+  
+  # DELETE /gift_cards/1
+  # DELETE /gift_cards/1.json
+  def destroy
+    @cart.destroy
+    flash[:notice] = "#{@cart.name} has been destroyed"
+    respond_to do |format|
+      format.html { redirect_to :back }
+      format.json { head :no_content }
+      format.js {}
+    end
+  end
+  
 
   def change_cart
     @cart = Cart.find cart_params[:id]
@@ -111,9 +148,9 @@ class CartController < ApplicationController
   def delete_user
     @deleted = nil
     @user = User.find(cart_params[:user_id])
-
     if @cart.users.size >= 1 && @cart.users.include?(@user)
-      @deleted = @cart.users.delete(@user) 
+      @deleted = @cart.users.delete(@user)
+      @cart.save
     end
 
     if @deleted.nil?
@@ -126,7 +163,15 @@ class CartController < ApplicationController
   private
 
     def cart_params
-      params.permit(:person_id, :all, :type, :name, :id, :user, :user_id, :notes)
+      params.permit(:person_id,
+                    :all,
+                    :type,
+                    :name,
+                    :id,
+                    :user,
+                    :user_id,
+                    :description,
+                    :notes)
     end
 
     def cart_init

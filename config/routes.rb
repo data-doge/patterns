@@ -56,16 +56,15 @@ Logan::Application.routes.draw do
   # simple session based cart for storing people ids.
   resources :cart, path: :cart do
     collection do
-      get 'cart(/:id)', to: 'cart#show', as: :show_cart
-      get 'cart/add/:person_id', to: 'cart#add', as: :add_cart
-      get 'cart/delete(/:person_id(/:all))', to: 'cart#delete', as: :delete_cart
+      post 'create', to: 'cart#create', as: :create
+      get 'add/:person_id', to: 'cart#add', as: :add_person
+      get 'delete(/:person_id(/:all))', to: 'cart#delete', as: :delete_person
 
-      post 'cart/add_user(/:user_id)', to: 'cart#add_user', as: :add_user_cart
-      post 'cart/delete_user/:user_id', to: 'cart#delete_user', as: :delete_user_cart
+      post 'add_user(/:user_id)', to: 'cart#add_user', as: :add_user
+      post 'delete_user/:user_id', to: 'cart#delete_user', as: :delete_user
 
-      get 'carts/all', to: 'cart#carts', as: :all_carts
-      post 'carts/change/:name', to: 'cart#change', as: :change_cart
-      post 'carts/delete/:name', to: 'cart#delete_cart', as: :cart_delete
+      post 'change/:id', to: 'cart#change_cart', as: :change
+      
     end
     resources :comments, controller: 'comments'
   end
