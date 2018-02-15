@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.5.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.0'
+gem 'rails', '5.1.4' # 5.1.5 breaks enumerables in views.
 
 gem 'airbrake', '~> 5.0'
 # gem 'pg' # soooooon!
