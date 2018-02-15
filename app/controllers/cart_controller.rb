@@ -5,12 +5,26 @@ class CartController < ApplicationController
   before_action :cart_init
 
   # Index
-  def index
+  def show
     @people = @cart.people
-    
+    @users = @cart.users
+    @comment = Comment.new commentable: @cart
+    @selectable_users = User.approved.where.not(id: @users.map(&:id))
     respond_to do |format|
-      format.html {  @people }
+      format.html
       format.json { render json: @people.map(&:id) }
+    end
+  end
+
+  def update
+    respond_to do |format|
+      if @cart.update(cart_params)
+        format.html { redirect_to show_cart_path(@cart), notice: 'Gift card was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @cart.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -64,26 +78,65 @@ class CartController < ApplicationController
   end
 
   def change_cart
-    session[:cart_id] = cart_params[:id]
+    @cart = Cart.find cart_params[:id]
+    current_user.current_cart = @cart
     cart_init
     respond_to do |format|
       # format.js
-      format.json { render json: { success: true,
-                                   cart_id: @cart.id,
-                                   cart_name: cart_name }
-                                 }
+      format.json do
+        render json: { success: true,
+                       cart_id: @cart.id,
+                       cart_name: cart_name }
+      end
+    end
+  end
+
+  def check_name
+    @cart_name_valid = !Cart.where(name: param[:name]).exists?
+    status = @cart_name_valid ? 200 : 422
+    respond_to do |format|
+      format.json do
+        render json: { success: @cart_name_valid, valid: @cart_name_valid }, status: status
+      end
+      format.html render text: @cart_name_valid , status: status
+    end
+  end
+
+  def add_user
+    @user = User.find(cart_params[:user_id])
+    @cart.users << @user
+    flash[:notice] = "#{@user.name} has been added to the cart"
+  end
+
+  def delete_user
+    @deleted = nil
+    @user = User.find(cart_params[:user_id])
+
+    if @cart.users.size >= 1 && @cart.users.include?(@user)
+      @deleted = @cart.users.delete(@user) 
+    end
+
+    if @deleted.nil?
+      flash[:error] = "Can't remove user..."
+    else
+      flash[:notice] = "#{@user.name} has been removed"
     end
   end
 
   private
 
     def cart_params
-      params.permit(:person_id, :all, :type, :name, :id, :user)
+      params.permit(:person_id, :all, :type, :name, :id, :user, :user_id, :notes)
     end
 
     def cart_init
-      @type = cart_params[:type].blank? ? 'full' : cart_params[:type]
+      @type = cart_params[:type].presence || 'full'
+      if cart_params[:id].present?
+        @cart = Cart.find(cart_params[:id])
+        current_user.current_cart = @cart
+      else  
+        @cart ||= current_user.current_cart
+      end
 
-      @cart = current_user.current_cart
     end
 end

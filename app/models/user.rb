@@ -54,6 +54,7 @@ class User < ActiveRecord::Base
   scope :upcoming_sessions, ->(d = 7) {
     joins(:research_sessions).merge(ResearchSession.upcoming(d))
   }
+  scope :approved, -> { where(approved: true) }
   # for sanity's sake
   alias_attribute :email_address, :email
 
@@ -130,7 +131,7 @@ class User < ActiveRecord::Base
     rescue NoMethodError => _e
       # this is used for users created before multi-cart.
       cart = Cart.find_by(user_id: id)
-      cart.add_user_to_cart(id)
+      cart.add_user_to_cart(id) unless cart.users.include?(self)
       cart.assign_current_cart(id)
       cart.save
     end
@@ -144,7 +145,7 @@ class User < ActiveRecord::Base
       CartsUser.find_by(user_id: id, cart_id: cart_id).set_current_cart
     rescue NoMethodError => _e
       cart = Cart.find cart_id
-      cart.add_user_to_cart(id)
+      cart.add_user_to_cart(id) unless cart.users.include?(self)
       cart.assign_current_cart(id)
       cart.save
     end

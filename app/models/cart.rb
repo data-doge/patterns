@@ -18,8 +18,8 @@ class Cart < ApplicationRecord
   has_many :carts_people, dependent: :destroy
   has_many :carts_users, dependent: :destroy
 
-  has_many :users, through: :carts_users, dependent: :destroy
-  has_many :people, through: :carts_people, dependent: :destroy
+  has_many :users, through: :carts_users
+  has_many :people, through: :carts_people
 
   has_many :comments, as: :commentable, dependent: :destroy
 
