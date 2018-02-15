@@ -1,5 +1,4 @@
-#
-
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: users
@@ -24,6 +23,7 @@
 #  token                   :string(255)
 #  phone_number            :string(255)
 #  new_person_notification :boolean          default(FALSE)
+#  team_id                 :integer
 #
 
 class User < ActiveRecord::Base
@@ -41,9 +41,11 @@ class User < ActiveRecord::Base
   has_many :research_sessions
   has_many :invitations, through: :research_sessions
   has_many :gift_cards, foreign_key: :created_by
-  has_many :carts
+  has_many :carts_user
+  has_many :carts, through: :carts_user, foreign_key: :user_id
   belongs_to :team
 
+  after_create :create_cart
   phony_normalize :phone_number, default_country_code: 'US'
   phony_normalized_method :phone_number, default_country_code: 'US'
 
@@ -116,11 +118,35 @@ class User < ActiveRecord::Base
     ).deliver_later
   end
 
-  def current_cart(cart_id)
-    @cart = if Cart.exists? id: cart_id, user_id: id
-              Cart.find_by(id: cart_id, user_id: id)
-            else
-              Cart.find_or_create_by(user_id: id, name: 'default')
-            end
+  def create_cart(cart_name = "#{name}-cart", assign = false)
+    cart = Cart.create(name: cart_name)
+    cart.assign_current_cart(id) if assign # default do not assign
+    cart
+  end
+
+  def current_cart
+    begin
+      cart = CartsUser.find_by(user_id: id, current_cart: true).cart
+    rescue NoMethodError => _e
+      # this is used for users created before multi-cart.
+      cart = Cart.find_by(user_id: id)
+      cart.add_user_to_cart(id)
+      cart.assign_current_cart(id)
+      cart.save
+    end
+    cart
+  end
+
+  def current_cart=(cart)
+    cart = Cart.find cart if cart.class.to_s != 'Cart'
+    cart_id = cart.id
+    begin
+      CartsUser.find_by(user_id: id, cart_id: cart_id).set_current_cart
+    rescue NoMethodError => _e
+      cart = Cart.find cart_id
+      cart.add_user_to_cart(id)
+      cart.assign_current_cart(id)
+      cart.save
+    end
   end
 end

@@ -1,8 +1,19 @@
 # frozen_string_literal: true
+# == Schema Information
+#
+# Table name: carts
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      default("default")
+#  user_id    :integer          not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 
 # should be renamed to pool...
-class Cart < ActiveRecord::Base
-  belongs_to :user
+class Cart < ApplicationRecord
+  #belongs_to :user
 
   has_many :carts_people, dependent: :destroy
   has_many :carts_users, dependent: :destroy
@@ -12,9 +23,7 @@ class Cart < ActiveRecord::Base
 
   has_many :comments, as: :commentable, dependent: :destroy
 
-  # example validation, the before_save obviates this.
-  # validate :uniqueness_of_people_ids
-  # before_save :dedupe_people_ids
+  #before_create :set_owner_as_user
 
   validates :name, uniqueness: true
   # keep current cart in carts_users,
@@ -23,4 +32,23 @@ class Cart < ActiveRecord::Base
     user
   end
 
+  def current_cart_for?
+    carts_users.includes(:user).select(&:current_cart)&.map(&:user)
+  end
+
+  def assign_current_cart(user_id)
+    carts_users.find_or_create_by(user_id: user_id).set_current_cart
+  end
+
+  def add_user_to_cart(user_id)
+    users << User.find(user_id)
+  end
+
+  private
+
+    # def set_owner_as_user
+    #   users << user
+    # end
+
 end
+

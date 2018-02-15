@@ -1,5 +1,4 @@
 #
-
 # == Schema Information
 #
 # Table name: research_sessions
@@ -15,6 +14,8 @@
 #  end_datetime    :datetime
 #  sms_description :string(255)
 #  session_type    :integer          default(1)
+#  location        :string(255)
+#  duration        :integer          default(60)
 #
 
 class ResearchSession < ActiveRecord::Base

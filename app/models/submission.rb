@@ -1,5 +1,4 @@
 #
-
 # == Schema Information
 #
 # Table name: submissions
@@ -14,7 +13,7 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #  form_id         :string(255)
-#  form_type       :integer          default(0)
+#  form_type       :integer          default("unknown")
 #
 
 class Submission < ActiveRecord::Base

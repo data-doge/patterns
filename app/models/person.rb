@@ -35,10 +35,9 @@
 #  deactivated_at                   :datetime
 #  deactivated_method               :string(255)
 #  neighborhood                     :string(255)
-#  tag_count_cache                  :integer          default(0)
-#  cached_tag_list                  :string(255)
 #  referred_by                      :string(255)
 #  low_income                       :boolean
+#  rapidpro_uuid                    :string(255)
 #
 
 # FIXME: Refactor and re-enable cop

@@ -1,5 +1,4 @@
 #
-
 # == Schema Information
 #
 # Table name: gift_cards
@@ -19,6 +18,10 @@
 #  updated_at       :datetime         not null
 #  batch_id         :string(255)
 #  proxy_id         :string(255)
+#  active           :boolean          default(FALSE)
+#  secure_code      :string(255)
+#  team_id          :integer
+#  finance_code     :string(255)
 #
 
 require 'csv'

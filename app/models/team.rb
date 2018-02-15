@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: teams
+#
+#  id           :integer          not null, primary key
+#  name         :string(255)
+#  finance_code :string(255)
+#  description  :text(65535)
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+
 class Team < ApplicationRecord
   has_many :users
   has_many :research_sessions, through: :users
