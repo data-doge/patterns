@@ -17,7 +17,7 @@ gem 'validates_overlap' # to ensure we don't double book people
 
 gem 'mail', '2.6.3'
 
-gem 'ransack'
+gem 'ransack', '1.8.4'
 
 gem 'cocoon' # for nested forms
 
@@ -92,7 +92,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', github: 'rails/jbuilder'
+gem 'jbuilder'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
