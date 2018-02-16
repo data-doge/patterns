@@ -59,7 +59,7 @@
         <dt>Last Updated:</dt>
         <dd><%= @cart.updated_at.to_s %></dd>
         <dt>New Pool</dt>
-        <dd><%= button_to "New Pool",new_cart_path %> </dd>
+        <dd><%= button_to "New Pool",new_cart_path, method: 'get' %> </dd>
       </dl>
     </div>
 
