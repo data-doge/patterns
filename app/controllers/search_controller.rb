@@ -126,6 +126,17 @@ class SearchController < ApplicationController
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
+  def add_to_cart
+    @q = Person.ransack(params[:q])
+    pids = current_cart.people_ids
+    new_pids = @q.result.map(&:id).delete_if{|i| pids.include?(i) }
+    current_cart.people << Person.find(new_pids)
+    flash[:notice] = "#{new_pids.size} people added to #{current_cart.name}."
+    respond_to do |format|
+      format.js {}
+      format.json { render json: {success: true} }
+    end
+  end
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Style/MethodName, Style/VariableName
   #

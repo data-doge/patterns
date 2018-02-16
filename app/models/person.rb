@@ -68,6 +68,10 @@ class Person < ActiveRecord::Base
   has_many :invitations
   has_many :research_sessions, through: :invitations
 
+
+  has_many :carts_people
+  has_many :carts, through: :carts_people, foreign_key: :person_id
+  
   has_secure_token :token
 
   after_update  :sendToMailChimp

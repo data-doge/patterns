@@ -6,7 +6,7 @@ class CartController < ApplicationController
 
   # Index
   def show
-    @people = @cart.people
+    @people = @cart.people.paginate(page: params[:page])
     @users = @cart.users
     @comment = Comment.new commentable: @cart
     @selectable_users = User.approved.where.not(id: @users.map(&:id))
@@ -23,7 +23,6 @@ class CartController < ApplicationController
   def create
     @cart = Cart.new(cart_params)
     @cart.user_id = current_user.id
-    @cart.users << current_user
     @create_result = @cart.save
     respond_to do |format|
       if @create_result
@@ -73,15 +72,17 @@ class CartController < ApplicationController
     if cart_params[:person_id].blank?
       @deleted = @cart.people.map(&:id)
       @cart.people = []
+      @deleted_all = true
     else
       @deleted = [cart_params[:person_id]]
       person = Person.find(cart_params[:person_id])
       @cart.people.delete(person) if person.present?
+      @deleted_all = @cart.people.size == 0 ? true : false
     end
     @cart.save
 
     respond_to do |format|
-      format.js
+      format.js 
       format.json { render json: @cart.to_json }
       format.html { render json: @cart.to_json }
     end

@@ -23,8 +23,8 @@ class Cart < ApplicationRecord
 
   has_many :comments, as: :commentable, dependent: :destroy
 
-  #before_create :set_owner_as_user
-
+  before_create :set_owner_as_user
+  validates :name, length: { in: 5..30 }
   validates :name, uniqueness: true
   # keep current cart in carts_users,
   # add validation that it must be unique on scope of user.
@@ -54,9 +54,9 @@ class Cart < ApplicationRecord
 
   private
 
-    # def set_owner_as_user
-    #   users << user
-    # end
+    def set_owner_as_user
+      users << user
+    end
 
 end
 

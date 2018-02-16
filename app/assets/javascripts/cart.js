@@ -93,7 +93,7 @@ $(document).on('turbolinks:load',function() {
 
     function get_current_ids(){
       var contents =  $('#research_session_people_ids').val();
-      if (contents !=='') {
+      if (contents !=='' && typeof contents !== "undefined") {
         return contents.split(',');
       }else{
         return [];

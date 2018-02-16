@@ -11,6 +11,10 @@
                             remote: true, method: :get %>
       </div>
     </div>
+    <%= will_paginate @people, :renderer => BootstrapPagination::Rails, inner_window:1,outer_window:1 %>
+    <% if @people.size > 15 %>
+      <%= page_entries_info @people %>
+    <% end %>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -26,8 +30,12 @@
         <%= render partial: 'cart/full_item', collection: @people, as: :person %>
       </tbody>
     </table>
+    <%= will_paginate @people, :renderer => BootstrapPagination::Rails, inner_window:1,outer_window:1 %>
+    <% if @people.size > 15 %>
+      <%= page_entries_info @people %>
+    <% end %>
   </div>
-  <div class='span5 offset1'>
+  <div class='span4 offset2'>
     <div class='well'>
 
       <dl>
@@ -83,7 +91,7 @@
     <%= form_for([@cart, @comment], remote: true) do |form| %>
       <%= form.hidden_field :commentable_type, :value => 'Cart' %>
       <%= form.hidden_field :commentable_id, :value => @cart.id %>
-      <%= form.text_area :content, rows: 2, class: "span5 input-block-level" %>
+      <%= form.text_area :content, rows: 3, class: "span4 input-block-level" %>
       <%= form.submit 'Add note', :class => "btn" %>
     <% end %>
 

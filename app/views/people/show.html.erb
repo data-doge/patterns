@@ -10,7 +10,7 @@
       <div class="span3">
         <h3>About</h3>
         <dl>
-          <dt>Add to Session</dt>
+          <dt>Add to Pool: <span id='current_pool'><%= link_to current_cart.name, cart_index_path(current_cart) %></span></dt>
           <dd> <%= render partial: 'add_remove_cart', locals: {person: @person} %></dd>
           <dt>Verified?</dt>
           <dd><%= best_in_place @person, :verified, as: :select, collection: @verified_types.map{|p| [p,p]} %></dd>
@@ -112,8 +112,12 @@
     </div>
     <div class='row'>
       <div class='span6'>
-        <h3>Activity</h3>
-        <div>Comms activity will live here.</div>
+        <h3>Pools</h3>
+        <ul>
+        <% @person.carts.each do |cart| %>
+          <li><%= cart.name %>: <%= cart.users.limit(5).map(&:name).join(", ")%><%= "..." if cart.users.size > 5 %></li>
+        <% end %>
+      </ul>
       </div>
     </div>
   </div>
