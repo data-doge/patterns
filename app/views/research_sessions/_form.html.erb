@@ -69,7 +69,7 @@
     <%= f.label "Tags", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :tags,
-                            class: 'tokenfield input-large span5',
+                            class: 'tokenfield input-large span3',
                             data: { search_url: '/taggings/search?type=ResearchSession&q=%QUERY',
                                     submit_id: 'search-tag-hidden-input',
                                     pre_populate: @tags.to_json

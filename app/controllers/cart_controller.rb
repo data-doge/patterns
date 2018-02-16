@@ -6,6 +6,7 @@ class CartController < ApplicationController
 
   # Index
   def show
+    current_user.current_cart = @cart
     @people = @cart.people.paginate(page: params[:page])
     @users = @cart.users
     @comment = Comment.new commentable: @cart
@@ -30,6 +31,7 @@ class CartController < ApplicationController
         format.json {}
         format.html { redirect_to @cart, notice: 'Pool was successfully created.'  }
       else
+        flash[:error] = @cart.errors
         format.js {}
         format.html { render action: 'new' }
         format.json { render json: @cart.errors, status: :unprocessable_entity }
@@ -40,9 +42,10 @@ class CartController < ApplicationController
   def update
     respond_to do |format|
       if @cart.update(cart_update_params)
-        format.html { redirect_to cart_path(@cart), notice: 'Gift card was successfully updated.' }
+        format.html { redirect_to cart_path(@cart), notice: 'Cart was successfully updated.' }
         format.json { head :no_content }
       else
+        flash[:error] = @cart.errors
         format.html { render action: 'edit' }
         format.json { render json: @cart.errors, status: :unprocessable_entity }
       end
@@ -54,10 +57,15 @@ class CartController < ApplicationController
     people = Person.where(id: cart_params[:person_id])
     @added = []
     people.each do |person|
-      @added << person.id unless @cart.people.include? person
-      @cart.people << person
+      unless @cart.people.include? person
+        @added << person.id
+        begin
+          @cart.people << person  
+        rescue ActiveRecord::RecordInvalid => e
+          flash[:error] = e.message    
+        end
+      end
     end
-    @cart.save
     respond_to do |format|
       format.js
       format.json { render json: @cart.people.map(&:id) }
@@ -143,21 +151,21 @@ class CartController < ApplicationController
   def add_user
     @user = User.find(cart_params[:user_id])
     @cart.users << @user
-    flash[:notice] = "#{@user.name} has been added to the cart"
+    if @cart.errors
+      flash[:error] = @cart.errors
+    end
   end
 
   def delete_user
     @deleted = nil
     @user = User.find(cart_params[:user_id])
-    if @cart.users.size >= 1 && @cart.users.include?(@user)
+    if @cart.users.size > 1 && @cart.users.include?(@user)
       @deleted = @cart.users.delete(@user)
       @cart.save
     end
 
     if @deleted.nil?
       flash[:error] = "Can't remove user..."
-    else
-      flash[:notice] = "#{@user.name} has been removed"
     end
   end
 
@@ -186,11 +194,17 @@ class CartController < ApplicationController
     end
 
     def cart_init
+      # type is if it's mini or not, for views
       @type = cart_params[:type].presence || 'full'
+
       if cart_params[:id].present?
+        logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        logger.info("param[:id] exists, setting #{cart_params[:id]} to current")
         @cart = Cart.find(cart_params[:id])
         current_user.current_cart = @cart
       else  
+        logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        logger.info("param[:id] doesn't exist")
         @cart ||= current_user.current_cart
       end
 

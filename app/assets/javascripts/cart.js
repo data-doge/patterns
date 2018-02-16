@@ -57,6 +57,8 @@ $(document).on('turbolinks:load',function() {
     });
   });
 
+  // clearout results after we are done with the typeahead
+  $('#cart-typeahead').on('blur',function(){$('#cart-typeahead').val("")})
 
   if ($('#mini-cart').length != 0) {
     // cleanup add buttons
@@ -130,45 +132,6 @@ $(document).on('turbolinks:load',function() {
         $('#add-'+id.toString()).show();
       }
     }
-
-    // $('form').on('cocoon:before-insert', function(e, insertedItem) {
-    //   console.log('cocoon before insert');
-    //   console.log(added_person);
-    //   var pid = added_person.person_id;
-    //   // horrible, horrible hack to prevent duplicates. why?
-    //   window.inserted_people = window.inserted_people || [];
-    //   if ($.inArray(pid, window.inserted_people) === -1) {
-    //     console.log('not already in list');
-    //     window.inserted_people.push(pid);
-    //   } else {
-    //     e.preventDefault();
-    //   }
-    // });
-
-    // $('form').on('cocoon:after-insert', function(e, inserted_item) {
-    //   console.log('cocoon afer insert');
-    //   $(inserted_item).find('.person-name').each(function() {
-    //     $(this).text(added_person.full_name);
-    //   });
-
-    //   $(inserted_item).find('input[type=hidden]').each(function() {
-    //     $(this).val(added_person.person_id);
-    //     $('.add-to-session#add-' + added_person.person_id).hide();
-    //   });
-    // });
-
-    // $('form').on('cocoon:before-remove', function(e,removed_item) {
-    //   console.log('cocoon before remove');
-    //   // horrible hack continues
-    //   window.inserted_people = jQuery.grep(window.inserted_people, function(value) {
-    //     return value != $(removed_item).find('input[type=hidden]').val();
-    //   });
-
-    //   $(removed_item).find('input[type=hidden]').each(function() {
-    //     console.log('cocoon removed item');
-    //     $('.add-to-session#add-' + $(this).val()).show();
-    //   });
-    // });
   }
 
 

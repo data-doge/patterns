@@ -1,10 +1,11 @@
 <% if @deleted_all %>
   $('#full-cart').html('<%= j render partial: 'cart/full_item', collection: current_cart.people, as: :person %>');  
-<% end %>
+<% else %>
   <% @deleted.each do |delete| %>
     $('#<%= delete %>-cart-delete').hide();
     $('#<%= delete %>-cart-add').show();
     $('#cart-<%= delete %>').remove();
   <% end %>
 <% end %>
+
 $('.cart-size').html('<%= @cart.people_ids.size %>');

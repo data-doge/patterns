@@ -39,31 +39,24 @@
     <div class='well'>
 
       <dl>
-        <dt>Pool Selector</dt>
-        <dd> <%= select_tag "cart",
-              options_from_collection_for_select(current_user.carts,'id','name_and_count'),
-              prompt: "#{@cart.name}: #{@cart.people.count}",
-              data:{
-                remote: true,
-                url: change_cart_index_path(format: :html),
-                method: 'post'
-              }
-              %>
-        </dd>
-        <dt>description:</dt>
+        <dt>Current Pool:</dt>
+        <dd><h3><%= best_in_place @cart, :name %></h3></dd>
+        <dt>Description:</dt>
         <dd><%= best_in_place @cart, :description %></dd>
+        <dt>Size:</dt>
+        <dd><%= @cart.size %></dd>
         <dt>Created By:</dt>
         <dd><%= link_to @cart.user.name, @cart.user %></dd>
         <dt>Created On:</dt>
         <dd><%= @cart.created_at.to_s %></dd>
         <dt>Last Updated:</dt>
         <dd><%= @cart.updated_at.to_s %></dd>
-        <dt>New Pool</dt>
-        <dd><%= button_to "New Pool",new_cart_path, method: 'get' %> </dd>
+        <dt>&nbsp;</dt>
+        <dd><%= link_to "New Pool",new_cart_path, method: 'get', class:'btn' %> </dd>
       </dl>
     </div>
 
-    <h4>Add users to the cart</h4>
+    <h4>Add users to this pool:</h4>
     <%= select_tag "user_id", 
           options_from_collection_for_select(@selectable_users, "id", "name"),
           include_blank: true,

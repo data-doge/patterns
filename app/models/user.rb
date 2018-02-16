@@ -127,22 +127,26 @@ class User < ActiveRecord::Base
 
   def current_cart
     begin
-      cart = CartsUser.find_by(user_id: id, current_cart: true).cart
+      return CartsUser.find_by(user_id: id, current_cart: true).cart
     rescue NoMethodError => _e
       # this is used for users created before multi-cart.
       cart = Cart.find_by(user_id: id)
       cart.add_user_to_cart(id) unless cart.users.include?(self)
       cart.assign_current_cart(id)
       cart.save
+      return cart
     end
-    cart
   end
 
-  def current_cart=(cart)
+  def current_cart=(cart) # this is tedious. could be better
     cart = Cart.find cart if cart.class.to_s != 'Cart'
+    return if cart == current_cart
     cart_id = cart.id
     begin
-      CartsUser.find_by(user_id: id, cart_id: cart_id).set_current_cart
+      cu = CartsUser.find_by(user_id: id, cart_id: cart_id)
+      CartsUser.where(user_id: id).update_all(current_cart: false)
+      cu.current_cart = true
+      cu.save
     rescue NoMethodError => _e
       cart = Cart.find cart_id
       cart.add_user_to_cart(id) unless cart.users.include?(self)

@@ -19,7 +19,7 @@
   </script>
   <% end %>
 </head>
-<body>
+<body>  
     <div class="navbar navbar-inverse">
       <div class="navbar-inner">
         <div class="container">
@@ -39,7 +39,7 @@
               <li class=""><%= link_to "Gift Cards".html_safe, gift_cards_path%></li>
               <li><%= link_to "New Session", new_research_session_path %></li>
               <li><%= link_to "Session List", research_sessions_path %></li>
-              <li><%= link_to "Pool: <span class='current_cart'>#{current_cart.name}</span>&nbsp;<span class='badge cart-size'>#{current_cart.people.size} </span>".html_safe, cart_path(current_cart.id) %></li>
+              <li><%= link_to "Pool: <span class='current_cart'>#{current_user.current_cart.name}</span>&nbsp;<span class='badge cart-size'>#{current_cart.people.size} </span>".html_safe, cart_path(current_user.current_cart.id) %></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Your Pools<b class="caret"></b></a>
                 <ul class="dropdown-menu">

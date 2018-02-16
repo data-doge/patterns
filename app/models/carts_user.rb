@@ -23,7 +23,6 @@ class CartsUser < ApplicationRecord
   def set_current_cart
     # update all is OK, because d
     CartsUser.where(user_id: user_id).update_all(current_cart: false)
-    self.current_cart = true
-    save
+    current_cart = true
   end
 end

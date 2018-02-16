@@ -23,6 +23,7 @@ class Cart < ApplicationRecord
 
   has_many :comments, as: :commentable, dependent: :destroy
 
+  delegate :size, to: :people
   before_create :set_owner_as_user
   validates :name, length: { in: 5..30 }
   validates :name, uniqueness: true
@@ -41,7 +42,10 @@ class Cart < ApplicationRecord
   end
 
   def assign_current_cart(user_id)
-    carts_users.find_or_create_by(user_id: user_id).set_current_cart
+    cu = carts_users.find_or_create_by(user_id: user_id)
+    cu.set_current_cart
+    cu.save
+
   end
 
   def add_user_to_cart(user_id)
