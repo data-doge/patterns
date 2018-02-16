@@ -1,4 +1,4 @@
-$(document).on('ready page:load turbolinks:load',function() {
+$(document).on('turbolinks:load',function() {
   // a typeahead that adds people to the card.
   // interacts with cocoon to do nested forms
   // does both big and mini-cart
@@ -12,9 +12,9 @@ $(document).on('ready page:load turbolinks:load',function() {
   var filter = function(suggestions) {9
     var current_people = $('.cart-container tr').map(function(index,el){
       return Number(el.id.replace(/^(cart-)/,''));
-    });
+    }).get();
     return $.grep(suggestions, function(suggestion) {
-        return $.inArray(suggestion.id,current_people) === -1;
+      return $.inArray(suggestion.id,current_people) === -1;
     });
   };
 
@@ -92,7 +92,12 @@ $(document).on('ready page:load turbolinks:load',function() {
     });
 
     function get_current_ids(){
-      return $('#research_session_people_ids').val().split(',');
+      var contents =  $('#research_session_people_ids').val();
+      if (contents !=='') {
+        return contents.split(',');
+      }else{
+        return [];
+      }
     }
 
     function add_person(id,name){

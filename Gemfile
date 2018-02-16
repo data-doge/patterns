@@ -19,8 +19,6 @@ gem 'mail', '2.6.3'
 
 gem 'ransack', '1.8.4'
 
-gem 'cocoon' # for nested forms
-
 gem 'mandrill-rails' # for inbound email
 
 gem 'awesome_print' # for printing awesomely

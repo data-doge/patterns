@@ -1,4 +1,4 @@
-$(document).on('ready page:load turbolinks:load', function () {
+$(document).on('turbolinks:load', function () {
 
   // initialize bloodhound engine
   var searchSelector = 'input#tag-typeahead';

@@ -1,4 +1,4 @@
-$(document).on('ready page:load turbolinks:load', function() {
+$(document).on('turbolinks:load', function() {
   // this is used on search and on interview/event_invitation
   // can't create new tokens with this.
 
