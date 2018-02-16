@@ -86,7 +86,6 @@ GEM
       launchy
     chronic (0.10.2)
     cliver (0.3.2)
-    cocoon (1.2.11)
     codeclimate-test-reporter (1.0.8)
       simplecov (<= 0.13)
     codemirror-rails (5.16.0)
@@ -540,7 +539,6 @@ DEPENDENCIES
   capybara
   capybara-email
   capybara-screenshot
-  cocoon
   codeclimate-test-reporter (~> 1.0.0)
   coffee-rails
   coveralls

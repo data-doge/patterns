@@ -40,7 +40,14 @@
               <li><%= link_to "New Session", new_research_session_path %></li>
               <li><%= link_to "Session List", research_sessions_path %></li>
               <li><%= link_to "Pool: <span class='current_cart'>#{current_cart.name}</span>&nbsp;<span class='badge cart-size'>#{current_cart.people.size} </span>".html_safe, cart_path(current_cart.id) %></li>
-
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Your Pools<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                <% current_user.carts.each do |cart| %>
+                  <li><%= link_to cart.name_and_count, cart_path(cart.id) %></li>
+                <% end %>
+                </ul>
+              </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">More<b class="caret"></b></a>
                 <ul class="dropdown-menu">
