@@ -22,7 +22,8 @@ class ResearchSession < ActiveRecord::Base
   has_paper_trail
   acts_as_taggable # new, better tagging system
   include Calendarable
-
+  attr_accessor :people_ids
+  
   # different types # breaks stuff
   #  enum session_type: %i[interview focus_group social test]
 

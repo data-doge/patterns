@@ -45,24 +45,20 @@ class ResearchSessionsController < ApplicationController
         end
       end
 
-      # need to handle case when the invitation is invalid
-      # i.e. timing overlaps, etc.
-      i_params = params['research_session']['invitations_attributes']
-
-      if i_params.present?
-        people = i_params.values.map do |v|
-          { person_id: v['person_id'],
-            research_session_id: @research_session.id }
-        end
-
-        Invitation.create(people) # auto associates
-      end
-
       if @research_session.location.blank?
         @research_session.location = "Call #{current_user.name} at #{current_user.phone_number}"
       end
       @research_session.save
 
+            # need to handle case when the invitation is invalid
+      # i.e. timing overlaps, etc.
+      people_ids = params['research_session']['people_ids']
+
+      if people_ids.present? && people_ids != ['']
+        pids = people_ids[0].split(',').map(&:to_i)
+        inv_hash = pids.map {|p| { person_id: p, research_session_id: @research_session.id } }
+        Invitation.create(inv_hash)
+      end
       # sends all of the invitations.
       if params[:send_invites][:boolean_attribute] != 'false'
         @research_session.invitations.each(&:invite!)
@@ -159,7 +155,8 @@ class ResearchSessionsController < ApplicationController
         :end_datetime,
         :buffer,
         :title,
-        :user_id
+        :user_id,
+        :people_ids
       ).to_h.symbolize_keys
 
     end
