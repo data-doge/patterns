@@ -1,5 +1,5 @@
-$(document).on('page:load ready', function() {
-
+$(document).on('page:load turbolinks:load ready', function() {
+  console.log('running research_sessions.js');
   // on add is clicked, find all adds, filter unique, then click them all
   $('#add_all').click(function() {
     $('.remove_fields').click();

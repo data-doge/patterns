@@ -1,4 +1,4 @@
-$(document).on('ready page:load', function() {
+$(document).on('ready page:load turbolinks:load', function() {
 
   $("#export-to-twilio-form-toggle").click(function() {
     $("#export-to-twilio-form").toggle();

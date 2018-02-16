@@ -32,4 +32,4 @@ people_ready = function() {
  };
 
 // loading for turbolinks etc.
-$(document).on('page:load ready', people_ready);
+$(document).on('page:load turbolinks:load ready', people_ready);

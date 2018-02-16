@@ -116,10 +116,9 @@ class CartController < ApplicationController
 
   def change_cart
     @cart = Cart.find(params[:cart]) || current_cart
-    pry
     current_user.current_cart = @cart
     respond_to do |format|
-      # format.js
+      format.html { redirect_to cart_path(@cart)}
       format.json do
         render json: { success: true,
                        cart_id: @cart.id,

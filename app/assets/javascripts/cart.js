@@ -1,4 +1,4 @@
-$(document).on('ready page:load',function() {
+$(document).on('ready page:load turbolinks:load',function() {
   // a typeahead that adds people to the card.
   // interacts with cocoon to do nested forms
   // does both big and mini-cart
@@ -10,7 +10,7 @@ $(document).on('ready page:load',function() {
 
   //filters out tags that are already in the list
   var filter = function(suggestions) {9
-    var current_people = $('#mini-cart tr').map(function(index,el){
+    var current_people = $('.cart-container tr').map(function(index,el){
       return Number(el.id.replace(/^(cart-)/,''));
     });
     return $.grep(suggestions, function(suggestion) {
@@ -59,19 +59,23 @@ $(document).on('ready page:load',function() {
 
 
   if ($('#mini-cart').length != 0) {
+    console.log('in minicart');
     $(".add_fields").hide();
     $('.add-to-session').on('click', function(el) {
-
+      console.log('clicked add_to_session');
       added_person = {full_name: $(this).data('fullname'),
                         person_id: $(this).data('personid')};
       $('a.add_fields').click();
     });
 
     $('form').on('cocoon:before-insert', function(e, insertedItem) {
+      console.log('cocoon before insert');
+      console.log(added_person);
       var pid = added_person.person_id;
       // horrible, horrible hack to prevent duplicates. why?
       window.inserted_people = window.inserted_people || [];
       if ($.inArray(pid, window.inserted_people) === -1) {
+        console.log('not already in list');
         window.inserted_people.push(pid);
       } else {
         e.preventDefault();
@@ -79,6 +83,7 @@ $(document).on('ready page:load',function() {
     });
 
     $('form').on('cocoon:after-insert', function(e, inserted_item) {
+      console.log('cocoon afer insert');
       $(inserted_item).find('.person-name').each(function() {
         $(this).text(added_person.full_name);
       });
@@ -90,12 +95,14 @@ $(document).on('ready page:load',function() {
     });
 
     $('form').on('cocoon:before-remove', function(e,removed_item) {
+      console.log('cocoon before remove');
       // horrible hack continues
       window.inserted_people = jQuery.grep(window.inserted_people, function(value) {
         return value != $(removed_item).find('input[type=hidden]').val();
       });
 
       $(removed_item).find('input[type=hidden]').each(function() {
+        console.log('cocoon removed item');
         $('.add-to-session#add-' + $(this).val()).show();
       });
     });
@@ -106,6 +113,7 @@ $(document).on('ready page:load',function() {
 
 // loading for turbolinks etc.
 if ($('#new_cart').length >0) {
+  console.log('new cart exists');
   var cart_validator;
   cart_validator = function() {
     console.log('foobar');
@@ -118,7 +126,7 @@ if ($('#new_cart').length >0) {
       }
      });
    };
-  $(document).on('page:load ready', cart_validator);
+  $(document).on('page:load turbolinks:load ready', cart_validator);
 }
 
 
