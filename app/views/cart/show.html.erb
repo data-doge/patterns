@@ -44,9 +44,13 @@
         <dt>Description:</dt>
         <dd><%= best_in_place @cart, :description %></dd>
         <dt>Size:</dt>
-        <dd><%= @cart.size %></dd>
+        <dd><span class='cart-size'><%= @cart.size %></span></dd>
         <dt>Created By:</dt>
-        <dd><%= link_to @cart.user.name, @cart.user %></dd>
+        <% if current_user.admin? %>
+          <dd><%= link_to @cart.user.name, @cart.user %></dd>
+        <% else %>
+          <dd><%= @cart.user.name%> </dd>
+        <% end %>
         <dt>Created On:</dt>
         <dd><%= @cart.created_at.to_s %></dd>
         <dt>Last Updated:</dt>
