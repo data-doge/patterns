@@ -1,5 +1,7 @@
 
 
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: submissions
@@ -87,7 +89,7 @@ class SubmissionsController < ApplicationController
       begin
         # try to save with matching enum type
         @submission.form_type = form_type.downcase
-      rescue
+      rescue StandardError
         # Otherwise set form type as unknown
         @submission.form_type = 'unknown'
       end

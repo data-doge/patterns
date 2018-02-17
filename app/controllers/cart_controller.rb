@@ -57,13 +57,12 @@ class CartController < ApplicationController
     people = Person.where(id: cart_params[:person_id])
     @added = []
     people.each do |person|
-      unless @cart.people.include? person
-        @added << person.id
-        begin
-          @cart.people << person  
-        rescue ActiveRecord::RecordInvalid => e
-          flash[:error] = e.message    
-        end
+      next if @cart.people.include? person
+      @added << person.id
+      begin
+        @cart.people << person
+      rescue ActiveRecord::RecordInvalid => e
+        flash[:error] = e.message
       end
     end
     respond_to do |format|
@@ -85,18 +84,17 @@ class CartController < ApplicationController
       @deleted = [cart_params[:person_id]]
       person = Person.find(cart_params[:person_id])
       @cart.people.delete(person) if person.present?
-      @deleted_all = @cart.people.size == 0 ? true : false
+      @deleted_all = @cart.people.empty?
     end
     @cart.save
 
     respond_to do |format|
-      format.js 
+      format.js
       format.json { render json: @cart.to_json }
       format.html { render json: @cart.to_json }
     end
   end
   # rubocop:enable Metrics/MethodLength
-
 
   def index
     current_user.reload
@@ -109,7 +107,6 @@ class CartController < ApplicationController
     end
   end
 
-  
   # DELETE /gift_cards/1
   # DELETE /gift_cards/1.json
   def destroy
@@ -121,19 +118,18 @@ class CartController < ApplicationController
       format.js {}
     end
   end
-  
 
   def change_cart
     @cart = Cart.find(params[:cart]) || current_cart
     current_user.current_cart = @cart
     respond_to do |format|
-      format.html { redirect_to cart_path(@cart)}
+      format.html { redirect_to cart_path(@cart) }
       format.json do
         render json: { success: true,
                        cart_id: @cart.id,
                        cart_name: cart_name }
       end
-      format.js {render layout: false}
+      format.js { render layout: false }
     end
   end
 
@@ -144,16 +140,14 @@ class CartController < ApplicationController
       format.json do
         render json: { success: @cart_name_valid, valid: @cart_name_valid }, status: status
       end
-      format.html render text: @cart_name_valid , status: status
+      format.html render text: @cart_name_valid, status: status
     end
   end
 
   def add_user
     @user = User.find(cart_params[:user_id])
     @cart.users << @user
-    if @cart.errors
-      flash[:error] = @cart.errors
-    end
+    flash[:error] = @cart.errors if @cart.errors
   end
 
   def delete_user
@@ -164,33 +158,31 @@ class CartController < ApplicationController
       @cart.save
     end
 
-    if @deleted.nil?
-      flash[:error] = "Can't remove user..."
-    end
+    flash[:error] = "Can't remove user..." if @deleted.nil?
   end
 
   private
 
     def cart_update_params
       params.require(:cart).permit(:description,
-                                   :name,
-                                   :id,
-                                   :user_id,
-                                   :user,
-                                   :person,
-                                   :person_id)
+        :name,
+        :id,
+        :user_id,
+        :user,
+        :person,
+        :person_id)
     end
 
     def cart_params
       params.permit(:person_id,
-                    :all,
-                    :type,
-                    :name,
-                    :id,
-                    :user,
-                    :user_id,
-                    :description,
-                    :notes)
+        :all,
+        :type,
+        :name,
+        :id,
+        :user,
+        :user_id,
+        :description,
+        :notes)
     end
 
     def cart_init
@@ -198,15 +190,14 @@ class CartController < ApplicationController
       @type = cart_params[:type].presence || 'full'
 
       if cart_params[:id].present?
-        logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        logger.info('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
         logger.info("param[:id] exists, setting #{cart_params[:id]} to current")
         @cart = Cart.find(cart_params[:id])
         current_user.current_cart = @cart
-      else  
-        logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+      else
+        logger.info('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
         logger.info("param[:id] doesn't exist")
         @cart ||= current_user.current_cart
       end
-
     end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -26,7 +27,7 @@
 #  team_id                 :integer
 #
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_paper_trail
   # acts_as_tagger #if we want owned tags.
 
@@ -126,16 +127,14 @@ class User < ActiveRecord::Base
   end
 
   def current_cart
-    begin
-      return CartsUser.find_by(user_id: id, current_cart: true).cart
-    rescue NoMethodError => _e
-      # this is used for users created before multi-cart.
-      cart = Cart.find_by(user_id: id)
-      cart.add_user_to_cart(id) unless cart.users.include?(self)
-      cart.assign_current_cart(id)
-      cart.save
-      return cart
-    end
+    return CartsUser.find_by(user_id: id, current_cart: true).cart
+  rescue NoMethodError => _e
+    # this is used for users created before multi-cart.
+    cart = Cart.find_by(user_id: id)
+    cart.add_user_to_cart(id) unless cart.users.include?(self)
+    cart.assign_current_cart(id)
+    cart.save
+    return cart
   end
 
   def current_cart=(cart) # this is tedious. could be better

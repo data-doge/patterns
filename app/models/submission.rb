@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # == Schema Information
 #
@@ -16,7 +18,7 @@
 #  form_type       :integer          default("unknown")
 #
 
-class Submission < ActiveRecord::Base
+class Submission < ApplicationRecord
   has_paper_trail
   validates_presence_of :raw_content
 
@@ -29,7 +31,6 @@ class Submission < ActiveRecord::Base
     screening: 2,
     availability: 3,
     test: 4
-
   }
 
   self.per_page = 15

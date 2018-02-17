@@ -153,7 +153,7 @@ class InvitationsController < ApplicationController
       visitor # sets our visitor object
       @invitation ||= Invitation.find_by(id: params[:id])
 
-      return false unless @invitation && @invitation.owner_or_invitee?(@visitor)
+      return false unless @invitation&.owner_or_invitee?(@visitor)
       @visitor.nil? ? false : true
     end
 

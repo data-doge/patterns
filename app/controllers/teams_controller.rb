@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class TeamsController < ApplicationController
-  before_action :set_team, only: [:show, :edit, :update, :destroy,:add,:remove]
+  before_action :set_team, only: %i[show edit update destroy add remove]
 
   # GET /teams
   # GET /teams.json
@@ -12,9 +14,9 @@ class TeamsController < ApplicationController
   def show
     @sessions = @team.research_sessions.order(created_at: :desc).page(params[:sessions_page]).limit(5)
     @changes = PaperTrail::Version.all.where(whodunnit: @team.users.map(&:id)).
-                order(created_at: :desc).
-                page(params[:changes_page]).
-                limit(10)
+               order(created_at: :desc).
+               page(params[:changes_page]).
+               limit(10)
   end
 
   # GET /teams/new
@@ -23,8 +25,7 @@ class TeamsController < ApplicationController
   end
 
   # GET /teams/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /teams
   # POST /teams.json
@@ -42,13 +43,11 @@ class TeamsController < ApplicationController
     end
   end
 
-  #POST
-  def add
-  end
+  # POST
+  def add; end
 
   # DELETE
-  def remove
-  end
+  def remove; end
 
   # PATCH/PUT /teams/1
   # PATCH/PUT /teams/1.json
@@ -81,12 +80,12 @@ class TeamsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_team
-      redirect_to root_url unless @current_user.admin? #admin only
+      redirect_to root_url unless @current_user.admin? # admin only
       @team = Team.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def team_params
-      params.require(:team).permit(:name,:finance_code,:description)
+      params.require(:team).permit(:name, :finance_code, :description)
     end
 end

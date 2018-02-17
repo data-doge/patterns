@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 # == Schema Information
@@ -44,7 +46,7 @@ module PeopleHelper
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Style/RescueEnsureAlignment
   def human_device_type_name(device_id)
-    Logan::Application.config.device_mappings.rassoc(device_id)[0].to_s; rescue; 'Unknown/No selection'
+    Logan::Application.config.device_mappings.rassoc(device_id)[0].to_s; rescue StandardError; 'Unknown/No selection'
   end
   # rubocop:enable Style/RescueEnsureAlignment
 
@@ -54,7 +56,7 @@ module PeopleHelper
                  other: 'Other',
                  public_computer: 'Public computer',
                  public_wifi: 'Public wifi' }
-    begin; mappings[Logan::Application.config.connection_mappings.rassoc(connection_id)[0]]; rescue; 'Unknown/No selection'; end
+    begin; mappings[Logan::Application.config.connection_mappings.rassoc(connection_id)[0]]; rescue StandardError; 'Unknown/No selection'; end
   end
 
   # FIXME: Refactor and re-enable cop

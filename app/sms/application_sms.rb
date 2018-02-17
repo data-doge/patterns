@@ -1,5 +1,5 @@
 
-
+# frozen_string_literal: true
 
 class ApplicationSms
   attr_reader :client, :application_number, :to
@@ -8,7 +8,7 @@ class ApplicationSms
   include Rails.application.routes.url_helpers
 
   # how we figure out the right host
-  host = ENV["#{Rails.env.upcase}_SERVER"].blank? ? 'localhost' : ENV["#{Rails.env.upcase}_SERVER"]
+  host = ENV["#{Rails.env.upcase}_SERVER"].presence || 'localhost'
   Rails.application.routes.default_url_options[:host] = host
 
   def initialize(*)

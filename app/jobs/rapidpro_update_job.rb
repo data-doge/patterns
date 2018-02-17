@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Style/StructInheritance
 class RapidproUpdateJob < Struct.new(:id)
   attr_accessor :retry_delay
@@ -7,7 +9,6 @@ class RapidproUpdateJob < Struct.new(:id)
     self.id = id
     self.retry_delay = 5 # default retry delay
   end
-
 
   def enqueue(job)
     Rails.logger.info '[RapidProUpdate] job enqueued'
@@ -26,7 +27,7 @@ class RapidproUpdateJob < Struct.new(:id)
 
       body = { name: person.full_name,
                first_name: person.first_name,
-               language: 'eng'}
+               language: 'eng' }
       # eventual fields: # first_name: person.first_name,
       # last_name: person.last_name,
       # email_address: person.email_address,
@@ -43,7 +44,7 @@ class RapidproUpdateJob < Struct.new(:id)
         body[:urns] << "mailto:#{person.email_address}" if person.email_address.present?
         body[:groups] = ['DIG']
       else # person doesn't yet exist in rapidpro
-        cgi_urn = CGI::escape(urn)
+        cgi_urn = CGI.escape(urn)
         url = base_url + "?urn=#{cgi_urn}" # uses phone number to identify.
       end
 
@@ -73,7 +74,7 @@ class RapidproUpdateJob < Struct.new(:id)
     15
   end
 
-  def reschedule_at(current_time, attempts)
+  def reschedule_at(current_time, _attempts)
     current_time + (retry_delay + attemps).seconds
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 # rubocop:disable Metrics/ModuleLength
@@ -138,7 +140,7 @@ module Neighborhoods
 
   def neighborhood_to_zip(neighborhood)
     res = select_neighborhood_mapping.select { |k, _v| k == neighborhood }
-    res.values[0] if res
+    res&.values[0]
   end
 
   private

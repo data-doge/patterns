@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 # == Schema Information
@@ -15,7 +17,7 @@
 #  form_type      :string(255)
 #
 
-class TwilioWufoo < ActiveRecord::Base
+class TwilioWufoo < ApplicationRecord
   has_paper_trail
   # https://robots.thoughtbot.com/inject-that-rails-configuration-dependency
   class_attribute :wufoo_form_ids

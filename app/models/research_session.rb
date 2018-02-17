@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # == Schema Information
 #
@@ -18,12 +20,12 @@
 #  duration        :integer          default(60)
 #
 
-class ResearchSession < ActiveRecord::Base
+class ResearchSession < ApplicationRecord
   has_paper_trail
   acts_as_taggable # new, better tagging system
   include Calendarable
   attr_accessor :people_ids
-  
+
   # different types # breaks stuff
   #  enum session_type: %i[interview focus_group social test]
 
@@ -56,7 +58,6 @@ class ResearchSession < ActiveRecord::Base
   }
 
   scope :upcoming, ->(d = 7) { where(start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days) }
-
 
   scope :ransack_tagged_with, ->(*tags) { tagged_with(tags) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # == Schema Information
 #
@@ -26,7 +28,7 @@
 #  updated_at         :datetime
 #
 
-class TwilioMessage < ActiveRecord::Base
+class TwilioMessage < ApplicationRecord
 
   phony_normalize :to, default_country_code: 'US'
   phony_normalized_method :to, default_country_code: 'US'

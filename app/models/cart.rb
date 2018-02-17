@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: carts
@@ -9,7 +10,6 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
-
 
 # should be renamed to pool...
 class Cart < ApplicationRecord
@@ -45,7 +45,6 @@ class Cart < ApplicationRecord
     cu = carts_users.find_or_create_by(user_id: user_id)
     cu.set_current_cart
     cu.save
-
   end
 
   def add_user_to_cart(user_id)
@@ -63,4 +62,3 @@ class Cart < ApplicationRecord
     end
 
 end
-

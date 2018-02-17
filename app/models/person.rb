@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: people
@@ -42,7 +44,7 @@
 
 # FIXME: Refactor and re-enable cop
 # rubocop:disable ClassLength
-class Person < ActiveRecord::Base
+class Person < ApplicationRecord
   has_paper_trail
 
   acts_as_taggable
@@ -68,10 +70,9 @@ class Person < ActiveRecord::Base
   has_many :invitations
   has_many :research_sessions, through: :invitations
 
-
   has_many :carts_people
   has_many :carts, through: :carts_people, foreign_key: :person_id
-  
+
   has_secure_token :token
 
   after_update  :sendToMailChimp
@@ -250,12 +251,13 @@ class Person < ActiveRecord::Base
   end
 
   def deleteFromRapidPro
-    Delayed::Job.enqueue(RapidproDeleteJob.new(id)).save unless self.active
+    Delayed::Job.enqueue(RapidproDeleteJob.new(id)).save unless active
   end
 
   def updateRapidPro
-    Delayed::Job.enqueue(RapidproUpdateJob.new(id)).save if self.active
+    Delayed::Job.enqueue(RapidproUpdateJob.new(id)).save if active
   end
+
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity
   #
@@ -360,7 +362,7 @@ class Person < ActiveRecord::Base
     self.deactivated_method = type if type
 
     save! # sends background mailchimp update
-    deleteFromRapidPro #remove from rapidpro
+    deleteFromRapidPro # remove from rapidpro
   end
 
   def md5_email

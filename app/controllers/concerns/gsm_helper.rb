@@ -1,5 +1,7 @@
 
 
+# frozen_string_literal: true
+
 module GsmHelper
 
   # FIXME: refactor and re-enable cop
