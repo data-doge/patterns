@@ -190,14 +190,10 @@ class CartController < ApplicationController
       @type = cart_params[:type].presence || 'full'
 
       if cart_params[:id].present?
-        logger.info('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-        logger.info("param[:id] exists, setting #{cart_params[:id]} to current")
         @cart = Cart.find(cart_params[:id])
         current_user.current_cart = @cart
       else
-        logger.info('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-        logger.info("param[:id] doesn't exist")
-        @cart ||= current_user.current_cart
+        @cart = current_user.current_cart
       end
     end
 end

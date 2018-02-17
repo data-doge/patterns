@@ -16,7 +16,7 @@ $(document).on('page:load turbolinks:load ready', function() {
 
   //filters out tags that are already in the list
   var filter = function(suggestions) {
-    var current_people = $('.invitees a').map(function(index, el) {
+    var current_people = $('.current-cart a').map(function(index, el) {
       return Number(el.id.replace(/^(person-)/, ''));
     });
     return $.grep(suggestions, function(suggestion) {

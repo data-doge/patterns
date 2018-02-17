@@ -1,6 +1,5 @@
 $(document).on('turbolinks:load',function() {
   // a typeahead that adds people to the card.
-  // interacts with cocoon to do nested forms
   // does both big and mini-cart
 
   added_person = {};

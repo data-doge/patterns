@@ -14,8 +14,13 @@ class SearchController < ApplicationController
       @tags = Person.tag_counts.where(name: t).order(taggings_count: :desc)
     else
       @tags = []
-
     end
+    
+    # normalize phone numbers
+    if params[:q].present? && params[:q][:phone_number_eq].present?
+      params[:q][:phone_number_eq] = PhonyRails.normalize_number(params[:q][:phone_number_eq])
+    end
+    
     @q = Person.ransack(params[:q])
     @results = @q.result.includes(:tags).page(params[:page])
 
