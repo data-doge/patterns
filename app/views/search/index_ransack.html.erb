@@ -132,10 +132,10 @@ Search Parameters:
   <div class="span12">
     <%= link_to "Save this list as CSV", search_index_ransack_path(params.merge(format: 'csv').permit!), :class => "btn"  %>
     <span>
-    <%= link_to "Export this list to MailChimp", "#", :class => "btn", :id => "export-to-mailchimp-form-toggle" %>
+    <%= link_to "Export this list to MailChimp", "#", class: "btn", id: "export-to-mailchimp-form-toggle" %>
     </span>
-    <span><%= link_to "Send text messages to this list", "#", :class => "btn", :id => "export-to-twilio-form-toggle" %></span>
-    <span><%= button_to "Save to Cart", search_add_to_cart_path(@q), remote: true %></span>
+    <span><%= link_to "Send text messages to this list", "#", class: "btn", id: "export-to-twilio-form-toggle" %></span>
+    <span><%= link_to "Save to pool: #{current_cart.name}", search_add_to_cart_path(@q), remote: true, class:'btn', id:'save-to-pool' %></span>
   </div>
 </div>
 
