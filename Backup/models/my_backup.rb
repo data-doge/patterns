@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+# Backup v5.x Configuration
 ##
 # Backup Generated: my_backup
 # Once configured, you can run the backup with the following command:
