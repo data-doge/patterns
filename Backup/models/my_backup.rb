@@ -111,7 +111,7 @@ Model.new(:my_backup, 'Description for my_backup') do
   #
   notify_by Mail do |mail|
     mail.on_success           = false
-    mail.on_warning           = true
+    mail.on_warning           = false
     mail.on_failure           = true
 
     mail.from                 = ENV['MAILER_SENDER']
