@@ -23,7 +23,7 @@ $(document).on('turbolinks:load',function() {
     },
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     remote: {
-      url:'/search/index_ransack.json?q[nav_bar_search_cont]=%QUERY',
+      url:'/search/index_ransack.json?q[full_name_cont]=%QUERY',
       wildcard: '%QUERY',
       filter: filter,
       limit: 20,
