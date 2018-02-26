@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 class Public::PeopleController < ApplicationController
@@ -34,7 +36,7 @@ class Public::PeopleController < ApplicationController
 
       if update_params[:tags].present?
         tags = update_params[:tags]
-        tags = tags.gsub('_', ' ').split(',')
+        tags = tags.tr('_', ' ').split(',')
         @person.tag_list.add(tags)
         @person.save
       end
@@ -64,7 +66,7 @@ class Public::PeopleController < ApplicationController
         @person = ::Person.new(api_create_params.except(:tags))
         @person.signup_at = Time.current
         if params[:tags].present?
-          tags = api_create_params[:tags].gsub('_', ' ').split(',')
+          tags = api_create_params[:tags].tr('_', ' ').split(',')
           @person.tag_list.add(tags)
         end
         output[:success] = @person.save ? true : false
@@ -112,15 +114,15 @@ class Public::PeopleController < ApplicationController
 
     def api_create_params
       params.permit(:tags,
-                    :first_name,
-                    :last_name,
-                    :preferred_contact_method,
-                    :postal_code,
-                    :email_address,
-                    :low_income,
-                    :phone_number,
-                    :rapidpro_uuid,
-                    :verified)
+        :first_name,
+        :last_name,
+        :preferred_contact_method,
+        :postal_code,
+        :email_address,
+        :low_income,
+        :phone_number,
+        :rapidpro_uuid,
+        :verified)
     end
 
     def update_params

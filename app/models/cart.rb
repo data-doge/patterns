@@ -1,28 +1,64 @@
 # frozen_string_literal: true
 
-class Cart < ActiveRecord::Base # should be renamed to pool...
+# == Schema Information
+#
+# Table name: carts
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      default("default")
+#  user_id    :integer          not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
+# should be renamed to pool...
+class Cart < ApplicationRecord
   belongs_to :user
-  # generally speaking, this is not the right way to do things
-  # however, I *think* it makes sense in the context.
-  # perhaps store is better than serialize, not sure.
-  serialize :people_ids, JSON # it's a string, so 255 char max
 
-  # example validation, the before_save obviates this.
-  # validate :uniqueness_of_people_ids
-  before_save :dedupe_people_ids
+  has_many :carts_people, dependent: :destroy
+  has_many :carts_users, dependent: :destroy
 
-  validates :name, uniqueness: { scope: :user_id,
-                                 message: 'Pools must have a unique name' }
+  has_many :users, through: :carts_users
+  has_many :people, through: :carts_people
+
+  has_many :comments, as: :commentable, dependent: :destroy
+
+  delegate :size, to: :people
+  before_create :set_owner_as_user
+  validates :name, length: { in: 5..30 }
+  validates :name, uniqueness: true
+  # keep current cart in carts_users,
+  # add validation that it must be unique on scope of user.
+  def owner
+    user
+  end
+
+  def name_and_count
+    "#{name}: #{people.count}"
+  end
+
+  def current_cart_for?
+    carts_users.includes(:user).select(&:current_cart)&.map(&:user)
+  end
+
+  def assign_current_cart(user_id)
+    cu = carts_users.find_or_create_by(user_id: user_id)
+    cu.set_current_cart
+    cu.save
+  end
+
+  def add_user_to_cart(user_id)
+    users << User.find(user_id)
+  end
+
+  def people_ids
+    people.map(&:id)
+  end
 
   private
 
-    def dedupe_people_ids
-      people_ids.uniq!
+    def set_owner_as_user
+      users << user
     end
 
-    def uniqueness_of_people_ids
-      if people_ids.detect { |e| people_ids.rindex(e) != people_ids.index(e) }
-        errors.add(:people_ids, 'duplicate person in pool')
-      end
-    end
 end

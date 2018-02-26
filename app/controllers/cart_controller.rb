@@ -1,32 +1,79 @@
-#
+# frozen_string_literal: true
 
 class CartController < ApplicationController
   include ApplicationHelper
-  before_action :cart_init
+  before_action :cart_init, except: :change_cart
 
   # Index
-  def index
-    @people_ids = @cart.people_ids
-    @people = Person.where(id: @people_ids)
+  def show
+    current_user.current_cart = @cart
+    @people = @cart.people.paginate(page: params[:page])
+    @users = @cart.users
+    @comment = Comment.new commentable: @cart
+    @selectable_users = User.approved.where.not(id: @users.map(&:id))
     respond_to do |format|
-      format.html {  @people }
-      format.json { render json: @people_ids }
+      format.html
+      format.json { render json: @people.map(&:id) }
+    end
+  end
+
+  def new
+    @cart = Cart.new
+  end
+
+  def create
+    @cart = Cart.new(cart_params)
+    @cart.user_id = current_user.id
+    @create_result = @cart.save
+    respond_to do |format|
+      if @create_result
+        format.js {}
+        format.json {}
+        format.html { redirect_to @cart, notice: 'Pool was successfully created.'  }
+      else
+        flash[:error] = @cart.errors
+        format.js {}
+        format.html { render action: 'new' }
+        format.json { render json: @cart.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update
+    respond_to do |format|
+      if @cart.update(cart_update_params)
+        format.html { redirect_to cart_path(@cart), notice: 'Cart was successfully updated.' }
+        format.json { head :no_content }
+      else
+        flash[:error] = @cart.errors
+        format.html { render action: 'edit' }
+        format.json { render json: @cart.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   # rubocop:disable Metrics/MethodLength
   def add
-    people = Person.where(id: cart_params[:person_id])
+    pids = cart_params[:person_id].split('/')
+    people = Person.where(id: pids)
     @added = []
+    current_size = @cart.people.size
     people.each do |person|
-      @added << person.id unless @cart.people_ids.include? person.id
-      @cart.people_ids << person.id
+      next if @cart.people.include? person
+      @added << person.id
+      begin
+        @cart.people << person
+      rescue ActiveRecord::RecordInvalid => e
+        flash[:error] = e.message
+      end
     end
-    @cart.save
+    new_size = @cart.people.size
+    delta = new_size - current_size
+    flash[:notice] = "#{delta} people added to #{@cart.name}" if  delta > 0
     respond_to do |format|
       format.js
-      format.json { render json: @cart.people_ids }
-      format.html { render json: @cart.people_ids }
+      format.json { render json: @cart.people.map(&:id) }
+      format.html { render json: @cart.people.map(&:id) }
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -35,55 +82,123 @@ class CartController < ApplicationController
   # rubocop:disable Metrics/MethodLength
   def delete
     if cart_params[:person_id].blank?
-      @deleted = @cart.people_ids
-      @cart.people_ids = []
+      @deleted = @cart.people.map(&:id)
+      @cart.people = []
+      @deleted_all = true
     else
       @deleted = [cart_params[:person_id]]
-      @cart.people_ids.delete(cart_params[:person_id].to_i)
+      person = Person.find(cart_params[:person_id])
+      @cart.people.delete(person) if person.present?
+      @deleted_all = @cart.people.empty?
     end
     @cart.save
 
     respond_to do |format|
       format.js
-      format.json { render json: session[:cart].to_json }
-      format.html { render json: session[:cart].to_json }
+      format.json { render json: @cart.to_json }
+      format.html { render json: @cart.to_json }
     end
   end
   # rubocop:enable Metrics/MethodLength
 
-  def carts
+  def index
     current_user.reload
-    @carts = current_user.carts.map { |c| { id: c.id, name: c.name }}
+    @carts = Cart.includes(:users).all
 
     respond_to do |format|
       # format.js
-      format.json { render json: @carts }
-      format.html { render json: @carts }
+      format.json { render json: @carts.to_json }
+      format.html
+    end
+  end
+
+  # DELETE /gift_cards/1
+  # DELETE /gift_cards/1.json
+  def destroy
+    @cart.destroy
+    flash[:notice] = "#{@cart.name} has been destroyed"
+    respond_to do |format|
+      format.html { redirect_to :back }
+      format.json { head :no_content }
+      format.js {}
     end
   end
 
   def change_cart
-    session[:cart_id] = cart_params[:id]
-    cart_init
+    @cart = Cart.find(params[:cart]) || current_cart
+    current_user.current_cart = @cart
     respond_to do |format|
-      # format.js
-      format.json { render json: { success: true,
-                                   cart_id: @cart.id,
-                                   cart_name: cart_name }
-                                 }
+      format.html { redirect_to cart_path(@cart) }
+      format.json do
+        render json: { success: true,
+                       cart_id: @cart.id,
+                       cart_name: cart_name }
+      end
+      format.js { render layout: false }
     end
+  end
+
+  def check_name
+    @cart_name_valid = !Cart.where(name: param[:name]).exists?
+    status = @cart_name_valid ? 200 : 422
+    respond_to do |format|
+      format.json do
+        render json: { success: @cart_name_valid, valid: @cart_name_valid }, status: status
+      end
+      format.html render text: @cart_name_valid, status: status
+    end
+  end
+
+  def add_user
+    @user = User.find(cart_params[:user_id])
+    @cart.users << @user
+    flash[:error] = @cart.errors if @cart.errors
+  end
+
+  def delete_user
+    @deleted = nil
+    @user = User.find(cart_params[:user_id])
+    if @cart.users.size > 1 && @cart.users.include?(@user)
+      @deleted = @cart.users.delete(@user)
+      @cart.save
+    end
+
+    flash[:error] = "Can't remove user..." if @deleted.nil?
   end
 
   private
 
+    def cart_update_params
+      params.require(:cart).permit(:description,
+        :name,
+        :id,
+        :user_id,
+        :user,
+        :person,
+        :person_id)
+    end
+
     def cart_params
-      params.permit(:person_id, :all, :type, :name, :id)
+      params.permit(:person_id,
+        :all,
+        :type,
+        :name,
+        :id,
+        :user,
+        :user_id,
+        :description,
+        :notes)
     end
 
     def cart_init
-      @type = cart_params[:type].blank? ? 'full' : cart_params[:type]
+      # type is if it's mini or not, for views
+      @type = cart_params[:type].presence || 'full'
 
-      @cart = current_user.current_cart(session[:cart_id])
-      session[:cart_id] = @cart.id
+      if cart_params[:id].present?
+        @cart = Cart.find(cart_params[:id])
+        current_user.current_cart = @cart
+      else
+        @cart = current_user.current_cart
+      end
     end
 end

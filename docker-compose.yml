@@ -1,0 +1,24 @@
+version: '3' # version of docker-compose to use
+
+services: # configuring each container
+  rails:
+    build: .
+    volumes: 
+      - '.:/app'
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    ports:
+      - "3000:3000" 
+    environment:
+      MYSQL_URL: 'db'
+      MYSQL_PASSWORD: 'root'
+      MYSQL_USER: 'root'
+  db: # name of our mysql container
+    image: mysql:latest # which image to pull, in this case specifying v. 5.7
+    restart: always # always restart the container after reboot
+    environment: # environment variables -- mysql options in this case
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: development
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes: # data to map to the container
+      - ./databases:/docker-entrypoint-initdb.d # where to find our data autoimport any sql

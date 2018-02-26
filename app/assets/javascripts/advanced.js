@@ -1,5 +1,4 @@
  this.Search = (function() {
-    console.log('added search globally')
     function Search(templates) {
       this.templates = templates != null ? templates : {};
     }

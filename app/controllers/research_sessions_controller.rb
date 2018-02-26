@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: researchsession
@@ -45,24 +47,20 @@ class ResearchSessionsController < ApplicationController
         end
       end
 
-      # need to handle case when the invitation is invalid
-      # i.e. timing overlaps, etc.
-      i_params = params['research_session']['invitations_attributes']
-
-      if i_params.present?
-        people = i_params.values.map do |v|
-          { person_id: v['person_id'],
-            research_session_id: @research_session.id }
-        end
-
-        Invitation.create(people) # auto associates
-      end
-
       if @research_session.location.blank?
         @research_session.location = "Call #{current_user.name} at #{current_user.phone_number}"
       end
       @research_session.save
 
+      # need to handle case when the invitation is invalid
+      # i.e. timing overlaps, etc.
+      people_ids = params['research_session']['people_ids']
+
+      if people_ids.present? && people_ids != ['']
+        pids = people_ids[0].split(',').map(&:to_i)
+        inv_hash = pids.map { |p| { person_id: p, research_session_id: @research_session.id } }
+        Invitation.create(inv_hash)
+      end
       # sends all of the invitations.
       if params[:send_invites][:boolean_attribute] != 'false'
         @research_session.invitations.each(&:invite!)
@@ -107,7 +105,7 @@ class ResearchSessionsController < ApplicationController
   def remove_person
     @research_session =  ResearchSession.find(params[:research_session_id])
     inv = @research_session.invitations.find_by(person_id: params[:person_id])
-    if inv.gift_cards.size > 0
+    if !inv.gift_cards.empty?
       flash[:error] = "Can't remove #{Person.find(inv.person_id).full_name}, they have a gift card for this session, remove the gift card first"
     else
       inv.delete
@@ -122,7 +120,7 @@ class ResearchSessionsController < ApplicationController
 
   def add_person
     @research_session =  ResearchSession.find(params[:research_session_id])
-    state = params[:invited].present? ? params[:invited] : 'created'
+    state = params[:invited].presence || 'created'
     inv = Invitation.new(person_id: params[:person_id], aasm_state: state)
     @research_session.invitations << inv
     if @research_session.save
@@ -159,9 +157,9 @@ class ResearchSessionsController < ApplicationController
         :end_datetime,
         :buffer,
         :title,
-        :user_id
+        :user_id,
+        :people_ids
       ).to_h.symbolize_keys
-
     end
 
   # rubocop:enable Metrics/MethodLength

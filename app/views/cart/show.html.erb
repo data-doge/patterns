@@ -1,0 +1,101 @@
+<%= render :partial => 'layouts/research_sessions_menu' %>
+<div class='row'>
+  <div class='span6'>
+    <div class='row'>
+      <div class='span4'>
+        <input id='cart-typeahead' type="text" placeholder="People Search" >  
+      </div>
+      <div class='span2'>
+        <%= link_to "Remove All", delete_person_cart_index_path({all: true}),
+                            class: "btn",
+                            remote: true, method: :get %>
+      </div>
+    </div>
+    <%= will_paginate @people, :renderer => BootstrapPagination::Rails, inner_window:1,outer_window:1 %>
+    <% if @people.size > 15 %>
+      <%= page_entries_info @people %>
+    <% end %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email address</th>
+          <th>Phone number</th>
+          <th>Preferred Contact Method</th>
+          <th>Tag Count</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody id='full-cart' class='cart-container'>
+        <%= render partial: 'cart/full_item', collection: @people, as: :person %>
+      </tbody>
+    </table>
+    <%= will_paginate @people, :renderer => BootstrapPagination::Rails, inner_window:1,outer_window:1 %>
+    <% if @people.size > 15 %>
+      <%= page_entries_info @people %>
+    <% end %>
+  </div>
+  <div class='span4 offset2'>
+    <div class='well'>
+
+      <dl>
+        <dt>Current Pool:</dt>
+        <dd><h3><%= best_in_place @cart, :name %></h3></dd>
+        <dt>Description:</dt>
+        <dd><%= best_in_place @cart, :description %></dd>
+        <dt>Size:</dt>
+        <dd><span class='cart-size'><%= @cart.size %></span></dd>
+        <dt>Created By:</dt>
+        <% if current_user.admin? %>
+          <dd><%= link_to @cart.user.name, @cart.user %></dd>
+        <% else %>
+          <dd><%= @cart.user.name%> </dd>
+        <% end %>
+        <dt>Created On:</dt>
+        <dd><%= @cart.created_at.to_s %></dd>
+        <dt>Last Updated:</dt>
+        <dd><%= @cart.updated_at.to_s %></dd>
+        <dt>&nbsp;</dt>
+        <dd><%= link_to "New Pool",new_cart_path, method: 'get', class:'btn' %> </dd>
+      </dl>
+    </div>
+
+    <h4>Add users to this pool:</h4>
+    <%= select_tag "user_id", 
+          options_from_collection_for_select(@selectable_users, "id", "name"),
+          include_blank: true,
+          data: {
+            remote: true,
+            method: 'post',
+            url: add_user_cart_index_path()
+          }
+    %>
+  
+    <h4>Users</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Remove</th>
+          
+        </tr>
+      </thead>
+      <tbody id='users-list'>
+        <%= render partial: 'cart/cart_user', collection: @users, as: :user %>
+      </tbody>
+    </table>
+    <h3>Notes</h3>
+    <%= form_for([@cart, @comment], remote: true) do |form| %>
+      <%= form.hidden_field :commentable_type, :value => 'Cart' %>
+      <%= form.hidden_field :commentable_id, :value => @cart.id %>
+      <%= form.text_area :content, rows: 3, class: "span4 input-block-level" %>
+      <%= form.submit 'Add note', :class => "btn" %>
+    <% end %>
+
+    <div id="comments">
+      <%= render partial: 'comments/embed',
+            collection: @cart.comments.order("created_at DESC"),
+            as: :comment %>
+    </div>
+  </div>
+</div>

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 # == Schema Information
@@ -12,7 +14,7 @@
 #  updated_at :datetime
 #
 
-class MailchimpExport < ActiveRecord::Base
+class MailchimpExport < ApplicationRecord
 
   validates_presence_of :name, :body
   validates_length_of   :name, in: 1..50

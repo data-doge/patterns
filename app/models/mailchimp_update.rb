@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: mailchimp_updates
@@ -12,7 +14,7 @@
 #  updated_at  :datetime         not null
 #
 
-class MailchimpUpdate < ActiveRecord::Base
+class MailchimpUpdate < ApplicationRecord
   scope :latest, -> { order('fired_at DESC') }
   after_save :update_person
   self.per_page = 15

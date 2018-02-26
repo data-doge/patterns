@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 # == Schema Information
@@ -13,7 +15,7 @@
 #  updated_by  :integer
 #
 
-class Program < ActiveRecord::Base
+class Program < ApplicationRecord
 
   validates_presence_of :name
 

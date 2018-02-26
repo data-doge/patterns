@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 module SearchHelper
@@ -56,29 +58,29 @@ module SearchHelper
   end
 
   def display_sort_column_headers(search)
-    person_column_headers.reduce(String.new) do |string, field|
+    person_column_headers.reduce('') do |string, field|
       string << (tag.th sort_link(search, field, {}, method: action))
     end
   end
 
   def display_search_results(objects)
-    objects.limit(results_limit).reduce(String.new) do |string, object|
+    objects.limit(results_limit).reduce('') do |string, object|
       string << (tag.tr display_search_results_row(object))
     end
   end
 
   def display_search_results_row(object)
-    person_column_fields.reduce(String.new) do |string, field|
+    person_column_fields.reduce('') do |string, field|
       string << (tag.td object.send(field))
-    end
-    .html_safe
+    end.
+      html_safe
   end
 
   def display_people_comments(comments)
-    comments.reduce(String.new) do |string, post|
+    comments.reduce('') do |string, _post|
       string << (tag.td truncate(comments.title, length: comments_title_length))
-    end
-    .html_safe
+    end.
+      html_safe
   end
 
 end

@@ -1,5 +1,7 @@
 
 
+# frozen_string_literal: true
+
 class ActiveRecord::Base
 
   def with_user(user)

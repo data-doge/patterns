@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180110193520) do
+ActiveRecord::Schema.define(version: 20180215202649) do
 
   create_table "activities", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.integer "trackable_id"
@@ -41,13 +41,26 @@ ActiveRecord::Schema.define(version: 20180110193520) do
     t.integer "updated_by"
   end
 
-  create_table "carts", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "carts", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "name", default: "default"
     t.integer "user_id", null: false
-    t.string "people_ids", default: "[]"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
     t.index ["user_id"], name: "index_carts_on_user_id"
+  end
+
+  create_table "carts_people", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "cart_id", null: false
+    t.bigint "person_id", null: false
+    t.index ["person_id", "cart_id"], name: "index_carts_people_on_person_id_and_cart_id", unique: true
+  end
+
+  create_table "carts_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "cart_id", null: false
+    t.bigint "user_id", null: false
+    t.boolean "current_cart", default: false
+    t.index ["user_id", "cart_id"], name: "index_carts_users_on_user_id_and_cart_id", unique: true
   end
 
   create_table "comments", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -281,7 +294,7 @@ ActiveRecord::Schema.define(version: 20180110193520) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
-  create_table "teams", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "teams", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "name"
     t.string "finance_code"
     t.text "description"

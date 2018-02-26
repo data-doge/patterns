@@ -54,13 +54,23 @@ Logan::Application.routes.draw do
 
 
   # simple session based cart for storing people ids.
-  get 'cart', to: 'cart#index', as: :show_cart
-  get 'cart/add/:person_id', to: 'cart#add', as: :add_cart
-  get 'cart/delete(/:person_id(/:all))', to: 'cart#delete', as: :delete_cart
+  resources :cart, path: :cart do
+    collection do
+      post 'create', to: 'cart#create', as: :create
+      get 'add/:person_id', to: 'cart#add', as: :add_person
+      get 'delete(/:person_id(/:all))', to: 'cart#delete', as: :delete_person
 
-  get 'carts/all', to: 'cart#carts', as: :all_carts
-  post 'carts/change/:name', to: 'cart#change', as: :change_cart
-  post 'carts/delete/:name', to: 'cart#delete_cart', as: :cart_delete
+      post 'add_user(/:user_id)', to: 'cart#add_user', as: :add_user
+      post 'delete_user/:user_id', to: 'cart#delete_user', as: :delete_user
+
+      post '(:id)/change', to: 'cart#change_cart', as: :change
+      get 'change(/:id)', to: 'cart#change_cart', as: :change_get
+      
+    end
+    resources :comments, controller: 'comments'
+  end
+  
+
   get 'registration', to: 'public/people#new'
 
   post '/api/update_person', to: 'public/people#update', as: :update_post
@@ -155,6 +165,7 @@ Logan::Application.routes.draw do
   post 'search/export_ransack'
   post 'search/export' # send search results elsewhere, i.e. Mailchimp
   post 'search/exportTwilio'
+  post 'search/add_to_cart', to: 'search#add_to_cart', as: :search_add_to_cart
   get  'search/advanced', to: 'search#advanced', as: :advanced_search
   post  'search/advanced', to: 'search#advanced', as: :advanced_search_post
 

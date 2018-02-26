@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Style/StructInheritance
 class RapidproDeleteJob < Struct.new(:id)
   attr_accessor :retry_delay
@@ -20,7 +22,6 @@ class RapidproDeleteJob < Struct.new(:id)
                   'Content-Type'  => 'application/json' }
       url = "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}"
       res = HTTParty.delete(url, headers: headers)
-
 
       case res.code
       when 404

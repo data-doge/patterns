@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require turbolinks
 //= require fastclick/fastclick
 //= require best_in_place
 //= require twitter/bootstrap
@@ -27,7 +28,7 @@
 //= require_tree .
 //= require maskedinput
 
-$(document).on('ready page:load',function() {
+$(document).on('turbolinks:load',function() {
   FastClick.attach(document.body);
   /* Activating Best In Place */
   jQuery(".best_in_place").best_in_place();

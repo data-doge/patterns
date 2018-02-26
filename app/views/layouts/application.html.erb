@@ -6,7 +6,8 @@
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <!-- no turbolinks caching -->
+  <meta name="turbolinks-cache-control" content="no-cache">
   <% if Logan::Application.config.google_analytics_enabled %>
   <script type="text/javascript">
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -19,7 +20,7 @@
   </script>
   <% end %>
 </head>
-<body>
+<body>  
     <div class="navbar navbar-inverse">
       <div class="navbar-inner">
         <div class="container">
@@ -39,7 +40,15 @@
               <li class=""><%= link_to "Gift Cards".html_safe, gift_cards_path%></li>
               <li><%= link_to "New Session", new_research_session_path %></li>
               <li><%= link_to "Session List", research_sessions_path %></li>
-              <li><%= link_to "People Pool <span class='badge cart-size'>#{current_cart.people_ids.size} </span>".html_safe, show_cart_path %></li>
+              <li><%= link_to "Pool: <span class='current_cart'>#{current_user.current_cart.name}</span>&nbsp;<span class='badge cart-size'>#{current_cart.people.size} </span>".html_safe, cart_path(current_user.current_cart.id) %></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Your Pools<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                <% current_user.carts.each do |cart| %>
+                  <li><%= link_to cart.name_and_count, cart_path(cart.id) %></li>
+                <% end %>
+                </ul>
+              </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">More<b class="caret"></b></a>
                 <ul class="dropdown-menu">

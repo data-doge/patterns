@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 # == Schema Information
@@ -15,7 +17,7 @@
 #  updated_by   :integer
 #
 
-class Reservation < ActiveRecord::Base
+class Reservation < ApplicationRecord
   has_paper_trail
   validates_presence_of :person_id, :event_id
 

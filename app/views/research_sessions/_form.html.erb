@@ -5,21 +5,10 @@
              html: { class: 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :people, "People", :class => 'control-label' %>
-    <div class="controls">
-    <!--
-      the cart adds person_ids here.
-      adding a person doesn't remove them from the cart.
-      use the cocoon stuff here and session edit too.
-      cart should be in the session edit as well.
-     -->
-      <% f.fields_for :invitations do |inv| %>
-        <%= render 'nested_invitation_fields', f: inv %>
-      <% end %>
-      <%= link_to_add_association 'add person',
-            f, :invitations,
-            render_options: { wrapper: 'hidden' },
-            partial: 'nested_invitation_fields' %>
+    <div class="controls" id='people-store'>
+
     </div>
+    <%= f.hidden_field :people_ids, multiple: true %>
   </div>
   <div class="control-group">
       <%= f.label :people, "Manage", :class => 'control-label' %>
@@ -80,7 +69,7 @@
     <%= f.label "Tags", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :tags,
-                            class: 'tokenfield input-large span5',
+                            class: 'tokenfield input-large span3',
                             data: { search_url: '/taggings/search?type=ResearchSession&q=%QUERY',
                                     submit_id: 'search-tag-hidden-input',
                                     pre_populate: @tags.to_json

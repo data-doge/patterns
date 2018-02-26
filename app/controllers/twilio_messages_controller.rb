@@ -1,5 +1,7 @@
 
 
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: twilio_messages
@@ -26,9 +28,6 @@
 #  created_at         :datetime
 #  updated_at         :datetime
 #
-
-require 'twilio-ruby'
-require 'csv'
 
 # FIXME: Refactor and re-enable cop
 # rubocop:disable ClassLength

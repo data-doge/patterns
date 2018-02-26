@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 require 'active_support/concern'
@@ -13,7 +15,6 @@ module Calendarable
   extend ActiveSupport::Concern
   # http://stackoverflow.com/questions/7323793/shared-scopes-via-module
   # http://stackoverflow.com/questions/2682638/finding-records-that-overlap-a-range-in-rails
-  # rubocop:disable Lint/AmbiguousBlockAssociation
   included do
     # doesn't work if you delegate start_datetime etc.
     # how do we fix?

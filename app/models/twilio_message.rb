@@ -1,5 +1,6 @@
-#
+# frozen_string_literal: true
 
+#
 # == Schema Information
 #
 # Table name: twilio_messages
@@ -12,7 +13,7 @@
 #  account_sid        :string(255)
 #  from               :string(255)
 #  to                 :string(255)
-#  body               :string(255)
+#  body               :text(65535)
 #  status             :string(255)
 #  error_code         :string(255)
 #  error_message      :string(255)
@@ -27,7 +28,7 @@
 #  updated_at         :datetime
 #
 
-class TwilioMessage < ActiveRecord::Base
+class TwilioMessage < ApplicationRecord
 
   phony_normalize :to, default_country_code: 'US'
   phony_normalized_method :to, default_country_code: 'US'

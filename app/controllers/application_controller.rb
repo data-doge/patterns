@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 class ApplicationController < ActionController::Base
@@ -26,9 +28,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def current_cart
-    current_user.current_cart(session[:cart_id])
-  end
+  delegate :current_cart, to: :current_user
 
   def flash_to_headers
     return unless request.xhr?

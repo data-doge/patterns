@@ -1,10 +1,8 @@
-
-
-require 'csv'
+# frozen_string_literal: true
 
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy]
-  skip_before_action :authenticate_user!, only: [:activate, :card_check]
+  skip_before_action :authenticate_user!, only: %i[activate card_check]
   helper_method :sort_column, :sort_direction
 
   GIFTABLE_TYPES = {

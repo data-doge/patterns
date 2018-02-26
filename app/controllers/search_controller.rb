@@ -1,12 +1,11 @@
-require 'csv'
+# frozen_string_literal: true
+
 # rubocop:disable ClassLength
 class SearchController < ApplicationController
 
   include PeopleHelper
   include GsmHelper
   include SearchHelper
-
-
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/BlockLength
   def index_ransack
@@ -15,11 +14,15 @@ class SearchController < ApplicationController
       @tags = Person.tag_counts.where(name: t).order(taggings_count: :desc)
     else
       @tags = []
-
     end
+    
+    # normalize phone numbers
+    if params[:q].present? && params[:q][:phone_number_eq].present?
+      params[:q][:phone_number_eq] = PhonyRails.normalize_number(params[:q][:phone_number_eq])
+    end
+    
     @q = Person.ransack(params[:q])
     @results = @q.result.includes(:tags).page(params[:page])
-
 
     # Need to better define these
     @participation_list = Person.pluck(:participation_type).uniq
@@ -127,6 +130,18 @@ class SearchController < ApplicationController
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
+  def add_to_cart
+    @q = Person.ransack(params[:q])
+    pids = current_cart.people_ids
+    new_pids = @q.result.map(&:id).delete_if { |i| pids.include?(i) }
+    current_cart.people << Person.find(new_pids)
+    flash[:notice] = "#{new_pids.size} people added to #{current_cart.name}."
+    respond_to do |format|
+      format.js {}
+      format.json { render json: { success: true } }
+    end
+  end
+
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Style/MethodName, Style/VariableName
   #
@@ -166,7 +181,7 @@ class SearchController < ApplicationController
   private
 
     def ransack_params
-      Person.includes(:tags,:comments).ransack(params[:q])
+      Person.includes(:tags, :comments).ransack(params[:q])
     end
 
     def ransack_result

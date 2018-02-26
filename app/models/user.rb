@@ -1,4 +1,4 @@
-#
+# frozen_string_literal: true
 
 # == Schema Information
 #
@@ -24,9 +24,10 @@
 #  token                   :string(255)
 #  phone_number            :string(255)
 #  new_person_notification :boolean          default(FALSE)
+#  team_id                 :integer
 #
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_paper_trail
   # acts_as_tagger #if we want owned tags.
 
@@ -41,9 +42,11 @@ class User < ActiveRecord::Base
   has_many :research_sessions
   has_many :invitations, through: :research_sessions
   has_many :gift_cards, foreign_key: :created_by
-  has_many :carts
+  has_many :carts_user
+  has_many :carts, through: :carts_user, foreign_key: :user_id
   belongs_to :team
 
+  after_create :create_cart
   phony_normalize :phone_number, default_country_code: 'US'
   phony_normalized_method :phone_number, default_country_code: 'US'
 
@@ -52,6 +55,7 @@ class User < ActiveRecord::Base
   scope :upcoming_sessions, ->(d = 7) {
     joins(:research_sessions).merge(ResearchSession.upcoming(d))
   }
+  scope :approved, -> { where(approved: true) }
   # for sanity's sake
   alias_attribute :email_address, :email
 
@@ -116,11 +120,37 @@ class User < ActiveRecord::Base
     ).deliver_later
   end
 
-  def current_cart(cart_id)
-    @cart = if Cart.exists? id: cart_id, user_id: id
-              Cart.find_by(id: cart_id, user_id: id)
-            else
-              Cart.find_or_create_by(user_id: id, name: 'default')
-            end
+  def create_cart(cart_name = "#{name}-cart", assign = false)
+    cart = Cart.create(name: cart_name)
+    cart.assign_current_cart(id) if assign # default do not assign
+    cart
+  end
+
+  def current_cart
+    return CartsUser.find_by(user_id: id, current_cart: true).cart
+  rescue NoMethodError => _e
+    # this is used for users created before multi-cart.
+    cart = Cart.find_by(user_id: id)
+    cart.add_user_to_cart(id) unless cart.users.include?(self)
+    cart.assign_current_cart(id)
+    cart.save
+    return cart
+  end
+
+  def current_cart=(cart) # this is tedious. could be better
+    cart = Cart.find cart if cart.class.to_s != 'Cart'
+    return if cart == current_cart
+    cart_id = cart.id
+    begin
+      cu = CartsUser.find_by(user_id: id, cart_id: cart_id)
+      CartsUser.where(user_id: id).update_all(current_cart: false)
+      cu.current_cart = true
+      cu.save
+    rescue NoMethodError => _e
+      cart = Cart.find cart_id
+      cart.add_user_to_cart(id) unless cart.users.include?(self)
+      cart.assign_current_cart(id)
+      cart.save
+    end
   end
 end

@@ -1,0 +1,5 @@
+$('#user-<%= @user.id %>').remove();
+$('#user_id').append($('<option/>', { 
+        value: '<%= @user.id %>',
+        text : '<%= @user.name %>' 
+    }));

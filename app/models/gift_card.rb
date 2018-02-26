@@ -1,5 +1,6 @@
-#
+# frozen_string_literal: true
 
+#
 # == Schema Information
 #
 # Table name: gift_cards
@@ -19,11 +20,13 @@
 #  updated_at       :datetime         not null
 #  batch_id         :string(255)
 #  proxy_id         :string(255)
+#  active           :boolean          default(FALSE)
+#  secure_code      :string(255)
+#  team_id          :integer
+#  finance_code     :string(255)
 #
 
-require 'csv'
-
-class GiftCard < ActiveRecord::Base
+class GiftCard < ApplicationRecord
   has_paper_trail
   page 20
   monetize :amount_cents
@@ -54,11 +57,11 @@ class GiftCard < ActiveRecord::Base
   validates_length_of :proxy_id, minimum: 2, maximum: 7, unless: proc { |c| c.proxy_id.blank? }
 
   validates_uniqueness_of :proxy_id,
-    scope: [:batch_id, :gift_card_number],
+    scope: %i[batch_id gift_card_number],
     unless: proc { |c| c.proxy_id.blank? }
 
   validates_uniqueness_of :gift_card_number,
-    scope: [:batch_id, :proxy_id],
+    scope: %i[batch_id proxy_id],
     unless: proc { |c| c.gift_card_number.blank? }
 
   validates_format_of :gift_card_number,
@@ -100,7 +103,7 @@ class GiftCard < ActiveRecord::Base
         GiftCard.create!(gift_card_hash)
       end # json.parse
     end # transaction
-  rescue
+  rescue StandardError
     Rails.logger('There was a problem.')
     # exception handling
   end  # batch_create
@@ -108,7 +111,7 @@ class GiftCard < ActiveRecord::Base
   # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
-      csv_column_names =  ['Gift Card ID', 'Given By', 'Team','FinanceCode','Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
+      csv_column_names =  ['Gift Card ID', 'Given By', 'Team', 'FinanceCode', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
       csv << csv_column_names
       all.find_each do |gift_card|
         this_person = Person.unscoped.find gift_card.person_id

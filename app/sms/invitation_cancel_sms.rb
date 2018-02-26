@@ -1,5 +1,7 @@
 
 
+# frozen_string_literal: true
+
 # TODO: needs a spec. The spec for SmsinvitationsController covers it,
 # but a unit test would make coverage more robust
 class InvitationCancelSms < ApplicationSms

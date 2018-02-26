@@ -13,6 +13,8 @@
 #  end_datetime    :datetime
 #  sms_description :string(255)
 #  session_type    :integer          default(1)
+#  location        :string(255)
+#  duration        :integer          default(60)
 #
 
 require 'rails_helper'

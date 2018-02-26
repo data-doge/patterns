@@ -1,5 +1,7 @@
 
 
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: taggings
@@ -26,7 +28,7 @@ class TaggingsController < ApplicationController
   def create
     klass = TAGGABLE_TYPES.fetch(params[:taggable_type])
     res = false
-    if klass && params[:tag].present? && !params[:tag].blank?
+    if klass && params[:tag].present? && params[:tag].present?
       obj = klass.includes(:tags, :taggings).find(params[:taggable_id])
       tag = params[:tag].downcase
       # if we want owned tags. Not sure we do...

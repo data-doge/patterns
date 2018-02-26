@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
-ruby '2.4.3'
+ruby '2.5.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.0'
+gem 'rails', '5.1.4' # 5.1.5 breaks enumerables in views.
 
 gem 'airbrake', '~> 5.0'
 # gem 'pg' # soooooon!
@@ -17,9 +17,7 @@ gem 'validates_overlap' # to ensure we don't double book people
 
 gem 'mail', '2.6.3'
 
-gem 'ransack', github: 'activerecord-hackery/ransack'
-
-gem 'cocoon' # for nested forms
+gem 'ransack', '1.8.4'
 
 gem 'mandrill-rails' # for inbound email
 
@@ -29,6 +27,7 @@ gem 'fuzzy_match' # for sms command fuzzy matching
 
 gem 'rails_db' #for data-wonky fellows
 
+gem 'nokogiri', '1.8.2'
 
 
 group :development do
@@ -36,7 +35,7 @@ group :development do
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
   # src: https://github.com/capistrano/capistrano/pull/412
 
-  gem 'capistrano', git: 'git://github.com/capistrano/capistrano.git', tag: 'v2.15.4'
+  gem 'capistrano', '2.15.4'
 
   gem 'rvm-capistrano', require: false
   gem 'rbnacl', '~> 4.0.0' # for modern ssh keys
@@ -191,7 +190,7 @@ gem 'maskedinput-rails'
 
 # the standard rails tagging library
 #gem 'acts-as-taggable-on', '~> 4.0'
-gem "acts-as-taggable-on", git: 'https://github.com/mbleigh/acts-as-taggable-on.git'
+gem 'acts-as-taggable-on'
 
 
 group :test do
@@ -201,7 +200,7 @@ group :test do
   gem 'sqlite3', platform: %i[ruby mswin mingw]
 
   # for JRuby
-  gem 'jdbc-sqlite3', platform: :jruby
+  # gem 'jdbc-sqlite3', platform: :jruby
   gem 'memory_test_fix' # in memory DB, for the speedy
 
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames

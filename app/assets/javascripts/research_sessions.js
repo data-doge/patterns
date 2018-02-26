@@ -1,14 +1,7 @@
-$(document).on('page:load ready', function() {
-
+$(document).on('page:load turbolinks:load ready', function() {
+  
   // on add is clicked, find all adds, filter unique, then click them all
-  $('#add_all').click(function() {
-    $('.remove_fields').click();
-    $('.add-to-session').click();
-  });
-
-  $('#remove_all').click(function() {
-    $('.remove_fields').click();
-  });
+  
 
 
   //https://eonasdan.github.io/bootstrap-datetimepicker/
@@ -23,7 +16,7 @@ $(document).on('page:load ready', function() {
 
   //filters out tags that are already in the list
   var filter = function(suggestions) {
-    var current_people = $('.invitees a').map(function(index, el) {
+    var current_people = $('.current-cart a').map(function(index, el) {
       return Number(el.id.replace(/^(person-)/, ''));
     });
     return $.grep(suggestions, function(suggestion) {

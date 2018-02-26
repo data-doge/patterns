@@ -1,5 +1,6 @@
-#
+# frozen_string_literal: true
 
+#
 # == Schema Information
 #
 # Table name: events
@@ -7,8 +8,8 @@
 #  id             :integer          not null, primary key
 #  name           :string(255)
 #  description    :text(65535)
-#  starts_at      :datetime
-#  ends_at        :datetime
+#  start_datetime :datetime
+#  end_datetime   :datetime
 #  location       :text(65535)
 #  address        :text(65535)
 #  capacity       :integer
@@ -19,7 +20,7 @@
 #  updated_by     :integer
 #
 
-class Event < ActiveRecord::Base
+class Event < ApplicationRecord
 
   validates_presence_of :name,
     :application_id,

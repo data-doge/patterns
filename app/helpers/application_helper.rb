@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 module ApplicationHelper
@@ -10,9 +12,7 @@ module ApplicationHelper
     options_for_select(options)
   end
 
-  def current_cart
-    current_user.current_cart(session[:cart_id])
-  end
+  delegate :current_cart, to: :current_user
 
   def nav_bar(classes = 'nav navbar-nav')
     content_tag(:ul, class: classes) do
@@ -42,15 +42,12 @@ module ApplicationHelper
       render('grouping_fields', f: f)
     end
 
-    content_for :document_ready, %Q{
-
+    content_for :document_ready, %{
       console.log('foobar');
       var search = new Search({grouping: "#{escape_javascript(fields)}"});
       $(document).on("click", "button.add_fields", function(e) {
         e.preventDefault();
-
         search.add_fields(this, $(this).data('fieldType'), $(this).data('content'));
-
         return false;
       });
       $(document).on("click", "button.remove_fields", function(e) {
@@ -63,7 +60,6 @@ module ApplicationHelper
         search.nest_fields(this, $(this).data('fieldType'));
         return false;
       });
-
     }.html_safe
   end
 
@@ -72,13 +68,14 @@ module ApplicationHelper
   end
 
   def button_to_add_fields(f, type)
-    new_object, name = f.object.send("build_#{type}"), "#{type}_fields"
+    new_object = f.object.send("build_#{type}")
+    name = "#{type}_fields"
     fields = f.send(name, new_object, child_index: "new_#{type}") do |builder|
       render(name, f: builder)
     end
 
     tag.button button_label[type], class: 'add_fields btn', 'data-field-type': type,
-      'data-content': "#{fields}"
+      'data-content': fields.to_s
   end
 
   def button_to_nest_fields(type)
@@ -91,6 +88,5 @@ module ApplicationHelper
       sort:      'Add Sort',
       grouping:  'Add Condition Group' }.freeze
   end
-
 
 end

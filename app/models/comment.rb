@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 
 # == Schema Information
@@ -14,7 +16,7 @@
 #  created_by       :integer
 #
 
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
   has_paper_trail
   validates_presence_of :content
   belongs_to :commentable, polymorphic: true, touch: true

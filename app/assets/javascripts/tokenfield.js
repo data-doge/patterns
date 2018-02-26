@@ -1,4 +1,4 @@
-$(document).on('ready page:load', function() {
+$(document).on('turbolinks:load', function() {
   // this is used on search and on interview/event_invitation
   // can't create new tokens with this.
 
@@ -130,7 +130,6 @@ $(document).on('ready page:load', function() {
     };
 
     if (typeof prePopulate !== 'undefined' && prePopulate != '') {
-     console.log(prePopulate);
      prepopulate_tokens(prePopulate);
     }
   } // end of check for tokenfield selector
