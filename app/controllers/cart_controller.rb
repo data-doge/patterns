@@ -54,8 +54,10 @@ class CartController < ApplicationController
 
   # rubocop:disable Metrics/MethodLength
   def add
-    people = Person.where(id: cart_params[:person_id])
+    pids = cart_params[:person_id].split('/')
+    people = Person.where(id: pids)
     @added = []
+    current_size = @cart.people.size
     people.each do |person|
       next if @cart.people.include? person
       @added << person.id
@@ -65,6 +67,9 @@ class CartController < ApplicationController
         flash[:error] = e.message
       end
     end
+    new_size = @cart.people.size
+    delta = new_size - current_size
+    flash[:notice] = "#{delta} people added to #{@cart.name}" if  delta > 0
     respond_to do |format|
       format.js
       format.json { render json: @cart.people.map(&:id) }

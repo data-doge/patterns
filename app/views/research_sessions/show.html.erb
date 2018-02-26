@@ -32,6 +32,8 @@ var research_session_id = <%= @research_session.id%>;
         <dd><%= @research_session.invitations.size %></dd>
         <dt>Attended</dt>
         <dd><%= @research_session.invitations.where(aasm_state:'attended').size %></p>
+        <dt>Add to Pool: <span class='current_cart'><%= current_cart.name %></span></dt>
+        <dd><%= link_to "Add all to pool", add_person_cart_index_path(@research_session.people.map(&:id)), remote: true, class: 'btn' %></dd>
       </dl>
     </div>
     <h3>Tags</h3>
@@ -60,6 +62,7 @@ var research_session_id = <%= @research_session.id%>;
     <%= render partial: 'invitations_panel',
           locals: { invitations: @research_session.invitations } %>
   </div>
+
 </div>
 <div class="row">
   <div class="span4">
