@@ -20,13 +20,14 @@ class Cart < ApplicationRecord
 
   has_many :users, through: :carts_users
   has_many :people, through: :carts_people
+  delegate :size, to: :people
 
   has_many :comments, as: :commentable, dependent: :destroy
 
-  delegate :size, to: :people
   before_create :set_owner_as_user
   validates :name, length: { in: 5..30 }
-  validates :name, uniqueness: true
+  validates :name, uniqueness: true, message: 'Pool must have a unique name'
+ 
   # keep current cart in carts_users,
   # add validation that it must be unique on scope of user.
   def owner
