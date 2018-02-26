@@ -46,7 +46,7 @@ add-apt-repository ppa:certbot/certbot
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password'
 
-apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nginx gpgv2 ruby-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev certbot
+apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nginx gpgv2 ruby-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev clang certbot
 
 mysqladmin -ppassword create `echo $RAILS_ENV`
 openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 2048
