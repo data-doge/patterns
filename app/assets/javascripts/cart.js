@@ -106,7 +106,7 @@ $(document).on('turbolinks:load',function() {
       if (!current_ids.includes(id.toString())) {
         $('#add-'+id.toString()).hide();
         current_ids.push(id.toString())
-        current_ids = current_ids.filter((v, i, a) => (a.indexOf(v) === i && v != "")); 
+        current_ids = current_ids.filter(function(v, i, a) {a.indexOf(v) === i && v != ""}); 
         
         $('#research_session_people_ids').val(current_ids.join(','));
         // this is an ugly hack, shoudl be a partial that gets rendered.
