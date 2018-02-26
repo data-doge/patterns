@@ -616,7 +616,7 @@ DEPENDENCIES
   twilio-ruby (~> 4.13.0)
   twitter-bootstrap-rails (~> 2.2.0)
   twitter-typeahead-rails
-  uglifier (>= 1.0.3)
+  uglifier
   unicorn
   validates_overlap
   validates_zipcode
