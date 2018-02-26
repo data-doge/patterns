@@ -81,7 +81,7 @@ group :assets do
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer', platforms: :ruby
-  gem 'uglifier'
+  gem 'uglifier', '~> 3.1.0'
 end
 
 gem 'jquery-rails'
