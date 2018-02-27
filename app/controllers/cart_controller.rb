@@ -14,6 +14,13 @@ class CartController < ApplicationController
     respond_to do |format|
       format.html
       format.json { render json: @people.map(&:id) }
+      format.csv do
+        output = CSV.generate do |csv|
+          csv << Person.column_names.map(&:titleize)
+          @people.each {|person| csv << person.to_a }
+        end
+        send_data output, filename: "Pool-#{@cart.name}.csv"
+      end
     end
   end
 

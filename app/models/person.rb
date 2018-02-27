@@ -356,6 +356,27 @@ class Person < ApplicationRecord
     end
   end
 
+  def to_a
+    fields = Person.column_names
+    fields.push('tags')
+    fields.map do |f|
+      field_value = self.send(f.to_sym)
+      if f == 'phone_number'
+        if field_value.present?
+          field_value.phony_formatted(format: :national, spaces: '-')
+        else
+          ''
+        end
+      elsif f == 'email_address'
+        field_value.presence || ''
+      elsif f == 'tags'
+        tag_values.present? ? tag_values.join('|') : ''
+      else
+        field_value
+      end
+    end
+  end
+
   def deactivate!(type = nil)
     self.active = false
     self.deactivated_at = Time.current

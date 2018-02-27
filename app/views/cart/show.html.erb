@@ -55,6 +55,8 @@
         <dd><%= @cart.created_at.to_s %></dd>
         <dt>Last Updated:</dt>
         <dd><%= @cart.updated_at.to_s %></dd>
+        <dt>Export</dt>
+        <dd><%= link_to "Export to CSV", cart_path(@cart,format: :csv), class:'btn' %></dd>
         <dt>&nbsp;</dt>
         <dd><%= link_to "New Pool",new_cart_path, method: 'get', class:'btn' %> </dd>
       </dl>
