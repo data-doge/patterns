@@ -102,7 +102,7 @@ class GiftCardsController < ApplicationController
     @gift_card.destroy
     giftable&.reload # weirdo.
     respond_to do |format|
-      format.html { redirect_to :back }
+      format.html { redirect_back(fallback_location: gift_cards_path) }
       format.json { head :no_content }
       format.js {}
     end
