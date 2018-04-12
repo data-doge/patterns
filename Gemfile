@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.4.3'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.1.4' # 5.1.5 breaks enumerables in views.
+gem 'rails', '5.2.0' # 5.1.5 breaks enumerables in views.
 
 gem 'airbrake', '~> 5.0'
 # gem 'pg' # soooooon!
@@ -15,9 +15,9 @@ gem 'validates_overlap' # to ensure we don't double book people
 
 #gem 'rails_12factor' # don't need this. yet. soon!
 
-gem 'mail', '2.6.3'
+gem 'mail'
 
-gem 'ransack', '1.8.4'
+gem 'ransack'
 
 gem 'mandrill-rails' # for inbound email
 
@@ -35,7 +35,7 @@ group :development do
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
   # src: https://github.com/capistrano/capistrano/pull/412
 
-  gem 'capistrano', '2.15.4'
+  gem 'capistrano', '~> 2.15.4'
 
   gem 'rvm-capistrano', require: false
   gem 'rbnacl', '~> 4.0.0' # for modern ssh keys
@@ -93,7 +93,7 @@ gem 'turbolinks'
 gem 'jbuilder'
 
 # To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
+gem 'bcrypt-ruby'
 
 # Use unicorn as the app server
 gem 'unicorn'
@@ -138,7 +138,7 @@ gem 'gsm_encoder'
 gem 'daemons'
 gem 'delayed_job_active_record'
 
-gem "delayed_job_web"
+#gem "delayed_job_web"
 
 # for generating unique tokens for Person
 gem 'has_secure_token'
@@ -199,18 +199,18 @@ group :test do
 
   gem 'sqlite3', platform: %i[ruby mswin mingw]
 
-  # for JRuby
+  ## for JRuby
   # gem 'jdbc-sqlite3', platform: :jruby
   gem 'memory_test_fix' # in memory DB, for the speedy
 
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
-  gem 'codeclimate-test-reporter', '~> 1.0.0'
-  gem 'coveralls', require: false
+  #gem 'codeclimate-test-reporter'
+  #gem 'coveralls', require: false
   gem 'faker'
   gem 'rubocop', require: false
   gem 'simplecov', require: false
   # screenshots when capybara fails
-  gem 'capybara-screenshot'
+  #gem 'capybara-screenshot'
 
   # retry poltergeist specs. they are finicky
   gem 'rspec-retry'
@@ -227,7 +227,7 @@ end
 
 group :development, :test do
   gem 'capybara'
-  gem 'capybara-email'
+  #gem 'capybara-email'
   gem 'database_cleaner'
   gem 'factory_girl_rails', require: false
   gem 'guard'
@@ -235,7 +235,7 @@ group :development, :test do
   gem 'guard-minitest'
   gem 'guard-rspec', require: false
   gem 'guard-rubocop'
-  gem 'poltergeist'
+  #gem 'poltergeist'
   gem 'pry'
   gem 'rspec-rails', '~> 3.0'
   gem 'shoulda-matchers', '~> 3.1.1', require: false
