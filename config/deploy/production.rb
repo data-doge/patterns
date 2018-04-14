@@ -1,5 +1,6 @@
 set :application, 'logan-production'
 set :branch, fetch(:branch, ENV['PRODUCTION_BRANCH'])
-set :rvm_ruby_string, '2.4.3@production'   # use the same ruby as used locally for deployment
+# use the same ruby as used locally for deployment
+set :rvm_ruby_string, '2.5.1@production'
 
 server ENV['PRODUCTION_SERVER'], :app, :web, :db, primary: true
