@@ -68,9 +68,6 @@ GEM
     bootstrap3-datetimepicker-rails (4.17.47)
       momentjs-rails (>= 2.8.1)
     builder (3.2.3)
-    bullet (5.7.5)
-      activesupport (>= 3.0.0)
-      uniform_notifier (~> 1.11.0)
     capistrano (2.15.9)
       highline
       net-scp (>= 1.0.0)
@@ -504,7 +501,6 @@ GEM
     unicorn (5.4.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    uniform_notifier (1.11.0)
     validates_overlap (0.8.6)
       rails (>= 3.0.0)
     validates_zipcode (0.0.19)
@@ -545,7 +541,6 @@ DEPENDENCIES
   best_in_place (~> 3.0.1)
   bootsnap
   bootstrap3-datetimepicker-rails
-  bullet
   capistrano (~> 2.15.4)
   capybara
   coffee-rails
