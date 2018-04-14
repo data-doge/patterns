@@ -85,7 +85,7 @@ Model.new(:my_backup, 'Description for my_backup') do
     s3.region            = 'us-east-1'
     s3.bucket            = ENV['AWS_S3_BUCKET']
     s3.path              = "/patterns_backups_#{ENV['RAILS_ENV']}"
-    s3.keep              = 50
+    s3.keep              = 200
     # s3.keep              = Time.now - 2592000 # Remove all backups older than 1 month.
   end
 
@@ -93,9 +93,9 @@ Model.new(:my_backup, 'Description for my_backup') do
   # Local (Copy) [Storage]
   #
   store_with Local do |local|
-    local.path       = '/var/www/logan-production/shared/backups'
-    local.keep       = 500
-    local.keep       = Time.now - 2592000 # Remove all backups older than 1 month.
+    local.path  = '/var/www/logan-production/shared/backups'
+    local.keep  = 50
+    local.keep  = Time.now - 2592000 # Remove all backups older than 1 month.
   end
 
   ##
