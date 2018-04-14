@@ -116,7 +116,8 @@ EOL
   rvm install 2.4.3
   rvm use 2.4.3@`echo $RAILS_ENV` --create
   echo -e "\n\n\n" | ssh-keygen -t rsa # make keys
-  rvm @global do gem install backup bundler rake whenever
+  rvm @global do gem install bundler rake whenever
+  rvm @global do gem install backup -v5.0.0.beta.2
   ln -s /var/www/logan-`echo $RAILS_ENV`/current `echo $RAILS_ENV`
   exit # back to root.
 fi
