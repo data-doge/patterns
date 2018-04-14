@@ -3,6 +3,7 @@ ruby '2.5.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
 gem 'bootsnap'
+gem 'rack-cache'
 gem 'airbrake', '~> 5.0'
 # gem 'pg' # soooooon!
 # must use this version of mysql2 for rails 4.0.0
@@ -180,7 +181,7 @@ gem 'paper_trail-globalid'
 
 gem 'fast_blank' # blank? rewritten in c
 
-#gem 'faster_path' if !`which rustc`.empty?
+gem 'faster_path' if !`which rustc`.empty?
 
 # storing money with money-rails
 gem 'money-rails'
@@ -189,7 +190,6 @@ gem 'money-rails'
 gem 'maskedinput-rails'
 
 # the standard rails tagging library
-#gem 'acts-as-taggable-on', '~> 4.0'
 gem 'acts-as-taggable-on'
 
 

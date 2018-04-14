@@ -138,6 +138,10 @@ GEM
     faraday (0.14.0)
       multipart-post (>= 1.2, < 3)
     fast_blank (1.0.0)
+    faster_path (0.3.10)
+      bundler (~> 1.12)
+      rake (~> 12.3)
+      thermite (= 0.13.0)
     ffi (1.9.23)
     flamegraph (0.9.5)
     formatador (0.2.5)
@@ -246,6 +250,7 @@ GEM
     mimemagic (0.3.2)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
+    minitar (0.6.1)
     minitest (5.11.3)
     mocha (1.5.0)
       metaclass (~> 0.0.1)
@@ -307,6 +312,8 @@ GEM
     public_suffix (3.0.2)
     puma (3.11.4)
     rack (2.0.4)
+    rack-cache (1.7.1)
+      rack (>= 0.4)
     rack-mini-profiler (1.0.0)
       rack (>= 1.2.0)
     rack-protection (2.0.1)
@@ -466,6 +473,10 @@ GEM
       tins (~> 1.0)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
+    thermite (0.13.0)
+      minitar (~> 0.5)
+      rake (>= 10)
+      tomlrb (~> 1.2)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
       ref
@@ -474,6 +485,7 @@ GEM
     tilt (2.0.8)
     timecop (0.9.1)
     tins (1.16.3)
+    tomlrb (1.2.6)
     turbolinks (5.1.1)
       turbolinks-source (~> 5.1)
     turbolinks-source (5.1.0)
@@ -555,6 +567,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   fast_blank
+  faster_path
   flamegraph
   fuzzy_match
   gibbon
@@ -591,6 +604,7 @@ DEPENDENCIES
   pry
   pry-rails
   puma
+  rack-cache
   rack-mini-profiler
   rails (~> 5.2.0)
   rails_db
