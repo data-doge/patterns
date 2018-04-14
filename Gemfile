@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 ruby '2.4.3'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.2.0' # 5.1.5 breaks enumerables in views.
-
+gem 'rails', '~> 5.2.0'
+gem 'bootsnap'
 gem 'airbrake', '~> 5.0'
 # gem 'pg' # soooooon!
 # must use this version of mysql2 for rails 4.0.0
@@ -93,7 +93,7 @@ gem 'turbolinks'
 gem 'jbuilder'
 
 # To use ActiveModel has_secure_password
-gem 'bcrypt-ruby'
+gem 'bcrypt'
 
 # Use unicorn as the app server
 gem 'unicorn'
@@ -138,7 +138,7 @@ gem 'gsm_encoder'
 gem 'daemons'
 gem 'delayed_job_active_record'
 
-#gem "delayed_job_web"
+gem "delayed_job_web"
 
 # for generating unique tokens for Person
 gem 'has_secure_token'
@@ -205,7 +205,7 @@ group :test do
 
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
   #gem 'codeclimate-test-reporter'
-  #gem 'coveralls', require: false
+  gem 'coveralls', require: false
   gem 'faker'
   gem 'rubocop', require: false
   gem 'simplecov', require: false
