@@ -1,7 +1,22 @@
 Logan::Application.routes.draw do
 
-  resources :activation_calls
-  resources :card_activations
+  resources :activation_calls do
+    collection do
+      post 'activate/:card_activation_id', 
+           action: :activate,
+           as: :activate,
+           defaults: { format: 'xml' }
+      post 'check/:card_activation_id',
+           action: :check, 
+           as: :check,
+           defaults: {format:'xml'}
+    end
+  end
+  
+  resources :card_activations do
+    
+  end
+
   resource :inbox, :controller => 'inbox', :only => [:show,:create]
   resources :gift_cards do
     collection do
