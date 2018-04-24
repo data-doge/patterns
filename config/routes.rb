@@ -1,5 +1,7 @@
 Logan::Application.routes.draw do
 
+  resources :activation_calls
+  resources :card_activations
   resource :inbox, :controller => 'inbox', :only => [:show,:create]
   resources :gift_cards do
     collection do
