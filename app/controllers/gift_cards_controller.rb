@@ -62,13 +62,13 @@ class GiftCardsController < ApplicationController
   # rubocop:disable Metrics/MethodLength
   def create
     @gift_card = GiftCard.new(gift_card_params)
+    @gift_card.finance_code = current_user&.team&.finance_code
+    @gift_card.team = current_user&.team
+    
     @create_result = @gift_card.with_user(current_user).save
     respond_to do |format|
       if @create_result
         @total = @gift_card.person.blank? ? @gift_card.amount : @gift_card.person.gift_card_total
-        @gift_card.finance_code = current_user&.team&.finance_code
-        @gift_card.team = current_user&.team
-        @gift_card.save
         format.js {}
         format.json {}
         format.html { redirect_to @gift_card, notice: 'Gift Card was successfully created.'  }

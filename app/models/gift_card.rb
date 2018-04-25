@@ -43,7 +43,7 @@ class GiftCard < ApplicationRecord
   belongs_to :giftable, polymorphic: true, touch: true
   belongs_to :person
   belongs_to :user, foreign_key: :created_by
-  belongs_to :team, optional: true
+  belongs_to :team, optional: true # shouldn't be optional moving forward
 
   validates_presence_of :amount
   validates_presence_of :reason
