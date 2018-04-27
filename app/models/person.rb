@@ -70,6 +70,7 @@ class Person < ApplicationRecord
   has_many :invitations
   has_many :research_sessions, through: :invitations
 
+  # TODO remove people from carts on deactivation
   has_many :carts_people
   has_many :carts, through: :carts_people, foreign_key: :person_id
 

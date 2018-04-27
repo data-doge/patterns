@@ -1,0 +1,40 @@
+Card Activation Plan
+
+activations model
+  card number "string"
+  expiration date "string"
+  Sequence # "string"
+  batch # string
+  Secure code string
+  user_id int
+  status = new, started, checked,active
+  gift_card_id = default null, linked to GC
+
+activation_calls  model
+  sid string
+  transcript
+  audio_url
+  type: activate || check || balance
+
+CardActivationsController:
+  download CSV
+  upload CSV
+    create records
+    queue up background activation tasks
+      activation task: make calls, save sid
+ActivationsCallsController
+    twilio makes request to endpoint, card_activation_id
+      find activation with card_activation_id,
+      Update activation with transcript audio
+      update frontend via action cable?
+    run check in background
+      same as above
+
+  enable user to set "active" if everything passes but our tanscription is wrong
+    must have activation sid and check sid, etc. etc. before you can do this.
+
+  Actioncable for updating front end with state
+
+
+activation calls:
+use 
