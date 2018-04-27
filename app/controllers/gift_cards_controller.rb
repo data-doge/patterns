@@ -50,7 +50,7 @@ class GiftCardsController < ApplicationController
 
   # GET /gift_cards/new
   def new
-    @last_gift_card = GiftCard.last # default scope is id: :desc
+    @last_gift_card = GiftCard.where.not(batch_id:'5555').last # default scope is id: :desc
     @gift_card = GiftCard.new
   end
 
