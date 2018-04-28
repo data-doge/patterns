@@ -78,13 +78,12 @@ class GiftCardsController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   # takes an card_activation_id, person_id, and sessionid
   def assign
     @card_activation = CardActivation.find(params[:card_activation_id])
     ca = @card_activation # for shortness.
-    @gift_card = GiftCard.new(proxy_id: ca.sequence_id, 
+    @gift_card = GiftCard.new(proxy_id: ca.sequence_id,
                               batch_id: ca.batch_id,
                               gift_card_number: ca.full_card_number.last(4),
                               person_id: params[:person_id],
@@ -96,10 +95,10 @@ class GiftCardsController < ApplicationController
 
     @total = @gift_card.person.gift_card_total
     @create_result = @gift_cart.save
-    
+
     respond_to do |format|
       if @create_result
-        format.js {render action: :create}
+        format.js { render action: :create }
         format.json {}
         format.html { redirect_to @gift_card, notice: 'Gift Card was successfully created.'  }
       else

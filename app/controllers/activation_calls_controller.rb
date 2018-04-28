@@ -26,7 +26,7 @@ class ActivationCallsController < ApplicationController
   # def edit
   # end
 
-  def activate #idempotent
+  def activate # idempotent
     respond_to do |format|
       format.xml
     end
@@ -36,7 +36,7 @@ class ActivationCallsController < ApplicationController
   #   # sets card to active
   # end
 
-  def check #idempotent
+  def check # idempotent
     respond_to do |format|
       format.xml
     end
