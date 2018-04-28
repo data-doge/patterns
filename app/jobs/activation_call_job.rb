@@ -31,7 +31,7 @@ class ActivationCallJob < Struct.new(:id)
       # Fetch instructions from this URL when the call connects
       url: url,
       method: 'GET')
-
+    call.call_status = 'started'
     call.sid = res.sid
     call.save!
   end

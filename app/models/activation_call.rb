@@ -35,9 +35,18 @@ class ActivationCall < ApplicationRecord
     when 'activate'
       'your card now has been activated'
     when 'check'
-      'please hold while we access your account'
+      'the available balance on this account'
     when 'balance' # not yet implemented. but could be
       'the available balance'
+    end
+  end
+
+  def balance
+    if transcript.present? && call_type == 'check'
+      regex = Regexp.new('\$\ ?[+-]?[0-9]{1,3}(?:,?[0-9])*(?:\.[0-9]{1,2})?')
+      transcript.scan(regex).&[0]&.delete("$")&.to_f || card_activation.amount
+    else
+      card_activation.amount
     end
   end
 
