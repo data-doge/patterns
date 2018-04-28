@@ -13,14 +13,18 @@
 #  gift_card_id     :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  amount_cents     :integer          default(0), not null
+#  amount_currency  :string(255)      default("USD"), not null
 #
 
 # records card details for activation and check calls
 class CardActivation < ApplicationRecord
   include AASM
+
   monetize :amount_cents
-  
+
   has_paper_trail
+
   validate :luhn_number_valid
   validates_presence_of :expiration_date
   validates_presence_of :batch_id
@@ -103,7 +107,7 @@ class CardActivation < ApplicationRecord
     def luhn_number_valid
       errors.add('Must include a card number') if full_card_number.blank?
       unless CreditCardValidations::Luhn.valid?(full_card_number)    
-        errors.add('card number is not valid')
+        errors.add("card number #{full_card_number} is not valid")
       end
     end
 

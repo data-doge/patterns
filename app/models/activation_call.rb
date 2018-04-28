@@ -10,12 +10,13 @@
 #  type               :string(255)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  status             :string(255)      default("created")
 #
 
 class ActivationCall < ApplicationRecord
   has_paper_trail
   validates_presence_of :card_activation_id
-  validates_inclusion_of :type, in: %w( activate check )
+  validates_inclusion_of :type, in: %w( activate check ) # balance soon 
   belongs_to :card_activations, dependent: :destroy
 
   def transcript_check

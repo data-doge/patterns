@@ -2,23 +2,22 @@ source 'https://rubygems.org'
 ruby '2.5.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
-gem 'bootsnap'
+gem 'bootsnap' # for faster booting
 gem 'rack-cache'
-gem 'airbrake', '~> 5.0'
+gem 'airbrake', '~> 5.0' # sends errors to external service
 # gem 'pg' # soooooon!
-# must use this version of mysql2 for rails 4.0.0
 gem 'mysql2'
 
 gem 'hiredis' # faster redis
 gem 'redis' # ephemeral storage and caching
-gem 'redis-rails' # for session store
+gem 'redis-rails' # for session store, I think deprecated in rails 5.2
 gem 'validates_overlap' # to ensure we don't double book people
 
 #gem 'rails_12factor' # don't need this. yet. soon!
 
 gem 'mail'
 
-gem 'ransack'
+gem 'ransack' # rad searching.
 
 gem 'mandrill-rails' # for inbound email
 
@@ -70,8 +69,8 @@ end
 
 group :production do
   #gem 'newrelic_rpm'
-  gem 'skylight'
-  gem 'lograge'
+  gem 'skylight' # perf
+  gem 'lograge' # sane logs
 end
 
 # Gems used only for assets and not required
@@ -105,10 +104,8 @@ gem 'unicorn'
 # https://coderwall.com/p/fnfdgw/useful-regular-expressions-to-update-to-bootstrap-3
 gem 'twitter-bootstrap-rails', '~> 2.2.0'
 gem 'glyphicons-rails'
-gem 'momentjs-rails'
+gem 'momentjs-rails' # sane time management in js
 gem 'bootstrap3-datetimepicker-rails'
-# use tire for ElasticSearch integration
-# gem 'tire' # no longer needed
 
 # pagniate with will_paginate: https://github.com/mislav/will_paginate
 gem 'will_paginate'
@@ -236,7 +233,7 @@ group :development, :test do
   gem 'guard-rspec', require: false
   gem 'guard-rubocop'
   #gem 'poltergeist'
-  gem 'pry'
+  gem 'pry' # a console anywhere!
   gem 'rspec-rails', '~> 3.0'
   gem 'shoulda-matchers', '~> 3.1.1', require: false
   gem 'sms-spec'
