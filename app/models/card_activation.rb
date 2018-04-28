@@ -110,8 +110,8 @@ class CardActivation < ApplicationRecord
     # action cable update to front end.
   end
 
-  def assign(_gc_id)
-    gift_card_id = gc.id
+  def assign(gc_id)
+    gift_card_id = gc_id
     save
   end
 
