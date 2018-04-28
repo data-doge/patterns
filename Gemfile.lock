@@ -189,6 +189,8 @@ GEM
       railties (>= 3.1.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
+    httparty (0.15.7)
+      multi_xml (>= 0.5.2)
     i18n (1.0.0)
       concurrent-ruby (~> 1.0)
     icalendar (2.4.1)
@@ -266,6 +268,7 @@ GEM
       railties (>= 3.0)
     msgpack (1.2.4)
     multi_json (1.13.1)
+    multi_xml (0.6.0)
     multipart-post (2.0.0)
     mustermann (1.0.2)
     mysql2 (0.5.1)
@@ -529,6 +532,10 @@ GEM
     will_paginate (3.1.6)
     will_paginate-bootstrap (0.2.5)
       will_paginate (>= 3.0.3)
+    wuparty (1.2.7)
+      httparty (>= 0.6.1)
+      mime-types (>= 1.16)
+      multipart-post (>= 1.0.1)
     xpath (3.0.0)
       nokogiri (~> 1.8)
 
@@ -575,6 +582,7 @@ DEPENDENCIES
   health_check
   hiredis
   holder_rails
+  httparty (= 0.15.7)
   icalendar
   jbuilder
   jquery-rails
@@ -632,6 +640,7 @@ DEPENDENCIES
   whenever
   will_paginate
   will_paginate-bootstrap (~> 0.2.5)
+  wuparty
 
 RUBY VERSION
    ruby 2.5.1p57

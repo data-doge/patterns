@@ -129,8 +129,9 @@ gem 'gibbon'
 # use twilio-ruby for twilio
 gem 'twilio-ruby', '~> 4.13.0'
 
+gem 'httparty', '0.15.7'
 # use Wuparty for wufoo
-#gem 'wuparty' # breaks latest version of httparty
+gem 'wuparty' # breaks latest version of httparty
 
 # Use gsm_encoder to help text messages send correctly
 gem 'gsm_encoder'
