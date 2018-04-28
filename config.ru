@@ -10,6 +10,6 @@ run Logan::Application
 if Rails.env.production?
   DelayedJobWeb.use Rack::Auth::Basic do |username, password|
     ActiveSupport::SecurityUtils.secure_compare('admin', username) &&
-      ActiveSupport::SecurityUtils.size_secure_compare(ENV['DJ_PASSWORD'], password)
+      ActiveSupport::SecurityUtils.secure_compare(ENV['DJ_PASSWORD'], password)
   end
 end
