@@ -1,14 +1,14 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: carts
 #
-#  id         :integer          not null, primary key
-#  name       :string(255)      default("default")
-#  user_id    :integer          not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id          :integer          not null, primary key
+#  name        :string(255)      default("default")
+#  user_id     :integer          not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  description :text(65535)
 #
 
 # should be renamed to pool...

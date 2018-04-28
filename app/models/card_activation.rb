@@ -1,6 +1,24 @@
+# == Schema Information
+#
+# Table name: card_activations
+#
+#  id               :integer          not null, primary key
+#  full_card_number :string(255)
+#  expiration_date  :string(255)
+#  sequence_number  :string(255)
+#  secure_code      :string(255)
+#  batch_id         :string(255)
+#  status           :string(255)      default("created")
+#  user_id          :integer
+#  gift_card_id     :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 # records card details for activation and check calls
 class CardActivation < ApplicationRecord
   include AASM
+  monetize :amount_cents
   
   has_paper_trail
   validate :luhn_number_valid
@@ -17,7 +35,7 @@ class CardActivation < ApplicationRecord
   #IMMUTABLE = %w{gift_card_id}
   #validate :force_immutable
 
-  has_many :activation_calls, dependant: :destroy
+  has_many :activation_calls, dependent: :destroy
   has_one  :gift_card
 
   after_create :do_activate_call
@@ -35,7 +53,7 @@ class CardActivation < ApplicationRecord
       transitions from: :created, to: :start_activation
     end
    
-    event :activation_success do
+    event :activation_success, after_commit: :do_success_notification do
       transitions from: :start_activation, to: :active
     end
     
@@ -66,10 +84,18 @@ class CardActivation < ApplicationRecord
     
   end
 
+  def do_success_notification
+    # action cable update to front end.
+  end
+
   def activation_error_report
     # call back to front end with actioncable about error
     # transition into start check
     self.start_check
+  end
+
+  def check_error_report
+    # action cable update to front end.
   end
 
   private

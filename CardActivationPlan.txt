@@ -35,6 +35,8 @@ ActivationsCallsController
 
   Actioncable for updating front end with state
 
-
-activation calls:
-use 
+upload card, create a card_activation object. and a call object
+background task to initiate calls (potentially action cable to update front end here too)
+calls make callback to call controller
+call controller checks and updates activations_card and call objects
+then actioncable updates front end.

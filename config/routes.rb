@@ -2,19 +2,28 @@ Logan::Application.routes.draw do
 
   resources :activation_calls do
     collection do
-      post 'activate/:card_activation_id', 
+      post 'activate/:id', 
            action: :activate,
            as: :activate,
            defaults: { format: 'xml' }
-      post 'check/:card_activation_id',
+      post 'check/:id',
            action: :check, 
            as: :check,
+           defaults: {format:'xml'}
+      post 'callback/:id',
+           action: :callback,
+           as: :callback,
            defaults: {format:'xml'}
     end
   end
   
   resources :card_activations do
-    
+    collection do
+      get 'template', 
+          action: :template, 
+          as: :template, 
+          defaults: {format: 'csv'}
+    end
   end
 
   resource :inbox, :controller => 'inbox', :only => [:show,:create]

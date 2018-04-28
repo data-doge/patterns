@@ -7,6 +7,18 @@ class CardActivationsController < ApplicationController
     @card_activations = CardActivation.where(user_id: current_user.id).all
   end
 
+  def template
+    respond_to do |format|
+      format.csv do
+        response.headers['Content-Type'] = 'text/csv'
+        output = CSV.generate do |csv|
+          csv << %w( full_card_number expiration_date amount sequence_number secure_code batch_id)
+        end
+        send_data output, filename: "ActivationTemplate.csv"
+      end
+    end
+  end
+
   # GET /card_activations/1
   # GET /card_activations/1.json
   def show
@@ -41,6 +53,10 @@ class CardActivationsController < ApplicationController
   def create
     @card_activation = CardActivation.new(card_activation_params)
     @card_activation.save
+    # this is where we do the whole starting calls thing.
+    # create activation calls type=activate
+    # use after_save_commit hook to do background task.
+    # 
     respond_to do |format|
       if @card_activation.errors.empty?
         format.html { redirect_to @card_activation, notice: 'Card activation was successfully created.' }
