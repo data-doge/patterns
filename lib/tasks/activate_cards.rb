@@ -1,7 +1,7 @@
 require_relative "../../config/boot"
 require_relative "../../config/environment"
 
-@client = Twilio::REST::Client.new(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN'])
+@client ||= $twilio
 
 def activate
   csv_text = File.read('cards.csv')

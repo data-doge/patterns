@@ -6,7 +6,6 @@ class ActivationCallJob < Struct.new(:id)
   attr_accessor :id
 
   def initialize(id)
-    @client = Twilio::REST::Client.new(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN'])
     self.id = id
     self.retry_delay = 5 # default retry delay
   end
@@ -22,17 +21,16 @@ class ActivationCallJob < Struct.new(:id)
     card = call.card_activation
     case call.call_type # activation or check for now. soon balance.
     when 'activate'
-      url = "https://#{HOSTNAME}/activation_calls/activate/#{call.id}.xml"
+      url = "https://#{HOSTNAME}/activation_calls/activate/#{call.token}.xml"
     when 'check'
-      url = "https://#{HOSTNAME}/activation_calls/check/#{call.id}.xml"
+      url = "https://#{HOSTNAME}/activation_calls/check/#{call.token}.xml"
     end
-    res = @client.account.calls.create(
+    res = $twilio.account.calls.create(
       from: ENV['TWILIO_SCHEDULING_NUMBER'],   # From your Twilio number
       to: '+18663008288', # BOA activation number
       # Fetch instructions from this URL when the call connects
       url: url,
-      method: 'GET'
-    )
+      method: 'GET')
 
     call.sid = res.sid
     call.save!

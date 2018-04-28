@@ -2,15 +2,15 @@ Logan::Application.routes.draw do
 
   resources :activation_calls do
     collection do
-      get 'activate/:id', 
+      get 'activate/:token', 
            action: :activate,
            as: :activate,
            defaults: { format: 'xml' }
-      get 'check/:id',
+      get 'check/:token',
            action: :check, 
            as: :check,
            defaults: {format:'xml'}
-      post 'callback/:id',
+      post 'callback/:token',
            action: :callback,
            as: :callback,
            defaults: {format:'xml'}

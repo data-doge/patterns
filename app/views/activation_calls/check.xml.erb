@@ -5,7 +5,7 @@
     <Pause length="9"/>
     <Play digits="<%= @card_activation.secure_code %>#"></Play>
     <Pause length="4"/>
-    <Play digits="<%= @card_activation.expiration_date %>#"></Play>
+    <Play digits="<%= @card_activation.expiration_date.gsub("/","") %>#"></Play>
     <% 
     # please hold while we access your account as of 
     # Date.current.to_s :long 
@@ -13,7 +13,7 @@
     %>
     <Gather input="speech" 
             hints="please hold while we access your account" 
-            action="<%= callback_activation_calls_url(@activation_call) %>" />
+            action="<%= callback_activation_calls_url(@activation_call.token) %>" />
     <Hangup/>
 </Response>
 

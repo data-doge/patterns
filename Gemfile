@@ -139,7 +139,7 @@ gem 'delayed_job_active_record'
 gem "delayed_job_web"
 
 # for generating unique tokens for Person
-gem 'has_secure_token'
+# gem 'has_secure_token' # not needed in rails 5+
 
 # phone number validation
 gem 'phony_rails'

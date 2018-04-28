@@ -17,6 +17,7 @@
 
 class ActivationCall < ApplicationRecord
   has_paper_trail
+  has_secure_token
   validates_presence_of :card_activation_id
   validates_presence_of :call_type
   validates_inclusion_of :call_type, in: %w[activate check] # balance soon
@@ -26,7 +27,7 @@ class ActivationCall < ApplicationRecord
   def transcript_check
     # this will be very different.
     # needs more subtle checks for transcription errors. pehaps distance?
-    transcript.include? type_transcript
+    transcript.downcase.include? type_transcript
   end
 
   def type_transcript
@@ -40,13 +41,17 @@ class ActivationCall < ApplicationRecord
     end
   end
 
+  def call
+    sid.nil? ? nil : $twilio.calls.get(sid)
+  end
+
   def success
-    status = 'success'
+    self.call_status = 'success'
     card_activation.success
   end
 
   def failure
-    status = 'failure'
+    self.call_status = 'failure'
     case call_type
     when 'activate'
       card_activation.activation_error

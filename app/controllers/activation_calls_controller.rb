@@ -53,6 +53,7 @@ class ActivationCallsController < ApplicationController
     else # fail
       @activation_call.failure # launched another check call if necessary
     end
+
     @activation_call.save
   end
 
@@ -101,7 +102,7 @@ class ActivationCallsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_activation_call
-      @activation_call = ActivationCall.find(params[:id])
+      @activation_call = ActivationCall.find_by(token: params[:token])
       @card_activation = @activation_call.card_activation
     end
 

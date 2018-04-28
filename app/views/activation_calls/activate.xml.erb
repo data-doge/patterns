@@ -19,6 +19,6 @@
             transcribe="true"/> -->
     <Gather input="speech" 
             hints="Your PIN has been created your card now has been activated and is ready for you" 
-            action="<%= callback_activation_calls_url(@activation_call) %>" />
+            action="<%= callback_activation_calls_url(@activation_call.token) %>" />
     <Hangup/>
 </Response>
