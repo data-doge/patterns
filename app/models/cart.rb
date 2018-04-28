@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: carts
@@ -26,8 +27,8 @@ class Cart < ApplicationRecord
 
   before_create :set_owner_as_user
   validates :name, length: { in: 5..30 }
-  validates :name, uniqueness: {message: 'Pool must have a unique name'}
- 
+  validates :name, uniqueness: { message: 'Pool must have a unique name' }
+
   # keep current cart in carts_users,
   # add validation that it must be unique on scope of user.
   def owner

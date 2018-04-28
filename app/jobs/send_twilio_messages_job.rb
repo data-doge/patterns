@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 # app/jobs/twilio/send_messages.rb
 #
 # module TwilioSender

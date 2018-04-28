@@ -7,7 +7,7 @@
 #  sid                :string(255)
 #  transcript         :string(255)
 #  audio_url          :string(255)
-#  type               :string(255)
+#  call_type          :string(255)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  status             :string(255)      default("created")

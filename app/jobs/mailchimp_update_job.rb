@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 # rubocop:disable Style/StructInheritance
 class MailchimpUpdateJob < Struct.new(:id, :status)
 

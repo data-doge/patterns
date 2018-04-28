@@ -74,7 +74,7 @@ class RapidproUpdateJob < Struct.new(:id)
     15
   end
 
-  def reschedule_at(current_time, attempts)
+  def reschedule_at(current_time, _attempts)
     # rapidpro gives us a retry time. We pad with attempts
     current_time + (retry_delay + attemps).seconds
   end

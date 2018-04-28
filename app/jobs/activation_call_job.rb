@@ -4,7 +4,7 @@
 class ActivationCallJob < Struct.new(:id)
   attr_accessor :retry_delay
   attr_accessor :id
-  
+
   def initialize(id)
     @client = Twilio::REST::Client.new(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN'])
     self.id = id
@@ -16,15 +16,14 @@ class ActivationCallJob < Struct.new(:id)
     job.save!
   end
 
-  #how it works: sends a twilio call, and records the sid, etc in the call object
+  # how it works: sends a twilio call, and records the sid, etc in the call object
   def perform
     call = ActivationCall.find(id)
-    type = call.type # activation or check for now. soon balance.
     card = call.activation_card
-    case type
-    when "activate"
+    case call.call_type # activation or check for now. soon balance.
+    when 'activate'
       url = "https://#{ENV['PRODUCTION_SERVER']}/activation_calls/activate/#{id}.xml"
-    when "check"
+    when 'check'
       url = "https://#{ENV['PRODUCTION_SERVER']}/activation_calls/check/#{id}.xml"
     end
     res = @client.account.calls.create(
@@ -32,8 +31,9 @@ class ActivationCallJob < Struct.new(:id)
       to: '+18663008288', # BOA activation number
       # Fetch instructions from this URL when the call connects
       url: url,
-      method: 'GET')
-    
+      method: 'GET'
+    )
+
     call.sid = res.sid
     call.save!
   end
@@ -42,7 +42,7 @@ class ActivationCallJob < Struct.new(:id)
     5
   end
 
-  def reschedule_at(current_time, attempts)
+  def reschedule_at(current_time, _attempts)
     current_time + (retry_delay + attemps).seconds
   end
 

@@ -59,7 +59,6 @@ class GiftCardsController < ApplicationController
 
   # POST /gift_cards
   # POST /gift_cards.json
-  # rubocop:disable Metrics/MethodLength
   def create
     @gift_card = GiftCard.new(gift_card_params)
     @create_result = @gift_card.with_user(current_user).save
@@ -97,6 +96,7 @@ class GiftCardsController < ApplicationController
 
     @total = @gift_card.person.gift_card_total
     @create_result = @gift_cart.save
+    
     respond_to do |format|
       if @create_result
         format.js {render action: :create}
@@ -107,6 +107,7 @@ class GiftCardsController < ApplicationController
         format.html { render action: 'edit' }
         format.json { render json: @gift_card.errors, status: :unprocessable_entity }
       end
+    end
   end
 
   # PATCH/PUT /gift_cards/1

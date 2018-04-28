@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 # == Schema Information
 #
 # Table name: events
@@ -96,7 +94,7 @@ class EventsController < ApplicationController
       end
     else
       Rails.logger.error("failed to send event to mailchimp: #{@mce.errors.inspect}")
-      format.all { render text: "failed to send event to mailchimp: #{@mce.errors.inspect}", status: 400 }
+      format.all { render text: "failed to send event to mailchimp: #{@mce.errors.inspect}", status: :bad_request }
     end
   end
   # rubocop:enable Metrics/AbcSize

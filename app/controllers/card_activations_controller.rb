@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class CardActivationsController < ApplicationController
-  before_action :set_card_activation, only: [:show, :edit, :update, :destroy]
+  before_action :set_card_activation, only: %i[show edit update destroy]
 
   # GET /card_activations
   # GET /card_activations.json
@@ -12,17 +14,16 @@ class CardActivationsController < ApplicationController
       format.csv do
         response.headers['Content-Type'] = 'text/csv'
         output = CSV.generate do |csv|
-          csv << %w( full_card_number expiration_date amount sequence_number secure_code batch_id)
+          csv << %w[full_card_number expiration_date amount sequence_number secure_code batch_id]
         end
-        send_data output, filename: "ActivationTemplate.csv"
+        send_data output, filename: 'ActivationTemplate.csv'
       end
     end
   end
 
   # GET /card_activations/1
   # GET /card_activations/1.json
-  def show
-  end
+  def show; end
 
   # GET /card_activations/new
   def new
@@ -30,8 +31,7 @@ class CardActivationsController < ApplicationController
   end
 
   # GET /card_activations/1/edit
-  def edit
-  end
+  def edit; end
 
   # def assign assignment happens in gift_card_controller
   #   @card_activation.assign params[:gift_card_id]
@@ -49,8 +49,8 @@ class CardActivationsController < ApplicationController
   # end
 
   def upload
-    #receive csv file, check each card for luhn, save card activations
-    # 
+    # receive csv file, check each card for luhn, save card activations
+    #
   end
 
   # POST /card_activations
@@ -62,7 +62,7 @@ class CardActivationsController < ApplicationController
     # this is where we do the whole starting calls thing.
     # create activation calls type=activate
     # use after_save_commit hook to do background task.
-    # 
+    #
     respond_to do |format|
       if @card_activation.errors.empty?
         format.html { redirect_to @card_activation, notice: 'Card Activation process started.' }
@@ -99,6 +99,7 @@ class CardActivationsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_card_activation
       @card_activation = CardActivation.find(params[:id])

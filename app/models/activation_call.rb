@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: activation_calls
@@ -7,7 +8,7 @@
 #  sid                :string(255)
 #  transcript         :string(255)
 #  audio_url          :string(255)
-#  type               :string(255)
+#  call_type          :string(255)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  status             :string(255)      default("created")
@@ -16,19 +17,19 @@
 class ActivationCall < ApplicationRecord
   has_paper_trail
   validates_presence_of :card_activation_id
-  validates_presence_of :type
-  validates_inclusion_of :type, in: %w( activate check ) # balance soon 
-  belongs_to :card_activations, dependent: :destroy
+  validates_presence_of :call_type
+  validates_inclusion_of :type, in: %w[activate check] # balance soon
+  belongs_to :card_activation, dependent: :destroy
   after_commit :enqueue_call, on: :create
 
   def transcript_check
     # this will be very different.
     # needs more subtle checks for transcription errors. pehaps distance?
-    transcript.include? type_transcript 
+    transcript.include? type_transcript
   end
- 
+
   def type_transcript
-    case type
+    case call_type
     when 'activate'
       'your card has been activated'
     when 'check'
@@ -45,15 +46,15 @@ class ActivationCall < ApplicationRecord
 
   def failure
     status = 'failure'
-    case type
+    case call_type
     when 'activate'
       card_activation.activation_error
       card_activation.start_check
     when 'check'
-      card_activation.check_error      
+      card_activation.check_error
     end
   end
-  
+
   def enqueue_call
     card_activation.start_activation
     Delayed::Job.enqueue(ActivationCallJob.new(id)).save

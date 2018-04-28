@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 # == Schema Information
 #
 # Table name: invitations
@@ -233,4 +231,3 @@ class Invitation < ApplicationRecord
   end
 
 end
-# rubocop:enable ClassLength

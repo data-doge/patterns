@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: card_activations
@@ -34,17 +36,18 @@ class CardActivation < ApplicationRecord
   validates_presence_of :secure_code
   validates :gift_card_id, uniqueness: true, allow_nil: true
 
+  scope :unassigned, -> { where(gift_card_id: nil) }
+  scope :assigned, -> { where.not(gift_card_id: nil) }
 
-  scope :unassigned -> { where(gift_card_id: nil) }
-  scope :assigned -> { where.not(gift_card_id:nil) }
-  
   # see force_immutable below. do we not want to allow people to
   # change the assigned activation to gift card? unclear
-  #IMMUTABLE = %w{gift_card_id}
-  #validate :force_immutable
+  # IMMUTABLE = %w{gift_card_id}
+  # validate :force_immutable
 
   has_many :activation_calls, dependent: :destroy
-  belongs_to  :gift_card, optional: true
+  alias_attribute :calls, :activation_calls
+
+  belongs_to :gift_card, optional: true
 
   # starts activation process on create after commit happens
   after_commit :create_activation_call, on: :create
@@ -60,37 +63,36 @@ class CardActivation < ApplicationRecord
     event :start_activation do
       transitions from: :created, to: :activation_started
     end
-   
+
     event :activation_error, after_commit: :actition_error_report do
       transitions from: :activation_started, to: :activation_errored
     end
 
     event :start_check, after_commit: :create_check_call do
-      transitions from: %i[activation_error, check_errored, active], 
+      transitions from: %i[activation_error check_errored active],
                   to: :check_started
     end
-    
-    # after_commit here because we want to ensure that 
+
+    # after_commit here because we want to ensure that
     # the history is present
     event :check_error, after_commit: :create_check_call do
-      transitions from: :check_started, to: :check_errored 
+      transitions from: :check_started, to: :check_errored
     end
 
     event :success, after_commit: :do_success_notification do
       transitions to: :active
     end
   end
-  
 
   def create_activation_call
     start_activation
-    ActivationCall.create(card_activation_id: id, type: 'activate') 
+    ActivationCall.create(card_activation_id: id, type: 'activate')
   end
 
   # override allows manual check calls
-  def create_check_call(override: false) 
-    if !override && activation_calls.where(type:'check').size < 5
-      ActivationCall.create(card_activation_id: id, type: 'check') 
+  def create_check_call(override: false)
+    if !override && activation_calls.where(type: 'check').size < 5
+      ActivationCall.create(card_activation_id: id, type: 'check')
     end
   end
 
@@ -108,7 +110,7 @@ class CardActivation < ApplicationRecord
     # action cable update to front end.
   end
 
-  def assign(gc_id)
+  def assign(_gc_id)
     gift_card_id = gc.id
     save
   end
@@ -117,7 +119,7 @@ class CardActivation < ApplicationRecord
 
     def luhn_number_valid
       errors.add('Must include a card number.') if full_card_number.blank?
-      unless CreditCardValidations::Luhn.valid?(full_card_number)    
+      unless CreditCardValidations::Luhn.valid?(full_card_number)
         errors.add("Card number #{full_card_number} is not valid.")
       end
     end
@@ -125,12 +127,12 @@ class CardActivation < ApplicationRecord
     # gift_card_id can't change one set.
     # dunno if we really want it.
     def force_immutable
-      if self.persisted?
+      if persisted?
         IMMUTABLE.each do |attr|
           next if self[attr].nil? # allow updates to nil
-          self.changed.include?(attr) &&
+          changed.include?(attr) &&
             errors.add(attr, :immutable) &&
-            self[attr] = self.changed_attributes[attr]
+            self[attr] = changed_attributes[attr]
         end
       end
     end

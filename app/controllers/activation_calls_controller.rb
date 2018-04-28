@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class ActivationCallsController < ApplicationController
-  before_action :set_activation_call, only: [:show, 
-                                             :check, 
-                                             :activate,
-                                             :callback]
+  before_action :set_activation_call, only: %i[show
+                                               check
+                                               activate
+                                               callback]
 
   # GET /activation_calls
   # GET /activation_calls.json
@@ -12,8 +14,7 @@ class ActivationCallsController < ApplicationController
 
   # GET /activation_calls/1
   # GET /activation_calls/1.json
-  def show
-  end
+  def show; end
 
   # # GET /activation_calls/new
   # def new
@@ -72,7 +73,7 @@ class ActivationCallsController < ApplicationController
 
   # # PATCH/PUT /activation_calls/1
   # # PATCH/PUT /activation_calls/1.json
-  # def update  
+  # def update
   #   @activation_call.update(activation_call_params)
   #   respond_to do |format|
   #     if @activation_call.errors.empty?
@@ -96,6 +97,7 @@ class ActivationCallsController < ApplicationController
   # end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_activation_call
       @activation_call = ActivationCall.find(params[:id])

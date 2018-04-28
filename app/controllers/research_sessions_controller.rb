@@ -162,5 +162,4 @@ class ResearchSessionsController < ApplicationController
       ).to_h.symbolize_keys
     end
 
-  # rubocop:enable Metrics/MethodLength
 end

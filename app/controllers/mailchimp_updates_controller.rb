@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 # == Schema Information
 #
 # Table name: mailchimp_updates
@@ -60,12 +58,12 @@ class MailchimpUpdatesController < ApplicationController
 
         else
           Rails.logger.warn('MailchimpUpdatesController#create: Received new update with invalid data')
-          render nothing: true, status: 400
+          render nothing: true, status: :bad_request
         end
       end
     else
       Rails.logger.warn('MailchimpUpdatesController#create: Received new update with bad secret key.')
-      render nothing: true, status: 400
+      render nothing: true, status: :bad_request
     end
   end
 

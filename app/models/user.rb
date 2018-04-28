@@ -81,12 +81,12 @@ class User < ApplicationRecord
   end
 
   def approve!
-    update_attributes(approved: true)
+    update(approved: true)
     Rails.logger.info("Approved user #{email}")
   end
 
   def unapprove!
-    update_attributes(approved: false)
+    update(approved: false)
     Rails.logger.info("Unapproved user #{email}")
   end
 
@@ -127,14 +127,14 @@ class User < ApplicationRecord
   end
 
   def current_cart
-    return CartsUser.find_by(user_id: id, current_cart: true).cart
+    CartsUser.find_by(user_id: id, current_cart: true).cart
   rescue NoMethodError => _e
     # this is used for users created before multi-cart.
     cart = Cart.find_by(user_id: id)
     cart.add_user_to_cart(id) unless cart&.users.include?(self)
     cart.assign_current_cart(id)
     cart.save
-    return cart
+    cart
   end
 
   def current_cart=(cart) # this is tedious. could be better

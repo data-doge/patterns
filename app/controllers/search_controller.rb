@@ -15,12 +15,12 @@ class SearchController < ApplicationController
     else
       @tags = []
     end
-    
+
     # normalize phone numbers
     if params[:q].present? && params[:q][:phone_number_eq].present?
       params[:q][:phone_number_eq] = PhonyRails.normalize_number(params[:q][:phone_number_eq])
     end
-    
+
     @q = Person.ransack(params[:q])
     @results = @q.result.includes(:tags).page(params[:page])
 
@@ -107,7 +107,7 @@ class SearchController < ApplicationController
       end
     else
       Rails.logger.error("[SearchController#export] failed to send event to mailchimp: #{@mce.errors.inspect}")
-      format.all { render text: "failed to send event to mailchimp: #{@mce.errors.inspect}", status: 400 }
+      format.all { render text: "failed to send event to mailchimp: #{@mce.errors.inspect}", status: :bad_request }
     end
   end
 
@@ -125,7 +125,7 @@ class SearchController < ApplicationController
       end
     else
       Rails.logger.error("[SearchController#export] failed to send event to mailchimp: #{@mce.errors.inspect}")
-      format.all { render text: "failed to send event to mailchimp: #{@mce.errors.inspect}", status: 400 }
+      format.all { render text: "failed to send event to mailchimp: #{@mce.errors.inspect}", status: :bad_request }
     end
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
@@ -167,7 +167,7 @@ class SearchController < ApplicationController
       end
     else
       Rails.logger.error('[SearchController#exportTwilio] failed to send text messages')
-      format.all { render text: 'failed to send text messages', status: 400 }
+      format.all { render text: 'failed to send text messages', status: :bad_request }
     end
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/MethodName, Style/VariableName

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 # FIXME: Refactor
 class SmsInvitationsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
@@ -268,4 +266,3 @@ class SmsInvitationsController < ApplicationController
       TwilioMessage.create(twilio_params)
     end
 end
-# rubocop:enable ClassLength

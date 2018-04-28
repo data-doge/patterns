@@ -29,7 +29,7 @@ class InvitationReminderSms < ApplicationSms
     msg += "Reply 'No' to cancel\n"
     msg += "Reply 'Calendar' to see your upcoming sessions\n"
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:enable
 
   def inv_count
     @invitations.size

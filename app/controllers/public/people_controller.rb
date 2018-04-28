@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 class Public::PeopleController < ApplicationController
   layout false
   after_action :allow_iframe
@@ -26,7 +24,7 @@ class Public::PeopleController < ApplicationController
     if find_user_and_person
       render json: @person.to_json
     else
-      render json: { success: false }, status: 404
+      render json: { success: false }, status: :not_found
     end
   end
 
@@ -49,12 +47,12 @@ class Public::PeopleController < ApplicationController
       end
 
       to_update = update_params.except(:tags, :note)
-      @person.update_attributes(to_update)
+      @person.update(to_update)
 
       @person.save
       render json: { success: true }
     else
-      render json: { success: false }, status: 404
+      render json: { success: false }, status: :not_found
     end
   end
 
@@ -96,7 +94,7 @@ class Public::PeopleController < ApplicationController
       format.html { render action: 'create' }
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def deactivate
     @person = Person.find_by(token: d_params[:token])

@@ -10,16 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_24_174757) do
+ActiveRecord::Schema.define(version: 2018_04_28_205149) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "card_activation_id"
     t.string "sid"
     t.string "transcript"
     t.string "audio_url"
-    t.string "type"
+    t.string "call_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "created"
   end
 
   create_table "activities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
@@ -62,6 +63,8 @@ ActiveRecord::Schema.define(version: 2018_04_24_174757) do
     t.integer "gift_card_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "amount_cents", default: 0, null: false
+    t.string "amount_currency", default: "USD", null: false
   end
 
   create_table "carts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
