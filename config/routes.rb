@@ -2,11 +2,11 @@ Logan::Application.routes.draw do
 
   resources :activation_calls do
     collection do
-      post 'activate/:id', 
+      get 'activate/:id', 
            action: :activate,
            as: :activate,
            defaults: { format: 'xml' }
-      post 'check/:id',
+      get 'check/:id',
            action: :check, 
            as: :check,
            defaults: {format:'xml'}

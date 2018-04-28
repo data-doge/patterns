@@ -18,7 +18,7 @@ class ActivationCall < ApplicationRecord
   has_paper_trail
   validates_presence_of :card_activation_id
   validates_presence_of :call_type
-  validates_inclusion_of :type, in: %w[activate check] # balance soon
+  validates_inclusion_of :call_type, in: %w[activate check] # balance soon
   belongs_to :card_activation, dependent: :destroy
   after_commit :enqueue_call, on: :create
 
@@ -31,7 +31,7 @@ class ActivationCall < ApplicationRecord
   def type_transcript
     case call_type
     when 'activate'
-      'your card has been activated'
+      'your card now has been activated'
     when 'check'
       'please hold while we access your account'
     when 'balance' # not yet implemented. but could be
@@ -49,14 +49,12 @@ class ActivationCall < ApplicationRecord
     case call_type
     when 'activate'
       card_activation.activation_error
-      card_activation.start_check
     when 'check'
       card_activation.check_error
     end
   end
 
   def enqueue_call
-    card_activation.start_activation
     Delayed::Job.enqueue(ActivationCallJob.new(id)).save
   end
 end

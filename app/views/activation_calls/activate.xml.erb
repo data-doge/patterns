@@ -18,8 +18,7 @@
             trim="trim-silence" 
             transcribe="true"/> -->
     <Gather input="speech" 
-            hints="your card has been activated" 
+            hints="Your PIN has been created your card now has been activated and is ready for you" 
             action="<%= callback_activation_calls_url(@activation_call) %>" />
     <Hangup/>
 </Response>
-

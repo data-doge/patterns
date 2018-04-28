@@ -5,7 +5,8 @@ class ActivationCallsController < ApplicationController
                                                check
                                                activate
                                                callback]
-
+  skip_before_action :authenticate_user!, only: %i[activate check callback]
+  skip_before_action :verify_authenticity_token
   # GET /activation_calls
   # GET /activation_calls.json
   def index
@@ -25,7 +26,7 @@ class ActivationCallsController < ApplicationController
   # def edit
   # end
 
-  def activate
+  def activate #idempotent
     respond_to do |format|
       format.xml
     end
@@ -35,7 +36,7 @@ class ActivationCallsController < ApplicationController
   #   # sets card to active
   # end
 
-  def check
+  def check #idempotent
     respond_to do |format|
       format.xml
     end

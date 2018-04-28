@@ -69,7 +69,7 @@ class CardActivation < ApplicationRecord
     end
 
     event :start_check, after_commit: :create_check_call do
-      transitions from: %i[activation_error check_errored active],
+      transitions from: %i[activation_errored check_errored active],
                   to: :check_started
     end
 
@@ -86,13 +86,13 @@ class CardActivation < ApplicationRecord
 
   def create_activation_call
     start_activation
-    ActivationCall.create(card_activation_id: id, type: 'activate')
+    ActivationCall.create(card_activation_id: id, call_type: 'activate')
   end
 
   # override allows manual check calls
   def create_check_call(override: false)
-    if !override && activation_calls.where(type: 'check').size < 5
-      ActivationCall.create(card_activation_id: id, type: 'check')
+    if !override && activation_calls.where(call_type: 'check').size < 5
+      ActivationCall.create(card_activation_id: id, call_type: 'check')
     end
   end
 
