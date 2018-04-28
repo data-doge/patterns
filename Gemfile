@@ -130,7 +130,7 @@ gem 'gibbon'
 gem 'twilio-ruby', '~> 4.13.0'
 
 # use Wuparty for wufoo
-gem 'wuparty'
+#gem 'wuparty' # breaks latest version of httparty
 
 # Use gsm_encoder to help text messages send correctly
 gem 'gsm_encoder'
