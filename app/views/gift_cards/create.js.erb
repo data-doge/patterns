@@ -14,12 +14,15 @@
   $('td#new-batchid-<%= @gift_card.person_id %>').html('<%= @gift_card.batch_id %>');
   $('td#new-cardnumber-<%= @gift_card.person_id %>').html('<span class="add-on">****-****-***</span><input class="input-small" readonly="true" value="<%= @gift_card.gift_card_number %>">');
   $('td#new-expirationdate-<%= @gift_card.person_id %>').html('<%= @gift_card.expiration_date %>');
+  
+  // should be actioncable callback. elementID should have personid in it.
   $('#gift_card_total').html("<%= humanized_money_with_symbol @total %>");
+  // Updates for Person page should be in actioncable callback, see above
+  $('#gift-card-total').html('Gift Cards - Total: <%= humanized_money_with_symbol @gift_card.person.gift_card_total %>');
+  
   $("#gift_card_content").val("");
   $('#error-div').html("");
-  // Updates for Person page
-  $('#gift-card-total').html('Gift Cards - Total: <%= humanized_money_with_symbol @gift_card.person.gift_card_total %>');
-  //$('#new-batchid').val('<%= @gift_card.batch_id %>');
+  
   $('#new-cardnumber').val('');
   $('#new-proxyid').val('');
   $('#new-amount').val('<%= @gift_card.amount %>');
@@ -27,9 +30,13 @@
   $('#new-expirationdate').val('<%= @gift_card.expiration_date %>');
 
   $('#<%= @gift_card.giftable&.id%>-gift-card-count').text('<%= @gift_card.giftable&.gift_cards&.size%>');
-<% else %>
-    console.log("In Create_result else statement");
+  <% if defined? @card_activation %>
+    // removing card activation ui if it exists. should be actioncable callback.
+    $('#<%= @card_activation.id %>-card-activation').remove();
+  <% end %>
 
+<% else %>
+  console.log("In Create_result else statement");
   $('#error-div').html("");
   $("<%= escape_javascript(render partial: 'gift_cards/gift_card_error', locals: { gift_card: @gift_card } ) %>").prependTo("#error-div");
 <% end %>

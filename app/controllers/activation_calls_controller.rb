@@ -41,26 +41,17 @@ class ActivationCallsController < ApplicationController
   end
 
   def callback
-    speech_results = params[:SpeechResult]
-    @activation_call.transcript = speech_results
-    if @activation_call.transcript_check
-      # pass
-      @activation_call.status = "success"
-      @card_activation.success
-    else
-      # fail
-      @activation_call.status = 'fail'
-      if @card_activation.activation_calls.where(type:check).size < 5
-        ActivationCall.create(type:'check', activation_card: @card_activation)
-      else
-        # noping out. 
-        # count check calls, and if less than 5 do check call.
-      end
-    end
-    @activation_call.save
     # twilio sends us the results of the gather here and we update
     # activation and call appropriately.
     # where we kick off a check if need be.
+    speech_results = params[:SpeechResult]
+    @activation_call.transcript = speech_results
+    if @activation_call.transcript_check # passed
+      @activation_call.success
+    else # fail
+      @activation_call.failure # launched another check call if necessary
+    end
+    @activation_call.save
   end
 
   # POST /activation_calls

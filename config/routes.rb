@@ -23,12 +23,16 @@ Logan::Application.routes.draw do
           action: :template, 
           as: :template, 
           defaults: {format: 'csv'}
+      post 'upload',
+           action: :upload,
+           as: :upload
     end
   end
 
   resource :inbox, :controller => 'inbox', :only => [:show,:create]
   resources :gift_cards do
     collection do
+      post 'assign/:card_activation_id', action: :assign, as: :assign
       get 'recent_signups', action: :recent_signups, as: :recent_signups
       get 'modal/:giftable_type/:giftable_id', action: :modal, as: :modal
     end

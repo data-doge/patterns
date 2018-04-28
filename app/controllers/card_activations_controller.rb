@@ -33,25 +33,31 @@ class CardActivationsController < ApplicationController
   def edit
   end
 
-  def assign
-    
-    @card_activation.gift_card_id = params[:gift_card_id]
-    @card_activation.save
-    respond_to do |format|
-      if @card_activation.errors.empty?
-        format.html { redirect_to @card_activation, notice: 'Card activation was successfully created.' }
-        format.json { render :show, status: :created, location: @card_activation }
-        format.js {render :assign, status: :created, notice: 'Card Assigned'}
-      else
-         format.html { render :new }
-        format.json { render json: @card_activation.errors, status: :unprocessable_entity }
-      end
-    end
+  # def assign assignment happens in gift_card_controller
+  #   @card_activation.assign params[:gift_card_id]
+  #   @card_activation.save
+  #   respond_to do |format|
+  #     if @card_activation.errors.empty?
+  #       format.html { redirect_to @card_activation, notice: 'Card activation was successfully created.' }
+  #       format.json { render :show, status: :created, location: @card_activation }
+  #       format.js {render :assign, status: :created, notice: 'Card Assigned'}
+  #     else
+  #        format.html { render :new }
+  #       format.json { render json: @card_activation.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
+
+  def upload
+    #receive csv file, check each card for luhn, save card activations
+    # 
   end
+
   # POST /card_activations
   # POST /card_activations.json
   def create
     @card_activation = CardActivation.new(card_activation_params)
+    @card_activation.user = current_user
     @card_activation.save
     # this is where we do the whole starting calls thing.
     # create activation calls type=activate
@@ -59,7 +65,7 @@ class CardActivationsController < ApplicationController
     # 
     respond_to do |format|
       if @card_activation.errors.empty?
-        format.html { redirect_to @card_activation, notice: 'Card activation was successfully created.' }
+        format.html { redirect_to @card_activation, notice: 'Card Activation process started.' }
         format.json { render :show, status: :created, location: @card_activation }
       else
         format.html { render :new }

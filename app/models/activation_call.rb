@@ -16,8 +16,10 @@
 class ActivationCall < ApplicationRecord
   has_paper_trail
   validates_presence_of :card_activation_id
+  validates_presence_of :type
   validates_inclusion_of :type, in: %w( activate check ) # balance soon 
   belongs_to :card_activations, dependent: :destroy
+  after_commit :enqueue_call, on: :create
 
   def transcript_check
     # this will be very different.
@@ -36,4 +38,24 @@ class ActivationCall < ApplicationRecord
     end
   end
 
+  def success
+    status = 'success'
+    card_activation.success
+  end
+
+  def failure
+    status = 'failure'
+    case type
+    when 'activate'
+      card_activation.activation_error
+      card_activation.start_check
+    when 'check'
+      card_activation.check_error      
+    end
+  end
+  
+  def enqueue_call
+    card_activation.start_activation
+    Delayed::Job.enqueue(ActivationCallJob.new(id)).save
+  end
 end

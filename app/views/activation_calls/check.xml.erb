@@ -13,7 +13,7 @@
     %>
     <Gather input="speech" 
             hints="please hold while we access your account" 
-            action="<%= activation_call_callback_path(@activation_call) %>" />
+            action="<%= callback_activation_calls_url(@activation_call) %>" />
     <Hangup/>
 </Response>
 

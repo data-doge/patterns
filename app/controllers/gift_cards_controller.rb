@@ -81,6 +81,34 @@ class GiftCardsController < ApplicationController
   end
   # rubocop:enable Metrics/MethodLength
 
+  # takes an card_activation_id, person_id, and sessionid
+  def assign
+    @card_activation = CardActivation.find(params[:card_activation_id])
+    ca = @card_activation # for shortness.
+    @gift_card = GiftCard.new(proxy_id: ca.sequence_id, 
+                              batch_id: ca.batch_id,
+                              gift_card_number: ca.full_card_number.last(4),
+                              person_id: params[:person_id],
+                              giftable_type: params[:giftable_type],
+                              giftable_id: params[:giftable_id],
+                              finance_code: current_user&.team&.finance_code,
+                              team: current_user&.team,
+                              created_by: current_user.id)
+
+    @total = @gift_card.person.gift_card_total
+    @create_result = @gift_cart.save
+    respond_to do |format|
+      if @create_result
+        format.js {render action: :create}
+        format.json {}
+        format.html { redirect_to @gift_card, notice: 'Gift Card was successfully created.'  }
+      else
+        format.js {}
+        format.html { render action: 'edit' }
+        format.json { render json: @gift_card.errors, status: :unprocessable_entity }
+      end
+  end
+
   # PATCH/PUT /gift_cards/1
   # PATCH/PUT /gift_cards/1.json
   def update
@@ -119,28 +147,28 @@ class GiftCardsController < ApplicationController
     end
   end
 
-  def activate
-    @card_number = params[:number]&.gsub(/[^0-9]/, '')
-    @valid =  CreditCardValidations::Luhn.valid?(@card_number)
-    @secure_code = params[:code]&.gsub(/[^0-9]/, '')
-    respond_to do |format|
-      format.xml
-    end
-  end
-
-  # def activate_response # this is where the gather endpoint it.
-  #   # sets card to active
+  # def activate
+  #   @card_number = params[:number]&.gsub(/[^0-9]/, '')
+  #   @valid =  CreditCardValidations::Luhn.valid?(@card_number)
+  #   @secure_code = params[:code]&.gsub(/[^0-9]/, '')
+  #   respond_to do |format|
+  #     format.xml
+  #   end
   # end
 
-  def card_check
-    @card_number = params[:number]&.gsub(/[^0-9]/, '')
-    @valid =  CreditCardValidations::Luhn.valid?(@card_number)
-    @secure_code = params[:code]&.gsub(/[^0-9]/, '') # three digits
-    @expiration = params[:expiration]&.gsub(/[^0-9]/, '') # four digits
-    respond_to do |format|
-      format.xml
-    end
-  end
+  # # def activate_response # this is where the gather endpoint it.
+  # #   # sets card to active
+  # # end
+
+  # def card_check
+  #   @card_number = params[:number]&.gsub(/[^0-9]/, '')
+  #   @valid =  CreditCardValidations::Luhn.valid?(@card_number)
+  #   @secure_code = params[:code]&.gsub(/[^0-9]/, '') # three digits
+  #   @expiration = params[:expiration]&.gsub(/[^0-9]/, '') # four digits
+  #   respond_to do |format|
+  #     format.xml
+  #   end
+  # end
 
   # def check_response # this is the gather endpoint for checking cards
   #   # returns true, and sets current value for card

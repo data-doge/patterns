@@ -44,7 +44,7 @@ class GiftCard < ApplicationRecord
   belongs_to :person
   belongs_to :user, foreign_key: :created_by
   belongs_to :team
-  belongs_to :card_activation, optional: true
+  has_one :card_activation
 
   validates_presence_of :amount
   validates_presence_of :reason

@@ -34,58 +34,64 @@ class CardActivation < ApplicationRecord
   validates_presence_of :secure_code
   validates :gift_card_id, uniqueness: true, allow_nil: true
 
+
+  scope :unassigned -> { where(gift_card_id: nil) }
+  scope :assigned -> { where.not(gift_card_id:nil) }
+  
   # see force_immutable below. do we not want to allow people to
   # change the assigned activation to gift card? unclear
   #IMMUTABLE = %w{gift_card_id}
   #validate :force_immutable
 
   has_many :activation_calls, dependent: :destroy
-  has_one  :gift_card
+  belongs_to  :gift_card, optional: true
 
-  after_create :do_activate_call
-  after_update :do_check_call
+  # starts activation process on create after commit happens
+  after_commit :create_activation_call, on: :create
 
   aasm column: 'status', requires_lock: true do
     state :created, initial: true
-    state :start_activation
+    state :activation_started
     state :activation_errored
     state :check_started
     state :check_errored
     state :active
 
-    event :start_activation, before_commit: :do_activate_call do
-      transitions from: :created, to: :start_activation
+    event :start_activation do
+      transitions from: :created, to: :activation_started
     end
    
-    event :activation_success, after_commit: :do_success_notification do
-      transitions from: :start_activation, to: :active
-    end
-    
     event :activation_error, after_commit: :actition_error_report do
-      transitions from: :start_activation, to: :activation_errored
+      transitions from: :activation_started, to: :activation_errored
     end
 
-    event :start_check, before_commit: :do_check do
-      transitions from: %i[activation_error,check_errored,active], 
+    event :start_check, after_commit: :create_check_call do
+      transitions from: %i[activation_error, check_errored, active], 
                   to: :check_started
     end
     
-    event :check_error do
+    # after_commit here because we want to ensure that 
+    # the history is present
+    event :check_error, after_commit: :create_check_call do
       transitions from: :check_started, to: :check_errored 
     end
 
-    event :check_success do
-      transitions from: :check_started, to: :active
+    event :success, after_commit: :do_success_notification do
+      transitions to: :active
     end
   end
   
 
-  def do_activate_call
-    
+  def create_activation_call
+    start_activation
+    ActivationCall.create(card_activation_id: id, type: 'activate') 
   end
 
-  def do_check_call
-    
+  # override allows manual check calls
+  def create_check_call(override: false) 
+    if !override && activation_calls.where(type:'check').size < 5
+      ActivationCall.create(card_activation_id: id, type: 'check') 
+    end
   end
 
   def do_success_notification
@@ -95,19 +101,24 @@ class CardActivation < ApplicationRecord
   def activation_error_report
     # call back to front end with actioncable about error
     # transition into start check
-    self.start_check
+    start_check
   end
 
   def check_error_report
     # action cable update to front end.
   end
 
+  def assign(gc_id)
+    gift_card_id = gc.id
+    save
+  end
+
   private
 
     def luhn_number_valid
-      errors.add('Must include a card number') if full_card_number.blank?
+      errors.add('Must include a card number.') if full_card_number.blank?
       unless CreditCardValidations::Luhn.valid?(full_card_number)    
-        errors.add("card number #{full_card_number} is not valid")
+        errors.add("Card number #{full_card_number} is not valid.")
       end
     end
 
