@@ -81,13 +81,6 @@ class GiftCard < ApplicationRecord
     reason == 'signup'
   end
 
-  def giftable_person_ownership
-    # if there is no giftable object, means this card was given directly. no invitation/session, etc.
-    return true if giftable.nil?
-
-    giftable.respond_to?(:person_id) ? person_id == giftable.person_id : false
-  end
-
   def research_session
     return nil if giftable.nil? && giftable_type != 'Invitation'
     giftable&.research_session # double check unnecessary, but I like it.
@@ -141,5 +134,12 @@ class GiftCard < ApplicationRecord
       end
     end
   end
+  private
+    def giftable_person_ownership
+      # if there is no giftable object, means this card was given directly. no invitation/session, etc.
+      return true if giftable.nil?
+
+      giftable.respond_to?(:person_id) ? person_id == giftable.person_id : false
+    end
   # rubocop:enable Metrics/MethodLength
 end

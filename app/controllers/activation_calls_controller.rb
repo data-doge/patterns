@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class ActivationCallsController < ApplicationController
-  before_action :set_activation_call, only: %i[show
-                                               check
-                                               activate
-                                               callback]
+  before_action :set_secret_activation_call, only: %i[check
+                                                      activate
+                                                      callback]
   skip_before_action :authenticate_user!, only: %i[activate check callback]
+  before_action :set_activation_call, only: %i[show edit]
   skip_before_action :verify_authenticity_token
   # GET /activation_calls
   # GET /activation_calls.json
@@ -22,9 +22,9 @@ class ActivationCallsController < ApplicationController
   #   @activation_call = ActivationCall.new
   # end
 
-  # # GET /activation_calls/1/edit
-  # def edit
-  # end
+  # GET /activation_calls/1/edit
+  def edit
+  end
 
   def activate # idempotent
     respond_to do |format|
@@ -46,15 +46,17 @@ class ActivationCallsController < ApplicationController
     # twilio sends us the results of the gather here and we update
     # activation and call appropriately.
     # where we kick off a check if need be.
-    speech_results = params[:SpeechResult]
-    @activation_call.transcript = speech_results
-    if @activation_call.transcript_check # passed
-      @activation_call.success
-    else # fail
-      @activation_call.failure # launched another check call if necessary
-    end
+    if @activation_call.can_be_updated? # finished calls can't be updated.
+      speech_results = params[:SpeechResult]
+      @activation_call.transcript = speech_results
+      if @activation_call.transcript_check # passed
+        @activation_call.success
+      else # fail
+        @activation_call.failure # launched another check call if necessary
+      end
 
-    @activation_call.save
+      @activation_call.save
+    end
   end
 
   # POST /activation_calls
@@ -101,8 +103,13 @@ class ActivationCallsController < ApplicationController
   private
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_activation_call
+    def set_secret_activation_call
       @activation_call = ActivationCall.find_by(token: params[:token])
+      @card_activation = @activation_call.card_activation
+    end
+    
+    def set_activation_call
+      @activation_call = ActivationCall.find(params[:id])
       @card_activation = @activation_call.card_activation
     end
 

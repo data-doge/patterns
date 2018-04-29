@@ -23,6 +23,8 @@ class ActivationCall < ApplicationRecord
   validates_inclusion_of :call_type, in: %w[activate check] # balance soon
   belongs_to :card_activation, dependent: :destroy
   after_commit :enqueue_call, on: :create
+  scope :checks, -> {where(call_type: 'check')}
+  scope :activations, -> {where(call_type: 'activation')}
 
   def transcript_check
     # this will be very different.
@@ -41,10 +43,14 @@ class ActivationCall < ApplicationRecord
     end
   end
 
+  def can_be_updated?
+    call_status == 'started'
+  end
+
   def balance
     if transcript.present? && call_type == 'check'
       regex = Regexp.new('\$\ ?[+-]?[0-9]{1,3}(?:,?[0-9])*(?:\.[0-9]{1,2})?')
-      transcript.scan(regex).&[0]&.delete("$")&.to_f || card_activation.amount
+      transcript.scan(regex)[0]&.delete("$")&.to_money || card_activation.amount
     else
       card_activation.amount
     end

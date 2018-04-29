@@ -6,7 +6,7 @@ class CardActivationsController < ApplicationController
   # GET /card_activations
   # GET /card_activations.json
   def index
-    @card_activations = CardActivation.where(user_id: current_user.id).all
+    @card_activations = CardActivation.where(user_id: current_user.id).page(params[:page])
   end
 
   def template
@@ -33,24 +33,14 @@ class CardActivationsController < ApplicationController
   # GET /card_activations/1/edit
   def edit; end
 
-  # def assign assignment happens in gift_card_controller
-  #   @card_activation.assign params[:gift_card_id]
-  #   @card_activation.save
-  #   respond_to do |format|
-  #     if @card_activation.errors.empty?
-  #       format.html { redirect_to @card_activation, notice: 'Card activation was successfully created.' }
-  #       format.json { render :show, status: :created, location: @card_activation }
-  #       format.js {render :assign, status: :created, notice: 'Card Assigned'}
-  #     else
-  #        format.html { render :new }
-  #       format.json { render json: @card_activation.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
+  # assignment happens in gift_card_controller
 
   def upload
     # receive csv file, check each card for luhn, save card activations
     #
+    CardActivation.import(params[:file],current_user)
+    flash[:notice] = "Import started"
+    redirect_to card_activations_path
   end
 
   # POST /card_activations
