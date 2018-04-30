@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class CardActivationsController < ApplicationController
-  before_action :set_card_activation, only: %i[show edit update destroy]
+  before_action :set_card_activation, only: %i[show edit update destroy change_user]
+  before_action :admin?, only: :change_user
 
   # GET /card_activations
   # GET /card_activations.json
@@ -38,9 +39,15 @@ class CardActivationsController < ApplicationController
   def upload
     # receive csv file, check each card for luhn, save card activations
     #
-    CardActivation.import(params[:file],current_user)
-    flash[:notice] = "Import started"
-    redirect_to card_activations_path
+    cards_count = CSV.read(params[:file], headers: true).count
+    flash[:notice] = "Import started for #{cards_count} cards."
+    @errors = CardActivation.import(params[:file], current_user)
+    if @errors.empty?
+      redirect_to card_activations_path
+    else
+      flash[:error] = "Error! #{errors.size} cards not valid."
+      # show individual erros in ui
+    end
   end
 
   # POST /card_activations
@@ -88,7 +95,15 @@ class CardActivationsController < ApplicationController
     end
   end
 
+  def change_user
+    # only admins can swap user for card activations
+  end
+
   private
+
+    def admin?
+      current_user.admin?
+    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_card_activation

@@ -134,7 +134,9 @@ class GiftCard < ApplicationRecord
       end
     end
   end
+
   private
+
     def giftable_person_ownership
       # if there is no giftable object, means this card was given directly. no invitation/session, etc.
       return true if giftable.nil?

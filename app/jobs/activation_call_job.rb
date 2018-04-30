@@ -18,7 +18,7 @@ class ActivationCallJob < Struct.new(:id)
   # how it works: sends a twilio call, and records the sid, etc in the call object
   def perform
     call = ActivationCall.find(id)
-    card = call.card_activation
+
     case call.call_type # activation or check for now. soon balance.
     when 'activate'
       url = "https://#{HOSTNAME}/activation_calls/activate/#{call.token}.xml"
@@ -30,7 +30,8 @@ class ActivationCallJob < Struct.new(:id)
       to: '+18663008288', # BOA activation number
       # Fetch instructions from this URL when the call connects
       url: url,
-      method: 'GET')
+      method: 'GET'
+    )
     call.call_status = 'started'
     call.sid = res.sid
     call.save!

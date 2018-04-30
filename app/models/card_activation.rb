@@ -38,10 +38,9 @@ class CardActivation < ApplicationRecord
 
   validates_format_of :expiration_date,
     with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i
-  
+
   # sequences are per batch
   validates_uniqueness_of :sequence_number, scope: :batch_id
-    
 
   scope :unassigned, -> { where(gift_card_id: nil) }
   scope :assigned, -> { where.not(gift_card_id: nil) }
@@ -54,47 +53,50 @@ class CardActivation < ApplicationRecord
   has_many :activation_calls, dependent: :destroy
   alias_attribute :calls, :activation_calls
 
-  belongs_to :gift_card
+  belongs_to :gift_card, optional: true
   belongs_to :user
 
   # starts activation call process on create after commit happens
   # only hook we're using here
   after_commit :create_activation_call, on: :create
-
+  after_commit :update_front_end # uses action cable to update card.
 
   def self.import(file, user)
-    CSV.foreach(file.path,headers:true) do |row|
+    results = []
+    CSV.foreach(file.path, headers: true) do |row|
       ca = CardActivation.new(row.to_hash)
       ca.user = user
-      ca.save!
+      # results is an array of errored card activatoins
+      results.push(ca) unless ca.save
     end
+    results
   end
 
   aasm column: 'status', requires_lock: true do
     state :created, initial: true
-    state :activation_started
-    state :activation_errored
+    state :activate_started
+    state :activate_errored
     state :check_started
     state :check_errored
     state :active
 
-    event :start_activation do
-      transitions from: :created, to: :activation_started
+    event :start_activate do
+      transitions from: :created, to: :activate_started
     end
 
-    event :activation_error, after_commit: :actition_error_report do
-      transitions from: :activation_started, to: :activation_errored
+    event :activate_error, after_commit: :activation_error_report do
+      transitions from: :activate_started, to: :activate_errored
     end
 
     event :start_check, after_commit: :create_check_call do
-      transitions from: %i[activation_errored check_errored active],
+      transitions from: %i[activate_errored check_errored active],
                   to: :check_started
     end
 
     # after_commit here because we want to ensure that
     # the history is present
     event :check_error, after_commit: :create_check_call do
-      transitions from: [:check_started,:active,:check_errored], to: :check_errored
+      transitions from: %i[check_started active check_errored], to: :check_errored
     end
 
     event :success, after_commit: :do_success_notification do
@@ -103,7 +105,7 @@ class CardActivation < ApplicationRecord
   end
 
   def create_activation_call
-    start_activation
+    start_activate!
     ActivationCall.create(card_activation_id: id, call_type: 'activate')
   end
 
@@ -128,6 +130,11 @@ class CardActivation < ApplicationRecord
     # action cable update to front end.
   end
 
+  def update_front_end
+    # action cable sending to front end.
+    # all action cable stuff should be here?
+  end
+
   def last_balance
     ca = calls.checks.order(created_at: 'DESC').first
     ca.nil? ? amount : ca.balance
@@ -145,9 +152,9 @@ class CardActivation < ApplicationRecord
   private
 
     def luhn_number_valid
-      errors.add('Must include a card number.') if full_card_number.blank?
+      errors[:base].push('Must include a card number.') if full_card_number.blank?
       unless CreditCardValidations::Luhn.valid?(full_card_number)
-        errors.add("Card number #{full_card_number} is not valid.")
+        errors[:base].push("Card number #{full_card_number} is not valid.")
       end
     end
 

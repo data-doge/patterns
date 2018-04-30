@@ -23,8 +23,7 @@ class ActivationCallsController < ApplicationController
   # end
 
   # GET /activation_calls/1/edit
-  def edit
-  end
+  def edit; end
 
   def activate # idempotent
     respond_to do |format|
@@ -54,8 +53,11 @@ class ActivationCallsController < ApplicationController
       else # fail
         @activation_call.failure # launched another check call if necessary
       end
-
-      @activation_call.save
+      if @activation_call.save
+        # action cable update front end here or in model?
+      else
+        # same as above?
+      end
     end
   end
 
@@ -107,7 +109,7 @@ class ActivationCallsController < ApplicationController
       @activation_call = ActivationCall.find_by(token: params[:token])
       @card_activation = @activation_call.card_activation
     end
-    
+
     def set_activation_call
       @activation_call = ActivationCall.find(params[:id])
       @card_activation = @activation_call.card_activation
