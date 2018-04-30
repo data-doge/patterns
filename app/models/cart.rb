@@ -20,7 +20,7 @@ class Cart < ApplicationRecord
   has_many :carts_users, dependent: :destroy
 
   has_many :users, through: :carts_users
-  has_many :people, through: :carts_people, counter_cache: true
+  has_many :people, through: :carts_people
   delegate :size, to: :people
 
   has_many :comments, as: :commentable, dependent: :destroy
@@ -36,7 +36,7 @@ class Cart < ApplicationRecord
   end
 
   def name_and_count
-    "#{name}: #{people_count}"
+    "#{name}: #{people.size}"
   end
 
   def current_cart_for?
