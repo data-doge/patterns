@@ -10,7 +10,7 @@
 #
 
 class CartsPerson < ApplicationRecord
-  belongs_to :cart
+  belongs_to :cart, counter_cache: :people_count
   belongs_to :person
 
   validates :person_id,
