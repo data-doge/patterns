@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ActivationCallJob
   include Sidekiq::Worker
   sidekiq_options retry: 5
@@ -26,4 +27,3 @@ class ActivationCallJob
     call.save!
   end
 end
-# rubocop:enable Style/StructInheritance

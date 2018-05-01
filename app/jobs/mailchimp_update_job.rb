@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class MailchimpUpdateJob
   include Sidekiq::Worker
   sidekiq_options retry: 1
@@ -35,4 +36,3 @@ class MailchimpUpdateJob
     end
   end
 end
-# rubocop:enable Style/StructInheritance

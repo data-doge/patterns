@@ -13,4 +13,3 @@ class TagPersonJob
     person.save
   end
 end
-# rubocop:enable Style/StructInheritance

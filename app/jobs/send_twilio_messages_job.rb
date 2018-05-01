@@ -70,4 +70,3 @@ class SendTwilioMessagesJob
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/BlockLength
 
 end
-# rubocop:enable Style/StructInheritance

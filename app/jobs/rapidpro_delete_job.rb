@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class RapidproDeleteJob
   include Sidekiq::Worker
   sidekiq_options retry: 5
@@ -29,4 +30,3 @@ class RapidproDeleteJob
     end
   end
 end
-# rubocop:enable Style/StructInheritance

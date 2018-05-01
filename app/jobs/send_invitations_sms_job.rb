@@ -55,4 +55,3 @@ class SendInvitationsSmsJob
       end
     end
 end
-# rubocop:enable Style/StructInheritance

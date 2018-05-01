@@ -85,7 +85,7 @@ class TwilioMessagesController < ApplicationController
       format.html { redirect_to '/twilio_messages/sendmessages' }
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/VariableName, Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/VariableName
 
   # GET /twilio_messages/1
   # GET /twilio_messages/1.json
