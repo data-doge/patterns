@@ -248,15 +248,15 @@ class Person < ApplicationRecord
 
   def sendToMailChimp
     status = active? ? 'subscribed' : 'unsubscribed'
-    Delayed::Job.enqueue(MailchimpUpdateJob.new(id, status)).save
+    MailchimpUpdateJob.perform_async(id, status)
   end
 
   def deleteFromRapidPro
-    Delayed::Job.enqueue(RapidproDeleteJob.new(id)).save unless active
+    RapidproDeleteJob.perform_async(id) unless active
   end
 
   def updateRapidPro
-    Delayed::Job.enqueue(RapidproUpdateJob.new(id)).save if active
+    RapidproUpdateJob.perform_async(id) if active
   end
 
   # FIXME: Refactor and re-enable cop

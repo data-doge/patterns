@@ -1,22 +1,11 @@
 # frozen_string_literal: true
-
-# rubocop:disable Style/StructInheritance
-class ActivationCallJob < Struct.new(:id)
-  attr_accessor :retry_delay
-  attr_accessor :id
-
-  def initialize(id)
-    self.id = id
-    self.retry_delay = 5 # default retry delay
-  end
-
-  def enqueue(job)
-    Rails.logger.info '[ActivationCall] job enqueued'
-    job.save!
-  end
+class ActivationCallJob
+  include Sidekiq::Worker
+  sidekiq_options retry: 5
 
   # how it works: sends a twilio call, and records the sid, etc in the call object
-  def perform
+  def perform(id)
+    Rails.logger.info '[ActivationCall] job enqueued'
     call = ActivationCall.find(id)
 
     case call.call_type # activation or check for now. soon balance.
@@ -36,14 +25,5 @@ class ActivationCallJob < Struct.new(:id)
     call.sid = res.sid
     call.save!
   end
-
-  def max_attempts
-    5
-  end
-
-  def reschedule_at(current_time, _attempts)
-    current_time + (retry_delay + attemps).seconds
-  end
-
 end
 # rubocop:enable Style/StructInheritance

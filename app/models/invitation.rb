@@ -151,7 +151,7 @@ class Invitation < ApplicationRecord
   end
 
   def send_invite_sms
-    ::InvitationSms.new(to: person, invitation: self).send
+    SendInvitationsSmsJob.perform_async(person.id, id, :invite)
   end
 
   def send_reminder
@@ -159,7 +159,7 @@ class Invitation < ApplicationRecord
 
     case person.preferred_contact_method.upcase
     when 'SMS'
-      ::InvitationReminderSms.new(to: person, invitations: [self]).send
+      SendInvitationsSmsJob.perform_async(person.id, id, :remind)
     when 'EMAIL'
       ::PersonMailer.remind(invitations: [self], email_address: person.email_address).deliver_now
     end
@@ -173,7 +173,7 @@ class Invitation < ApplicationRecord
     ::PersonMailer.confirm(email_address: user.email, invitation: self).deliver_later
     case person.preferred_contact_method.upcase
     when 'SMS'
-      ::InvitationConfirmSms.new(to: person, invitation: self).send
+      SendInvitationsSmsJob.perform_async(person.id, id, :confirm)
     when 'EMAIL'
       ::PersonMailer.confirm(email_address: person.email_address, invitation: self).deliver_later
     end
@@ -187,7 +187,7 @@ class Invitation < ApplicationRecord
 
     case person.preferred_contact_method.upcase
     when 'SMS'
-      ::InvitationCancelSms.new(to: person, invitation: self).send
+      SendInvitationsSmsJob.perform_async(person.id, id, :cancel)
     when 'EMAIL'
       ::PersonMailer.cancel(email_address: person.email_address, invitation: self).deliver_later
     end

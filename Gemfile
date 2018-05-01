@@ -36,7 +36,7 @@ group :development do
   # src: https://github.com/capistrano/capistrano/pull/412
 
   gem 'capistrano', '~> 2.15.4'
-
+  gem 'capistrano-sidekiq'
   gem 'rvm-capistrano', require: false
   gem 'rbnacl', '~> 4.0.0' # for modern ssh keys
   gem 'rbnacl-libsodium' # same as above
@@ -132,11 +132,11 @@ gem 'wuparty'
 # Use gsm_encoder to help text messages send correctly
 gem 'gsm_encoder'
 
-# use Delayed Job to queue messages
-gem 'daemons'
-gem 'delayed_job_active_record'
+# Switching to sidekiq: async, threaded, less memory,
+# more performance. Important for responsiveness
+# for background tasks users are waiting for.
 
-gem "delayed_job_web"
+gem 'sidekiq'
 
 # for generating unique tokens for Person
 # gem 'has_secure_token' # not needed in rails 5+

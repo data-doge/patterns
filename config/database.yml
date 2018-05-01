@@ -38,5 +38,5 @@ production:
   host: <%= ENV['MYSQL_HOST'] || 'localhost' %>
   username: <%= ENV['MYSQL_USER'] || 'logan' %>
   password: <%= ENV['MYSQL_PWD'] || '' %>
-  pool: 5
+  pool: 30
   timeout: 5000

@@ -159,15 +159,11 @@ class SearchController < ApplicationController
     phone_numbers = @people.collect(&:phone_number)
     Rails.logger.info("[SearchController#exportTwilio] people #{phone_numbers}")
     phone_numbers = phone_numbers.reject { |e| e.to_s.blank? }
-    @job_enqueue = Delayed::Job.enqueue SendTwilioMessagesJob.new(messages, phone_numbers, smsCampaign)
-    if @job_enqueue.save
-      Rails.logger.info("[SearchController#exportTwilio] Sent #{phone_numbers} to Twilio")
-      respond_to do |format|
-        format.js {}
-      end
-    else
-      Rails.logger.error('[SearchController#exportTwilio] failed to send text messages')
-      format.all { render text: 'failed to send text messages', status: :bad_request }
+
+    SendTwilioMessagesJob.perform_async(messages, phone_numbers, smsCampaign)
+    Rails.logger.info("[SearchController#exportTwilio] Sent #{phone_numbers} to Twilio")
+    respond_to do |format|
+      format.js {}
     end
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/MethodName, Style/VariableName

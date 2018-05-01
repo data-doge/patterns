@@ -1,14 +1,10 @@
 # frozen_string_literal: true
+class MailchimpUpdateJob
+  include Sidekiq::Worker
+  sidekiq_options retry: 1
 
-# rubocop:disable Style/StructInheritance
-class MailchimpUpdateJob < Struct.new(:id, :status)
-
-  def enqueue(job)
+  def perform(id, status)
     Rails.logger.info '[MailchimpSave] job enqueued'
-    job.save!
-  end
-
-  def perform
     person = Person.unscoped.find id
     if person.email_address.present? && person.verified?
       begin
@@ -37,10 +33,6 @@ class MailchimpUpdateJob < Struct.new(:id, :status)
         Rails.logger.fatal("[People->sendToMailChimp] fatal error sending #{person.id} to Mailchimp: #{e.message}")
       end
     end
-  end
-
-  def max_attempts
-    1
   end
 end
 # rubocop:enable Style/StructInheritance

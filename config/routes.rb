@@ -1,5 +1,6 @@
-Logan::Application.routes.draw do
-
+require 'sidekiq/web'
+Logan::Application.routes.draw do  
+  
   resources :activation_calls do
     collection do
       get 'activate/:token', 
@@ -227,8 +228,10 @@ Logan::Application.routes.draw do
     to: 'gift_cards#card_check',
     defaults: { format: 'xml' }
 
-  match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
-
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+  
   root to: 'dashboard#index'
 
   # The priority is based upon order of creation: first created -> highest priority.

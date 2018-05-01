@@ -23,7 +23,7 @@ namespace :tag_migration do
         next if person.nil? || tags.blank?
         # person.tag_list.add(v)
         # person.save
-        Delayed::Job.enqueue TagPersonJob.new(person_id, tags)
+        TagPersonJob.perform_async(person_id, tags)
       rescue Exception => e
         errors << [person_id, e]
       end

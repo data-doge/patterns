@@ -75,7 +75,7 @@ class ActivationCall < ApplicationRecord
   end
 
   def enqueue_call
-    Delayed::Job.enqueue(ActivationCallJob.new(id)).save
+    ActivationCallJob.perform_async(id)
   end
 
   def update_front_end

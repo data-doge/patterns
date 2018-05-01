@@ -6,27 +6,18 @@
 # Send twilio messages to a list of phone numbers
 #
 # FIXME: Refactor and re-enable cop
-# rubocop:disable Style/StructInheritance
 #
-class SendTwilioMessagesJob < Struct.new(:messages, :phone_numbers, :smsCampaign)
-
-  def enqueue(job)
-    # job.delayed_reference_id   =
-    # job.delayed_reference_type = ''
-    Rails.logger.info '[TwilioSender] job enqueued'
-    job.save!
-  end
-
-  def max_attempts
-    1
-  end
+class SendTwilioMessagesJob
+  include Sidekiq::Worker
+  sidekiq_options retry: 1
 
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/BlockLength
   #
-  def perform
+  def perform(messages, phone_numbers, smsCampaign)
+    Rails.logger.info '[TwilioSender] job enqueued'
     # Instantiate a Twilio client
-    client = Twilio::REST::Client.new(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN'])
+    $twilio ||= Twilio::REST::Client.new
 
     Rails.logger.info "[TwilioSender#perform] Send #{messages} to #{phone_numbers}"
     if phone_numbers.present?
@@ -77,16 +68,6 @@ class SendTwilioMessagesJob < Struct.new(:messages, :phone_numbers, :smsCampaign
     end
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/BlockLength
-
-  def max_run_time
-    120.minutes
-  end
-
-  def before(job); end
-
-  def after(job); end
-
-  def success(job); end
 
 end
 # rubocop:enable Style/StructInheritance

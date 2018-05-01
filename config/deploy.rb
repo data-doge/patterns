@@ -1,4 +1,5 @@
 require 'bundler/capistrano'
+require 'capistrano/sidekiq'
 require 'capistrano/ext/multistage'
 set :whenever_command, 'bundle exec whenever'
 require 'whenever/capistrano'
@@ -44,7 +45,7 @@ set :ssh_options, { forward_agent: true }
 before  'deploy:finalize_update', "deploy:create_shared_directories", 'deploy:link_db_config', 'deploy:link_env_var'
 # before  'deploy:finalize_update', 'deploy:link_db_config', 'deploy:link_env_var'
 
-after   'deploy:finalize_update', 'deploy:create_binstubs', 'deploy:migrate', 'deploy:generate_delayed_job','deploy:reload_nginx', 'deploy:cleanup'
+after   'deploy:finalize_update', 'deploy:create_binstubs', 'deploy:migrate', 'deploy:reload_nginx', 'deploy:cleanup'
 
 
 namespace :deploy do
@@ -104,8 +105,8 @@ namespace :deploy do
     run "cd #{latest_release.shellescape} && bundle binstubs unicorn --force --path ./bin"
   end
 
-  task :generate_delayed_job do
-    run "cd #{latest_release.shellescape} && RAILS_ENV=#{rails_env.to_s.shellescape} bundle exec rails generate delayed_job && RAILS_ENV=#{rails_env.to_s.shellescape} bin/delayed_job -n4 restart"
-  end
+  # task :generate_delayed_job do
+  #   run "cd #{latest_release.shellescape} && RAILS_ENV=#{rails_env.to_s.shellescape} bundle exec rails generate delayed_job && RAILS_ENV=#{rails_env.to_s.shellescape} bin/delayed_job -n4 restart"
+  # end
 
 end

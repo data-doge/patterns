@@ -1,24 +1,13 @@
 # frozen_string_literal: true
-
-# rubocop:disable Style/StructInheritance
-class RapidproUpdateJob < Struct.new(:id)
-  attr_accessor :retry_delay
-  attr_accessor :id
-
-  def initialize(id)
-    self.id = id
-    self.retry_delay = 5 # default retry delay
-  end
-
-  def enqueue(job)
-    Rails.logger.info '[RapidProUpdate] job enqueued'
-    job.save!
-  end
+class RapidproUpdateJob
+  include Sidekiq::Worker
+  sidekiq_options retry: 5
 
   # works like so, if person has no rapidpro uuid, we post with phone,
   # otherwise use uuid. this will allow changes to phone numbers.
   # additionally, it means we only need one worker.
-  def perform
+  def perform(id)
+    Rails.logger.info '[RapidProUpdate] job enqueued'
     person = Person.find(id)
     # we may deal with a word where rapidpro does email...
     # but not now.
@@ -60,7 +49,8 @@ class RapidproUpdateJob < Struct.new(:id)
           person.update_column(:rapidpro_uuid, res.parsed_response['uuid'])
         end
       when 429 # throttled
-        self.retry_delay = res.headers['retry-after'].to_i
+        retry_delay = res.headers['retry-after'].to_i + 5
+        RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
       when 200 # happy response
         return true
       else
@@ -69,15 +59,5 @@ class RapidproUpdateJob < Struct.new(:id)
       end
     end
   end
-
-  def max_attempts
-    15
-  end
-
-  def reschedule_at(current_time, _attempts)
-    # rapidpro gives us a retry time. We pad with attempts
-    current_time + (retry_delay + attemps).seconds
-  end
-
 end
 # rubocop:enable Style/StructInheritance
