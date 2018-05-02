@@ -1,0 +1,35 @@
+<tr id='card-activation-<%=card_activation.id%>' class='well well-small'>
+  <td>
+    <%= card_activation.last_4 %>
+  </td>
+  <td>
+    <%= card_activation.batch_id %>
+  </td>
+  <td>
+    <%= card_activation.sequence_number %>
+  </td>
+  <td class='label label-<%= card_activation.label %>'>
+    <%= card_activation.status %>
+  </td>
+  <td>
+    <% unless card_activation.active? %>
+    <%= button_to "Check", check_card_activations_path(card_activation), remote: true, class: 'btn btn-small' %>
+    <% end %>
+  </td>
+  <td> <!-- admin -->
+    <%= select_tag :user_id,
+        options_from_collection_for_select(User.approved.all,
+                                          'id',
+                                          'name'),
+          class: 'input-small',
+          data: {
+           remote: true,
+           method: 'post',
+          url: change_user_card_activations_path(card_activation)} %>
+  </td>
+  <td>
+    <%= link_to 'Show', card_activation %> | 
+    <%= link_to 'Edit', edit_card_activation_path(card_activation) %> | 
+    <%= link_to 'Destroy', card_activation, method: :delete, data: { confirm: 'Are you sure?' } %>
+  </td>
+</tr>

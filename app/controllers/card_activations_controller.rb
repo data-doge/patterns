@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'csv'
 class CardActivationsController < ApplicationController
-  before_action :set_card_activation, only: %i[show edit update destroy change_user]
+  before_action :set_card_activation, only: %i[show edit update destroy change_user check]
   before_action :admin?, only: :change_user
 
   # GET /card_activations
@@ -26,6 +26,7 @@ class CardActivationsController < ApplicationController
 
   def check
     @card_activation.create_check_call(override: true)
+    flash[:notice] = "Checking Card ##{@card_activation.last_4}"
     respond_to do |format|
       format.json { render json: { success: true }, status: :ok }
     end
@@ -105,7 +106,14 @@ class CardActivationsController < ApplicationController
   end
 
   def change_user
-    # only admins can swap user for card activations
+    if current_user.admin?
+      @card_activation.user_id = params[:user_id]
+      @card_activation.save
+      flash[:notice] = "Card Owner Changed to #{@card_activation.user.name}"
+    end
+    respond_to do |format|
+      format.json { render json:{success: true}.to_json, status: :ok}
+    end
   end
 
   private

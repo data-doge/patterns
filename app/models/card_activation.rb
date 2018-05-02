@@ -14,7 +14,7 @@
 #  user_id          :integer
 #  gift_card_id     :integer
 #  created_at       :datetime         not null
-#  updated_at       :datetime         not null
+#  updated_at       :datetime         not nullw
 #  amount_cents     :integer          default(0), not null
 #  amount_currency  :string(255)      default("USD"), not null
 #
@@ -39,9 +39,9 @@ class CardActivation < ApplicationRecord
   validates_format_of :expiration_date,
     with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i
 
-  validates_format_of :batch_id, with: /^[0-9]*$/
-  validates_format_of :secure_code, with: /^[0-9]*$/
-  validates_format_of :sequence_number, with: /^[0-9]*$/
+  validates_format_of :batch_id, with: /[0-9]*/
+  validates_format_of :secure_code, with: /[0-9]*/
+  validates_format_of :sequence_number, with: /[0-9]*/
   # sequences are per batch
   validates_uniqueness_of :sequence_number, scope: :batch_id
 
@@ -142,6 +142,29 @@ class CardActivation < ApplicationRecord
     ca = calls.checks.order(created_at: 'DESC').first
     ca.nil? ? amount : ca.balance
   end
+
+  def last_4
+    full_card_number.last(4)
+  end
+
+  def label
+    case status
+    when 'active'
+      'success'
+    when 'activate_started'
+      'warning'
+    when 'check_started'
+      'warning'
+    when 'created'
+      'warning'
+    when 'activate_errored' 
+      'important'
+    when 'check_errored'
+      'important'
+    end
+  end
+
+  
 
   def update_balance
     create_check_call(override: true)

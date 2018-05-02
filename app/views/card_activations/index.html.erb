@@ -1,10 +1,24 @@
 <%= render :partial => 'layouts/gift_card_menu' %>
+<style>
+table tr {
+  padding-bottom: 1em !important;
+}
+</style>
 <h1>Activate Cards</h1>
 <div class='container'>
   <div class='row'>
-    <div class='span10'>
+    <div class='span2'>
+      <!-- button for modal uploader -->
+      <%= link_to "Upload Cards", "#modal-window", :class => "btn btn-default", "data-toggle" => "modal" %>
+    </div>
+    <div class='span2'>
+      <%= button_tag 'Manually Enter Card', 
+      onclick: '$("#manual_card").toggle()', 
+      class: 'btn'%>
+    </div>
+    <div class='span8'>
       <!-- form for single card -->
-      <table>
+      <table style='display: none;' id='manual_card'>
         <thead>
           <tr>
             <th>Full Card #</th>
@@ -60,48 +74,47 @@
       </tr>
     </tbody>
   </table>
-        
       <% end %>
-      
-      
     </div>
-    <div class='span2'>
-      <!-- button for modal uploader -->
-      <%= link_to "Upload Cards", "#modal-window", :class => "btn", "data-toggle" => "modal" %>
+  </div>
+  <div class='row'>
+    <div class='span12'>
+      <hr>
     </div>
   </div>
   <div class='row'>
     <h2>Unassigned Cards</h2>
+     <%= will_paginate @card_activations, :renderer => BootstrapPagination::Rails, inner_window:1, outer_window:1 %>
     <div class='span12'>
-      <table class="table table-striped">
+      <table class="table">
         <thead>
           <tr>
+            <th colspan="1">Last 4</th>
             <th colspan="1">Batch</th>
             <th colspan="1">Sequence</th>
-            <th colspan="1">Last 4</th>
             <th colspan="1">Status</th>
             <th colspan="1">Re-Run Check</th>
+          <% if current_user.admin? %>
+            <th colspan="1">Owner</th>
+            <th colspan="3">Admin</th>
+          <% end %>
           </tr>
         </thead>
 
-        <tbody> 
+        <tbody id='card-activations-large'> 
           <!-- should be partials below for reuse -->
-          <% @card_activations.each do |card_activation| %>
-            <tr>
-              <!-- <td><%= link_to 'Show', card_activation %></td>
-              <td><%= link_to 'Edit', edit_card_activation_path(card_activation) %></td>
-              <td><%= link_to 'Destroy', card_activation, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
-            </tr>
-          <% end %>
+          <%= render partial: "single_card_activation",
+                     collection: @card_activations, 
+                     as: :card_activation %>
         </tbody>
       </table>
     </div>
   </div>
 </div>
 <br>
-
+<!-- 
 <%= link_to 'New Card Activation', new_card_activation_path %>
-
+ -->
 <div id="modal-window" class="modal hide" role="dialog" aria-labelledby="ActivationUploadModal" aria-hidden="true">
   <div id="card-activation-modal">
     <div class="modal-header">
