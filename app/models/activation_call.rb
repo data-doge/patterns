@@ -18,9 +18,11 @@
 class ActivationCall < ApplicationRecord
   has_paper_trail
   has_secure_token
+
   validates_presence_of :card_activation_id
   validates_presence_of :call_type
   validates_inclusion_of :call_type, in: %w[activate check] # balance soon
+
   belongs_to :card_activation, dependent: :destroy
   after_commit :enqueue_call, on: :create
   after_commit :update_front_end

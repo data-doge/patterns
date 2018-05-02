@@ -184,7 +184,7 @@ gem 'faster_path' #if !`which rustc`.empty?
 gem 'money-rails'
 
 # masked inputs
-gem 'maskedinput-rails'
+gem 'jquery_mask_rails'
 
 # the standard rails tagging library
 gem 'acts-as-taggable-on'

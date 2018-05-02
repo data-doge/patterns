@@ -39,6 +39,9 @@ class CardActivation < ApplicationRecord
   validates_format_of :expiration_date,
     with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i
 
+  validates_format_of :batch_id, with: /^[0-9]*$/
+  validates_format_of :secure_code, with: /^[0-9]*$/
+  validates_format_of :sequence_number, with: /^[0-9]*$/
   # sequences are per batch
   validates_uniqueness_of :sequence_number, scope: :batch_id
 
@@ -63,7 +66,7 @@ class CardActivation < ApplicationRecord
 
   def self.import(file, user)
     results = []
-    CSV.foreach(file.path, headers: true) do |row|
+    CSV.foreach(file, headers: true) do |row|
       ca = CardActivation.new(row.to_hash)
       ca.user = user
       # results is an array of errored card activatoins

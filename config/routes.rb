@@ -27,6 +27,10 @@ Logan::Application.routes.draw do
       post 'upload',
            action: :upload,
            as: :upload
+      post 'check',
+           action: :check,
+           as: :check,
+           defaults: {format: 'json'}
     end
   end
 

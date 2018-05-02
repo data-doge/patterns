@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'csv'
 class CardActivationsController < ApplicationController
   before_action :set_card_activation, only: %i[show edit update destroy change_user]
   before_action :admin?, only: :change_user
@@ -7,18 +7,27 @@ class CardActivationsController < ApplicationController
   # GET /card_activations
   # GET /card_activations.json
   def index
-    @card_activations = CardActivation.where(user_id: current_user.id).page(params[:page])
+    @new_card = CardActivation.new
+    @card_activations = CardActivation.unassigned.where(user_id: current_user.id).page(params[:page])
   end
 
   def template
     respond_to do |format|
       format.csv do
         response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = 'attachment; filename=CardActivationTemplate.csv'
         output = CSV.generate do |csv|
           csv << %w[full_card_number expiration_date amount sequence_number secure_code batch_id]
         end
-        send_data output, filename: 'ActivationTemplate.csv'
+        send_data output, filename: 'CardActivationTemplate.csv'
       end
+    end
+  end
+
+  def check
+    @card_activation.create_check_call(override: true)
+    respond_to do |format|
+      format.json { render json: { success: true }, status: :ok }
     end
   end
 
@@ -39,9 +48,9 @@ class CardActivationsController < ApplicationController
   def upload
     # receive csv file, check each card for luhn, save card activations
     #
-    cards_count = CSV.read(params[:file], headers: true).count
+    cards_count = CSV.read(params[:file].path, headers: true).count
     flash[:notice] = "Import started for #{cards_count} cards."
-    @errors = CardActivation.import(params[:file], current_user)
+    @errors = CardActivation.import(params[:file].path, current_user)
     if @errors.empty?
       redirect_to card_activations_path
     else

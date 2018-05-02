@@ -190,6 +190,7 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     jquery-validation-rails (1.16.0)
+    jquery_mask_rails (0.1.0)
     json (2.1.0)
     jwt (1.5.6)
     kaminari (1.1.1)
@@ -225,7 +226,6 @@ GEM
       activesupport (>= 4)
     marcel (0.3.2)
       mimemagic (~> 0.3.2)
-    maskedinput-rails (1.4.1.0)
     memory_profiler (0.9.10)
     memory_test_fix (1.5.1)
       activerecord (~> 5.0)
@@ -566,10 +566,10 @@ DEPENDENCIES
   jbuilder
   jquery-rails
   jquery-validation-rails
+  jquery_mask_rails
   lograge
   mail
   mandrill-rails
-  maskedinput-rails
   memory_profiler
   memory_test_fix
   mocha

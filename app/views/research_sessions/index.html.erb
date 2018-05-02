@@ -51,7 +51,11 @@
             <td><%= sesh.location %></td>
             <td><%= sesh.start_datetime_human %></td>
             <td><%= sesh.duration %></td>
+            <% if current_user.admin? %>
+            <td><%= link_to sesh.user.name, sesh.user %></td>
+            <% else %>
             <td><%= sesh.user.name %></td>
+            <% end %>
             <td><%= sesh.people.count %></td>
             <td><%= sesh.invitations.where(aasm_state:'attended').size %></td>
             <!-- probably link to the reservations for this event -->

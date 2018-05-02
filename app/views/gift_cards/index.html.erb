@@ -20,9 +20,12 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= sortable 'id', 'Gift Card ID'%></th>
-      <th>Person ID</th>
-      <th>Name</th>
+      <!-- <th><%= sortable 'id', 'Gift Card ID'%></th>
+      <th>Person ID</th> -->
+    <% if current_user.admin? %>
+      <th>User</th>
+    <% end %>
+      <th>Person</th>
       <th>Reason</th>
       <th>Giftable Object</th>
       <th>Batch</th>
@@ -39,8 +42,11 @@
   <tbody id="gift_cards">
     <% @gift_cards.each do |gift_card| %>
       <tr id="gift_card-<%= gift_card.id%>">
-        <td><%= gift_card.id %></td>
-        <td><%= gift_card.person_id %></td>
+        <!-- <td><%= gift_card.id %></td>
+        <td><%= gift_card.person_id %></td> -->
+      <% if current_user.admin? %>
+        <td><%= link_to gift_card.user.name, gift_card.user %></td>
+      <% end %>
         <% person = Person.unscoped.find(gift_card.person_id) %>
         <td><%= link_to "#{person.full_name}", person_path(person) %></td>
         <td><%= gift_card.reason.titleize %></td>

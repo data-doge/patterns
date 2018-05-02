@@ -26,9 +26,11 @@
 //= require fullcalendar/fullcalendar.min
 //= require jquery-touchswipe/jquery.touchSwipe.min
 //= require_tree .
-//= require maskedinput
+//= require jquery.mask
 
 $(document).on('turbolinks:load',function() {
+  $.jMaskGlobals.watchDataMask = true;
+  
   FastClick.attach(document.body);
   /* Activating Best In Place */
   jQuery(".best_in_place").best_in_place();

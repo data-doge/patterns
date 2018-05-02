@@ -13,7 +13,11 @@ class GiftCardsController < ApplicationController
   # GET /gift_cards
   # GET /gift_cards.csv
   def index
-    @q_giftcards = GiftCard.ransack(params[:q])
+    if current_user.admin?
+      @q_giftcards = GiftCard.ransack(params[:q])
+    else
+      @q_giftcards = GiftCard.where(created_by: current_user.id).ransack(params[:q])
+    end
     @q_giftcards.sorts = [sort_column + ' ' + sort_direction] if @q_giftcards.sorts.empty?
     respond_to do |format|
       format.html do
