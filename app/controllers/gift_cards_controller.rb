@@ -65,13 +65,15 @@ class GiftCardsController < ApplicationController
   # POST /gift_cards.json
   def create
     @gift_card = GiftCard.new(gift_card_params)
-    @create_result = @gift_card.with_user(current_user).save
+    @total = @gift_card.person.blank? ? @gift_card.amount : @gift_card.person.gift_card_total
+    @gift_card.created_by = current_user.id
+    @gift_card.finance_code = current_user&.team&.finance_code
+    @gift_card.team = current_user&.team
+    @gift_card.save
+    
+    @create_result = @gift_card.save
     respond_to do |format|
       if @create_result
-        @total = @gift_card.person.blank? ? @gift_card.amount : @gift_card.person.gift_card_total
-        @gift_card.finance_code = current_user&.team&.finance_code
-        @gift_card.team = current_user&.team
-        @gift_card.save
         format.js {}
         format.json {}
         format.html { redirect_to @gift_card, notice: 'Gift Card was successfully created.'  }
@@ -143,6 +145,7 @@ class GiftCardsController < ApplicationController
   def modal
     klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
     @giftable = klass.find(params[:giftable_id])
+    @card_activations = CardActivation.unassigned.active.where(user_id: current_user.id)
     @gift_card = GiftCard.new
     @last_gift_card = GiftCard.last # default scope is id: :desc
     respond_to do |format|
@@ -195,6 +198,19 @@ class GiftCardsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def gift_card_params
-      params.require(:gift_card).permit(:gift_card_number, :batch_id, :expiration_date, :person_id, :notes, :proxy_id, :created_by, :reason, :amount, :giftable_id, :giftable_type, :team_id, :finance_code)
+      params.require(:gift_card).permit(:gift_card_number, 
+                                        :batch_id,
+                                        :expiration_date,
+                                        :person_id,
+                                        :notes,
+                                        :proxy_id,
+                                        :created_by,
+                                        :reason,
+                                        :amount,
+                                        :giftable_id,
+                                        :giftable_type,
+                                        :team_id,
+                                        :finance_code,
+                                        :card_activation_id)
     end
 end

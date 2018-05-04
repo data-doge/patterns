@@ -11,7 +11,6 @@
       var new_id, regexp;
       new_id = new Date().getTime();
       regexp = new RegExp('new_' + type, 'g');
-      console.log(new_id);
       return $(button).before(content.replace(regexp, new_id));
     };
 

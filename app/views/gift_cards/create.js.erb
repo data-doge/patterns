@@ -2,7 +2,7 @@
 <% Rails.logger.warn("In the create.js.erb file") %>
 <% if @create_result %>
   // this should be like the dynamic panel in research session.
-  console.log("In Create_result if statement");
+  //console.log("In Create_result if statement");
   $('#error-div').val("");
   $("<%= escape_javascript(render partial: 'gift_cards/gift_card', locals: { gift_card: @gift_card } ) %>").prependTo("#gift_cards");
   $("<%= escape_javascript(render partial: 'people/gift_card', locals: { gift_card: @gift_card } ) %>").prependTo("#people_gift_cards");

@@ -3,13 +3,18 @@
     <%= form_for(resource, as: resource_name, url: session_path(resource_name), class: 'form-horizontal') do |f| %>
       <div class="control-group">
         <%= f.label :email, class: 'control-label' %>
-        <div class="controls"><%= f.email_field :email, :autofocus => true %></div>
+        <div class="controls">
+          <%= f.email_field :email, 
+                autofocus: true, 
+                autocomplete: 'username' %>
+        </div>
       </div>
 
       <div class="control-group">
         <%= f.label :password, class: 'control-label' %>
         <div class="controls">
-          <%= f.password_field :password %>
+          <%= f.password_field :password, 
+                autocomplete: 'current-password' %>
         </div>
       </div>
 

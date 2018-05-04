@@ -27,23 +27,29 @@
 #
 
 class GiftCard < ApplicationRecord
+  attr_accessor :card_activation_id
   has_paper_trail
   page 20
   monetize :amount_cents
 
+  before_destroy :unassign_card_activation
+  after_create :assign_card_activation
+  
   enum reason: {
     unknown: 0,
     signup: 1,
-    test: 2,
+    user_test: 2,
     referral: 3,
     interview: 4,
-    other: 5
+    other: 5,
+    focus_group: 6
   }
 
   belongs_to :giftable, polymorphic: true, touch: true
   belongs_to :person
   belongs_to :user, foreign_key: :created_by
   belongs_to :team
+  
   has_one :card_activation
 
   validates_presence_of :amount
@@ -80,7 +86,7 @@ class GiftCard < ApplicationRecord
   def reason_is_signup?
     reason == 'signup'
   end
-
+  
   def research_session
     return nil if giftable.nil? && giftable_type != 'Invitation'
     giftable&.research_session # double check unnecessary, but I like it.
@@ -136,6 +142,35 @@ class GiftCard < ApplicationRecord
   end
 
   private
+
+    def assign_card_activation
+      # tricksy: must allow creation of cards without activations
+      # but must check to see if card has activation
+      # AND throw error if we are duplicating.
+      if card_activation.nil?
+        # first check if we have an activation id, then a search
+        ca = CardActivation.find card_activation_id unless card_activation_id.nil?
+        ca ||= CardActivation.where(sequence_number: proxy_id, batch_id: batch_id).first
+    
+        if ca.present? && ca.gift_card_id.nil?
+          self.card_activation = ca
+          return true
+        elsif ca.gift_card_id.present?
+          # error case, duplicating
+          errors.add(:base, 'This card as already been assigned')
+          raise ActiveRecord::RecordInvalid.new(self)
+        else
+          return true # no card activation for this gift card
+        end
+      end
+    end
+
+    def unassign_card_activation
+      if card_activation.present?
+        card_activation.gift_card_id = nil
+        card_activation.save
+      end
+    end
 
     def giftable_person_ownership
       # if there is no giftable object, means this card was given directly. no invitation/session, etc.

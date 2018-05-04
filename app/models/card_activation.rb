@@ -59,10 +59,14 @@ class CardActivation < ApplicationRecord
   belongs_to :gift_card, optional: true
   belongs_to :user
 
+  before_create :check_secure_code
   # starts activation call process on create after commit happens
   # only hook we're using here
   after_commit :create_activation_call, on: :create
-  after_commit :update_front_end # uses action cable to update card.
+  
+  # uses action cable to update card.
+  after_commit :update_front_end, on: :update 
+
 
   def self.import(file, user)
     results = []
@@ -124,18 +128,27 @@ class CardActivation < ApplicationRecord
   end
 
   def activation_error_report
-    # call back to front end with actioncable about error
     # transition into start check
     start_check
   end
 
-  def check_error_report
-    # action cable update to front end.
-  end
+  
 
-  def update_front_end
-    # action cable sending to front end.
-    # all action cable stuff should be here?
+  #almost always backend
+  def update_front_end 
+    # if assigned, delete.
+    # otherwise, update
+    if gift_card_id.nil?
+      ActionCable.server.broadcast "activation_event_#{user_id}_channel",
+                                 type: :update,
+                                 id: id,
+                                 large: render_large_card_activation,
+                                 mini: render_mini_card_activation
+    else
+      ActionCable.server.broadcast "activation_event_#{user_id}_channel",
+                                 type: :delete,
+                                 id: id
+    end
   end
 
   def last_balance
@@ -168,14 +181,25 @@ class CardActivation < ApplicationRecord
 
   def update_balance
     create_check_call(override: true)
-  end
-
-  def assign(gc_id)
-    gift_card_id = gc_id
-    save
-  end
+  end  
 
   private
+
+    def check_secure_code # sometimes we drop leading 0's in csv
+      while secure_code.length < 3
+        secure_code.prepend("0")
+      end
+    end
+
+    def render_large_card_activation
+      ApplicationController.render partial: 'card_activations/single_card_activation',
+        locals: { card_activation: self }
+    end
+
+    def render_mini_card_activation
+      ApplicationController.render partial: 'card_activations/card_activation_mini',
+      locals: { card_activation: self }
+    end
 
     def luhn_number_valid
       errors[:base].push('Must include a card number.') if full_card_number.blank?

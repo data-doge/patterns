@@ -9,7 +9,6 @@
       </div>
       <div class="modal-body">
         <div id="error-div"></div>
-        <%= form_for( @gift_card, remote: true) do |form| %>
           <% if @gift_card.errors.any? %>
             <div id="error_explanation">
               <h2><%= pluralize(@gift_card.errors.count, "error") %> prohibited this gift_card from being saved:</h2>
@@ -21,66 +20,89 @@
               </ul>
             </div>
           <% end %>
-          <%= form.hidden_field :person_id, :value => @giftable.person_id %>
-          <%= form.hidden_field :giftable_id, :value => @giftable.id %>
-          <%= form.hidden_field :giftable_type, :value => @giftable.class.to_s %>
-          <table>
+        <div class='card_activations'>
+          <table class='table table-striped'>
             <thead>
-              <tr>
-                <th>Reason</th>
-                <th>Sequence #</th>
-                <th>Card #</th>
-                <th>Batch</th>
-                <th>Expiration</th>
-                <th>Amount</th>
-                <th></th>
-              </tr>
+              <th>Last 4</th>
+              <th>Sequence</th>
+              <th>Amount</th>
+              <th>Reason</th>
+              <th>Add</th>
             </thead>
-            <tbody>
-              <tr>
+            <tbody id='card-activations-mini'>
+              <%= render partial: "card_activations/card_activation_mini",
+                     collection: @card_activations, 
+                     as: :card_activation %>
+            </tbody>
+          </table>
+        </div>
+        <%= button_tag 'Manually Enter Card', 
+          onclick: '$("#manual-card-form").toggle()', 
+          class: 'btn'%>
+        <div id='manual-card-form' style='display:none'>
+              <%= form_for( @gift_card, remote: true) do |form| %>
+                <%= form.hidden_field :person_id, value: @giftable.person_id %>
+                <%= form.hidden_field :giftable_id, value: @giftable.id %>
+                <%= form.hidden_field :giftable_type, value: @giftable.class.to_s %>
+                <%= form.hidden_field :card_activation_id %>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Reason</th>
+                      <th>Sequence #</th>
+                      <th>Card #</th>
+                      <th>Batch</th>
+                      <th>Expiration</th>
+                      <th>Amount</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
 
-          <td>
-          <%= form.select :reason,
-                  GiftCard.reasons.keys.to_a,
-                  { prompt: "Reason", selected: 'interview' },
-                    class: 'input-small',
-                    id: "new-reason"
-                   %>
-          </td><td>
-          <%= form.text_field :proxy_id,
-                  placeholder: "Proxy/Sequence",
-                  class: 'input-mini',
-                  id: "new-proxyid" %>
-          </td><td>
-          <%= form.text_field :gift_card_number,
-                  placeholder: "Card #",
-                  class: 'input-mini',
-                  id: "new-cardnumber" %>
-          </td><td>
-          <%= form.text_field :batch_id,
-                  placeholder: "BatchID",
-                  class: 'input-mini',
-                  id: "new-batchid",
-                  value: @last_gift_card.batch_id %>
-          </td><td>
-          <%= form.text_field :expiration_date,
-                  placeholder: "MM/YY",
-                  class: 'input-mini',
-                  id: "new-expirationdate",
-                  value: @last_gift_card.expiration_date %>
-          </td><td>
-          <%= form.text_field :amount,
-                  value: @last_gift_card.amount,
-                  placeholder: "####",
-                  class: 'input-mini',
-                  id: "new-amount" %>
-          </td><td>
+                <td>
+                <%= form.select :reason,
+                        GiftCard.reasons.keys.to_a,
+                        { prompt: "Reason", selected: 'interview' },
+                          class: 'input-small',
+                          id: "new-reason"
+                         %>
+                </td><td>
+                <%= form.text_field :proxy_id,
+                        placeholder: "Proxy/Sequence",
+                        class: 'input-mini',
+                        id: "new-proxyid" %>
+                </td><td>
+                <%= form.text_field :gift_card_number,
+                        placeholder: "Card #",
+                        class: 'input-mini',
+                        id: "new-cardnumber" %>
+                </td><td>
+                <%= form.text_field :batch_id,
+                        placeholder: "BatchID",
+                        class: 'input-mini',
+                        id: "new-batchid",
+                        value: @last_gift_card.batch_id %>
+                </td><td>
+                <%= form.text_field :expiration_date,
+                        placeholder: "MM/YY",
+                        class: 'input-mini',
+                        id: "new-expirationdate",
+                        value: @last_gift_card.expiration_date %>
+                </td><td>
+                <%= form.text_field :amount,
+                        value: @last_gift_card.amount,
+                        placeholder: "####",
+                        class: 'input-mini',
+                        id: "new-amount" %>
+                </td><td>
 
-          <%= form.submit 'Add Gift Card', :class => "btn btn-small" %>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+                <%= form.submit 'Add Gift Card', class: "btn btn-small", id: 'add-gift-card-button' %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div> <!-- End of hidden form-->
         <% end %>
         <%= render partial: 'gift_cards/mini_view',
               locals: { gift_cards: @giftable.gift_cards } %>

@@ -8,7 +8,11 @@ class CardActivationsController < ApplicationController
   # GET /card_activations.json
   def index
     @new_card = CardActivation.new
-    @card_activations = CardActivation.unassigned.where(user_id: current_user.id).page(params[:page])
+    if current_user.admin?
+      @card_activations = CardActivation.unassigned.page(params[:page])
+    else
+      @card_activations = CardActivation.unassigned.where(user_id: current_user.id).page(params[:page])
+    end
   end
 
   def template

@@ -41,7 +41,6 @@ module ApplicationHelper
     end
 
     content_for :document_ready, %{
-      console.log('foobar');
       var search = new Search({grouping: "#{escape_javascript(fields)}"});
       $(document).on("click", "button.add_fields", function(e) {
         e.preventDefault();

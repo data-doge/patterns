@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require jquery.turbolinks
 //= require fastclick/fastclick
 //= require best_in_place
 //= require twitter/bootstrap
@@ -25,6 +26,7 @@
 //= require datepicker/bootstrap-datetimepicker.min
 //= require fullcalendar/fullcalendar.min
 //= require jquery-touchswipe/jquery.touchSwipe.min
+//= require cable
 //= require_tree .
 //= require jquery.mask
 
@@ -54,4 +56,5 @@ $(document).on('turbolinks:load',function() {
     }
   });
 
+  
 });
