@@ -16,20 +16,21 @@
     <%= button_to "Check", check_card_activations_path(card_activation), remote: true, class: 'btn btn-small' %>
     <% end %>
   </td>
+  <% if current_user.admin? %>
   <td> <!-- admin -->
     <%= select_tag :user_id,
         options_from_collection_for_select(User.approved.all,
                                           'id',
-                                          'name'),
+                                          'name', card_activation.user_id),
           class: 'input-small',
           data: {
            remote: true,
            method: 'post',
           url: change_user_card_activations_path(card_activation)} %>
-  </td>
-  <td>
+    <%= check_box_tag "card_activation_id_change[]", card_activation.id, id:"card_activation_id_change_#{card_activation.id}" %> |
     <%= link_to 'Show', card_activation %> | 
     <%= link_to 'Edit', edit_card_activation_path(card_activation) %> | 
     <%= link_to 'Destroy', card_activation, method: :delete, data: { confirm: 'Are you sure?' } %>
   </td>
+  <% end %>
 </tr>

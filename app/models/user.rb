@@ -56,6 +56,7 @@ class User < ApplicationRecord
     joins(:research_sessions).merge(ResearchSession.upcoming(d))
   }
   scope :approved, -> { where(approved: true) }
+  scope :admin, ->{ where(new_person_notification: true) }
   # for sanity's sake
   alias_attribute :email_address, :email
 

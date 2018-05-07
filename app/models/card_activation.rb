@@ -134,20 +134,16 @@ class CardActivation < ApplicationRecord
 
   
 
-  #almost always backend
-  def update_front_end 
+  # almost always backend
+  def update_front_end
     # if assigned, delete.
     # otherwise, update
     if gift_card_id.nil?
-      ActionCable.server.broadcast "activation_event_#{user_id}_channel",
-                                 type: :update,
-                                 id: id,
-                                 large: render_large_card_activation,
-                                 mini: render_mini_card_activation
+      User.admin.each { |u|  broadcast_update(u) }
+      broadcast_update
     else
-      ActionCable.server.broadcast "activation_event_#{user_id}_channel",
-                                 type: :delete,
-                                 id: id
+      User.admin.each { |u|  broadcast_delete(u) }
+      broadcast_delete
     end
   end
 
@@ -191,14 +187,33 @@ class CardActivation < ApplicationRecord
       end
     end
 
-    def render_large_card_activation
-      ApplicationController.render partial: 'card_activations/single_card_activation',
-        locals: { card_activation: self }
+    def broadcast_update(c_user = nil)
+      current_user = c_user.nil? ? user : c_user
+      ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
+                                 type: :update,
+                                 id: id,
+                                 large: render_large_card_activation(current_user),
+                                 mini: render_mini_card_activation(current_user)
+
     end
 
-    def render_mini_card_activation
+    def broadcase_delete(c_user_id = nil)
+      current_user = c_user.nil? ? user : c_user
+      ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
+                                 type: :delete,
+                                 id: id
+    end
+    
+    def render_large_card_activation(c_user = nil)
+      current_user = c_user.nil? ? user : c_user
+      ApplicationController.render partial: 'card_activations/single_card_activation',
+        locals: { card_activation: self, current_user: current_user }
+    end
+
+    def render_mini_card_activation(c_user = nil)
+      current_user = c_user.nil? ? user : c_user
       ApplicationController.render partial: 'card_activations/card_activation_mini',
-      locals: { card_activation: self }
+      locals: { card_activation: self,current_user: current_user }
     end
 
     def luhn_number_valid

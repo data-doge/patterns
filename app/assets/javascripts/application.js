@@ -33,10 +33,9 @@
 $(document).on('turbolinks:load',function() {
   $.jMaskGlobals.watchDataMask = true;
   
-  FastClick.attach(document.body);
+  FastClick.attach(document.body);  
   /* Activating Best In Place */
   jQuery(".best_in_place").best_in_place();
-
 
   var show_ajax_message = function(msg, type) {
     var cssClass = type === 'error' ? 'alert-error' : 'alert-success'
@@ -55,6 +54,4 @@ $(document).on('turbolinks:load',function() {
       show_ajax_message(msg, type);
     }
   });
-
-  
 });

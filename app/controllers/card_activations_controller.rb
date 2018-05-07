@@ -2,7 +2,6 @@
 require 'csv'
 class CardActivationsController < ApplicationController
   before_action :set_card_activation, only: %i[show edit update destroy change_user check]
-  before_action :admin?, only: :change_user
 
   # GET /card_activations
   # GET /card_activations.json
@@ -89,7 +88,7 @@ class CardActivationsController < ApplicationController
   # PATCH/PUT /card_activations/1.json
   def update
     respond_to do |format|
-      if @card_activation.update(card_activation_params)
+      if @card_activation.update(card_activation_params) && current_user.admin?
         format.html { redirect_to @card_activation, notice: 'Card activation was successfully updated.' }
         format.json { render :show, status: :ok, location: @card_activation }
       else
@@ -102,18 +101,26 @@ class CardActivationsController < ApplicationController
   # DELETE /card_activations/1
   # DELETE /card_activations/1.json
   def destroy
-    @card_activation.destroy
+    
+    @card_activation.destroy if current_user.admin?
     respond_to do |format|
-      format.html { redirect_to card_activations_url, notice: 'Card activation was successfully destroyed.' }
-      format.json { head :no_content }
+      if current_user.admin?
+        format.html { redirect_to card_activations_url, notice: 'Card activation was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.json { render json: @card_activation, status: :unauthorized }
+        format.html { redirect_to card_activations_url, notice: 'Not Authorized' }
+      end
     end
   end
 
   def change_user
     if current_user.admin?
-      @card_activation.user_id = params[:user_id]
-      @card_activation.save
-      flash[:notice] = "Card Owner Changed to #{@card_activation.user.name}"
+      # https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
+      ca = Array.wrap(@card_activation)
+      ca.each { |c| c.user_id = params[:user_id] }
+      ca.each(&:save)
+      flash[:notice] = "#{ca.size } Cards owner changed to #{ca.first.user.name}"
     end
     respond_to do |format|
       format.json { render json:{success: true}.to_json, status: :ok}
@@ -122,13 +129,10 @@ class CardActivationsController < ApplicationController
 
   private
 
-    def admin?
-      current_user.admin?
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_card_activation
-      @card_activation = CardActivation.find(params[:id])
+      ca_id = params[:id].split(',')
+      @card_activation = CardActivation.find(ca_id)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
