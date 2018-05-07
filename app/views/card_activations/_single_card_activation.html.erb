@@ -27,7 +27,9 @@
            remote: true,
            method: 'post',
           url: change_user_card_activations_path(card_activation)} %>
-    <%= check_box_tag "card_activation_id_change[]", card_activation.id, id:"card_activation_id_change_#{card_activation.id}" %> |
+    <%= check_box_tag "card_activation_id_change[]", 
+          card_activation.id, false,
+          id: "card_activation_id_change_#{card_activation.id}" %> |
     <%= link_to 'Show', card_activation %> | 
     <%= link_to 'Edit', edit_card_activation_path(card_activation) %> | 
     <%= link_to 'Destroy', card_activation, method: :delete, data: { confirm: 'Are you sure?' } %>
