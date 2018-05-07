@@ -197,7 +197,7 @@ class CardActivation < ApplicationRecord
 
     end
 
-    def broadcase_delete(c_user_id = nil)
+    def broadcast_delete(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
                                  type: :delete,
