@@ -132,9 +132,9 @@ class GiftCardsController < ApplicationController
   # DELETE /gift_cards/1
   # DELETE /gift_cards/1.json
   def destroy
-    giftable = @gift_card.giftable
+    @giftable = @gift_card.giftable
     @gift_card.destroy
-    giftable&.reload # weirdo.
+    @giftable&.reload # weirdo.
     respond_to do |format|
       format.html { redirect_back(fallback_location: gift_cards_path) }
       format.json { head :no_content }

@@ -16,9 +16,8 @@
   $('td#new-expirationdate-<%= @gift_card.person_id %>').html('<%= @gift_card.expiration_date %>');
   
   // should be actioncable callback. elementID should have personid in it.
-  $('#gift_card_total').html("<%= humanized_money_with_symbol @total %>");
-  // Updates for Person page should be in actioncable callback, see above
-  $('#gift-card-total').html('Gift Cards - Total: <%= humanized_money_with_symbol @gift_card.person.gift_card_total %>');
+  <% @gift_card.person.reload %>
+  $('#gift_card_total').html("<%= @gift_card.person.gift_card_total %>");
   
   $("#gift_card_content").val("");
   $('#error-div').html("");
@@ -32,7 +31,7 @@
   $('#<%= @gift_card.giftable&.id%>-gift-card-count').text('<%= @gift_card.giftable&.gift_cards&.size%>');
   <% if defined? @card_activation %>
     // removing card activation ui if it exists. should be actioncable callback.
-    $('#<%= @card_activation.id %>-card-activation').remove();
+    // $('#<%= @card_activation.id %>-card-activation').remove();
   <% end %>
 
 <% else %>
