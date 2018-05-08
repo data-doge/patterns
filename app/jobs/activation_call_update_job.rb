@@ -26,6 +26,6 @@ class ActivationCallJob
     call.sid = res.sid
     call.save!
     # start background status check
-    ActivationCallJob.perform_async(true)
+    ActivationCallUpdateJob.perform_async(true)
   end
 end
