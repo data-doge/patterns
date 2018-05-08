@@ -190,7 +190,7 @@ class CardActivation < ApplicationRecord
   end
 
   def can_run_check?
-    !active? || current_call_status != 'complete'
+    !active? && current_call_status != 'complete'
   end
 
   private
