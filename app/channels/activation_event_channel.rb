@@ -8,6 +8,6 @@ class ActivationEventChannel < ApplicationCable::Channel
   end
 
   def log_me
-    logger.info('logging')
+    logger.info("logging: #{current_user.id}")
   end
 end

@@ -24,6 +24,7 @@ class CardActivation < ApplicationRecord
   include AASM
   page 20
   monetize :amount_cents
+  attr_accessor :old_user_id
 
   has_paper_trail
 
@@ -47,7 +48,7 @@ class CardActivation < ApplicationRecord
 
   scope :unassigned, -> { where(gift_card_id: nil) }
   scope :assigned, -> { where.not(gift_card_id: nil) }
-
+  default_scope { order(sequence_number: :asc) }
   # see force_immutable below. do we not want to allow people to
   # change the assigned activation to gift card? unclear
   # IMMUTABLE = %w{gift_card_id}
@@ -64,9 +65,9 @@ class CardActivation < ApplicationRecord
   # starts activation call process on create after commit happens
   # only hook we're using here
   after_commit :create_activation_call, on: :create
-  
+
   # uses action cable to update card.
-  after_commit :update_front_end, on: :update 
+  after_commit :update_front_end, on: :update
 
 
   def self.import(file, user)
@@ -133,8 +134,6 @@ class CardActivation < ApplicationRecord
     start_check
   end
 
-  
-
   # almost always backend
   def update_front_end
     # if assigned, delete.
@@ -174,11 +173,9 @@ class CardActivation < ApplicationRecord
     end
   end
 
-  
-
   def update_balance
     create_check_call(override: true)
-  end  
+  end
 
   private
 
@@ -191,7 +188,7 @@ class CardActivation < ApplicationRecord
     def set_created_by
       self.created_by = user_id
     end
-    
+
     def broadcast_update(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
@@ -199,7 +196,6 @@ class CardActivation < ApplicationRecord
                                  id: id,
                                  large: render_large_card_activation(current_user),
                                  mini: render_mini_card_activation(current_user)
-
     end
 
     def broadcast_delete(c_user = nil)
@@ -208,7 +204,7 @@ class CardActivation < ApplicationRecord
                                  type: :delete,
                                  id: id
     end
-    
+
     def render_large_card_activation(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ApplicationController.render partial: 'card_activations/single_card_activation',

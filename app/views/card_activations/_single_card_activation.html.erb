@@ -27,6 +27,8 @@
            remote: true,
            method: 'post',
           url: change_user_card_activations_path(card_activation)} %>
+    </td>
+    <td>
     <%= check_box_tag "card_activation_id_change[]", 
           card_activation.id, false,
           id: "card_activation_id_change_#{card_activation.id}" %> |
