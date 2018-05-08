@@ -30,6 +30,9 @@ set :keep_releases, 10
 set :stages, %w(production staging)
 set :default_stage, 'staging'
 
+set :sidekiq_config, 'config/sidekiq.yml'
+set :sidekiq_processes, 2
+
 set :bundle_flags, '--deployment --quiet'
 
 #set :default_environment, { 'PATH' => '/home/logan/.rbenv/shims:/home/logan/.rbenv/bin:$PATH' }
