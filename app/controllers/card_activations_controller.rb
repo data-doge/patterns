@@ -101,7 +101,6 @@ class CardActivationsController < ApplicationController
   # DELETE /card_activations/1
   # DELETE /card_activations/1.json
   def destroy
-    
     @card_activation.destroy if current_user.admin?
     respond_to do |format|
       if current_user.admin?
@@ -131,7 +130,7 @@ class CardActivationsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_card_activation
-      ca_id = params[:id].split(',')
+      ca_id = params[:id].split(',') if params[:id].include? ','
       @card_activation = CardActivation.find(ca_id)
     end
 

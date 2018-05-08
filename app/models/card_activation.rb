@@ -62,6 +62,7 @@ class CardActivation < ApplicationRecord
 
   before_create :check_secure_code
   before_create :set_created_by
+  
   # starts activation call process on create after commit happens
   # only hook we're using here
   after_commit :create_activation_call, on: :create
@@ -90,7 +91,7 @@ class CardActivation < ApplicationRecord
     state :active
 
     event :start_activate do
-      transitions from: :created, to: :activate_started
+      transitions from: %i(created activate_started), to: :activate_started
     end
 
     event :activate_error, after_commit: :activation_error_report do
