@@ -82,7 +82,7 @@ class CardActivationsController < ApplicationController
     #
     respond_to do |format|
       if @card_activation.errors.empty?
-        format.html { redirect_to @card_activation, notice: 'Card Activation process started.' }
+        format.html { redirect_to card_activations_url, notice: 'Card Activation process started.' }
         format.json { render :show, status: :created, location: @card_activation }
         format.js {}
       else

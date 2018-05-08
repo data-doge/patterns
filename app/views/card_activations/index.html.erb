@@ -31,11 +31,11 @@ table tr {
         <thead>
           <tr>
             <th>Full Card #</th>
-            <th>Sequence</th>
             <th>Secure Code</th>
-            <th>Batch ID</th>
             <th>Exp Date</th>
             <th>Amount</th>
+            <th>Sequence</th>
+            <th>Batch ID</th>
             <th></th>
           </tr>
         </thead>
@@ -48,22 +48,10 @@ table tr {
                 'data-mask': '9999-9999-9999-9999'%>
         </td>
         <td>
-          <%= f.text_field :sequence_number, 
-                placeholder:'Sequence',
-                class: 'input-mini',
-                'data-mask':'999' %>
-        </td>
-        <td>
           <%= f.text_field :secure_code, 
                 placeholder: 'Secure Code',
                 class: 'input-mini',
                 'data-mask': '999' %>
-        </td>
-        <td>
-          <%= f.text_field :batch_id, 
-                placeholder: 'Batch ID',
-                class: 'input-mini',
-                'data-mask':'999999' %>
         </td>
         <td>
           <%= f.text_field :expiration_date, 
@@ -76,6 +64,18 @@ table tr {
                 placeholder: '$25.00', 
                 class: 'input-mini',
                 'data-mask': '$99.99' %>
+        </td>
+        <td>
+          <%= f.text_field :sequence_number, 
+                placeholder:'Sequence',
+                class: 'input-mini',
+                'data-mask':'999' %>
+        </td>
+        <td>
+          <%= f.text_field :batch_id, 
+                placeholder: 'Batch ID',
+                class: 'input-mini',
+                'data-mask':'999999' %>
         </td>
         <td>
           <%= f.submit "Activate", class: 'btn' %>

@@ -184,12 +184,12 @@ class CardActivation < ApplicationRecord
     create_check_call(override: true)
   end
 
-  def current_call_status
-    calls&.last&.call&.status || 'complete'
+  def ongoing_call?
+    calls.ongoing.size.positive?
   end
 
   def can_run_check?
-    !active? && current_call_status != 'complete'
+    !active? && !ongoing_call?
   end
 
   private

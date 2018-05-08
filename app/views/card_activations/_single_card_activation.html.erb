@@ -18,7 +18,7 @@
             remote: true, 
             class: 'btn btn-small', 
             id: "check-card-#{card_activation.id}" %>
-    <% elsif card_activation.current_call_status != 'completed' %>
+    <% elsif card_activation.ongoing_call? %>
       <%= image_tag("/spinner.gif",size: '20x20') %>
     <% else %>
       Ready for use.
