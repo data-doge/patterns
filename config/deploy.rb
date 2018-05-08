@@ -1,4 +1,5 @@
 require 'bundler/capistrano'
+require 'capistrano'
 require 'capistrano/sidekiq'
 require 'capistrano/ext/multistage'
 set :whenever_command, 'bundle exec whenever'
@@ -16,6 +17,7 @@ end if File.exist?(File.dirname(__FILE__) + '/local_env.yml')
 YAML.load(File.open(File.dirname(__FILE__) + '/sample.local_env.yml')).each do |key, value|
   ENV[key.to_s] = value unless ENV[key]
 end
+
 
 set :repository, ENV['GIT_REPOSITORY']
 
