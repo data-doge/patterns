@@ -61,7 +61,9 @@ class CardActivation < ApplicationRecord
   belongs_to :user
 
   before_create :check_secure_code
+  before_validate :sanitize_card_number
   before_create :set_created_by
+
   
   # starts activation call process on create after commit happens
   # only hook we're using here
@@ -188,6 +190,10 @@ class CardActivation < ApplicationRecord
   end
 
   private
+
+    def sanitize_card_number
+      self.full_card_number = self.full_card_number.delete('-')
+    end
 
     def check_secure_code # sometimes we drop leading 0's in csv
       while secure_code.length < 3

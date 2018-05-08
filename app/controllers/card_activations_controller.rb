@@ -142,6 +142,8 @@ class CardActivationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def card_activation_params
-      params.fetch(:card_activation, {})
+      allowed = %i(amount batch_id expiration_date full_card_number secure_code sequence_number)
+       
+      params.fetch(:card_activation, {}).permit(allowed)
     end
 end
