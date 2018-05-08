@@ -82,6 +82,7 @@ class CardActivation < ApplicationRecord
         ca.start_activate!
       else
         errors << ca
+      end
     end
     errors
   end
