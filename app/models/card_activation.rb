@@ -190,7 +190,7 @@ class CardActivation < ApplicationRecord
     end
 
     def set_created_by
-      self.created_by = user_id
+      self.created_by = self.user_id
     end
 
     def broadcast_update(c_user = nil)

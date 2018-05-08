@@ -67,8 +67,6 @@ class CardActivationsController < ApplicationController
   def create
     @card_activation = CardActivation.new(card_activation_params)
     @card_activation.user = current_user
-    @card_activation.created_by = current_user.id
-    
     @card_activation.start_activate! if @card_activation.save
 
 
