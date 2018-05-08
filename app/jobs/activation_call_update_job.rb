@@ -12,7 +12,7 @@ class ActivationCallUpdateJob
           activation_call.failure
           activation_call.save
           activation_call.update_front_end
-        end
+        end unless activation_call.card.active?
         redis.setex('ActivationCallUpdateLock', 5, true)
         sleep 1
       end until ActivationCall.ongoing.empty?
