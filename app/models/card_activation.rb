@@ -112,7 +112,7 @@ class CardActivation < ApplicationRecord
     # after_commit here because we want to ensure that
     # the history is present
     event :check_error, after_commit: :create_check_call do
-      transitions from: %i[check_started active check_errored], to: :check_errored
+      transitions from: %i[check_started activate_errored active check_errored], to: :check_errored
     end
 
     event :success, after_commit: :do_success_notification do
