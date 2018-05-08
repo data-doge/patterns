@@ -10,7 +10,34 @@
       </ul>
     </div>
   <% end %>
-
+   <div class="field">
+    <%= form.label :batch_id %><br>
+    <%= form.text_field :batch_id,
+          class: 'input-mini' %>
+  </div>
+  <div class="field">
+    <%= form.label "sequence" %><br>
+    <%= form.text_field :sequence_number, class: 'input-mini'%>
+  </div>
+  <div class='field'>
+    <%= form.label :full_card_number %><br>
+    <%= form.text_field :full_card_number, class: 'input-large'%>
+  </div>
+  <div class="field">
+    <%= form.label :expiration_date %><br>
+    <%= form.text_field :expiration_date,
+          class: 'input-mini'%>
+  </div>
+  <div class="field">
+    <%= form.label :secure_code %><br>
+    <%= form.text_field :secure_code,
+          class: 'input-mini'%>
+  </div>
+  <div class="field">
+    <%= form.label :status_be_careful_here %>
+    <%= form.select :status, card_activation.aasm.states.map(&:name),
+          class: 'input-mini'%>
+  </div>
   <div class="actions">
     <%= form.submit %>
   </div>
