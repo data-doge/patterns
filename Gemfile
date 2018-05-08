@@ -138,12 +138,7 @@ gem 'gsm_encoder'
 # Switching to sidekiq: async, threaded, less memory,
 # more performance. Important for responsiveness
 # for background tasks users are waiting for.
-
 gem 'sidekiq'
-gem 'sidekiq-unique-jobs'
-
-# for generating unique tokens for Person
-# gem 'has_secure_token' # not needed in rails 5+
 
 # phone number validation
 gem 'phony_rails'
