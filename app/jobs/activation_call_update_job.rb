@@ -1,31 +1,17 @@
 # frozen_string_literal: true
 
-class ActivationCallJob
+class ActivationCallUpdateJob
   include Sidekiq::Worker
-  sidekiq_options retry: 5
-
-  # how it works: sends a twilio call, and records the sid, etc in the call object
-  def perform(id)
-    Rails.logger.info '[ActivationCall] job enqueued'
-    call = ActivationCall.find(id)
-
-    case call.call_type # activation or check for now. soon balance.
-    when 'activate'
-      url = "https://#{HOSTNAME}/activation_calls/activate/#{call.token}.xml"
-    when 'check'
-      url = "https://#{HOSTNAME}/activation_calls/check/#{call.token}.xml"
-    end
-    res = $twilio.account.calls.create(
-      from: ENV['TWILIO_SCHEDULING_NUMBER'],   # From your Twilio number
-      to: '+18663008288', # BOA activation number
-      # Fetch instructions from this URL when the call connects
-      url: url,
-      method: 'GET'
-    )
-    call.call_status = 'started'
-    call.sid = res.sid
-    call.save!
-    # start background status check
-    ActivationCallUpdateJob.perform_async(true)
+  sidekiq_options unique: :while_executing
+  
+  def perform(_useless)
+    ActivationCall.ongoing.find_each do |activation_call|
+      if activation_call.timeout_error?
+        activation_call.failure
+        activation_call.save
+        activation_call.update_front_end
+      end
+      sleep 1
+    end until ActivationCall.ongoing.empty?
   end
 end

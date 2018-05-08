@@ -67,7 +67,11 @@ class CardActivationsController < ApplicationController
   def create
     @card_activation = CardActivation.new(card_activation_params)
     @card_activation.user = current_user
-    @card_activation.start_activate! if @card_activation.save
+    if @card_activation.save
+      @card_activation.start_activate! 
+    else
+      flash[:error]= "Card Error: #{@card_activation.errors}"
+    end
 
 
     # this is where we do the whole starting calls thing.
