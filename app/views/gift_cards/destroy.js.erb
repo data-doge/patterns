@@ -1,4 +1,7 @@
 $('#gift_card-<%= @gift_card.id%>').remove();
 if ($('#gift_card_total').length) {
+  <% @gift_card.person.reload %>
   $('#gift_card_total').html("<%= humanized_money_with_symbol @gift_card.person.gift_card_total %>");
 }
+
+$('#dynamic-invitation-panel').load('/sessions/' + research_session_id + '/invitations_panel.html');

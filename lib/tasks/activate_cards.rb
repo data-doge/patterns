@@ -1,7 +1,7 @@
 require_relative "../../config/boot"
 require_relative "../../config/environment"
 
-@client = Twilio::REST::Client.new(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN'])
+@client ||= $twilio
 
 def activate
   csv_text = File.read('cards.csv')
@@ -80,7 +80,8 @@ def check
   csv.each do |row|
     number = row[0]
     code   = row[1]
-    next if code.nil? && number.nil?
+    expiration = row[2]
+    next if code.nil? || number.nil? || expiration.nil?
     if code.length != 3
       puts "invalid code: #{number},#{code}"
       next
@@ -116,15 +117,17 @@ def check
       sleep 10
     end
   end
-
+  @active = 0
   @calls.each do |card_number,c|
+
     c.update
     transcript = c&.recordings&.list&.first&.transcriptions&.list&.first&.transcription_text
-    # "Your pin has been created your card has been activated"
-    if transcript.nil? || !transcript.include?('please hold while we')
+    
+    if transcript.nil? || !transcript.include?('Please hold while')
       puts "card not activated: #{card_number} transcript: #{transcript.nil? ? 'nil' : transcript}"
     else
-      puts "activated! #{transcript}"
+      puts "activated!"
+      @active +=1
   end
 
 end

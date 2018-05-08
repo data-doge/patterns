@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 class ApplicationController < ActionController::Base
 
   # Prevent CSRF attacks by raising an exception.
@@ -24,7 +22,7 @@ class ApplicationController < ActionController::Base
 
   def user_needed
     unless current_user
-      render json: { 'error' => 'authentication error' }, status: 401
+      render json: { 'error' => 'authentication error' }, status: :unauthorized
     end
   end
 

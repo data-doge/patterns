@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 require 'active_support/concern'
 
 # to be "calendarable", must have or delegate to
@@ -34,7 +32,6 @@ module Calendarable
         Time.zone.now.end_of_day + 1.day)
     }
   end
-  # rubocop:enable Lint/AmbiguousBlockAssociation
 
   def not_overlap?(other)
     !overlap?(other)

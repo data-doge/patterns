@@ -1,21 +1,11 @@
 # frozen_string_literal: true
 
-# rubocop:disable Style/StructInheritance
-class RapidproDeleteJob < Struct.new(:id)
-  attr_accessor :retry_delay
-  attr_accessor :id
+class RapidproDeleteJob
+  include Sidekiq::Worker
+  sidekiq_options retry: 5
 
-  def initialize(id)
-    self.id = id
-    self.retry_delay = 5 # default retry delay
-  end
-
-  def enqueue(job)
+  def perform(id)
     Rails.logger.info '[RapidProDelete] job enqueued'
-    job.save!
-  end
-
-  def perform
     person = Person.find id
     if person&.rapidpro_uuid.present?
       headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
@@ -30,20 +20,13 @@ class RapidproDeleteJob < Struct.new(:id)
         person.update_column(:rapidpro_uuid, nil) # skip callbacks
         return true
       when 429
-        self.retry_delay = res.headers['retry-after'].to_i
-        raise 'error'
+        retry_delay = res.headers['retry-after'].to_i + 5
+        RapidproDeleteJob.perform_in(retry_delay, id)
       else
         raise 'error'
       end
+    else
+      raise 'error' # no person found
     end
   end
-
-  def max_attempts
-    15
-  end
-
-  def reschedule_at(current_time, attempts)
-    current_time + (retry_delay + attempts).seconds
-  end
 end
-# rubocop:enable Style/StructInheritance

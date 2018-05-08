@@ -19,7 +19,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  batch_id         :string(255)
-#  proxy_id         :string(255)
+#  sequence_number         :string(255)
 #  active           :boolean          default(FALSE)
 #  secure_code      :string(255)
 #  team_id          :integer
@@ -27,41 +27,49 @@
 #
 
 class GiftCard < ApplicationRecord
+  attr_accessor :card_activation_id
   has_paper_trail
   page 20
   monetize :amount_cents
 
+  before_destroy :unassign_card_activation
+  after_create :assign_card_activation
+  
   enum reason: {
     unknown: 0,
     signup: 1,
-    test: 2,
+    user_test: 2,
     referral: 3,
     interview: 4,
-    other: 5
+    other: 5,
+    focus_group: 6
   }
 
   belongs_to :giftable, polymorphic: true, touch: true
   belongs_to :person
   belongs_to :user, foreign_key: :created_by
-  belongs_to :team, optional: true # shouldn't be optional moving forward
+  belongs_to :team
+  
+  has_one :card_activation
+
 
   validates_presence_of :amount
   validates_presence_of :reason
   validates_presence_of :batch_id
-  validates_presence_of :proxy_id
+  validates_presence_of :sequence_number
 
   validates_format_of :expiration_date,
     with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i,
     unless: proc { |c| c.expiration_date.blank? }
 
-  validates_length_of :proxy_id, minimum: 2, maximum: 7, unless: proc { |c| c.proxy_id.blank? }
+  validates_length_of :sequence_number, minimum: 1, maximum: 7, unless: proc { |c| c.sequence_number.blank? }
 
-  validates_uniqueness_of :proxy_id,
+  validates_uniqueness_of :sequence_number,
     scope: %i[batch_id gift_card_number],
-    unless: proc { |c| c.proxy_id.blank? }
+    unless: proc { |c| c.sequence_number.blank? }
 
   validates_uniqueness_of :gift_card_number,
-    scope: %i[batch_id proxy_id],
+    scope: %i[batch_id sequence_number],
     unless: proc { |c| c.gift_card_number.blank? }
 
   validates_format_of :gift_card_number,
@@ -78,13 +86,6 @@ class GiftCard < ApplicationRecord
 
   def reason_is_signup?
     reason == 'signup'
-  end
-
-  def giftable_person_ownership
-    # if there is no giftable object, means this card was given directly. no invitation/session, etc.
-    return true if giftable.nil?
-
-    giftable.respond_to?(:person_id) ? person_id == giftable.person_id : false
   end
 
   def research_session
@@ -123,7 +124,7 @@ class GiftCard < ApplicationRecord
                      gift_card.research_session&.created_at&.to_date&.to_s || '',
                      gift_card.created_at.to_s(:rfc822),
                      gift_card.batch_id.to_s,
-                     gift_card.proxy_id.to_s,
+                     gift_card.sequence_number.to_s,
                      gift_card.amount.to_s,
                      gift_card.reason.titleize,
                      this_person.id || '',
@@ -140,5 +141,43 @@ class GiftCard < ApplicationRecord
       end
     end
   end
+
+  private
+
+    def assign_card_activation
+      # tricksy: must allow creation of cards without activations
+      # but must check to see if card has activation
+      # AND throw error if we are duplicating.
+      if card_activation.nil?
+        # first check if we have an activation id, then a search
+        ca = CardActivation.find card_activation_id unless card_activation_id.nil?
+        ca ||= CardActivation.where(sequence_number: sequence_number, batch_id: batch_id).first
+    
+        if ca.present? && ca.gift_card_id.nil?
+          self.card_activation = ca
+          return true
+        elsif ca.gift_card_id.present?
+          # error case, duplicating
+          errors.add(:base, 'This card as already been assigned')
+          raise ActiveRecord::RecordInvalid.new(self)
+        else
+          return true # no card activation for this gift card
+        end
+      end
+    end
+
+    def unassign_card_activation
+      if card_activation.present?
+        card_activation.gift_card_id = nil
+        card_activation.save
+      end
+    end
+
+    def giftable_person_ownership
+      # if there is no giftable object, means this card was given directly. no invitation/session, etc.
+      return true if giftable.nil?
+
+      giftable.respond_to?(:person_id) ? person_id == giftable.person_id : false
+    end
   # rubocop:enable Metrics/MethodLength
 end

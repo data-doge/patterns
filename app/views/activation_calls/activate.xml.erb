@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Pause length="27"/>
+    <!-- card number -->
+    <Play digits="<%= @card_activation.full_card_number %>#"></Play>
+    <Pause length="18"/>
+    <Play digits="1234#"></Play>
+    <Pause length="18"/>
+    <Play digits="1234#"></Play>
+    <Pause length="10"/>
+    <!-- security code -->
+    <Play digits="<%= @card_activation.secure_code %>#"></Play>
+    <!-- "Your pin has been created your card has been activated"-->
+    <!-- Should be a gather that pings an endpoint-->
+    
+    <!-- <Record timeout="5" 
+            maxLength="6" 
+            trim="trim-silence" 
+            transcribe="true"/> -->
+    <Gather input="speech" 
+            hints="Your PIN has been created your card now has been activated and is ready for you" 
+            action="<%= callback_activation_calls_url(@activation_call.token) %>" />
+    <Hangup/>
+</Response>

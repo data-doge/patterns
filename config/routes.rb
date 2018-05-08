@@ -1,8 +1,47 @@
-Logan::Application.routes.draw do
+require 'sidekiq/web'
+Logan::Application.routes.draw do  
+  
+  resources :activation_calls do
+    collection do
+      get 'activate/:token', 
+           action: :activate,
+           as: :activate,
+           defaults: { format: 'xml' }
+      get 'check/:token',
+           action: :check, 
+           as: :check,
+           defaults: {format:'xml'}
+      post 'callback/:token',
+           action: :callback,
+           as: :callback,
+           defaults: {format:'xml'}
+    end
+  end
+  
+  resources :card_activations do
+    collection do
+      get 'template', 
+          action: :template, 
+          as: :template, 
+          defaults: {format: 'csv'}
+      post 'upload',
+           action: :upload,
+           as: :upload
+      post 'check/:id',
+           action: :check,
+           as: :check,
+           defaults: {format: 'json'}
+      post 'change_user/:id',
+           action: :change_user,
+           as: :change_user,
+           defaults: {format: 'json'}
+    end
+  end
 
   resource :inbox, :controller => 'inbox', :only => [:show,:create]
   resources :gift_cards do
     collection do
+      post 'assign/:card_activation_id', action: :assign, as: :assign
       get 'recent_signups', action: :recent_signups, as: :recent_signups
       get 'modal/:giftable_type/:giftable_id', action: :modal, as: :modal
     end
@@ -197,8 +236,10 @@ Logan::Application.routes.draw do
     to: 'gift_cards#card_check',
     defaults: { format: 'xml' }
 
-  match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
-
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+  
   root to: 'dashboard#index'
 
   # The priority is based upon order of creation: first created -> highest priority.

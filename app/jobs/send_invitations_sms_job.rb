@@ -1,29 +1,17 @@
 # frozen_string_literal: true
 
-#
-
-# app/jobs/twilio/send_messages.rb
-#
-# module TwilioSender
-# Send twilio messages to a list of phone numbers
-#
 # FIXME: Refactor and re-enable cop
-# rubocop:disable Style/StructInheritance
 #
-class SendInvitationsSmsJob < Struct.new(:to, :invitation)
-
-  def enqueue(job)
-    Rails.logger.info '[SendInvitationsSms] job enqueued'
-    job.save!
-  end
-
-  def max_attempts
-    1
-  end
+class SendInvitationsSmsJob
+  include Sidekiq::Worker
+  sidekiq_options retry: 1
 
   # FIXME: Refactor and Enable Cops!
 
-  def perform
+  def perform(person_id, invitation_id, type)
+    person = Person.find person_id
+    invitation = Invitation.find invitation_id
+    Rails.logger.info '[SendInvitationsSms] job enqueued'
     # TODO: all texts should consider the persons' state with a ttl.
     # step 1: check to see if we already have a conversation for the person
     #   yes: get ttl and re-enque for after ttl
@@ -32,18 +20,23 @@ class SendInvitationsSmsJob < Struct.new(:to, :invitation)
     #   yes: requeue for 8:30am
     #   no: set context with expire and send!
     if time_requeue?
-      Delayed::Job.enqueue(SendInvitationsSmsJob.new(to, invitation), run_at: run_in_business_hours)
+      Rails.logger.info '[SendInvitationsSms] job re-enqueued for business hours'
+      SendInvitationsSmsJob.perform_at(run_in_business_hours, person.id, invitation.id, type)
     else # person is locked, wait till the lock times out.
-      InvitationSms.new(to: to, invitation: invitation).send
+      case type.to_sym
+      when :invite
+        ::InvitationSms.new(to: person, invitation: invitation).send
+      when :cancel
+        ::InvitationCancelSms.new(to: person, invitation: invitation).send
+      when :confirm
+        ::InvitationConfirmSms.new(to: person, invitation: invitation).send
+      when :remind
+        ::InvitationReminderSms.new(to: person, invitations: [invitation]).send
+      end
+
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
-
-  def before(job); end
-
-  def after(job); end
-
-  def success(job); end
+  # rubocop:enable
 
   private
 
@@ -51,7 +44,6 @@ class SendInvitationsSmsJob < Struct.new(:to, :invitation)
       # yes if before 8:30am and yes if after 8pm
       return true if Time.current < DateTime.current.change({ hour: 8, minute: 30 })
       return true if Time.current > DateTime.current.change({ hour: 20, minute: 0 })
-
       false
     end
 
@@ -63,4 +55,3 @@ class SendInvitationsSmsJob < Struct.new(:to, :invitation)
       end
     end
 end
-# rubocop:enable Style/StructInheritance

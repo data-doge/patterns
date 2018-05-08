@@ -61,7 +61,7 @@ $(document).on('turbolinks:load', function () {
   });
 
   $("#new-expirationdate").mask("99/99",{placeholder:"MM/YY"});
-  $("#new-amount").mask("9?9?.99",{placeholder:"##.##"});
+  $("#new-amount").mask("$99.99",{placeholder:"##.##"});
   $("#new-cardnumber").mask("9999",{placeholder:"####"});
   $('#new-notes').hide();
 

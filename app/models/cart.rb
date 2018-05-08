@@ -4,11 +4,12 @@
 #
 # Table name: carts
 #
-#  id         :integer          not null, primary key
-#  name       :string(255)      default("default")
-#  user_id    :integer          not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id          :integer          not null, primary key
+#  name        :string(255)      default("default")
+#  user_id     :integer          not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  description :text(65535)
 #
 
 # should be renamed to pool...
@@ -26,8 +27,8 @@ class Cart < ApplicationRecord
 
   before_create :set_owner_as_user
   validates :name, length: { in: 5..30 }
-  validates :name, uniqueness: {message: 'Pool must have a unique name'}
- 
+  validates :name, uniqueness: { message: 'Pool must have a unique name' }
+
   # keep current cart in carts_users,
   # add validation that it must be unique on scope of user.
   def owner
@@ -35,7 +36,7 @@ class Cart < ApplicationRecord
   end
 
   def name_and_count
-    "#{name}: #{people.count}"
+    "#{name}: #{people.size}"
   end
 
   def current_cart_for?

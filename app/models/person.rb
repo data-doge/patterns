@@ -70,6 +70,7 @@ class Person < ApplicationRecord
   has_many :invitations
   has_many :research_sessions, through: :invitations
 
+  # TODO: remove people from carts on deactivation
   has_many :carts_people
   has_many :carts, through: :carts_people, foreign_key: :person_id
 
@@ -247,15 +248,15 @@ class Person < ApplicationRecord
 
   def sendToMailChimp
     status = active? ? 'subscribed' : 'unsubscribed'
-    Delayed::Job.enqueue(MailchimpUpdateJob.new(id, status)).save
+    MailchimpUpdateJob.perform_async(id, status)
   end
 
   def deleteFromRapidPro
-    Delayed::Job.enqueue(RapidproDeleteJob.new(id)).save unless active
+    RapidproDeleteJob.perform_async(id) unless active
   end
 
   def updateRapidPro
-    Delayed::Job.enqueue(RapidproUpdateJob.new(id)).save if active
+    RapidproUpdateJob.perform_async(id) if active
   end
 
   # FIXME: Refactor and re-enable cop
@@ -301,7 +302,7 @@ class Person < ApplicationRecord
 
     new_person
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Rails/TimeZone, Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity
 
   def primary_device_type_name
     if primary_device_id.present?
@@ -360,7 +361,7 @@ class Person < ApplicationRecord
     fields = Person.column_names
     fields.push('tags')
     fields.map do |f|
-      field_value = self.send(f.to_sym)
+      field_value = send(f.to_sym)
       if f == 'phone_number'
         if field_value.present?
           field_value.phony_formatted(format: :national, spaces: '-')

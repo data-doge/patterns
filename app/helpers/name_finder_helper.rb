@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 module NameFinderHelper
   def find_name(obj)
     return 'None' if obj.nil?

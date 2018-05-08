@@ -2,7 +2,7 @@
 <% Rails.logger.warn("In the create.js.erb file") %>
 <% if @create_result %>
   // this should be like the dynamic panel in research session.
-  console.log("In Create_result if statement");
+  //console.log("In Create_result if statement");
   $('#error-div').val("");
   $("<%= escape_javascript(render partial: 'gift_cards/gift_card', locals: { gift_card: @gift_card } ) %>").prependTo("#gift_cards");
   $("<%= escape_javascript(render partial: 'people/gift_card', locals: { gift_card: @gift_card } ) %>").prependTo("#people_gift_cards");
@@ -10,26 +10,32 @@
   $("<%= j render partial: 'gift_cards/mini_gift_card', locals:{ gift_card: @gift_card } %>").prependTo('#mini-gift-card');
 
   $('td#new-submit-<%= @gift_card.person_id %>').html("Yes");
-  $('td#new-proxyid-<%= @gift_card.person_id %>').html('<%= @gift_card.proxy_id %>');
+  $('td#new-sequencenumber-<%= @gift_card.person_id %>').html('<%= @gift_card.sequence_number %>');
   $('td#new-batchid-<%= @gift_card.person_id %>').html('<%= @gift_card.batch_id %>');
   $('td#new-cardnumber-<%= @gift_card.person_id %>').html('<span class="add-on">****-****-***</span><input class="input-small" readonly="true" value="<%= @gift_card.gift_card_number %>">');
   $('td#new-expirationdate-<%= @gift_card.person_id %>').html('<%= @gift_card.expiration_date %>');
-  $('#gift_card_total').html("<%= humanized_money_with_symbol @total %>");
+  
+  // should be actioncable callback. elementID should have personid in it.
+  <% @gift_card.person.reload %>
+  $('#gift_card_total').html("<%= @gift_card.person.gift_card_total %>");
+  
   $("#gift_card_content").val("");
   $('#error-div').html("");
-  // Updates for Person page
-  $('#gift-card-total').html('Gift Cards - Total: <%= humanized_money_with_symbol @gift_card.person.gift_card_total %>');
-  //$('#new-batchid').val('<%= @gift_card.batch_id %>');
+  
   $('#new-cardnumber').val('');
-  $('#new-proxyid').val('');
+  $('#new-sequencenumber').val('');
   $('#new-amount').val('<%= @gift_card.amount %>');
   $('#new-reason').val('<%= @gift_card.reason %>');
   $('#new-expirationdate').val('<%= @gift_card.expiration_date %>');
 
   $('#<%= @gift_card.giftable&.id%>-gift-card-count').text('<%= @gift_card.giftable&.gift_cards&.size%>');
-<% else %>
-    console.log("In Create_result else statement");
+  <% if defined? @card_activation %>
+    // removing card activation ui if it exists. should be actioncable callback.
+    // $('#<%= @card_activation.id %>-card-activation').remove();
+  <% end %>
 
+<% else %>
+  console.log("In Create_result else statement");
   $('#error-div').html("");
   $("<%= escape_javascript(render partial: 'gift_cards/gift_card_error', locals: { gift_card: @gift_card } ) %>").prependTo("#error-div");
 <% end %>

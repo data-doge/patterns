@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require jquery.turbolinks
 //= require fastclick/fastclick
 //= require best_in_place
 //= require twitter/bootstrap
@@ -25,14 +26,16 @@
 //= require datepicker/bootstrap-datetimepicker.min
 //= require fullcalendar/fullcalendar.min
 //= require jquery-touchswipe/jquery.touchSwipe.min
+//= require cable
 //= require_tree .
-//= require maskedinput
+//= require jquery.mask
 
 $(document).on('turbolinks:load',function() {
-  FastClick.attach(document.body);
+  $.jMaskGlobals.watchDataMask = true;
+  
+  FastClick.attach(document.body);  
   /* Activating Best In Place */
   jQuery(".best_in_place").best_in_place();
-
 
   var show_ajax_message = function(msg, type) {
     var cssClass = type === 'error' ? 'alert-error' : 'alert-success'
@@ -51,5 +54,4 @@ $(document).on('turbolinks:load',function() {
       show_ajax_message(msg, type);
     }
   });
-
 });

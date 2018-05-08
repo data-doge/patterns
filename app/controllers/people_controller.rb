@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 # == Schema Information
 #
 # Table name: people
@@ -60,7 +58,7 @@ class PeopleController < ApplicationController
                   where(active: true)
               else
                 tags =  params[:tags].split(',').map(&:strip)
-                @tags = ActsAsTaggableOn::Tag.where(name: tags)
+                @tags = Person.tag_counts.where(name: tags)
 
                 Person.includes(:taggings).paginate(page: params[:page]).
                   order(sort_column + ' ' + sort_direction).
@@ -193,7 +191,7 @@ class PeopleController < ApplicationController
       @person = Person.initialize_from_wufoo(params)
       @person.save
       begin
-        @client = Twilio::REST::Client.new(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN'])
+        @client ||= $twilio
         @twilio_message = TwilioMessage.new
         @twilio_message.from = ENV['TWILIO_SIGNUP_VERIFICATION_NUMBER']
         @twilio_message.to = @person.normalized_phone_number

@@ -6,7 +6,7 @@ RSpec.describe 'gift_cards/index', type: :view do
     @a = GiftCard.create!(
       gift_card_number: 12345,
       batch_id: 1,
-      proxy_id: '0432',
+      sequence_number: 123,
       person_id: person.id,
       notes: 'Notes',
       created_by: 3,
@@ -16,7 +16,7 @@ RSpec.describe 'gift_cards/index', type: :view do
     @b = GiftCard.create!(
       gift_card_number: 2346,
       batch_id: 1,
-      proxy_id: '4321',
+      sequence_number: 123,
       person_id: person.id,
       notes: 'Notes',
       created_by: 3,
@@ -34,8 +34,8 @@ RSpec.describe 'gift_cards/index', type: :view do
   it 'renders a list of gift_cards' do
     render
 
-    assert_select 'tr>td', text: @a.proxy_id, count: 1
-    assert_select 'tr>td', text: @b.proxy_id, count: 1
+    assert_select 'tr>td', text: @a.sequence_number, count: 1
+    assert_select 'tr>td', text: @b.sequence_number, count: 1
     assert_select 'tr>td', text: @a.gift_card_number, count: 1
     assert_select 'tr>td', text: @b.gift_card_number, count: 1
     assert_select 'tr>td', text: 'Signup', count: 1

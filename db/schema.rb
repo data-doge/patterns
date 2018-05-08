@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180215202649) do
+ActiveRecord::Schema.define(version: 2018_05_08_214259) do
 
-  create_table "activities", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "card_activation_id"
+    t.string "sid"
+    t.text "transcript"
+    t.string "audio_url"
+    t.string "call_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "call_status", default: "created"
+    t.string "token"
+    t.index ["token"], name: "index_activation_calls_on_token", unique: true
+  end
+
+  create_table "activities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "trackable_id"
     t.string "trackable_type"
     t.integer "owner_id"
@@ -28,7 +41,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
   end
 
-  create_table "applications", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "applications", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.string "url"
@@ -41,29 +54,46 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.integer "updated_by"
   end
 
-  create_table "carts", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "card_activations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "full_card_number"
+    t.string "expiration_date"
+    t.string "sequence_number"
+    t.string "secure_code"
+    t.string "batch_id"
+    t.string "status", default: "created"
+    t.integer "user_id"
+    t.integer "gift_card_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "amount_cents", default: 0, null: false
+    t.string "amount_currency", default: "USD", null: false
+    t.integer "created_by"
+  end
+
+  create_table "carts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "name", default: "default"
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
+    t.integer "people_count", default: 0
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
-  create_table "carts_people", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "carts_people", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "cart_id", null: false
     t.bigint "person_id", null: false
     t.index ["person_id", "cart_id"], name: "index_carts_people_on_person_id_and_cart_id", unique: true
   end
 
-  create_table "carts_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "carts_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "cart_id", null: false
     t.bigint "user_id", null: false
     t.boolean "current_cart", default: false
     t.index ["user_id", "cart_id"], name: "index_carts_users_on_user_id_and_cart_id", unique: true
   end
 
-  create_table "comments", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.text "content"
     t.integer "user_id"
     t.string "commentable_type"
@@ -73,7 +103,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.integer "created_by"
   end
 
-  create_table "delayed_jobs", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "delayed_jobs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
@@ -92,7 +122,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.index ["queue"], name: "delayed_jobs_queue"
   end
 
-  create_table "events", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "events", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "start_datetime"
@@ -107,7 +137,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.integer "updated_by"
   end
 
-  create_table "gift_cards", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "gift_cards", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "gift_card_number"
     t.string "expiration_date"
     t.integer "person_id"
@@ -121,7 +151,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "batch_id"
-    t.string "proxy_id"
+    t.integer "sequence_number"
     t.boolean "active", default: false
     t.string "secure_code"
     t.bigint "team_id"
@@ -130,14 +160,14 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.index ["reason"], name: "gift_reason_index"
   end
 
-  create_table "invitation_invitees_join_table", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "invitation_invitees_join_table", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.integer "event_invitation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "invitations", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "invitations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -147,7 +177,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.index ["research_session_id"], name: "index_invitations_on_research_session_id"
   end
 
-  create_table "mailchimp_exports", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "mailchimp_exports", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.text "body"
     t.integer "created_by"
@@ -155,7 +185,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.datetime "updated_at"
   end
 
-  create_table "mailchimp_updates", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "mailchimp_updates", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.text "raw_content"
     t.string "email"
     t.string "update_type"
@@ -165,7 +195,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "old_taggings", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "old_taggings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "taggable_type"
     t.integer "taggable_id"
     t.integer "created_by"
@@ -174,7 +204,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.integer "tag_id"
   end
 
-  create_table "old_tags", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "old_tags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.integer "created_by"
     t.datetime "created_at"
@@ -182,7 +212,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.integer "taggings_count", default: 0, null: false
   end
 
-  create_table "people", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "people", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "email_address"
@@ -220,7 +250,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.string "rapidpro_uuid"
   end
 
-  create_table "programs", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "programs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at"
@@ -229,7 +259,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.integer "updated_by"
   end
 
-  create_table "research_sessions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "research_sessions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "description"
     t.integer "buffer", default: 0, null: false
     t.datetime "created_at"
@@ -245,7 +275,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.index ["user_id"], name: "index_research_sessions_on_user_id"
   end
 
-  create_table "reservations", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "reservations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "person_id"
     t.integer "event_id"
     t.datetime "confirmed_at"
@@ -256,7 +286,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.integer "updated_by"
   end
 
-  create_table "submissions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "submissions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.text "raw_content"
     t.integer "person_id"
     t.string "ip_addr"
@@ -269,7 +299,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.integer "form_type", default: 0
   end
 
-  create_table "taggings", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "taggings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "tag_id"
     t.integer "taggable_id"
     t.string "taggable_type"
@@ -288,13 +318,13 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
   end
 
-  create_table "tags", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "tags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "name", collation: "utf8_bin"
     t.integer "taggings_count", default: 0
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
-  create_table "teams", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "teams", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "name"
     t.string "finance_code"
     t.text "description"
@@ -302,7 +332,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "twilio_messages", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "twilio_messages", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "message_sid"
     t.datetime "date_created"
     t.datetime "date_updated"
@@ -325,7 +355,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.datetime "updated_at"
   end
 
-  create_table "twilio_wufoos", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "twilio_wufoos", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "wufoo_formid"
     t.string "twilio_keyword"
@@ -336,7 +366,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.string "form_type"
   end
 
-  create_table "users", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -360,7 +390,7 @@ ActiveRecord::Schema.define(version: 20180215202649) do
     t.index ["team_id"], name: "fk_rails_b2bbf87303"
   end
 
-  create_table "versions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
+  create_table "versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "item_type", limit: 191, null: false
     t.integer "item_id", null: false
     t.string "event", null: false

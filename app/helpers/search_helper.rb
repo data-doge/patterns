@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 module SearchHelper
 
   def search_result_field(value, search_facet = nil)
@@ -12,7 +10,6 @@ module SearchHelper
     terms.any? ? highlight(value.to_s, terms) : value
   end
 
-  #
   def action
     if action_name == 'advanced_search'
       :post

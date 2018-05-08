@@ -37,7 +37,12 @@ $(document).on('turbolinks:load', function() {
         cached_suggestions = cached_suggestions.concat();
       }
       suggestion_values = cached_suggestions.map(function(e, i) {
-        return e.name.toString();
+        if (typeof(e) == 'string') {
+          return e;
+        }else{
+          return e.name.toString();  
+        }
+        
       });
 
       if ($.inArray(event_value, suggestion_values) === -1) {

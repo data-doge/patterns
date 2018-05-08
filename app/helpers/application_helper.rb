@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 module ApplicationHelper
   def simple_time_select_options
     minutes = %w[00 15 30 45]
@@ -43,7 +41,6 @@ module ApplicationHelper
     end
 
     content_for :document_ready, %{
-      console.log('foobar');
       var search = new Search({grouping: "#{escape_javascript(fields)}"});
       $(document).on("click", "button.add_fields", function(e) {
         e.preventDefault();

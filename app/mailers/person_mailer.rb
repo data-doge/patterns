@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 class PersonMailer < ApplicationMailer
 
   # how to get the groovy "accept/decline" thingy...

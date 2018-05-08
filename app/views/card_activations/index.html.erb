@@ -1,0 +1,156 @@
+<%= render :partial => 'layouts/gift_card_menu' %>
+<style>
+table tr {
+  padding-bottom: 1em !important;
+}
+</style>
+<h1>Activate Cards</h1>
+<div class='container'>
+  <div class='row'>
+    <div class='span2'>
+      <!-- button for modal uploader -->
+      <%= link_to "Upload Cards", "#modal-window", :class => "btn btn-default", "data-toggle" => "modal" %>
+    </div>
+    <div class='span2'>
+      <%= button_tag 'Manually Enter Card', 
+      onclick: '$("#manual_card").toggle()', 
+      class: 'btn'%>
+    </div>
+    <div class='span8'>
+      <!-- form for single card -->
+      <table style='display: none;' id='manual_card' class='card_activations'>
+        <thead>
+          <tr>
+            <th>Full Card #</th>
+            <th>Sequence</th>
+            <th>Secure Code</th>
+            <th>Batch ID</th>
+            <th>Exp Date</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+      <%= form_for @new_card, url: {action: "create"}, html: {class: "navbar-form pull-left"} do |f| %>
+        <td>
+          <%= f.text_field :full_card_number, 
+                placeholder:'Full Card Number',
+                'data-mask': '9999-9999-9999-9999'%>
+        </td>
+        <td>
+          <%= f.text_field :sequence_number, 
+                placeholder:'Sequence',
+                class: 'input-mini',
+                'data-mask':'999' %>
+        </td>
+        <td>
+          <%= f.text_field :secure_code, 
+                placeholder: 'Secure Code',
+                class: 'input-mini',
+                'data-mask': '999' %>
+        </td>
+        <td>
+          <%= f.text_field :batch_id, 
+                placeholder: 'Batch ID',
+                class: 'input-mini',
+                'data-mask':'999999' %>
+        </td>
+        <td>
+          <%= f.text_field :expiration_date, 
+                placeholder: 'MM/YY', 
+                class: 'input-mini',
+                'data-mask': '00/00' %>
+        </td>
+        <td>
+          <%= f.text_field :amount, 
+                placeholder: '$25.00', 
+                class: 'input-mini',
+                'data-mask': '$99.99' %>
+        </td>
+        <td>
+          <%= f.submit "Activate", class: 'btn' %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+      <% end %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='span12'>
+      <hr>
+    </div>
+  </div>
+  <div class='row'>
+    <h2>Unassigned Cards</h2>
+     <%= will_paginate @card_activations, :renderer => BootstrapPagination::Rails, inner_window:1, outer_window:1 %>
+     <% if current_user.admin? %>
+      <%= select_tag :user_id,
+            options_from_collection_for_select(User.approved.all,
+                                          'id',
+                                          'name'),
+            class: 'input',
+            prompt: 'Bulk Assign To:', 
+            id: 'select_user_for_cards',
+            onchange: 'assign_cards_to_user()' %>
+  </td>
+     <% end %>
+    <div class='span12'>
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="1">Last 4</th>
+            <th colspan="1">Batch</th>
+            <th colspan="1">Sequence</th>
+            <th colspan="1">Status</th>
+            <th colspan="1">Re-Run Check</th>
+            <% show_admin = current_user.admin? ? 'block' : 'none' %>
+            <th colspan="4" style="display:<%= show_admin %>;">Admin</th>
+          </tr>
+        </thead>
+
+        <tbody id='card-activations-large'> 
+          <!-- should be partials below for reuse -->
+          <%= render partial: "single_card_activation",
+                     collection: @card_activations, 
+                     as: :card_activation %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<br>
+<!-- 
+<%= link_to 'New Card Activation', new_card_activation_path %>
+ -->
+<div id="modal-window" class="modal hide" role="dialog" aria-labelledby="ActivationUploadModal" aria-hidden="true">
+  <div id="card-activation-modal">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Upload Cards to Activate</h3>
+    </div>
+    <div class="modal-body">
+      <div class="container">
+        <div class="row">
+          <div class="span3">
+            <%= form_with url: upload_card_activations_path do |form| %>
+              <%= form.file_field :file %>
+              <%= form.submit "Upload", {class:'btn btn-primary'} %>
+            <% end %>
+          </div>
+          <div class="span3">
+            <!-- format: :csv wasn't working below... -->
+            <%= link_to 'Download Template',
+                  '/card_activations/template.csv',
+                  class: 'btn' %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      
+    </div>
+  </div>
+</div>

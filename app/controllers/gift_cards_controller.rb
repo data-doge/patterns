@@ -13,7 +13,11 @@ class GiftCardsController < ApplicationController
   # GET /gift_cards
   # GET /gift_cards.csv
   def index
-    @q_giftcards = GiftCard.ransack(params[:q])
+    if current_user.admin?
+      @q_giftcards = GiftCard.ransack(params[:q])
+    else
+      @q_giftcards = GiftCard.where(created_by: current_user.id).ransack(params[:q])
+    end
     @q_giftcards.sorts = [sort_column + ' ' + sort_direction] if @q_giftcards.sorts.empty?
     respond_to do |format|
       format.html do
@@ -59,16 +63,18 @@ class GiftCardsController < ApplicationController
 
   # POST /gift_cards
   # POST /gift_cards.json
-  # rubocop:disable Metrics/MethodLength
   def create
     @gift_card = GiftCard.new(gift_card_params)
+
+    @total = @gift_card.person.blank? ? @gift_card.amount : @gift_card.person.gift_card_total
+    @gift_card.created_by = current_user.id
     @gift_card.finance_code = current_user&.team&.finance_code
     @gift_card.team = current_user&.team
+    @gift_card.save
     
-    @create_result = @gift_card.with_user(current_user).save
+    @create_result = @gift_card.save
     respond_to do |format|
       if @create_result
-        @total = @gift_card.person.blank? ? @gift_card.amount : @gift_card.person.gift_card_total
         format.js {}
         format.json {}
         format.html { redirect_to @gift_card, notice: 'Gift Card was successfully created.'  }
@@ -79,7 +85,36 @@ class GiftCardsController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength
+
+  # takes an card_activation_id, person_id, and sessionid
+  def assign
+    @card_activation = CardActivation.find(params[:card_activation_id])
+    ca = @card_activation # for shortness.
+    @gift_card = GiftCard.new(sequence_number: ca.sequence_number,
+                              batch_id: ca.batch_id,
+                              gift_card_number: ca.full_card_number.last(4),
+                              person_id: params[:person_id],
+                              giftable_type: params[:giftable_type],
+                              giftable_id: params[:giftable_id],
+                              finance_code: current_user&.team&.finance_code,
+                              team: current_user&.team,
+                              created_by: current_user.id)
+
+    @total = @gift_card.person.gift_card_total
+    @create_result = @gift_cart.save
+
+    respond_to do |format|
+      if @create_result
+        format.js { render action: :create }
+        format.json {}
+        format.html { redirect_to @gift_card, notice: 'Gift Card was successfully created.'  }
+      else
+        format.js {}
+        format.html { render action: 'edit' }
+        format.json { render json: @gift_card.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
   # PATCH/PUT /gift_cards/1
   # PATCH/PUT /gift_cards/1.json
@@ -98,9 +133,9 @@ class GiftCardsController < ApplicationController
   # DELETE /gift_cards/1
   # DELETE /gift_cards/1.json
   def destroy
-    giftable = @gift_card.giftable
+    @giftable = @gift_card.giftable
     @gift_card.destroy
-    giftable&.reload # weirdo.
+    @giftable&.reload # weirdo.
     respond_to do |format|
       format.html { redirect_back(fallback_location: gift_cards_path) }
       format.json { head :no_content }
@@ -111,6 +146,7 @@ class GiftCardsController < ApplicationController
   def modal
     klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
     @giftable = klass.find(params[:giftable_id])
+    @card_activations = CardActivation.unassigned.active.where(user_id: current_user.id)
     @gift_card = GiftCard.new
     @last_gift_card = GiftCard.last # default scope is id: :desc
     respond_to do |format|
@@ -119,28 +155,28 @@ class GiftCardsController < ApplicationController
     end
   end
 
-  def activate
-    @card_number = params[:number]&.gsub(/[^0-9]/, '')
-    @valid =  CreditCardValidations::Luhn.valid?(@card_number)
-    @secure_code = params[:code]&.gsub(/[^0-9]/, '')
-    respond_to do |format|
-      format.xml
-    end
-  end
-
-  # def activate_response # this is where the gather endpoint it.
-  #   # sets card to active
+  # def activate
+  #   @card_number = params[:number]&.gsub(/[^0-9]/, '')
+  #   @valid =  CreditCardValidations::Luhn.valid?(@card_number)
+  #   @secure_code = params[:code]&.gsub(/[^0-9]/, '')
+  #   respond_to do |format|
+  #     format.xml
+  #   end
   # end
 
-  def card_check
-    @card_number = params[:number]&.gsub(/[^0-9]/, '')
-    @valid =  CreditCardValidations::Luhn.valid?(@card_number)
-    @secure_code = params[:code]&.gsub(/[^0-9]/, '') # three digits
-    @expiration = params[:expiration]&.gsub(/[^0-9]/, '') # four digits
-    respond_to do |format|
-      format.xml
-    end
-  end
+  # # def activate_response # this is where the gather endpoint it.
+  # #   # sets card to active
+  # # end
+
+  # def card_check
+  #   @card_number = params[:number]&.gsub(/[^0-9]/, '')
+  #   @valid =  CreditCardValidations::Luhn.valid?(@card_number)
+  #   @secure_code = params[:code]&.gsub(/[^0-9]/, '') # three digits
+  #   @expiration = params[:expiration]&.gsub(/[^0-9]/, '') # four digits
+  #   respond_to do |format|
+  #     format.xml
+  #   end
+  # end
 
   # def check_response # this is the gather endpoint for checking cards
   #   # returns true, and sets current value for card
@@ -163,6 +199,19 @@ class GiftCardsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def gift_card_params
-      params.require(:gift_card).permit(:gift_card_number, :batch_id, :expiration_date, :person_id, :notes, :proxy_id, :created_by, :reason, :amount, :giftable_id, :giftable_type, :team_id, :finance_code)
+      params.require(:gift_card).permit(:gift_card_number, 
+                                        :batch_id,
+                                        :expiration_date,
+                                        :person_id,
+                                        :notes,
+                                        :sequence_number,
+                                        :created_by,
+                                        :reason,
+                                        :amount,
+                                        :giftable_id,
+                                        :giftable_type,
+                                        :team_id,
+                                        :finance_code,
+                                        :card_activation_id)
     end
 end

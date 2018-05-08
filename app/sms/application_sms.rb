@@ -12,10 +12,7 @@ class ApplicationSms
   Rails.application.routes.default_url_options[:host] = host
 
   def initialize(*)
-    @client = Twilio::REST::Client.new(
-      ENV['TWILIO_ACCOUNT_SID'],
-      ENV['TWILIO_AUTH_TOKEN']
-    )
+    @client ||= $twilio
     @application_number = ENV['TWILIO_SCHEDULING_NUMBER']
   end
 

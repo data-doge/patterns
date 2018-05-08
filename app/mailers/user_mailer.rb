@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 class UserMailer < ApplicationMailer
   def new_person_notify(email_address:, person:)
     @person = person

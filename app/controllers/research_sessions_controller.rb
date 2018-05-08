@@ -76,7 +76,8 @@ class ResearchSessionsController < ApplicationController
 
   def index
     @s = ResearchSession.ransack(params[:q])
-
+    tags =  @s.ransack_tagged_with&.split(',')&.map {|t| t.delete(' ') } || []
+    @tags = ResearchSession.tag_counts.where(name: tags).to_a
     @research_sessions = @s.result(distinct: true).includes(:people, :tags, :user).page(params[:page])
   end
 
@@ -162,5 +163,4 @@ class ResearchSessionsController < ApplicationController
       ).to_h.symbolize_keys
     end
 
-  # rubocop:enable Metrics/MethodLength
 end

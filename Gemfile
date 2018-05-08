@@ -2,23 +2,23 @@ source 'https://rubygems.org'
 ruby '2.5.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
-gem 'bootsnap'
+gem 'actioncable'
+gem 'bootsnap' # for faster booting
 gem 'rack-cache'
-gem 'airbrake', '~> 5.0'
+gem 'airbrake', '~> 5.0' # sends errors to external service
 # gem 'pg' # soooooon!
-# must use this version of mysql2 for rails 4.0.0
 gem 'mysql2'
 
 gem 'hiredis' # faster redis
 gem 'redis' # ephemeral storage and caching
-gem 'redis-rails' # for session store
+gem 'redis-rails' # for session store, I think deprecated in rails 5.2
 gem 'validates_overlap' # to ensure we don't double book people
 
 #gem 'rails_12factor' # don't need this. yet. soon!
 
 gem 'mail'
 
-gem 'ransack'
+gem 'ransack' # rad searching.
 
 gem 'mandrill-rails' # for inbound email
 
@@ -37,7 +37,7 @@ group :development do
   # src: https://github.com/capistrano/capistrano/pull/412
 
   gem 'capistrano', '~> 2.15.4'
-
+  gem 'capistrano-sidekiq'
   gem 'rvm-capistrano', require: false
   gem 'rbnacl', '~> 4.0.0' # for modern ssh keys
   gem 'rbnacl-libsodium' # same as above
@@ -70,8 +70,8 @@ end
 
 group :production do
   #gem 'newrelic_rpm'
-  gem 'skylight'
-  gem 'lograge'
+  gem 'skylight' # perf
+  gem 'lograge' # sane logs
 end
 
 # Gems used only for assets and not required
@@ -86,6 +86,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'jquery-turbolinks'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
@@ -105,10 +106,8 @@ gem 'unicorn'
 # https://coderwall.com/p/fnfdgw/useful-regular-expressions-to-update-to-bootstrap-3
 gem 'twitter-bootstrap-rails', '~> 2.2.0'
 gem 'glyphicons-rails'
-gem 'momentjs-rails'
+gem 'momentjs-rails' # sane time management in js
 gem 'bootstrap3-datetimepicker-rails'
-# use tire for ElasticSearch integration
-# gem 'tire' # no longer needed
 
 # pagniate with will_paginate: https://github.com/mislav/will_paginate
 gem 'will_paginate'
@@ -136,14 +135,14 @@ gem 'wuparty' # breaks latest version of httparty
 # Use gsm_encoder to help text messages send correctly
 gem 'gsm_encoder'
 
-# use Delayed Job to queue messages
-gem 'daemons'
-gem 'delayed_job_active_record'
+# Switching to sidekiq: async, threaded, less memory,
+# more performance. Important for responsiveness
+# for background tasks users are waiting for.
 
-gem "delayed_job_web"
+gem 'sidekiq'
 
 # for generating unique tokens for Person
-gem 'has_secure_token'
+# gem 'has_secure_token' # not needed in rails 5+
 
 # phone number validation
 gem 'phony_rails'
@@ -188,7 +187,7 @@ gem 'faster_path' #if !`which rustc`.empty?
 gem 'money-rails'
 
 # masked inputs
-gem 'maskedinput-rails'
+gem 'jquery_mask_rails'
 
 # the standard rails tagging library
 gem 'acts-as-taggable-on'
@@ -237,7 +236,7 @@ group :development, :test do
   gem 'guard-rspec', require: false
   gem 'guard-rubocop'
   #gem 'poltergeist'
-  gem 'pry'
+  gem 'pry' # a console anywhere!
   gem 'rspec-rails', '~> 3.0'
   gem 'shoulda-matchers', '~> 3.1.1', require: false
   gem 'sms-spec'

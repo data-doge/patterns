@@ -17,7 +17,7 @@ class CartController < ApplicationController
       format.csv do
         output = CSV.generate do |csv|
           csv << Person.column_names.map(&:titleize)
-          @people.each {|person| csv << person.to_a }
+          @people.each { |person| csv << person.to_a }
         end
         send_data output, filename: "Pool-#{@cart.name}.csv"
       end
@@ -94,8 +94,8 @@ class CartController < ApplicationController
       @deleted_all = true
     else
       @deleted = [cart_params[:person_id]]
-      person = Person.find(cart_params[:person_id])
-      @cart.people.delete(person) if person.present?
+      cart_person = @cart.carts_people.find_by(person_id: cart_params[:person_id])
+      cart_person.destroy if cart_person.present?
       @deleted_all = @cart.people.empty?
     end
     @cart.save
@@ -122,7 +122,7 @@ class CartController < ApplicationController
   # DELETE /gift_cards/1
   # DELETE /gift_cards/1.json
   def destroy
-    @cart.destroy
+    @cart.destroy_all
     flash[:notice] = "#{@cart.name} has been destroyed"
     respond_to do |format|
       format.html { redirect_to :back }

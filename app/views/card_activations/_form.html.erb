@@ -1,0 +1,17 @@
+<%= form_with(model: card_activation, local: true) do |form| %>
+  <% if card_activation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(card_activation.errors.count, "error") %> prohibited this card_activation from being saved:</h2>
+
+      <ul>
+      <% card_activation.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -48,7 +48,7 @@ class TwilioMessagesController < ApplicationController
   def sendmessages; end
 
   # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Style/VariableName, Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Style/VariableName
   #
   def uploadnumbers
     phone_numbers = []
@@ -75,14 +75,9 @@ class TwilioMessagesController < ApplicationController
       Rails.logger.info("[TwilioMessagesController#sendmessages] messages #{messages}")
       Rails.logger.info("[TwilioMessagesController#sendmessages] phone numbers #{phone_numbers}")
       phone_numbers = phone_numbers.reject { |e| e.to_s.blank? }
-      @job_enqueue = Delayed::Job.enqueue SendTwilioMessagesJob.new(messages, phone_numbers, smsCampaign)
-      if @job_enqueue.save
-        Rails.logger.info("[TwilioMessagesController#sendmessages] Sent #{phone_numbers} to Twilio")
-        flash[:notice] = "Sent Messages: #{messages} to Phone Numbers: #{phone_numbers}"
-      else
-        Rails.logger.error('[TwilioMessagesController#sendmessages] failed to send text messages')
-        flash[:error] = 'Failed to send messages.'
-      end
+      SendTwilioMessagesJob.perform_async(messages, phone_numbers, smsCampaign)
+      Rails.logger.info("[TwilioMessagesController#sendmessages] Sent #{phone_numbers} to Twilio")
+      flash[:notice] = "Sent Messages: #{messages} to Phone Numbers: #{phone_numbers}"
     else
       flash[:error] = 'Please upload a CSV instead.'
     end
@@ -90,7 +85,7 @@ class TwilioMessagesController < ApplicationController
       format.html { redirect_to '/twilio_messages/sendmessages' }
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/VariableName, Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/VariableName
 
   # GET /twilio_messages/1
   # GET /twilio_messages/1.json

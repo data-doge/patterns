@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-#
-
 # == Schema Information
 #
 # Table name: reservations
@@ -80,7 +78,7 @@ class ReservationsController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Rails/TimeZone
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   # DELETE /reservations/1
   # DELETE /reservations/1.json
