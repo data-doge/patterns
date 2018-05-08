@@ -76,6 +76,7 @@ class CardActivation < ApplicationRecord
   def self.import(file, user)
     errors = []
     CSV.foreach(file, headers: true) do |row|
+      next if row[:full_card_number].nil? # empty rows
       ca = CardActivation.new(row.to_hash)
       ca.user_id = user.id
       ca.created_by = user.id
@@ -196,7 +197,7 @@ class CardActivation < ApplicationRecord
   private
 
     def sanitize_card_number
-      self.full_card_number = self.full_card_number.delete('-')
+      full_card_number.delete('-')
     end
 
     def check_secure_code # sometimes we drop leading 0's in csv
