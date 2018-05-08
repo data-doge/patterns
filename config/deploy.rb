@@ -35,14 +35,18 @@ set :sidekiq_processes, 2
 
 set :bundle_flags, '--deployment --quiet'
 
-#set :default_environment, { 'PATH' => '/home/logan/.rbenv/shims:/home/logan/.rbenv/bin:$PATH' }
-set :rvm_autolibs_flag, "read-only"       # more info: rvm help autolibs
-before 'deploy', 'rvm:install_rvm'  # install/update RVM
+# more info: rvm help autolibs
+set :rvm_autolibs_flag, "read-only"
+
+# install/update RVM
+before 'deploy', 'rvm:install_rvm'  
 
 ENV['GEM'] = "bundler"
-before 'bundle:install', 'rvm:install_gem' # Make sure Bundler is installed for gemset
+ # Make sure Bundler is installed for gemset
+before 'bundle:install', 'rvm:install_gem'
 
-before 'deploy', 'rvm:install_ruby' # install Ruby and create gemset (both if missing)
+# install Ruby and create gemset (both if missing)
+before 'deploy', 'rvm:install_ruby'
 
 set :ssh_options, { forward_agent: true }
 # set :shared_children, fetch(:shared_children) + ["sharedconfig"]
