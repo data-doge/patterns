@@ -186,7 +186,7 @@ class CardActivation < ApplicationRecord
   end
 
   def current_call_status
-    calls.ongoing.last.call.status
+    calls&.last&.call&.status || 'complete'
   end
 
   def can_run_check?
