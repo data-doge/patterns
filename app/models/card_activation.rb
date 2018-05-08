@@ -61,7 +61,7 @@ class CardActivation < ApplicationRecord
   belongs_to :user
 
   before_create :check_secure_code
-  before_validate :sanitize_card_number
+  before_validation :sanitize_card_number
   before_create :set_created_by
 
   
@@ -190,7 +190,7 @@ class CardActivation < ApplicationRecord
   end
 
   def can_run_check?
-    !self.active? || current_call_status != 'complete'
+    !active? || current_call_status != 'complete'
   end
 
   private
