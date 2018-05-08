@@ -4,6 +4,15 @@ table tr {
   padding-bottom: 1em !important;
 }
 </style>
+<ul>
+<% if @errors.any? %>
+    <% @errors.each do |error|
+      <% error.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    <% end %>
+  <% end %>
+</ul>
 <h1>Activate Cards</h1>
 <div class='container'>
   <div class='row'>

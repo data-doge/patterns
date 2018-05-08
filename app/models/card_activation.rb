@@ -75,7 +75,8 @@ class CardActivation < ApplicationRecord
     results = []
     CSV.foreach(file, headers: true) do |row|
       ca = CardActivation.new(row.to_hash)
-      ca.user = user
+      ca.user_id = user.id
+      ca.create_by = user.id
       # results is an array of errored card activatoins
       results.push(ca) unless ca.save
     end

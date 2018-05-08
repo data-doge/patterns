@@ -6,6 +6,7 @@ class CardActivationsController < ApplicationController
   # GET /card_activations
   # GET /card_activations.json
   def index
+    @errors = []
     @new_card = CardActivation.new
     if current_user.admin?
       @card_activations = CardActivation.unassigned.page(params[:page])
@@ -50,8 +51,6 @@ class CardActivationsController < ApplicationController
   # assignment happens in gift_card_controller
 
   def upload
-    # receive csv file, check each card for luhn, save card activations
-    #
     cards_count = CSV.read(params[:file].path, headers: true).count
     flash[:notice] = "Import started for #{cards_count} cards."
     @errors = CardActivation.import(params[:file].path, current_user)
@@ -68,6 +67,7 @@ class CardActivationsController < ApplicationController
   def create
     @card_activation = CardActivation.new(card_activation_params)
     @card_activation.user = current_user
+    @card_activation.created_by = current_user.id
     @card_activation.save
     # this is where we do the whole starting calls thing.
     # create activation calls type=activate
@@ -131,11 +131,11 @@ class CardActivationsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_card_activation
       if params[:id].include? ','
-        ca_id = params[:id].split(',') 
+        ca_id = params[:id].split(',')
       else
         ca_id = params[:id]
       end
-      
+
       @card_activation = CardActivation.find(ca_id)
     end
 
