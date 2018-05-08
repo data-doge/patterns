@@ -78,6 +78,7 @@ class CardActivationsController < ApplicationController
       if @card_activation.errors.empty?
         format.html { redirect_to @card_activation, notice: 'Card Activation process started.' }
         format.json { render :show, status: :created, location: @card_activation }
+        format.js {}
       else
         format.html { render :new }
         format.json { render json: @card_activation.errors, status: :unprocessable_entity }
