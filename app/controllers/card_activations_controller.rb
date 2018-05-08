@@ -130,7 +130,12 @@ class CardActivationsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_card_activation
-      ca_id = params[:id].split(',') if params[:id].include? ','
+      if params[:id].include? ','
+        ca_id = params[:id].split(',') 
+      else
+        ca_id = params[:id]
+      end
+      
       @card_activation = CardActivation.find(ca_id)
     end
 
