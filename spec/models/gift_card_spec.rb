@@ -16,10 +16,10 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  batch_id         :string(255)
-#  sequence_number         :string(255)
+#  sequence_number  :integer
 #  active           :boolean          default(FALSE)
 #  secure_code      :string(255)
-#  team_id          :integer
+#  team_id          :bigint(8)
 #  finance_code     :string(255)
 #
 

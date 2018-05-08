@@ -57,7 +57,7 @@ class CardActivationsController < ApplicationController
     if @errors.empty?
       redirect_to card_activations_path
     else
-      flash[:error] = "Error! #{errors.size} cards not valid."
+      flash[:error] = "Error! #{@errors.size} cards not valid."
       # show individual erros in ui
     end
   end

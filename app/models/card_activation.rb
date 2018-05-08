@@ -1,10 +1,9 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: card_activations
 #
-#  id               :integer          not null, primary key
+#  id               :bigint(8)        not null, primary key
 #  full_card_number :string(255)
 #  expiration_date  :string(255)
 #  sequence_number  :string(255)
@@ -14,9 +13,10 @@
 #  user_id          :integer
 #  gift_card_id     :integer
 #  created_at       :datetime         not null
-#  updated_at       :datetime         not nullw
+#  updated_at       :datetime         not null
 #  amount_cents     :integer          default(0), not null
 #  amount_currency  :string(255)      default("USD"), not null
+#  created_by       :integer
 #
 
 # records card details for activation and check calls
@@ -181,6 +181,10 @@ class CardActivation < ApplicationRecord
 
   def update_balance
     create_check_call(override: true)
+  end
+
+  def current_call_status
+    calls.ongoing.last.call.status
   end
 
   private

@@ -2,7 +2,7 @@
 #
 # Table name: card_activations
 #
-#  id               :integer          not null, primary key
+#  id               :bigint(8)        not null, primary key
 #  full_card_number :string(255)
 #  expiration_date  :string(255)
 #  sequence_number  :string(255)
@@ -15,6 +15,7 @@
 #  updated_at       :datetime         not null
 #  amount_cents     :integer          default(0), not null
 #  amount_currency  :string(255)      default("USD"), not null
+#  created_by       :integer
 #
 
 require 'rails_helper'

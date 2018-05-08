@@ -1,18 +1,18 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: activation_calls
 #
-#  id                 :integer          not null, primary key
+#  id                 :bigint(8)        not null, primary key
 #  card_activation_id :integer
 #  sid                :string(255)
-#  transcript         :string(255)
+#  transcript         :text(65535)
 #  audio_url          :string(255)
 #  call_type          :string(255)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  status             :string(255)      default("created")
+#  call_status        :string(255)      default("created")
+#  token              :string(255)
 #
 
 class ActivationCall < ApplicationRecord
@@ -28,7 +28,7 @@ class ActivationCall < ApplicationRecord
   after_commit :update_front_end
 
   alias_attribute :card, :card_activation
-
+  scope :ongoing, -> { where(call_status: 'started') }
   scope :checks, -> { where(call_type: 'check') }
   scope :activations, -> { where(call_type: 'activation') }
 
@@ -67,6 +67,10 @@ class ActivationCall < ApplicationRecord
     @call ||= sid.nil? ? nil : $twilio.calls.get(sid)
   end
 
+  def timeout_error?
+    call.status == 'completed' && (Time.current - updated_at) > 1.minute && !%w[success failure].include?(call_status)
+  end
+
   def success
     self.call_status = 'success'
     card_activation.success!
@@ -82,6 +86,6 @@ class ActivationCall < ApplicationRecord
   end
 
   def update_front_end
-    
+    card_activation.update_front_end
   end
 end

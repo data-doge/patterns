@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: users
@@ -24,7 +23,7 @@
 #  token                   :string(255)
 #  phone_number            :string(255)
 #  new_person_notification :boolean          default(FALSE)
-#  team_id                 :integer
+#  team_id                 :bigint(8)
 #
 
 class User < ApplicationRecord

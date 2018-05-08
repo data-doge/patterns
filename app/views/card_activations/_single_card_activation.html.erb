@@ -12,8 +12,14 @@
     <%= card_activation.status %>
   </td>
   <td>
-    <% unless card_activation.active? %>
-    <%= button_to "Check", check_card_activations_path(card_activation), remote: true, class: 'btn btn-small' %>
+    <% if !card_activation.active? || card_activation.current_call_status! = 'complete'%>
+      <%= button_to "Check", 
+            check_card_activations_path(card_activation),
+            remote: true, 
+            class: 'btn btn-small', 
+            id: "check-card-#{card_activation.id}" %>
+    <% else %>
+      <i class="fa fa-spinner fa-spin" style="font-size:24px">
     <% end %>
   </td>
   <% if current_user.admin? %>

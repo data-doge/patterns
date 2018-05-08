@@ -25,5 +25,7 @@ class ActivationCallJob
     call.call_status = 'started'
     call.sid = res.sid
     call.save!
+    # start background status check
+    ActivationCallJob.perform_async
   end
 end

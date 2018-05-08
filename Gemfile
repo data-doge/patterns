@@ -140,6 +140,7 @@ gem 'gsm_encoder'
 # for background tasks users are waiting for.
 
 gem 'sidekiq'
+gem 'sidekiq-unique-jobs'
 
 # for generating unique tokens for Person
 # gem 'has_secure_token' # not needed in rails 5+

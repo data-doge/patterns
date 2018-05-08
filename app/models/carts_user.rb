@@ -1,13 +1,12 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: carts_users
 #
-#  cart_id      :integer          not null
-#  user_id      :integer          not null
+#  cart_id      :bigint(8)        not null
+#  user_id      :bigint(8)        not null
 #  current_cart :boolean          default(FALSE)
-#  id           :integer          not null, primary key
+#  id           :bigint(8)        not null, primary key
 #
 
 class CartsUser < ApplicationRecord

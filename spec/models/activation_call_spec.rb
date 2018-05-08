@@ -2,15 +2,16 @@
 #
 # Table name: activation_calls
 #
-#  id                 :integer          not null, primary key
+#  id                 :bigint(8)        not null, primary key
 #  card_activation_id :integer
 #  sid                :string(255)
-#  transcript         :string(255)
+#  transcript         :text(65535)
 #  audio_url          :string(255)
 #  call_type          :string(255)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  status             :string(255)      default("created")
+#  call_status        :string(255)      default("created")
+#  token              :string(255)
 #
 
 require 'rails_helper'
