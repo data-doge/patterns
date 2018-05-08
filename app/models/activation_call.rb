@@ -26,6 +26,7 @@ class ActivationCall < ApplicationRecord
   belongs_to :card_activation, dependent: :destroy
   after_commit :enqueue_call, on: :create
   after_commit :update_front_end
+
   alias_attribute :card, :card_activation
 
   scope :checks, -> { where(call_type: 'check') }
@@ -81,6 +82,6 @@ class ActivationCall < ApplicationRecord
   end
 
   def update_front_end
-    true
+    
   end
 end
