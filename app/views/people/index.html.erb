@@ -11,7 +11,7 @@
                             params[:tags],
                             class: 'tokenfield input-small span4',
                             id:'tag-field',
-                            data: { search_url: '/taggings/search?q=%QUERY',
+                            data: { search_url: '/taggings/search?type=Person&q=%QUERY',
                                     submit_id: 'tag-field',
                                     submit_on_tag: true,
                                     pre_populate: @tags

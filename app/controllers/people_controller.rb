@@ -58,7 +58,7 @@ class PeopleController < ApplicationController
                   where(active: true)
               else
                 tags =  params[:tags].split(',').map(&:strip)
-                @tags = ActsAsTaggableOn::Tag.where(name: tags)
+                @tags = Person.tag_counts.where(name: tags)
 
                 Person.includes(:taggings).paginate(page: params[:page]).
                   order(sort_column + ' ' + sort_direction).
