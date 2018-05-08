@@ -6,7 +6,7 @@ table tr {
 </style>
 <ul>
 <% if @errors.any? %>
-    <% @errors.each do |error|
+    <% @errors.each do |error| %>
       <% error.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
