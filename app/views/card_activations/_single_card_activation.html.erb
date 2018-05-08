@@ -12,14 +12,16 @@
     <%= card_activation.status %>
   </td>
   <td>
-    <% if !card_activation.active? || card_activation.current_call_status != 'complete'%>
+    <% if card_activation.can_run_check? %>
       <%= button_to "Check", 
             check_card_activations_path(card_activation),
             remote: true, 
             class: 'btn btn-small', 
             id: "check-card-#{card_activation.id}" %>
+    <% elsif card_activation.current_call_status != 'completed' %>
+      <%= image_tag("/spinner.gif",size: '20x20') %>
     <% else %>
-      <i class="fa fa-spinner fa-spin" style="font-size:24px">
+      Ready for use.
     <% end %>
   </td>
   <% if current_user.admin? %>

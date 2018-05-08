@@ -114,9 +114,10 @@ table tr {
             <th colspan="1">Sequence</th>
             <th colspan="1">Status</th>
             <th colspan="1">Re-Run Check</th>
-            <% show_admin = current_user.admin? ? 'block' : 'none' %>
+            <% if current_user.admin? %>
             <th colspan='1'>User</th>
-            <th colspan='3' style="display:<%= show_admin %>;">Admin</th>
+            <th colspan='3'>Admin</th>
+            <% end %>
           </tr>
         </thead>
 
