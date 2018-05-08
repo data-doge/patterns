@@ -131,6 +131,7 @@ class CardActivation < ApplicationRecord
 
   def do_success_notification
     # action cable update to front end.
+    true
   end
 
   def activation_error_report

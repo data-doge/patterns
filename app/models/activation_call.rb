@@ -81,6 +81,6 @@ class ActivationCall < ApplicationRecord
   end
 
   def update_front_end
-    # action cable here!
+    true
   end
 end
