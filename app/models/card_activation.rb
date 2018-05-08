@@ -74,7 +74,7 @@ class CardActivation < ApplicationRecord
   def self.import(file, user)
     errors = []
     CSV.foreach(file, headers: true) do |row|
-      next if row[:full_card_number].nil? # empty rows
+      next if row['full_card_number'].nil? # empty rows
       ca = CardActivation.new(row.to_hash)
       ca.user_id = user.id
       ca.created_by = user.id
