@@ -12,7 +12,7 @@
     <%= card_activation.status %>
   </td>
   <td>
-    <% if !card_activation.active? || card_activation.current_call_status == 'complete'%>
+    <% if !card_activation.active? || card_activation.current_call_status != 'complete'%>
       <%= button_to "Check", 
             check_card_activations_path(card_activation),
             remote: true, 
