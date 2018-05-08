@@ -189,6 +189,10 @@ class CardActivation < ApplicationRecord
     calls.ongoing.last.call.status
   end
 
+  def can_run_check?
+    !self.active? || current_call_status != 'complete'
+  end
+
   private
 
     def sanitize_card_number
