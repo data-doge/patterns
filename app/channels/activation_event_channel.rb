@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ActivationEventChannel < ApplicationCable::Channel
   def subscribed
     stream_from "activation_event_#{current_user.id}_channel"

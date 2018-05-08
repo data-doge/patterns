@@ -34,7 +34,7 @@ class GiftCard < ApplicationRecord
 
   before_destroy :unassign_card_activation
   after_create :assign_card_activation
-  
+
   enum reason: {
     unknown: 0,
     signup: 1,
@@ -49,9 +49,8 @@ class GiftCard < ApplicationRecord
   belongs_to :person
   belongs_to :user, foreign_key: :created_by
   belongs_to :team
-  
-  has_one :card_activation
 
+  has_one :card_activation
 
   validates_presence_of :amount
   validates_presence_of :reason
@@ -152,7 +151,7 @@ class GiftCard < ApplicationRecord
         # first check if we have an activation id, then a search
         ca = CardActivation.find card_activation_id unless card_activation_id.nil?
         ca ||= CardActivation.where(sequence_number: sequence_number, batch_id: batch_id).first
-    
+
         if ca.present? && ca.gift_card_id.nil?
           self.card_activation = ca
           return true

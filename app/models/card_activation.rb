@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: card_activations
@@ -64,14 +65,12 @@ class CardActivation < ApplicationRecord
   before_validation :sanitize_card_number
   before_create :set_created_by
 
-  
   # starts activation call process on create after commit happens
   # only hook we're using here
-  #after_commit :create_activation_call, on: :create
+  # after_commit :create_activation_call, on: :create
 
   # uses action cable to update card.
   after_commit :update_front_end, on: :update
-
 
   def self.import(file, user)
     errors = []
@@ -99,7 +98,7 @@ class CardActivation < ApplicationRecord
     state :active
 
     event :start_activate, after_commit: :create_activation_call do
-      transitions from: %i(created activate_started), to: :activate_started
+      transitions from: %i[created activate_started], to: :activate_started
     end
 
     event :activate_error, after_commit: :activation_error_report do
@@ -175,7 +174,7 @@ class CardActivation < ApplicationRecord
       'warning'
     when 'created'
       'warning'
-    when 'activate_errored' 
+    when 'activate_errored'
       'important'
     when 'check_errored'
       'important'
@@ -201,29 +200,27 @@ class CardActivation < ApplicationRecord
     end
 
     def check_secure_code # sometimes we drop leading 0's in csv
-      while secure_code.length < 3
-        secure_code.prepend("0")
-      end
+      secure_code.prepend('0') while secure_code.length < 3
     end
 
     def set_created_by
-      self.created_by = self.user_id
+      self.created_by = user_id
     end
 
     def broadcast_update(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
-                                 type: :update,
-                                 id: id,
-                                 large: render_large_card_activation(current_user),
-                                 mini: render_mini_card_activation(current_user)
+        type: :update,
+        id: id,
+        large: render_large_card_activation(current_user),
+        mini: render_mini_card_activation(current_user)
     end
 
     def broadcast_delete(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
-                                 type: :delete,
-                                 id: id
+        type: :delete,
+        id: id
     end
 
     def render_large_card_activation(c_user = nil)
@@ -235,7 +232,7 @@ class CardActivation < ApplicationRecord
     def render_mini_card_activation(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ApplicationController.render partial: 'card_activations/card_activation_mini',
-      locals: { card_activation: self,current_user: current_user }
+      locals: { card_activation: self, current_user: current_user }
     end
 
     def luhn_number_valid

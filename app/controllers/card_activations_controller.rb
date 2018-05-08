@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'csv'
 class CardActivationsController < ApplicationController
   before_action :set_card_activation, only: %i[show edit update destroy change_user check]
@@ -8,11 +9,11 @@ class CardActivationsController < ApplicationController
   def index
     @errors = []
     @new_card = CardActivation.new
-    if current_user.admin?
-      @card_activations = CardActivation.unassigned.page(params[:page])
-    else
-      @card_activations = CardActivation.unassigned.where(user_id: current_user.id).page(params[:page])
-    end
+    @card_activations = if current_user.admin?
+                          CardActivation.unassigned.page(params[:page])
+                        else
+                          CardActivation.unassigned.where(user_id: current_user.id).page(params[:page])
+                        end
   end
 
   def template
@@ -68,11 +69,10 @@ class CardActivationsController < ApplicationController
     @card_activation = CardActivation.new(card_activation_params)
     @card_activation.user = current_user
     if @card_activation.save
-      @card_activation.start_activate! 
+      @card_activation.start_activate!
     else
       flash[:error]= "Card Error: #{@card_activation.errors}"
     end
-
 
     # this is where we do the whole starting calls thing.
     # create activation calls type=activate
@@ -125,10 +125,10 @@ class CardActivationsController < ApplicationController
       ca = Array.wrap(@card_activation)
       ca.each { |c| c.user_id = params[:user_id] }
       ca.each(&:save)
-      flash[:notice] = "#{ca.size } Cards owner changed to #{ca.first.user.name}"
+      flash[:notice] = "#{ca.size} Cards owner changed to #{ca.first.user.name}"
     end
     respond_to do |format|
-      format.json { render json:{success: true}.to_json, status: :ok}
+      format.json { render json: { success: true }.to_json, status: :ok }
     end
   end
 
@@ -136,19 +136,19 @@ class CardActivationsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_card_activation
-      if params[:id].include? ','
-        ca_id = params[:id].split(',')
-      else
-        ca_id = params[:id]
-      end
+      ca_id = if params[:id].include? ','
+                params[:id].split(',')
+              else
+                params[:id]
+              end
 
       @card_activation = CardActivation.find(ca_id)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def card_activation_params
-      allowed = %i(amount batch_id expiration_date full_card_number secure_code sequence_number)
-       
+      allowed = %i[amount batch_id expiration_date full_card_number secure_code sequence_number]
+
       params.fetch(:card_activation, {}).permit(allowed)
     end
 end

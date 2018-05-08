@@ -13,11 +13,11 @@ class GiftCardsController < ApplicationController
   # GET /gift_cards
   # GET /gift_cards.csv
   def index
-    if current_user.admin?
-      @q_giftcards = GiftCard.ransack(params[:q])
-    else
-      @q_giftcards = GiftCard.where(created_by: current_user.id).ransack(params[:q])
-    end
+    @q_giftcards = if current_user.admin?
+                     GiftCard.ransack(params[:q])
+                   else
+                     GiftCard.where(created_by: current_user.id).ransack(params[:q])
+                   end
     @q_giftcards.sorts = [sort_column + ' ' + sort_direction] if @q_giftcards.sorts.empty?
     respond_to do |format|
       format.html do
@@ -54,7 +54,7 @@ class GiftCardsController < ApplicationController
 
   # GET /gift_cards/new
   def new
-    @last_gift_card = GiftCard.where.not(batch_id:'5555').last # default scope is id: :desc
+    @last_gift_card = GiftCard.where.not(batch_id: '5555').last # default scope is id: :desc
     @gift_card = GiftCard.new
   end
 
@@ -71,7 +71,7 @@ class GiftCardsController < ApplicationController
     @gift_card.finance_code = current_user&.team&.finance_code
     @gift_card.team = current_user&.team
     @gift_card.save
-    
+
     @create_result = @gift_card.save
     respond_to do |format|
       if @create_result
@@ -199,19 +199,19 @@ class GiftCardsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def gift_card_params
-      params.require(:gift_card).permit(:gift_card_number, 
-                                        :batch_id,
-                                        :expiration_date,
-                                        :person_id,
-                                        :notes,
-                                        :sequence_number,
-                                        :created_by,
-                                        :reason,
-                                        :amount,
-                                        :giftable_id,
-                                        :giftable_type,
-                                        :team_id,
-                                        :finance_code,
-                                        :card_activation_id)
+      params.require(:gift_card).permit(:gift_card_number,
+        :batch_id,
+        :expiration_date,
+        :person_id,
+        :notes,
+        :sequence_number,
+        :created_by,
+        :reason,
+        :amount,
+        :giftable_id,
+        :giftable_type,
+        :team_id,
+        :finance_code,
+        :card_activation_id)
     end
 end

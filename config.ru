@@ -5,7 +5,6 @@
 require ::File.expand_path('../config/environment',  __FILE__)
 run Logan::Application
 
-
 # no more delayed job web
 # if Rails.env.production?
 #   DelayedJobWeb.use Rack::Auth::Basic do |username, password|

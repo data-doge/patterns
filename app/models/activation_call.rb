@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: activation_calls
@@ -85,7 +86,5 @@ class ActivationCall < ApplicationRecord
     ActivationCallJob.perform_async(id)
   end
 
-  def update_front_end
-    card_activation.update_front_end
-  end
+  delegate :update_front_end, to: :card_activation
 end
