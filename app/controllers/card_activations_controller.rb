@@ -66,12 +66,14 @@ class CardActivationsController < ApplicationController
   # POST /card_activations
   # POST /card_activations.json
   def create
-    @card_activation = CardActivation.new(card_activation_params)
+    ca_params = card_activation_params
+    ca_params[:full_card_number] = ca_params[:full_card_number].delete('-')
+    @card_activation = CardActivation.new(ca_params)
     @card_activation.user = current_user
     if @card_activation.save
       @card_activation.start_activate!
     else
-      flash[:error]= "Card Error: #{@card_activation.errors}"
+      flash[:error]= "Card Error: #{@card_activation.errors.messages[:base]}"
     end
 
     # this is where we do the whole starting calls thing.
@@ -84,7 +86,7 @@ class CardActivationsController < ApplicationController
         format.json { render :show, status: :created, location: @card_activation }
         format.js {}
       else
-        format.html { render :index }
+        format.html { redirect_to card_activations_url }
         format.json { render json: @card_activation.errors, status: :unprocessable_entity }
       end
     end

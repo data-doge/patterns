@@ -5,9 +5,9 @@ table tr {
 }
 </style>
 <ul>
-<% if @errors.any? %>
+<% if @errors.present? %>
     <% @errors.each do |error| %>
-      <% error.full_messages.each do |message| %>
+      <% error.messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
     <% end %>
