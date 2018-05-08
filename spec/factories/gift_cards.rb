@@ -16,7 +16,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  batch_id         :string(255)
-#  proxy_id         :string(255)
+#  sequence_number         :string(255)
 #  active           :boolean          default(FALSE)
 #  secure_code      :string(255)
 #  team_id          :integer
@@ -31,7 +31,7 @@ FactoryGirl.define do
     notes 'MyString'
     created_by 1
     reason 1
-    proxy_id Faker::Number.number(4)
+    sequence_number Faker::Number.number(3)
     batch_id Faker::Number.number(10)
   end
 end

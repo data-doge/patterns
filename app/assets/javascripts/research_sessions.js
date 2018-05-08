@@ -20,7 +20,7 @@ $(document).on('page:load turbolinks:load ready', function() {
     
     var myform = document.getElementById("new_gift_card");
     $('input[name="gift_card[reason]"]').val(card_data.reason);
-    $('input[name="gift_card[proxy_id]"]').val(card_data.sequenceNumber);
+    $('input[name="gift_card[sequence_number]"]').val(card_data.sequenceNumber);
     $('input[name="gift_card[gift_card_number]"]').val(card_data.giftCardNumber);
     $('input[name="gift_card[batch_id]"]').val(card_data.batchId);
     $('input[name="gift_card[expiration_date]"]').val(card_data.expirationDate);

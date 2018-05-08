@@ -89,7 +89,7 @@ class GiftCardsController < ApplicationController
   def assign
     @card_activation = CardActivation.find(params[:card_activation_id])
     ca = @card_activation # for shortness.
-    @gift_card = GiftCard.new(proxy_id: ca.sequence_id,
+    @gift_card = GiftCard.new(sequence_number: ca.sequence_number,
                               batch_id: ca.batch_id,
                               gift_card_number: ca.full_card_number.last(4),
                               person_id: params[:person_id],
@@ -203,7 +203,7 @@ class GiftCardsController < ApplicationController
                                         :expiration_date,
                                         :person_id,
                                         :notes,
-                                        :proxy_id,
+                                        :sequence_number,
                                         :created_by,
                                         :reason,
                                         :amount,

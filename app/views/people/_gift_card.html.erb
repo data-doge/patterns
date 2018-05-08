@@ -1,7 +1,7 @@
 <tr class="gift_card" id="gift_card-<%= gift_card.id %>">
     <td><%= (gift_card.reason.titleize) || "" %></td>
     <td><%= link_to(gift_card.giftable.title, gift_card.giftable) if gift_card.giftable.present? %></td>
-    <td><%= gift_card.proxy_id %></td>
+    <td><%= gift_card.sequence_number %></td>
     <td><%= gift_card.batch_id %></td>
     <td><%= gift_card.gift_card_number %></td>
     <td><%= gift_card.expiration_date %></td>

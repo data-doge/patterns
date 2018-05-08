@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_30_214258) do
+ActiveRecord::Schema.define(version: 2018_05_08_214259) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "card_activation_id"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 2018_04_30_214258) do
     t.datetime "updated_at", null: false
     t.integer "amount_cents", default: 0, null: false
     t.string "amount_currency", default: "USD", null: false
+    t.integer "created_by"
   end
 
   create_table "carts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -74,8 +75,8 @@ ActiveRecord::Schema.define(version: 2018_04_30_214258) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "people_count", default: 0
     t.text "description"
+    t.integer "people_count", default: 0
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
@@ -150,7 +151,7 @@ ActiveRecord::Schema.define(version: 2018_04_30_214258) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "batch_id"
-    t.string "proxy_id"
+    t.integer "sequence_number"
     t.boolean "active", default: false
     t.string "secure_code"
     t.bigint "team_id"

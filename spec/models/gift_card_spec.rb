@@ -16,7 +16,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  batch_id         :string(255)
-#  proxy_id         :string(255)
+#  sequence_number         :string(255)
 #  active           :boolean          default(FALSE)
 #  secure_code      :string(255)
 #  team_id          :integer

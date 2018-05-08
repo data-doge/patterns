@@ -60,6 +60,7 @@ class CardActivation < ApplicationRecord
   belongs_to :user
 
   before_create :check_secure_code
+  before_create :set_created_by
   # starts activation call process on create after commit happens
   # only hook we're using here
   after_commit :create_activation_call, on: :create
@@ -187,6 +188,10 @@ class CardActivation < ApplicationRecord
       end
     end
 
+    def set_created_by
+      self.created_by = user_id
+    end
+    
     def broadcast_update(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",

@@ -10,7 +10,7 @@
   $("<%= j render partial: 'gift_cards/mini_gift_card', locals:{ gift_card: @gift_card } %>").prependTo('#mini-gift-card');
 
   $('td#new-submit-<%= @gift_card.person_id %>').html("Yes");
-  $('td#new-proxyid-<%= @gift_card.person_id %>').html('<%= @gift_card.proxy_id %>');
+  $('td#new-sequencenumber-<%= @gift_card.person_id %>').html('<%= @gift_card.sequence_number %>');
   $('td#new-batchid-<%= @gift_card.person_id %>').html('<%= @gift_card.batch_id %>');
   $('td#new-cardnumber-<%= @gift_card.person_id %>').html('<span class="add-on">****-****-***</span><input class="input-small" readonly="true" value="<%= @gift_card.gift_card_number %>">');
   $('td#new-expirationdate-<%= @gift_card.person_id %>').html('<%= @gift_card.expiration_date %>');
@@ -23,7 +23,7 @@
   $('#error-div').html("");
   
   $('#new-cardnumber').val('');
-  $('#new-proxyid').val('');
+  $('#new-sequencenumber').val('');
   $('#new-amount').val('<%= @gift_card.amount %>');
   $('#new-reason').val('<%= @gift_card.reason %>');
   $('#new-expirationdate').val('<%= @gift_card.expiration_date %>');

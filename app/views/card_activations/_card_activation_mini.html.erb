@@ -2,7 +2,7 @@
     <td id='last_4'>
       <%= card_activation.last_4 %>
     </td>
-    <td id='sequence_id'>
+    <td id='sequence_number'>
       <%= card_activation.sequence_number %>
     </td>
     <td id='amount'>
@@ -24,6 +24,7 @@
               amount: card_activation.amount.to_s,
               expiration_date: card_activation.expiration_date,
             },
+            id: "add-card-activation-#{card_activation.id}",
             class: 'add-card-activation' ,
             onclick: "add_card_activation(this);"  %>
     </td>

@@ -19,7 +19,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  batch_id         :string(255)
-#  proxy_id         :string(255)
+#  sequence_number         :string(255)
 #  active           :boolean          default(FALSE)
 #  secure_code      :string(255)
 #  team_id          :integer
@@ -55,20 +55,20 @@ class GiftCard < ApplicationRecord
   validates_presence_of :amount
   validates_presence_of :reason
   validates_presence_of :batch_id
-  validates_presence_of :proxy_id
+  validates_presence_of :sequence_number
 
   validates_format_of :expiration_date,
     with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i,
     unless: proc { |c| c.expiration_date.blank? }
 
-  validates_length_of :proxy_id, minimum: 2, maximum: 7, unless: proc { |c| c.proxy_id.blank? }
+  validates_length_of :sequence_number, minimum: 1, maximum: 7, unless: proc { |c| c.sequence_number.blank? }
 
-  validates_uniqueness_of :proxy_id,
+  validates_uniqueness_of :sequence_number,
     scope: %i[batch_id gift_card_number],
-    unless: proc { |c| c.proxy_id.blank? }
+    unless: proc { |c| c.sequence_number.blank? }
 
   validates_uniqueness_of :gift_card_number,
-    scope: %i[batch_id proxy_id],
+    scope: %i[batch_id sequence_number],
     unless: proc { |c| c.gift_card_number.blank? }
 
   validates_format_of :gift_card_number,
@@ -86,7 +86,7 @@ class GiftCard < ApplicationRecord
   def reason_is_signup?
     reason == 'signup'
   end
-  
+
   def research_session
     return nil if giftable.nil? && giftable_type != 'Invitation'
     giftable&.research_session # double check unnecessary, but I like it.
@@ -123,7 +123,7 @@ class GiftCard < ApplicationRecord
                      gift_card.research_session&.created_at&.to_date&.to_s || '',
                      gift_card.created_at.to_s(:rfc822),
                      gift_card.batch_id.to_s,
-                     gift_card.proxy_id.to_s,
+                     gift_card.sequence_number.to_s,
                      gift_card.amount.to_s,
                      gift_card.reason.titleize,
                      this_person.id || '',
@@ -150,7 +150,7 @@ class GiftCard < ApplicationRecord
       if card_activation.nil?
         # first check if we have an activation id, then a search
         ca = CardActivation.find card_activation_id unless card_activation_id.nil?
-        ca ||= CardActivation.where(sequence_number: proxy_id, batch_id: batch_id).first
+        ca ||= CardActivation.where(sequence_number: sequence_number, batch_id: batch_id).first
     
         if ca.present? && ca.gift_card_id.nil?
           self.card_activation = ca

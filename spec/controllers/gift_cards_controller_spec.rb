@@ -32,7 +32,7 @@ RSpec.describe GiftCardsController, type: :controller do
       amount: '5.00',
       reason: 'signup',
       expiration_date: '05/20',
-      proxy_id: '4321',
+      sequence_number: 4321,
       batch_id: 4321,
       gift_card_number: '99998'
     }
@@ -128,7 +128,7 @@ RSpec.describe GiftCardsController, type: :controller do
         let(:new_attributes) {
           {
             expiration_date: '05/20',
-            proxy_id: '4321',
+            sequence_number: '4321',
             batch_id: '4321',
             gift_card_number: '12345',
             reason: 'test',
