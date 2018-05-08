@@ -68,7 +68,10 @@ class CardActivationsController < ApplicationController
     @card_activation = CardActivation.new(card_activation_params)
     @card_activation.user = current_user
     @card_activation.created_by = current_user.id
-    @card_activation.save
+    
+    @card_activation.start_activate! if @card_activation.save
+
+
     # this is where we do the whole starting calls thing.
     # create activation calls type=activate
     # use after_save_commit hook to do background task.

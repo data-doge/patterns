@@ -65,22 +65,25 @@ class CardActivation < ApplicationRecord
   
   # starts activation call process on create after commit happens
   # only hook we're using here
-  after_commit :create_activation_call, on: :create
+  #after_commit :create_activation_call, on: :create
 
   # uses action cable to update card.
   after_commit :update_front_end, on: :update
 
 
   def self.import(file, user)
-    results = []
+    errors = []
     CSV.foreach(file, headers: true) do |row|
       ca = CardActivation.new(row.to_hash)
       ca.user_id = user.id
       ca.create_by = user.id
       # results is an array of errored card activatoins
-      results.push(ca) unless ca.save
+      if ca.save
+        ca.start_activate!
+      else
+        errors << ca
     end
-    results
+    errors
   end
 
   aasm column: 'status', requires_lock: true do
@@ -91,7 +94,7 @@ class CardActivation < ApplicationRecord
     state :check_errored
     state :active
 
-    event :start_activate do
+    event :start_activate, after_commit: :create_activation_call do
       transitions from: %i(created activate_started), to: :activate_started
     end
 
@@ -116,7 +119,6 @@ class CardActivation < ApplicationRecord
   end
 
   def create_activation_call
-    start_activate!
     ActivationCall.create(card_activation_id: id, call_type: 'activate')
   end
 
