@@ -196,7 +196,7 @@ class CardActivation < ApplicationRecord
   private
 
     def sanitize_card_number
-      full_card_number.delete('-')
+      self.full_card_number = self.full_card_number.delete('-') if self.full_card_number.present?
     end
 
     def check_secure_code # sometimes we drop leading 0's in csv
@@ -237,6 +237,7 @@ class CardActivation < ApplicationRecord
 
     def luhn_number_valid
       errors[:base].push('Must include a card number.') if full_card_number.blank?
+      full_card_number = full_card_number.delete('-')
       unless CreditCardValidations::Luhn.valid?(full_card_number)
         errors[:base].push("Card number #{full_card_number} is not valid.")
       end

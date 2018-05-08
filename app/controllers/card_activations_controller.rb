@@ -84,7 +84,7 @@ class CardActivationsController < ApplicationController
         format.json { render :show, status: :created, location: @card_activation }
         format.js {}
       else
-        format.html { render :new }
+        format.html { render :index }
         format.json { render json: @card_activation.errors, status: :unprocessable_entity }
       end
     end
