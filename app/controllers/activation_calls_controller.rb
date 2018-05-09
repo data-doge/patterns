@@ -54,9 +54,9 @@ class ActivationCallsController < ApplicationController
         @activation_call.failure # launched another check call if necessary
       end
       if @activation_call.save
-        # action cable update front end here or in model?
+        render status: :ok
       else
-        # same as above?
+        render status: :unprocessable_entity
       end
     end
   end
