@@ -10,6 +10,17 @@
       </ul>
     </div>
   <% end %>
+    <dl class="dl-horizontal well">
+      <dt>Card ID</dt>
+      <dd><%= card_activation.id %></dd>
+      <dt>Created By</dt>
+      <% created_by = User.find(card_activation.created_by) %>
+      <dd><%= link_to created_by.name, created_by %></dd>
+      <dt>Status</dt>
+      <dd><%= card_activation.status %></dd>
+    </dl>
+    <h4>Card id: <%= card_activation.id %></h4>
+  
    <div class="field">
     <%= form.label :batch_id %><br>
     <%= form.text_field :batch_id,
@@ -34,8 +45,8 @@
           class: 'input-mini'%>
   </div>
   <div class="field">
-    <%= form.label :status_be_careful_here %>
-    <%= form.select :status, card_activation.aasm.states.map(&:name),
+    <%= form.label :amount %><br>
+    <%= form.text_field :amount,
           class: 'input-mini'%>
   </div>
   <div class="actions">
