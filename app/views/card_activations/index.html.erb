@@ -150,11 +150,9 @@ table tr {
               <%= form.submit "Upload", {class:'btn btn-primary'} %>
             <% end %>
           </div>
-          <div class="span3">
+          <div class="span1 pull-right">
             <!-- format: :csv wasn't working below... -->
-            <%= link_to 'Download Template',
-                  '/card_activations/template.csv',
-                  class: 'btn' %>
+            <%= link_to 'Download Template','/card_activations/template.csv' %>
           </div>
         </div>
       </div>
