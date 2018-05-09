@@ -233,6 +233,7 @@ class CardActivation < ApplicationRecord
 
     def luhn_number_valid
       errors[:base].push('Must include a card number.') if full_card_number.blank?
+      errors[:base].push('Card Number is not long enough.') if full_card_number.length != 16
       unless CreditCardValidations::Luhn.valid?(full_card_number)
         errors[:base].push("Card number #{full_card_number} is not valid.")
       end
