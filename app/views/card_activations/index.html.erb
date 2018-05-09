@@ -144,22 +144,23 @@ table tr {
     <div class="modal-body">
       <div class="container">
         <div class="row">
-          <div class="span3">
+          <div class="span4">
             <%= form_with url: upload_card_activations_path do |form| %>
               <%= form.file_field :file %>
               <%= form.submit "Upload", {class:'btn btn-primary'} %>
             <% end %>
           </div>
-          <div class="span1 pull-right">
+          <div class="span1">
             <!-- format: :csv wasn't working below... -->
-            <%= link_to 'Download Template','/card_activations/template.csv' %>
+            <%= link_to 'Download Template',
+                  '/card_activations/template.csv',
+                  class: 'btn' %>
           </div>
         </div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      
     </div>
   </div>
 </div>
