@@ -83,7 +83,7 @@ class Person < ApplicationRecord
   after_create  :updateRapidPro if ENV['RAILS_ENV'] == 'production'
 
   after_create  :update_neighborhood
-  after_create  :send_new_person_notifications
+  after_commit  :send_new_person_notifications, on: :create
 
   validates :first_name, presence: true
   validates :last_name, presence: true
