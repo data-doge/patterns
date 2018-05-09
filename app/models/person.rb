@@ -75,12 +75,11 @@ class Person < ApplicationRecord
   has_many :carts, through: :carts_people, foreign_key: :person_id
 
   has_secure_token :token
-
-  after_update  :sendToMailChimp
-  after_update  :updateRapidPro if ENV['RAILS_ENV'] == 'production'
-
-  after_create  :sendToMailChimp
-  after_create  :updateRapidPro if ENV['RAILS_ENV'] == 'production'
+  
+  if ENV['RAILS_ENV'] == 'production'
+    after_commit :sendToMailChimp, on: %i[update create]
+    after_commit :updateRapidPro, on: %i[update create]
+  end
 
   after_create  :update_neighborhood
   after_commit  :send_new_person_notifications, on: :create
