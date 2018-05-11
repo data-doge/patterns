@@ -19,9 +19,9 @@ class CalendarController < ApplicationController
     calendar = Icalendar::Calendar.new
     case visitor.class.to_s
     when 'Person'
-      visitor.invitations.each { |r| calendar.add_event(r.to_ics) }
+      visitor.invitations.each { |i| calendar.add_event(i.to_ics) }
     when 'User'
-      visitor.research_sessions.each { |e| calendar.add_event(e.to_ics) }
+      visitor.research_sessions.each { |r| calendar.add_event(r.to_ics) }
     end
     calendar.publish
     render text: calendar.to_ical

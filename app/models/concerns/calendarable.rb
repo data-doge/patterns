@@ -79,52 +79,54 @@ module Calendarable
   private
 
     def cal_description
-      if defined? person
-        res  = description + "\n tel: #{person.phone_number}"
-        res << " \n email: #{person.email_address}"
-        res
+      
+      if defined? person # it's an invitation
+        res = description + %(
+          tel: #{person.phone_number}\n
+          email: #{person.email_address}\n
+        )
+        return res
+      elsif defined?(people) # it's a reservation
+        %(Created by: #{user.name}
+People: #{invitations.size}
+Title: #{title}
+Description:#{description}
+url: #{generate_url})
       else
         description
       end
     end
 
     def generate_url
-      if defined? person
-        "https://#{ENV['PRODUCTION_SERVER']}/calendar/?token=#{person.token}&#{self.class.to_s.demodulize}_id=#{id}"
-      else
-        "https://#{ENV['PRODUCTION_SERVER']}/calendar/?#{self.class.to_s.demodulize}_id=#{id}"
+      if self.class.to_s == 'Invitation'
+        "https://#{ENV['PRODUCTION_SERVER']}/research_session/#{research_session.id}"
+      elsif self.class.to_s == 'ResearchSession'
+        "https://#{ENV['PRODUCTION_SERVER']}/research_session/#{id}"
       end
     end
 
-    def add_alarm(e)
+    def add_alarm(event)
       # only add alarms for the actual reservation
       case self.class.name.demodulize
-      when 'Reservation'
-        generate_alarm(e)
+      when 'ResearchSession'
+        generate_alarm(event)
       else
-        e
+        event
       end
     end
 
-    def generate_alarm(e)
-      e.alarm do |a|
-        a.attendee = generate_atendees
-        a.summary  = description
-        a.trigger  = '-P1DT0H0M0S' # 1 day before
+    def generate_alarm(event)
+      user_email = defined?(user) ?  user.email : ENV['MAIL_ADMIN']
+      event.alarm do |alarm|
+        alarm.attendee = "mailto:#{user_email}"
+        alarm.summary  = description
+        alarm.trigger  = '-P1DT0H0M0S' # 1 day before
       end
-      e
+      event
     end
 
     def date_plus_time(date, time)
       (Date.strptime(date, '%m/%d/%Y') + Time.zone.parse(time).seconds_since_midnight.seconds)
-    end
-
-    def generate_atendees
-      # some may not have a person.
-      # this is only really used for reservations, so may be overkill
-      user_email = defined? user ?  user.email : ENV['MAIL_ADMIN']
-      person_email = defined? person ?  person.email_address : nil
-      [user_email, person_email].map { |at| "mailto:#{at}" }.compact!
     end
 
     # must by reasonably unique
