@@ -37,7 +37,7 @@
         <dd><%= @user.token %></dd>
         <dt>Session Calendar</dt>
         <dd> <%= link_to "Your sessions calendar feed", controller: 'calendar', action: :feed, token: @user.token, protocol: 'webcal', format: :ics %></dd>
-        <% if user.admin? %>
+        <% if current_user.admin? %>
           <dt>Admin Calendar</dt>
           <dd> <%= link_to "All Sessions calendar feed", controller: 'calendar', action: :admin_feed, token: @user.token, protocol: 'webcal', format: :ics %></dd>
         <% end %>
