@@ -27,6 +27,17 @@ class CalendarController < ApplicationController
     render text: calendar.to_ical
   end
 
+  def admin_feed
+    calendar = Icalendar::Calendar.new
+    if visitor&.admin?
+      sessions = ResearchSession.in_range(30.days.ago .. 3.months.from_now)
+      
+      sessions.each { |e| calendar.add_event(e.to_ics) }
+    end
+    calendar.publish
+    render text: calendar.to_ical
+  end
+
   def research_sessions # should be different for user and person, maybe?
     @research_sessions = visitor.
                          research_sessions.includes(:invitations).

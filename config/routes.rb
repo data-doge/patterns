@@ -176,6 +176,9 @@ Logan::Application.routes.draw do
 
   get '/calendar/(:id)', to: 'calendar#show', as: :calendar
   get '/calendar/(:token)/feed/', to: 'calendar#feed', defaults: { format: 'ics' }
+  
+  get '/calendar/(:token)/admin_feed/', to: 'calendar#admin_feed', defaults: { format: 'ics' }
+  
   get '/calendar/show_actions/:id/(:token)',
       to: 'calendar#show_actions',
       defaults: { format: 'js' },
