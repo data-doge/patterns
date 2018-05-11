@@ -82,6 +82,7 @@ class CardActivation < ApplicationRecord
       if ca.save
         ca.start_activate!
       else
+        Airbrake.notify(ca.errors) if errors.present?
         logger.info("Card Error: sequence: #{ca.sequence_number}, #{ca.full_card_number}")
         errors << ca
       end
