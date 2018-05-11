@@ -24,7 +24,7 @@ class CalendarController < ApplicationController
       visitor.research_sessions.each { |r| calendar.add_event(r.to_ics) }
     end
     calendar.publish
-    render text: calendar.to_ical
+    render plain: calendar.to_ical
   end
 
   def admin_feed
@@ -35,7 +35,7 @@ class CalendarController < ApplicationController
       sessions.each { |e| calendar.add_event(e.to_ics) }
     end
     calendar.publish
-    render text: calendar.to_ical
+    render plain: calendar.to_ical
   end
 
   def research_sessions # should be different for user and person, maybe?
@@ -93,8 +93,8 @@ class CalendarController < ApplicationController
     # TODO fix this
     def visitor # this looks like it needs work
       @visitor ||= @person ? @person : current_user
-      PaperTrail.whodunnit = @visitor
-      @visitor
+      # PaperTrail.whodunnit = @visitor
+      # @visitor
     end
 
     def allowed_params
