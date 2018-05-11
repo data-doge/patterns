@@ -30,7 +30,7 @@ class CalendarController < ApplicationController
   def admin_feed
     calendar = Icalendar::Calendar.new
     if visitor&.admin?
-      sessions = ResearchSession.in_range(30.days.ago .. 3.months.from_now)
+      sessions = ResearchSession.in_range(6.months.ago .. 3.months.from_now)
       
       sessions.each { |e| calendar.add_event(e.to_ics) }
     end
