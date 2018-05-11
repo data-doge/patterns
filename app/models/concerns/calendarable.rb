@@ -43,7 +43,7 @@ module Calendarable
 
   def to_ics
     e               = Icalendar::Event.new
-    e.summary       = title
+    e.summary       = title + " (#{user.name})"
     e.dtstart       = Icalendar::Values::DateTime.new(start_datetime)
     e.dtend         = Icalendar::Values::DateTime.new(end_datetime)
     e.description   = cal_description
@@ -88,10 +88,10 @@ module Calendarable
         return res
       elsif defined?(people) # it's a reservation
         %(Created by: #{user.name}
+Team: #{user.team.name}
 People: #{invitations.size}
-Title: #{title}
 Description:#{description}
-url: #{generate_url})
+tags: #{tag_list.to_s})
       else
         description
       end
