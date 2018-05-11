@@ -99,9 +99,9 @@ url: #{generate_url})
 
     def generate_url
       if self.class.to_s == 'Invitation'
-        "https://#{ENV['PRODUCTION_SERVER']}/research_session/#{research_session.id}"
+        "https://#{ENV['PRODUCTION_SERVER']}/sessions/#{research_session.id}"
       elsif self.class.to_s == 'ResearchSession'
-        "https://#{ENV['PRODUCTION_SERVER']}/research_session/#{id}"
+        "https://#{ENV['PRODUCTION_SERVER']}/sessions/#{id}"
       end
     end
 
