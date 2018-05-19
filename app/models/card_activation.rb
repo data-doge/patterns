@@ -187,10 +187,12 @@ class CardActivation < ApplicationRecord
   end
 
   def ongoing_call?
+    return false if active? #there may be, but we don't care.
     calls.ongoing.size.positive?
   end
 
   def can_run_check?
+    return false if active? # don't run any more checks if active
     !active? && !ongoing_call?
   end
 
