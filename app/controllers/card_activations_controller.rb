@@ -52,15 +52,18 @@ class CardActivationsController < ApplicationController
   # assignment happens in gift_card_controller
 
   def upload
-    cards_count = CSV.read(params[:file].path, headers: true).count
-    flash[:notice] = "Import started for #{cards_count} cards."
-    @errors = CardActivation.import(params[:file].path, current_user)
-    if @errors.empty?
-      redirect_to card_activations_path
+    if params[:file].empty?
+      flash[:error] = "No file uploaded"
     else
-      flash[:error] = "Error! #{@errors.size} cards not valid."
-      # show individual erros in ui
+      cards_count = CSV.read(params[:file].path, headers: true).count
+      flash[:notice] = "Import started for #{cards_count} cards."
+      @errors = CardActivation.import(params[:file].path, current_user)
+      if @errors.present?
+        flash[:error] = "Error! #{@errors.size} cards not valid."
+        # show individual erros in ui
+      end
     end
+    redirect_to card_activations_path
   end
 
   # POST /card_activations
