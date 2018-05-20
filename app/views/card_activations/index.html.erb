@@ -25,7 +25,12 @@ table tr {
       onclick: '$("#manual_card").toggle()', 
       class: 'btn'%>
     </div>
-    <div class='span8'>
+    <div class='span2'>
+      <%= link_to 'Download Signout Sheet', 
+          signout_sheet_card_activations_path,
+          class: 'btn'%>
+    </div>
+    <div class='span6'>
       <!-- form for single card -->
       <table style='display: none;' id='manual_card' class='card_activations'>
         <thead>

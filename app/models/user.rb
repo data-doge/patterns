@@ -42,6 +42,7 @@ class User < ApplicationRecord
   has_many :research_sessions
   has_many :invitations, through: :research_sessions
   has_many :gift_cards, foreign_key: :created_by
+  has_many :card_activations
   has_many :carts_user
   has_many :carts, through: :carts_user, foreign_key: :user_id
   belongs_to :team

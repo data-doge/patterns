@@ -28,6 +28,27 @@ class CardActivationsController < ApplicationController
       end
     end
   end
+  
+  def signout_sheet
+    if current_user.admin?
+      card_activations = CardActivation.unassigned.all
+    else
+      card_activations = current_user.card_activations.unassigned
+    end
+    respond_to do |format|
+      format.csv do
+        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = 'attachment; filename=CardActivationSignoutSheet.csv'
+        output = CSV.generate do |csv|
+          csv << %w[last_4 sequence_number name email phone zip join_dig?]
+          card_activations.each do |ca|
+            csv << [ca.last_4.to_s, ca.sequence_number, '', '', '', '', '']
+          end
+        end
+        send_data output, filename: 'CardActivationSignoutSheet.csv'
+      end
+    end
+  end
 
   def check
     @card_activation.create_check_call(override: true)

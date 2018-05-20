@@ -25,12 +25,17 @@
           <%= invitation.gift_cards.size %>
         </td>
         <td>
-        <%= link_to "+",
+        <% if invitation.aasm_state == 'attended' %>
+          <%= link_to "+",
               modal_gift_cards_path(invitation.class.to_s, invitation.id),
                 {:remote => true,
                   'data-toggle' =>  "modal",
                   'data-target' => '#modal-window',
-                  class: 'btn btn-mini'} unless invitation.missed? %>
+                  class: 'btn btn-mini'} %>
+        <% else %>
+          <%= link_to 'X','#', onclick: 'alert("Person must have attended to get a gift card.")', class: 'alert'
+          %>
+        <% end %>
         </td>
       </tr>
     <% end if @research_session.invitations.size > 0 %>

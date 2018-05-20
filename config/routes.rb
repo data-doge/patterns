@@ -24,6 +24,10 @@ Logan::Application.routes.draw do
           action: :template, 
           as: :template, 
           defaults: {format: 'csv'}
+      get 'signout_sheet', 
+          action: :signout_sheet, 
+          as: :signout_sheet, 
+          defaults: {format: 'csv'}    
       post 'upload',
            action: :upload,
            as: :upload

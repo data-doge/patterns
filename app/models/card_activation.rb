@@ -162,7 +162,7 @@ class CardActivation < ApplicationRecord
   end
 
   def last_4
-    full_card_number.last(4)
+    full_card_number.to_s.last(4)
   end
 
   def label

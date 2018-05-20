@@ -24,14 +24,26 @@
       </dl>
       <h4>Newest tags</h4>
       <ul id="tag-list">
-        <%= render partial: 'taggings/tag', collection: @new_tags, cached: true %>
+        <%= render partial: 
+              'taggings/tag', 
+              collection: @new_tags, 
+              as: :tag,
+              cached: true %>
 
       </ul>
       <h4>Most popular tags</h4>
       <ul id="tag-list">
-        <%= render partial: 'taggings/tag', collection: @popular_tags, cached: true %>
+        <%= render partial: 'taggings/tag', 
+              collection: @popular_tags,
+              as: :tag,
+              cached: true %>
 
       </ul>
+      <h4>Cart Activity:</h4>
+      <%= render partial: 'cart_activity', 
+            collection: @cart_people, 
+            as: :cart_person,
+            cached: true %>      
     </div>
   </div>
 </div>
