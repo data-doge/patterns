@@ -53,7 +53,7 @@ class CardActivationsController < ApplicationController
 
   def upload
     if params[:file].empty?
-      flash[:error] = "No file uploaded"
+      flash[:error] = 'No file uploaded'
     else
       cards_count = CSV.read(params[:file].path, headers: true).count
       flash[:notice] = "Import started for #{cards_count} cards."

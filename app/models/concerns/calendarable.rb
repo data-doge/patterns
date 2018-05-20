@@ -79,19 +79,18 @@ module Calendarable
   private
 
     def cal_description
-      
       if defined? person # it's an invitation
         res = description + %(
           tel: #{person.phone_number}\n
           email: #{person.email_address}\n
         )
-        return res
+        res
       elsif defined?(people) # it's a reservation
         %(Created by: #{user.name}
 Team: #{user.team.name}
 People: #{invitations.size}
 Description:#{description}
-tags: #{tag_list.to_s})
+tags: #{tag_list})
       else
         description
       end

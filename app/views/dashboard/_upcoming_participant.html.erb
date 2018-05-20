@@ -1,0 +1,19 @@
+<div class="upcoming-participant">
+
+  <% person = upcoming_participant 
+    upcoming =  person.research_session.where('start_datetime > ?', Time.current).last 
+     invite = upcoming.invitations.find_by(person_id: person.id)
+  %>
+  <span class="name">
+    <%= link_to "#{person.first_name} #{person.last_name}", person %>
+  </span>
+  <br/>
+  <span class="session">
+    Session:<%= link_to upcoming.title, upcoming %>
+  </span>
+  <br/>
+  <span class="session-user">
+    User: <%= upcoming.user.name %>
+  </span>
+  <br/> 
+</div>

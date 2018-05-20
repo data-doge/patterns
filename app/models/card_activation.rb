@@ -187,7 +187,7 @@ class CardActivation < ApplicationRecord
   end
 
   def ongoing_call?
-    return false if active? #there may be, but we don't care.
+    return false if active? # there may be, but we don't care.
     calls.ongoing.size.positive?
   end
 
@@ -197,7 +197,6 @@ class CardActivation < ApplicationRecord
   end
 
   private
-
 
     def check_secure_code # sometimes we drop leading 0's in csv
       secure_code.prepend('0') while secure_code.length < 3

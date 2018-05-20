@@ -1,0 +1,7 @@
+<div class="research_session">
+  <span class="name"><%= link_to "#{person.first_name} #{person.last_name}", person %></span><br/>
+  <span class="deactivated-at">Time:<%= person.deactivated_at.to_s :short %></span><br/>
+  <span class="deactivated-by">Method:<%= person.deactivation_method %></span>
+  <span class="gift-cards">Gift Cards: <%= person.gift_cards.size %></span>
+  <span class="gift-cards">Last User Interaction: <%= person.research_sessions.last&.user&.name %></span>
+</div>

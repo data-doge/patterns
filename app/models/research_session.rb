@@ -76,6 +76,10 @@ class ResearchSession < ApplicationRecord
     end
   end
 
+  def gift_cards
+    invitations.map(&:gift_cards).flatten
+  end
+
   def send_invitation_notifications
     invitations.where(aasm_state: 'created').find_each(&:invite!)
   end

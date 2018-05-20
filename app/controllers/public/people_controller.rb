@@ -8,7 +8,7 @@ class Public::PeopleController < ApplicationController
 
   # GET /people/new
   def new
-    @referrer = false
+    @referrer = current_user.nil? ? false : "patterns user: #{current_user.name}"
     if params[:referrer]
       begin
         uri = URI.parse(params[:referrer])
