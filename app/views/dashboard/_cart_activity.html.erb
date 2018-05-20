@@ -1,0 +1,20 @@
+<div class="cart-activity well">
+  <% 
+    person = cart_person.person
+    cart = cart_person.cart
+    user = cart_person.cart.user
+    %>
+
+  <span class="person-name">Person: <%= link_to "#{person.first_name} #{person.last_name}", person %></span><br/>
+  <% if current_user.admin? %>
+  <span class="cart-name">Cart: <%= link_to cart.name, cart %></span><br/>
+  <% else %>
+  <span class="cart-name">Cart: <%= cart.name%></span><br/>  
+  <% end %>
+  <span class="cart-size">Size: <%= cart.size %></span><br/>  
+  <% if current_user.admin? %>
+  <span class="user-name">User: <%= link_to user.name, user %></span><br/>
+  <% else %>
+  <span class="user-name">User: <%= cart.name%></span><br/>  
+  <% end %>
+</div>
