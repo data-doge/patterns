@@ -2,8 +2,20 @@
 <div class="row page-header">
   <div class="span2">
     <h1><%=t '.title', :default => "People" %></h1>
-    <h5 class="pull-left"><%= Person.count %></h5>
+    <h5 >Count:<%= Person.count %></h5>
+    <br/>
+    <!-- can't get this to work, moving on -->
+    <!--Show: <%= select_tag :per_page, 
+                options_for_select([30,60,100,200,500,1000,1500], Person.per_page), 
+                class: 'input-mini',
+                data:{
+                  remote: true,
+                  url: people_path
+                } %>
+    <br/> -->
+    <%= link_to "New Person", "https://brl.nyc", target: "_blank", class: 'btn btn-small' %>
   </div>
+  
   <div class='span3'>
    <label for="tags">Tags</label>
       <%= form_tag '/people', method: :get %>
@@ -19,11 +31,9 @@
                           %>
       <%= submit_tag "Search", :name => nil, :class => 'btn btn-primary' %>
   </div>
-  <div class="span2">
-
-  </div>
-  <div class='span3'>
-    <%= link_to "New Person", "https://brl.nyc", target: "_blank", class: 'btn btn-small' %>
+  
+  <div class='span2'>
+    
   </div>
 </div>
 

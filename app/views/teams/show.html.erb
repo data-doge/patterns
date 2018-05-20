@@ -49,16 +49,51 @@
       <thead>
         <tr>
           <th colspan="1">Title</th>
+          <th colspan="1">User</th>
           <th colspan="1">Date</th>
           <th colspan="1">Invited</th>
+          <th colspan="1">Gift Card Count</th>
+          <th colspan="1">Gift Card Amount</th>
+          <th colspan="1">Tags</th>
         </tr>
       </thead>
       <tbody>
         <% @sessions.each do |session| %>
         <tr>
           <td><%= link_to session.title, session %> </td>
+          <td><%= link_to session.user.name, session.user %> </td>
           <td><%= session.start_datetime_human %> </td>
           <td><%= session.invitations.invited.size %> </td>
+          <td><%= session.gift_cards.size %> </td>
+          <td><%= session.gift_cards.sum(&:amount) %> </td>
+          <td><%= session.tag_list.to_s %> </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class='row'>
+  <div class='span12'>
+    <h3>Recent People</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="1">Name</th>
+          <th colspan="1">Zip</th>
+          <th colspan="1">Neighborhood</th>
+          <th colspan="1">Gift Card YTD</th>
+          <th colspan="1">Tags</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @people.each do |person| %>
+        <tr>
+          <td><%= link_to person.full_name, person %></td>
+          <td><%= person.postal_code %></td>
+          <td><%= person.neighborhood %></td>
+          <td><%= person.gift_card_total %></td>
+          <td><%= person.tag_list.to_s %></td>
         </tr>
         <% end %>
       </tbody>

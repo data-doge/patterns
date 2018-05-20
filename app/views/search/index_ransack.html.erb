@@ -67,6 +67,7 @@
         <%= f.search_field :submissions_raw_content_cont %>
       </div>
     <br>
+    <%= select_tag :per_page, options_for_select([30,60,100,200,500,1000,1500],Person.per_page) %>
     <%= f.submit 'Search', class: "btn btn-primary" %>
     <%= link_to 'Clear Search', request.path, class:"btn" %>
   </div>

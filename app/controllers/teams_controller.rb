@@ -12,7 +12,8 @@ class TeamsController < ApplicationController
   # GET /teams/1
   # GET /teams/1.json
   def show
-    @sessions = @team.research_sessions.order(created_at: :desc).page(params[:sessions_page]).limit(5)
+    @sessions = @team.research_sessions.includes(:invitations, :people).order(created_at: :desc).page(params[:sessions_page]).limit(5)
+    @people = @sessions.map(&:people).flatten.uniq
     @changes = PaperTrail::Version.all.where(whodunnit: @team.users.map(&:id)).
                order(created_at: :desc).
                page(params[:changes_page]).

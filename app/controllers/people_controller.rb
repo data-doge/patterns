@@ -50,19 +50,21 @@ class PeopleController < ApplicationController
 
   # rubocop:disable Metrics/AbcSize
   def index
+    if params[:per_page].present? # allow for larger pages
+      Person.per_page = params[:per_page] 
+    end
+
     @verified_types = Person.pluck(:verified).uniq.select(&:present?)
     # this could be cleaner...
     search = if params[:tags].blank?
                 Person.includes(:taggings).paginate(page: params[:page]).
-                  order(sort_column + ' ' + sort_direction).
-                  where(active: true)
+                  order(sort_column + ' ' + sort_direction)
               else
                 tags =  params[:tags].split(',').map(&:strip)
                 @tags = Person.tag_counts.where(name: tags)
 
                 Person.includes(:taggings).paginate(page: params[:page]).
                   order(sort_column + ' ' + sort_direction).
-                  where(active: true).
                   tagged_with(tags)
               end
     # only show verified people to non-admins
