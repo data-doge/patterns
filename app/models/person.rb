@@ -49,6 +49,8 @@ class Person < ApplicationRecord
 
   acts_as_taggable
 
+  page 50
+  
   # include Searchable
   include ExternalDataMappings
   include Neighborhoods
@@ -111,9 +113,12 @@ class Person < ApplicationRecord
   scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM gift_cards where gift_cards.reason = 1)') }
   scope :signup_card_needed, -> { joins(:gift_cards).where('gift_cards.reason !=1') }
 
+  scope :verified, -> { where('verified like ?', '%Verified%') }
+  scope :not_verified, -> { where.not('verified like ?', '%Verified%') }
+
   default_scope { where(active: true) }
 
-  self.per_page = 15
+  
 
   ransacker :full_name, formatter: proc { |v| v.mb_chars.downcase.to_s } do |parent|
     Arel::Nodes::NamedFunction.new('lower',

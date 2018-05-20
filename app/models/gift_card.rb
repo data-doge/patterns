@@ -29,7 +29,7 @@
 class GiftCard < ApplicationRecord
   attr_accessor :card_activation_id
   has_paper_trail
-  page 20
+  page 50
   monetize :amount_cents
 
   before_destroy :unassign_card_activation

@@ -52,7 +52,7 @@ class PeopleController < ApplicationController
   def index
     @verified_types = Person.pluck(:verified).uniq.select(&:present?)
     # this could be cleaner...
-    @people = if params[:tags].blank?
+    search = if params[:tags].blank?
                 Person.includes(:taggings).paginate(page: params[:page]).
                   order(sort_column + ' ' + sort_direction).
                   where(active: true)
@@ -65,6 +65,8 @@ class PeopleController < ApplicationController
                   where(active: true).
                   tagged_with(tags)
               end
+    # only show verified people to non-admins
+    @people = current_user.admin? ? search : search.verified
     @tags ||= []
   end
   # rubocop:enable Metrics/AbcSize

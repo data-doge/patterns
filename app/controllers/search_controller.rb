@@ -20,8 +20,11 @@ class SearchController < ApplicationController
     if params[:q].present? && params[:q][:phone_number_eq].present?
       params[:q][:phone_number_eq] = PhonyRails.normalize_number(params[:q][:phone_number_eq])
     end
-
-    @q = Person.ransack(params[:q])
+    if current_user.admin?
+      @q = Person.ransack(params[:q])
+    else
+      @q = Person.verified.ransack(params[:q])
+    end
     @results = @q.result.includes(:tags).page(params[:page])
 
     # Need to better define these

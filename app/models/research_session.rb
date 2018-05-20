@@ -26,6 +26,8 @@ class ResearchSession < ApplicationRecord
   include Calendarable
   attr_accessor :people_ids
 
+  self.per_page  = 50
+
   # different types # breaks stuff
   #  enum session_type: %i[interview focus_group social test]
 

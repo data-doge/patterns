@@ -1,5 +1,5 @@
 <div class="recent-participant well">
-  <%  person = recent_participant 
+  <%
     recent =  person.research_sessions.where('start_datetime < ?', Time.current).last 
      invite = recent.invitations.find_by(person_id: person.id)
      %>
