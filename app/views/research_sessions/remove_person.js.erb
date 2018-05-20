@@ -1,1 +1,6 @@
 $('#dynamic-invitation-panel').load('/sessions/<%= @research_session.id %>/invitations_panel.html');
+$('#cart-<%=@person.id%>').replaceWith("<%= j render 'cart/mini_item', locals:{ person: @person, current_session: @research_session} %>")
+if(typeof research_session_id !== "undefined")
+{
+  reloadWithTurbolinks(); // horrible hack
+}

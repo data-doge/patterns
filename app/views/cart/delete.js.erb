@@ -8,4 +8,9 @@
   <% end %>
 <% end %>
 
+if(typeof research_session_id !== "undefined")
+{
+  reloadWithTurbolinks(); // horrible hack
+} 
+
 $('.cart-size').html('<%= @cart.people_ids.size %>');

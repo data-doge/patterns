@@ -106,6 +106,7 @@ class ResearchSessionsController < ApplicationController
   def remove_person
     @research_session =  ResearchSession.find(params[:research_session_id])
     inv = @research_session.invitations.find_by(person_id: params[:person_id])
+    @person = inv.person
     if !inv.gift_cards.empty?
       flash[:error] = "Can't remove #{Person.find(inv.person_id).full_name}, they have a gift card for this session, remove the gift card first"
     else
@@ -116,6 +117,7 @@ class ResearchSessionsController < ApplicationController
     end
     respond_to do |format|
       format.js
+      format.html { redirect_to research_session_path(@research_session) }
     end
   end
 
@@ -124,12 +126,14 @@ class ResearchSessionsController < ApplicationController
     state = params[:invited].presence || 'created'
     inv = Invitation.new(person_id: params[:person_id], aasm_state: state)
     @research_session.invitations << inv
+    @research_session.save
+    @person = inv.person
     if @research_session.save
-      flash[:notice] = "#{Person.find(inv.person_id).full_name} added to session!"
+      flash[:notice] = "#{@person.full_name} added to session!"
     end
     respond_to do |format|
       format.js
-      format.html
+      format.html { redirect_to research_session_path(@research_session) }
     end
   end
 

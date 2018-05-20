@@ -30,7 +30,7 @@ class Invitation < ApplicationRecord
   has_many :gift_cards, as: :giftable, dependent: :destroy
 
   # one person can't have multiple invitations for the same event
-  validates :person, uniqueness: { scope: :research_session }
+  validates :person_id, uniqueness: { scope: :research_session_id }
 
   # not sure about all these delegations.
   delegate :user,

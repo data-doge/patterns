@@ -1,3 +1,5 @@
+<% people ||= @people %>
+
 <span id='cart_mini_view'>
     <h3> People in Pool</h3>
     <%= select_tag "cart",
@@ -20,7 +22,11 @@
         </tr>
       </thead>
       <tbody id='mini-cart' class='cart-container'>
+        <% if defined? current_session %>
+        <%= render partial: 'cart/mini_item', collection: people, as: :person, locals: {current_session: current_session }%>
+        <% else %>
         <%= render partial: 'cart/mini_item', collection: people, as: :person %>
+        <% end %>
       </tbody>
     </thread>
   </table>

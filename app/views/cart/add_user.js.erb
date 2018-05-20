@@ -1,2 +1,6 @@
 $('#users-list').append("<%= j render partial: "cart/cart_user", locals: {user: @user} %>");
 $('#user_id option[value="<%=@user.id%>"]').remove();
+if(typeof research_session_id !== "undefined")
+{
+  reloadWithTurbolinks(); // horrible hack
+}

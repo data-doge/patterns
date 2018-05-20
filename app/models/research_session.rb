@@ -39,6 +39,8 @@ class ResearchSession < ApplicationRecord
 
   accepts_nested_attributes_for :invitations, reject_if: :all_blank, allow_destroy: true
 
+  validate :clean_invitations
+
   validates :description,
     :title,
     :start_datetime,
@@ -78,6 +80,10 @@ class ResearchSession < ApplicationRecord
     end
   end
 
+  def is_invited?(person)
+    invitations.map(&:person_id).include? person.id
+  end
+
   def gift_cards
     invitations.map(&:gift_cards).flatten
   end
@@ -90,6 +96,10 @@ class ResearchSession < ApplicationRecord
 
     def update_missing_attributes
       self.end_datetime = start_datetime + duration.minutes
+    end
+
+    def clean_invitations
+      invitations.each {|inv| inv.delete unless inv.valid?}
     end
 
 end

@@ -2,12 +2,11 @@
 
 <% content_for :page_title, @research_session.title %>
 <script>
-var research_session_id = <%= @research_session.id%>;
+research_session_id = <%= @research_session.id%>;
 </script>
 <div class="page-header">
   <h1><%= @research_session.title %></h1>
 </div>
-
 <div class="row">
   <div class="span6">
     <div class="well">
@@ -65,12 +64,17 @@ var research_session_id = <%= @research_session.id%>;
 
 </div>
 <div class="row">
-  <div class="span4">
+  <div class="span6">
     
   </div>
-  <div class='span1'>
-  </div>
-  <div class="span7">
+  
+  <div class="span6">
+    <div class='span6'>
+      <%= render partial: 'cart/mini_view', locals: {
+          people: current_cart.people,
+          current_session: @research_session
+          } %>
+    </div>
   </div>
 </div>
 

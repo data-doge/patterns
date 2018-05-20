@@ -1,11 +1,25 @@
+<% 
+person ||= @person 
+current_session ||= @current_session
+
+%>
+
 <tr id='cart-<%= person.id %>'>
   <td><%= link_to person.full_name, person_path(person) %></td>
   <td><%= person.preferred_contact_method %></td>
   <td>
+    <% if current_session.nil? %> <!-- new session -->
     <a class='btn btn-mini add-to-session'
        data-fullname='<%= person.full_name %>'
        data-personid='<%= person.id %>'
        id='add-<%= person.id%>'>add</a>
+    <% elsif current_session.is_invited?(person) %> 
+      <!-- is already invited -->
+      <%= link_to "Remove from Session", research_session_remove_person_path(current_session,person)%>
+    <% else %>
+      <!--not yet invited-->
+      <%= link_to "Add to Session", research_session_add_person_path(current_session,person) %>
+    <% end %>
   </td>
   <td>
     <%= render partial: '/people/add_remove_cart',

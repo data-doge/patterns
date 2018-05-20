@@ -10,4 +10,10 @@
   $('#<%= add %>-cart-add').hide();
 <% end %>
 
+if(typeof research_session_id !== "undefined")
+{
+  reloadWithTurbolinks(); // horrible hack
+} 
+
+
 $('.cart-size').html('<%= @cart.people.size %>');

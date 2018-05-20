@@ -84,6 +84,8 @@ $(document).on('turbolinks:load',function() {
       e.preventDefault();     
     });
 
+
+
     $('.add-to-session').on('click', function(e) {
       
       person = {full_name: $(this).data('fullname'),
@@ -106,13 +108,13 @@ $(document).on('turbolinks:load',function() {
       if (!current_ids.includes(id.toString())) {
         $('#add-'+id.toString()).hide();
         current_ids.push(id.toString())
-        current_ids = current_ids.filter(function(v, i, a) {a.indexOf(v) === i && v != ""}); 
-        
+        current_ids = $.unique(current_ids).filter(function(el){ return el != ''})
         $('#research_session_people_ids').val(current_ids.join(','));
         // this is an ugly hack, shoudl be a partial that gets rendered.
-        $('#people-store').append("<div class='added_person' id='person-"+ id +"'><span class='btn btn-danger btn-mini'>X</span>&nbsp;&nbsp;<span class='person-name'>"+name+"</span></div>")
-        $('#person-'+id).on('click',function(){
-          remove_person(id);
+        $('#people-store').append("<div class='added_person' data-personid="+id+" id='person-"+ id +"'><span class='btn btn-danger btn-mini'>X</span>&nbsp;&nbsp;<span class='person-name'>"+name+"</span></div>")
+        $('#person-'+id).on('click',function(e){
+          var pid = $(this).data('personid');
+          remove_person(pid);
         })  
       }
       
@@ -122,13 +124,14 @@ $(document).on('turbolinks:load',function() {
       var current_ids = get_current_ids()
       id = id.toString();
       if (current_ids.includes(id)) {
+        
         current_ids = jQuery.grep(current_ids, function(value) {
           return value != id.toString();
         });
 
         $('#research_session_people_ids').val(current_ids.join(',')); 
-        $('#person-'+id.toString()).remove();
-        $('#add-'+id.toString()).show();
+        $('#person-'+id).remove();
+        $('#add-'+id).show();
       }
     }
   }
