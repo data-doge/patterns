@@ -25,6 +25,10 @@ class DashboardController < ApplicationController
     @six_month_gc = GiftCard.where('created_at > ?', 6.months.ago).sum(&:amount)
     @twelve_month_gc = GiftCard.where('created_at > ?', 1.year.ago).sum(&:amount)
 
+    @one_month_people = GiftCard.select('distinct person_id').where('created_at > ?', 1.month.ago).size
+    @six_month_people = GiftCard.select('distinct person_id').where('created_at > ?', 6.months.ago).size
+    @twelve_month_people = GiftCard.select('distinct person_id').where('created_at > ?', 1.year.ago).size
+
     @popular_tags   = ActsAsTaggableOn::Tag.most_used(10)
     @new_tags       = ActsAsTaggableOn::Tag.order('id desc').limit(10)
 

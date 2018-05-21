@@ -17,8 +17,8 @@
         <dd><%=@unverified_count%></dd>
         <dt>Last Month's Deactivation Count:</dt>
         <dd><%= @deactivated_count %></dd>
-        <dt>Active People in 6 months:</dt>
-        <dd><%= @active_people_count %></dd>
+        <dt>Active People in 1,6,12 months:</dt>
+        <dd><%= @one_month_people%>, <%= @six_month_people%>, <%= @twelve_month_people%></dd>
         <dt>Total Gift Card $ in 1,6,12 months:</dt>
         <dd><%= @one_month_gc%>, <%= @six_month_gc%>, <%= @twelve_month_gc%></dd>
       </dl>
