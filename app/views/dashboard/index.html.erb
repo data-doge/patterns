@@ -22,6 +22,14 @@
         <dt>Total Gift Card $ in 1,6,12 months:</dt>
         <dd><%= @one_month_gc%>, <%= @six_month_gc%>, <%= @twelve_month_gc%></dd>
       </dl>
+      <% if current_user.admin? %>
+      <h4>Last Logins, count</h4>
+      <ul id='user-list'>
+        <% @last_logins.each do |user| %>
+        <li><%= link_to user.name, user %>: <%= user.last_sign_in_at.to_s :short%>, <%= user.sign_in_count%></li>
+        <% end %>
+      </ul>
+      <% end %>
       <h4>Newest tags</h4>
       <ul id="tag-list">
         <%= render partial: 
