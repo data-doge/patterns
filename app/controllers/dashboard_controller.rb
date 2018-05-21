@@ -20,7 +20,7 @@ class DashboardController < ApplicationController
     @deactivated_count    = Person.unscoped.where(active: false).where('deactivated_at > ?', 1.month.ago).size
     @deactivated_people = Person.unscoped.where(active: false).order('deactivated_at DESC').limit(10)
 
-    @last_logins = User.approved.all
+    @last_logins = User.approved.order('last_sign_in_at DESC').all
     @one_month_gc = GiftCard.where('created_at > ?', 1.month.ago).sum(&:amount)
     @six_month_gc = GiftCard.where('created_at > ?', 6.months.ago).sum(&:amount)
     @twelve_month_gc = GiftCard.where('created_at > ?', 1.year.ago).sum(&:amount)

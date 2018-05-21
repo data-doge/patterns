@@ -92,6 +92,7 @@ class ResearchSessionsController < ApplicationController
   end
 
   def update
+    @research_session =  ResearchSession.find(params[:id])
     respond_to do |format|
       if @research_session.update(research_session_params)
         format.html { redirect_to(@research_session, notice: 'Session was successfully updated.') }

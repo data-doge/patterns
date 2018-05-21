@@ -4,8 +4,9 @@
     <%= render partial: 'new_person', collection: @new_unverified_people, as: :person, cached: true %>
   </div>
   <div class="span4">
-    <h3>Recent Deactivated People</h3>
-    <%= render partial: 'deactivated_person', collection: @deactivated_people, as: :person, cached: true  %>
+    <h3> Upcoming Sessions</h3>
+    <%= render partial: 'upcoming_session', 
+          collection: @upcoming_sessions, as: :session, cached: true %>
   </div>
 
   <div class="span4">
@@ -57,11 +58,6 @@
 </div>
 <div class='row'>
   <div class='span3'>
-    <h3> Upcoming Sessions</h3>
-    <%= render partial: 'upcoming_session', 
-          collection: @upcoming_sessions, as: :session, cached: true %>
-  </div>
-  <div class='span3'>
     <h3> Recent Sessions</h3>
     <%= render partial: 'recent_session', 
           collection: @recent_sessions, as: :session, cached: true  %>
@@ -75,5 +71,9 @@
     <h3> Recent Participants</h3>
     <%= render partial: 'recent_participant', 
           collection: @recent_participants, as: :person, cached: true  %>
+  </div>
+  <div class='span3'>
+    <h3>Recent Deactivated People</h3>
+    <%= render partial: 'deactivated_person', collection: @deactivated_people, as: :person, cached: true  %>
   </div>
 </div>

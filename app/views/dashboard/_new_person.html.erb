@@ -1,6 +1,6 @@
 <div class="recent-signup well">
   <span class="name"><%= link_to "#{person.first_name} #{person.last_name}", person %></span><br/>
-  <span class="address"><%= address_fields_to_sentence(person) %></span><br/>
+  <span class="created"><%= person.created_at.to_s :short %></span><br/>
   <span class="verified">Verified?: <%= person.verified %></span><br/>
   <span class="low-income">Low income?: <%= person.low_income %></span><br/>
   <span class="referral">referral: <%= person.referred_by %></span><br/>
