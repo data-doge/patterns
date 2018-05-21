@@ -37,7 +37,7 @@ $(document).on('turbolinks:load',function() {
   /* Activating Best In Place */
   jQuery(".best_in_place").best_in_place();
 
-  var show_ajax_message = function(msg, type) {
+  show_ajax_message = function(msg, type) {
     var cssClass = type === 'error' ? 'alert-error' : 'alert-success'
     var html ='<div class="alert ' + cssClass + '">';
     html +='<button type="button" class="close" data-dismiss="alert">&times;</button>';
@@ -48,19 +48,10 @@ $(document).on('turbolinks:load',function() {
 
 
   reloadWithTurbolinks = (function () {
-    var scrollPosition
 
     function reload () {
-      scrollPosition = [window.scrollX, window.scrollY]
-      Turbolinks.visit(window.location.toString(), { action: 'replace' })
+      Turbolinks.visit(window.location.toString(), { action: 'replace', scroll: true })
     }
-
-    document.addEventListener('turbolinks:load', function () {
-      if (scrollPosition) {
-        window.scrollTo.apply(window, scrollPosition)
-        scrollPosition = null
-      }
-    })
 
     return reload
   })()

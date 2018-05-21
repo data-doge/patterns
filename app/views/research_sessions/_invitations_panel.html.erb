@@ -33,7 +33,7 @@
                   'data-target' => '#modal-window',
                   class: 'btn btn-mini'} %>
         <% else %>
-          <%= link_to 'X','#', onclick: 'alert("Person must have attended to get a gift card.")', class: 'alert'
+          <%= link_to 'X','#', onclick: 'event.preventDefault();alert("Person must have attended to get a gift card.")', class: 'alert'
           %>
         <% end %>
         </td>
