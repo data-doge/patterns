@@ -46,15 +46,21 @@ $(document).on('turbolinks:load',function() {
     $("#notifications").html(html);
   };
 
-
-  reloadWithTurbolinks = (function () {
-
-    function reload () {
-      Turbolinks.visit(window.location.toString(), { action: 'replace', scroll: true })
+  scrollPosition = null;
+  
+  document.addEventListener('turbolinks:load', function () {
+    
+    if (scrollPosition) {
+      window.scrollTo.apply(window, scrollPosition)
+      scrollPosition = null
     }
-
-    return reload
-  })()
+  }, false)
+  
+  Turbolinks.reload = function () {
+    scrollPosition = [window.scrollX, window.scrollY]
+    console.log(scrollPosition);
+    Turbolinks.visit(window.location, { action: 'replace', scroll: false })
+  }
 
   $(document).ajaxComplete(function(event, request) {
     var msg = request.getResponseHeader('X-Message');
