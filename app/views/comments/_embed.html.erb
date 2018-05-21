@@ -1,6 +1,6 @@
 <section class="comment" id="comment-<%= comment.id %>">
   <a id="comment-<%= comment.id %>"></a>
-  <%= best_in_place comment, :content,:ok_button => 'Save', :cancel_button => 'Cancel',as: :textarea %>
+  <%= best_in_place comment, :content, ok_button: 'Save', cancel_button: 'Cancel',as: :textarea %>
   <br>
   <span class="comment-byline">
     <% if comment.created_by %>

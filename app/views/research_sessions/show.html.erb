@@ -5,7 +5,11 @@
 research_session_id = <%= @research_session.id%>;
 </script>
 <div class="page-header">
+  <% if current_user.admin? %>
+  <h1> <%= best_in_place @research_session, :title, ok_button: 'Save', cancel_button: 'Cancel',as: :textarea %> 
+  <% else %>
   <h1><%= @research_session.title %></h1>
+  <% end %>
 </div>
 <div class="row">
   <div class="span6">
