@@ -1,4 +1,4 @@
-<div class="cart-activity well">
+<div class="cart-activity well <%= cycle('pull-left', 'pull-right') %>">
   <% 
     person = cart_person.person
     cart = cart_person.cart
@@ -11,7 +11,7 @@
   <% else %>
   <span class="cart-name">Cart: <%= cart.name%></span><br/>  
   <% end %>
-  <span class="cart-size">Size: <%= cart.size %></span><br/>  
+  
   <% if current_user.admin? %>
   <span class="user-name">User: <%= link_to user.name, user %></span><br/>
   <% else %>

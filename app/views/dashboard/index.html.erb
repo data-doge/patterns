@@ -1,15 +1,19 @@
 <div class="row">
-  <div class="span4">
-    <h3>Recent signups, yay!</h3>
+  <div class="span3">
+    <h3>Recent signups</h3>
     <%= render partial: 'new_person', collection: @new_unverified_people, as: :person, cached: true %>
   </div>
-  <div class="span4">
+  <div class="span2">
     <h3> Upcoming Sessions</h3>
     <%= render partial: 'upcoming_session', 
           collection: @upcoming_sessions, as: :session, cached: true %>
   </div>
-
-  <div class="span4">
+  <div class='span2'>
+    <h3>Upcoming Participants</h3>
+    <%= render partial: 'upcoming_participant', 
+          collection: @upcoming_participants, as: :person, cached: true  %>
+  </div>
+  <div class="span5">
     <div class="well">
       <dl>
         <dt>Total Verified count:</dt> 
@@ -48,31 +52,27 @@
               cached: true %>
 
       </ul>
-      <h4>Cart Activity:</h4>
+    </div>
+    <h4>Cart Activity:</h4>
       <%= render partial: 'cart_activity', 
             collection: @cart_people, 
             as: :cart_person,
-            cached: true %>      
-    </div>
+            cached: true %> 
   </div>
 </div>
 <div class='row'>
-  <div class='span3'>
+  <div class='span4'>
     <h3> Recent Sessions</h3>
     <%= render partial: 'recent_session', 
           collection: @recent_sessions, as: :session, cached: true  %>
   </div>
-  <div class='span3'>
-    <h3>Upcoming Participants</h3>
-    <%= render partial: 'upcoming_participant', 
-          collection: @upcoming_participants, as: :person, cached: true  %>
-  </div>
-  <div class='span3'>
+  
+  <div class='span4'>
     <h3> Recent Participants</h3>
     <%= render partial: 'recent_participant', 
           collection: @recent_participants, as: :person, cached: true  %>
   </div>
-  <div class='span3'>
+  <div class='span4'>
     <h3>Recent Deactivated People</h3>
     <%= render partial: 'deactivated_person', collection: @deactivated_people, as: :person, cached: true  %>
   </div>
