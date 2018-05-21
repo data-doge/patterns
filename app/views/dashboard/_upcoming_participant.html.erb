@@ -1,7 +1,6 @@
-<div class="upcoming-participant">
-
+<div class="upcoming-participant well" id='person-<%=person.id%>'>
   <% 
-    upcoming =  person.research_session.where('start_datetime > ?', Time.current).last 
+    upcoming =  person.research_sessions.where('start_datetime > ?', Time.current).last 
      invite = upcoming.invitations.find_by(person_id: person.id)
   %>
   <span class="name">

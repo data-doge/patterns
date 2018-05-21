@@ -192,6 +192,10 @@ class Person < ApplicationRecord
     tag_list.size
   end
 
+  def screened?
+    tag_list.include?('screened')
+  end
+
   def submission_values
     submissions.collect(&:submission_values)
   end

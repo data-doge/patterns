@@ -1,7 +1,19 @@
 <div class="row">
-  <div class="span3">
+  <div class="span4">
     <h3>Recent signups</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Person</th>
+          <th>joined</th>
+          <th>low income</th>
+          <th>reffered</th>
+        </tr>
+      </thead>
+      <tbody>
     <%= render partial: 'new_person', collection: @new_unverified_people, as: :person, cached: true %>
+      </tbody>
+    </table>
   </div>
   <div class="span2">
     <h3> Upcoming Sessions</h3>
@@ -13,7 +25,7 @@
     <%= render partial: 'upcoming_participant', 
           collection: @upcoming_participants, as: :person, cached: true  %>
   </div>
-  <div class="span5">
+  <div class="span4">
     <div class="well">
       <dl>
         <dt>Total Verified count:</dt> 
@@ -54,10 +66,21 @@
       </ul>
     </div>
     <h4>Cart Activity:</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Person</th>
+          <th>Cart</th>
+          <th>User</th>
+        </tr>
+      </thead>
+      <tbody>
       <%= render partial: 'cart_activity', 
             collection: @cart_people, 
             as: :cart_person,
             cached: true %> 
+      </tbody>
+    </table>
   </div>
 </div>
 <div class='row'>

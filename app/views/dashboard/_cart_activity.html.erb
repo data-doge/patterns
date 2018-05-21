@@ -1,20 +1,17 @@
-<div class="cart-activity well <%= cycle('pull-left', 'pull-right') %>">
-  <% 
-    person = cart_person.person
+<%  person = cart_person.person
     cart = cart_person.cart
-    user = cart_person.cart.user
-    %>
-
-  <span class="person-name">Person: <%= link_to "#{person.first_name} #{person.last_name}", person %></span><br/>
+    user = cart_person.cart.user %>
+<tr id='cart-<%= person.id %>'>
+  <td><%= link_to "#{person.first_name} #{person.last_name}", person %></td>
   <% if current_user.admin? %>
-  <span class="cart-name">Cart: <%= link_to cart.name, cart %></span><br/>
+  <td><%= link_to cart.name, cart %></td>
   <% else %>
-  <span class="cart-name">Cart: <%= cart.name%></span><br/>  
+  <td><%= cart.name%></td>
   <% end %>
   
   <% if current_user.admin? %>
-  <span class="user-name">User: <%= link_to user.name, user %></span><br/>
+  <td><%= link_to user.name, user %></td>
   <% else %>
-  <span class="user-name">User: <%= cart.name%></span><br/>  
+  <td><%= cart.name%></td>
   <% end %>
-</div>
+<tr>
