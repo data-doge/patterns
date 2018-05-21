@@ -61,10 +61,10 @@ class ResearchSessionsController < ApplicationController
         inv_hash = pids.map { |p| { person_id: p, research_session_id: @research_session.id } }
         Invitation.create(inv_hash)
       end
-      # sends all of the invitations.
-      if params[:send_invites][:boolean_attribute] != 'false'
-        @research_session.invitations.each(&:invite!)
-      end
+      # sends all of the invitations. # no invitations
+      # if params[:send_invites][:boolean_attribute] != 'false'
+      #   @research_session.invitations.each(&:invite!)
+      # end
 
       redirect_to research_session_path(@research_session)
     else
