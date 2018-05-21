@@ -133,6 +133,9 @@ class CartController < ApplicationController
 
   def change_cart
     @cart = Cart.find(params[:cart]) || current_cart
+    if params[:current_session_id].present?
+      @current_session = ResearchSession.find(params[:current_session_id]) || nil
+    end
     current_user.current_cart = @cart
     respond_to do |format|
       format.html { redirect_to cart_path(@cart) }

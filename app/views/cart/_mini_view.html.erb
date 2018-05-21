@@ -1,7 +1,8 @@
 <% people ||= @people %>
-
+<% current_session ||= @current_session %>
 <span id='cart_mini_view'>
     <h3> People in Pool</h3>
+    <% if current_session.nil? %>
     <%= select_tag "cart",
               options_from_collection_for_select(current_user.carts,'id','name_and_count'),
               prompt: "#{current_cart.name}: #{current_cart.people.count}",
@@ -11,6 +12,17 @@
                 method: 'post'
               }
               %>
+    <% else %>
+    <%= select_tag "cart",
+              options_from_collection_for_select(current_user.carts,'id','name_and_count'),
+              prompt: "#{current_cart.name}: #{current_cart.people.count}",
+              data:{
+                remote: true,
+                url: change_cart_index_path(current_session_id: current_session.id, format: :js),
+                method: 'post'
+              }
+              %>
+    <% end %>
     <input id='cart-typeahead' type="text" placeholder="People Search">
     <table class="table table-striped">
       <thead>
