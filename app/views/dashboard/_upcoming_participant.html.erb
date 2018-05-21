@@ -1,6 +1,6 @@
 <div class="upcoming-participant">
 
-  <% person = upcoming_participant 
+  <% 
     upcoming =  person.research_session.where('start_datetime > ?', Time.current).last 
      invite = upcoming.invitations.find_by(person_id: person.id)
   %>
