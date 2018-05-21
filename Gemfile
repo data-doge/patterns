@@ -27,7 +27,8 @@ gem 'awesome_print' # for printing awesomely
 gem 'fuzzy_match' # for sms command fuzzy matching
 
 gem 'rails_db' #for data-wonky fellows
-
+gem 'groupdate' # for graphing
+gem 'chartkick'
 gem 'nokogiri', '1.8.2'
 
 

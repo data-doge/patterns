@@ -29,6 +29,8 @@
 //= require cable
 //= require_tree .
 //= require jquery.mask
+//= require Chart.bundle
+//= require chartkick
 
 $(document).on('turbolinks:load',function() {
   $.jMaskGlobals.watchDataMask = true;
