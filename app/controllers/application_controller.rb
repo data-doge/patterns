@@ -34,6 +34,7 @@ class ApplicationController < ActionController::Base
       current_user.last_sign_in_at = Time.current
       current_user.save
     end
+    true
   end
   
   def flash_to_headers
