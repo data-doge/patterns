@@ -11,7 +11,7 @@ class DashboardController < ApplicationController
   # Recent activity stream-> sessions, people edits, pool edits
 
   def index
-    @new_unverified_people = Person.includes(:taggings).not_verified.where('signup_at > :startdate', { startdate: 1.month.ago })
+    @new_unverified_people = Person.includes(:taggings).not_verified.order('created_at DESC').where('signup_at > :startdate', { startdate: 1.month.ago })
     @new_verified_people   = Person.includes(:taggings).verified.order('created_at DESC').where('signup_at > :startdate', { startdate: 1.month.ago })
 
     @verified_count = Person.verified.size
