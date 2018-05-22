@@ -6,7 +6,7 @@ class RapidproDeleteJob
 
   def perform(id)
     Rails.logger.info '[RapidProDelete] job enqueued'
-    person = Person.find id
+    person = Person.unscoped.find id
     if person&.rapidpro_uuid.present?
       headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
                   'Content-Type'  => 'application/json' }
