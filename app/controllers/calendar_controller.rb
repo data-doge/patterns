@@ -6,7 +6,7 @@ class CalendarController < ApplicationController
   # this is so that people can also visit the calendar.
   # identified by their secure token.
   skip_before_action :authenticate_user!, if: :person?
-  skip_before_action :update_user_activity, only: [:feed, :admin_feed]
+  #skip_before_action :update_user_activity, only: [:feed, :admin_feed]
 
   include ActionController::MimeResponds
 
