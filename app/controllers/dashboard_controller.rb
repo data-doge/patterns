@@ -28,8 +28,8 @@ class DashboardController < ApplicationController
     @six_month_people = GiftCard.select('distinct person_id').where('created_at > ?', 6.months.ago).size
     @twelve_month_people = GiftCard.select('distinct person_id').where('created_at > ?', 1.year.ago).size
 
-    @popular_tags   = ActsAsTaggableOn::Tag.most_used(10)
-    @new_tags       = ActsAsTaggableOn::Tag.order('id desc').limit(10)
+    @popular_tags   = Person.tag_counts.order('taggings_count DESC').limit(10)
+    @new_tags       = Person.tag_counts.order('id desc').limit(10)
 
     @recent_participants   = ResearchSession.order('created_at DESC').limit(10).map(&:people).flatten.uniq
     @recent_sessions   = ResearchSession.order('created_at DESC').limit(10)
