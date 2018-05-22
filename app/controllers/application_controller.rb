@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   after_action :flash_to_headers
+  after_action :update_user_activity
 
   # this is so that json requests don't redirect without a user
   before_action :authenticate_user!
@@ -28,6 +29,13 @@ class ApplicationController < ActionController::Base
 
   delegate :current_cart, to: :current_user
 
+  def update_user_activity
+    if current_user.present?
+      current_user.last_sign_in_at = Time.current
+      current_user.save
+    end
+  end
+  
   def flash_to_headers
     return unless request.xhr?
     response.headers['X-Message'] = flash_message if flash_message
