@@ -15,7 +15,7 @@ research_session_id = <%= @research_session.id%>;
   </h1>
 </div>
 <div class="row">
-  <div class="span6">
+  <div class="span4">
     <div class="well">
       <dl>
         <dt>Clone</dt>
@@ -53,7 +53,7 @@ research_session_id = <%= @research_session.id%>;
     <%= form_for([@research_session, Comment.new], remote: true) do |form| %>
       <%= form.hidden_field :commentable_type, :value => 'ResearchSession' %>
       <%= form.hidden_field :commentable_id, :value => @research_session.id %>
-      <%= form.text_area :content, rows: 6, class: "span6 input-block-level" %>
+      <%= form.text_area :content, rows: 6, class: "span4 input-block-level" %>
       <%= form.submit 'Add note', :class => "btn" %>
     <% end %>
 
@@ -64,27 +64,18 @@ research_session_id = <%= @research_session.id%>;
     </div>
   </div>
   <!-- http://stackoverflow.com/questions/10539143/reloading-partial-in-an-rails-app -->
-  <div class="span6">
+  <div class="span8">
     <h3>Invitees</h3>
     <input id='invitees-typeahead' type="text" placeholder="People Search">
     <%= render partial: 'invitations_panel',
           locals: { invitations: @research_session.invitations } %>
+
+    <%= render partial: 'cart/mini_view', locals: {
+        people: current_cart.people,
+        current_session: @research_session
+        } %>
   </div>
 
-</div>
-<div class="row">
-  <div class="span6">
-    
-  </div>
-  
-  <div class="span6">
-    <div class='span6'>
-      <%= render partial: 'cart/mini_view', locals: {
-          people: current_cart.people,
-          current_session: @research_session
-          } %>
-    </div>
-  </div>
 </div>
 
 
