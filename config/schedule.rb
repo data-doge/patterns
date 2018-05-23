@@ -44,7 +44,8 @@ if File.exist?(path) # handling cold start
   # this queues up all the email/sms for the day!
   every :day, at: local_time("8:00am") do
     runner "User.send_all_reminders"
-    runner "Person.send_all_reminders"
+    # no reminders for people for now
+    #runner "Person.send_all_reminders"
   end
 
   every :day, at: local_time("2:00am") do

@@ -1,6 +1,6 @@
 <div class="row">
   <div class="span4">
-    <h3>Recent signups</h3>
+    <h4>Recent signups</h4>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -16,12 +16,12 @@
     </table>
   </div>
   <div class="span2">
-    <h3> Upcoming Sessions</h3>
+    <h4> Upcoming Sessions</h4>
     <%= render partial: 'upcoming_session', 
           collection: @upcoming_sessions, as: :session, cached: true %>
   </div>
   <div class='span2'>
-    <h3>Upcoming Participants</h3>
+    <h4>Upcoming Participants</h4>
     <%= render partial: 'upcoming_participant', 
           collection: @upcoming_participants, as: :person, cached: true  %>
   </div>
@@ -85,18 +85,18 @@
 </div>
 <div class='row'>
   <div class='span4'>
-    <h3> Recent Sessions</h3>
+    <h4> Recent Sessions</h4>
     <%= render partial: 'recent_session', 
           collection: @recent_sessions, as: :session, cached: true  %>
   </div>
   
   <div class='span4'>
-    <h3> Recent Participants</h3>
+    <h4> Recent Participants</h4>
     <%= render partial: 'recent_participant', 
           collection: @recent_participants, as: :person, cached: true  %>
   </div>
   <div class='span4'>
-    <h3>Recent Deactivated People</h3>
+    <h4>Recent Deactivated People</h4>
     <%= render partial: 'deactivated_person', collection: @deactivated_people, as: :person, cached: true  %>
   </div>
 </div>

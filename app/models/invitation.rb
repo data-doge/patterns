@@ -85,19 +85,23 @@ class Invitation < ApplicationRecord
     state :missed # means they didn't cancel
     state :attended
 
-    event :invite, after_commit: :send_invitation, guard: :in_future? do
+    event :invite, guard: :in_future? do
+      # after_commit: :send_invitation,
       transitions from: :created, to: :invited
     end
 
-    event :remind, after_commit: :send_reminder, guard: :in_future? do
+    event :remind, guard: :in_future? do
+      # after_commit: :send_reminder,
       transitions from: %i[invited reminded], to: :reminded
     end
 
-    event :confirm, after_commit: :notify_about_confirmation, guard: :in_future? do
+    event :confirm, guard: :in_future? do
+       # after_commit: :notify_about_confirmation,
       transitions from: %i[confirmed invited reminded confirmed], to: :confirmed
     end
 
-    event :cancel, after_commit: :notify_about_cancellation, guard: :in_future? do
+    event :cancel, guard: :in_future? do
+      after_commit: :notify_about_cancellation,
       transitions from: %i[invited cancel reminded confirmed], to: :cancelled
     end
 
