@@ -3,6 +3,7 @@
     <tr>
       <th>Remove</th>
       <th>Name</th>
+      <th>Phone</th>
       <th>Action</th>
       <th>Current State</th>
       <th>Gift Card #</th>
@@ -17,6 +18,7 @@
         <td><%= link_to person.full_name, 
                 person_path(person), 
                 id: "person-#{person.id}" %></td>
+        <td><%= link_to person.phone_number, "tel:#{person.phone_number}" %></td>
         <td>
           <%= render partial: 'invitations/actions', locals: {invitation: invitation} %>
         </td>
