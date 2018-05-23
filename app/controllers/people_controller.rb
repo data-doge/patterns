@@ -297,6 +297,7 @@ class PeopleController < ApplicationController
         :secondary_connection_id,
         :secondary_connection_description,
         :phone_number,
+        :landline,
         :participation_type,
         :preferred_contact_method,
         gift_cards_attributes: %i[

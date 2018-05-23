@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_08_214259) do
+ActiveRecord::Schema.define(version: 2018_05_23_165026) do
 
-  create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "card_activation_id"
     t.string "sid"
     t.text "transcript"
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 2018_05_08_214259) do
     t.integer "updated_by"
   end
 
-  create_table "card_activations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "card_activations", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "full_card_number"
     t.string "expiration_date"
     t.string "sequence_number"
@@ -80,17 +80,19 @@ ActiveRecord::Schema.define(version: 2018_05_08_214259) do
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
-  create_table "carts_people", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "carts_people", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.bigint "cart_id", null: false
     t.bigint "person_id", null: false
-    t.index ["person_id", "cart_id"], name: "index_carts_people_on_person_id_and_cart_id", unique: true
+    t.index ["cart_id", "person_id"], name: "index_carts_people_on_cart_id_and_person_id"
+    t.index ["person_id", "cart_id"], name: "index_carts_people_on_person_id_and_cart_id"
   end
 
-  create_table "carts_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "carts_users", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.bigint "cart_id", null: false
     t.bigint "user_id", null: false
     t.boolean "current_cart", default: false
-    t.index ["user_id", "cart_id"], name: "index_carts_users_on_user_id_and_cart_id", unique: true
+    t.index ["cart_id", "user_id"], name: "index_carts_users_on_cart_id_and_user_id"
+    t.index ["user_id", "cart_id"], name: "index_carts_users_on_user_id_and_cart_id"
   end
 
   create_table "comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
@@ -248,6 +250,7 @@ ActiveRecord::Schema.define(version: 2018_05_08_214259) do
     t.string "referred_by"
     t.boolean "low_income"
     t.string "rapidpro_uuid"
+    t.string "landline"
   end
 
   create_table "programs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
