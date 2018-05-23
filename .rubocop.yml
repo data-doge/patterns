@@ -21,7 +21,7 @@ Rails:
   Enabled: true
 
 Rails/Validation:
-  Enabled: false
+  Enabled: true
 
 Style/AlignHash:
   EnforcedHashRocketStyle: table

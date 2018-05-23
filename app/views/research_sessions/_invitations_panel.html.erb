@@ -18,7 +18,9 @@
         <td><%= link_to person.full_name, 
                 person_path(person), 
                 id: "person-#{person.id}" %></td>
-        <td><%= link_to number_to_phone(person.phone_number.gsub('+1',''),area_code: true), "tel:#{person.phone_number}" %></td> 
+        <td><%= link_to number_to_phone(person.phone_number&.gsub('+1',''), area_code: true), 
+                  "tel:#{person.phone_number}" %>
+        </td> 
         <td>
           <%= render partial: 'invitations/actions', locals: {invitation: invitation} %>
         </td>
