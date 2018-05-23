@@ -101,7 +101,7 @@ class Invitation < ApplicationRecord
     end
 
     event :cancel, guard: :in_future? do
-      after_commit: :notify_about_cancellation,
+      # after_commit: :notify_about_cancellation,
       transitions from: %i[invited cancel reminded confirmed], to: :cancelled
     end
 
