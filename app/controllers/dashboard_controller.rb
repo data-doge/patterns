@@ -31,7 +31,7 @@ class DashboardController < ApplicationController
     @popular_tags   = Person.tag_counts.order('taggings_count DESC').limit(10)
     @new_tags       = Person.tag_counts.order('id desc').limit(10)
 
-    @recent_participants   = ResearchSession.order('created_at DESC').limit(10).map(&:people).flatten.uniq
+    @recent_participants   = ResearchSession.order('created_at DESC').where('start_datetime < ?', Time.current).limit(10).map(&:people).flatten.uniq
     @recent_sessions   = ResearchSession.order('created_at DESC').limit(10)
 
     @upcoming_participants = ResearchSession.where('start_datetime between NOW() and ?', 1.week.from_now).map(&:people).flatten.uniq

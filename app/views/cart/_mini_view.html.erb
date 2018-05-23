@@ -29,8 +29,13 @@
         <tr>
           <th>Name</th>
           <th>Contact Method</th>
-          <th>Phone Number</th>
-          <th>Session</th>
+          <th>Phone&nbsp;Number</th>
+          <th>Session <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "This is to add or remove people from the current session.",
+          title: 'popover',
+          original_title:"Session People Management"} %></th>
           <th>Pool: Add/Remove</th>
         </tr>
       </thead>

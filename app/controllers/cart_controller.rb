@@ -109,13 +109,16 @@ class CartController < ApplicationController
   # rubocop:enable Metrics/MethodLength
 
   def index
-    current_user.reload
-    @carts = Cart.includes(:users).all
-
-    respond_to do |format|
-      # format.js
-      format.json { render json: @carts.to_json }
-      format.html
+    if current_user.admin?
+      current_user.reload
+      @carts = Cart.includes(:users).all
+      respond_to do |format|
+        # format.js
+        format.json { render json: @carts.to_json }
+        format.html
+      end
+    else
+      redirect_to current_cart
     end
   end
 

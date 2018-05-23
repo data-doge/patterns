@@ -22,14 +22,14 @@ research_session_id = <%= @research_session.id%>;
         <dd><%= link_to 'Clone me', research_session_clone_path(@research_session), class:'btn btn-small' %></dd>
         <dt>Description</dt>
         <dd><%= @research_session.description %>
-        <dt>SMS Description</dt>
-        <dd><%= @research_session.sms_description %>
+        <!-- <dt>SMS Description</dt>
+        <dd><%= @research_session.sms_description %> -->
         <dt>Location</dt>
         <dd><%= @research_session.location %>
         <dt>Starts at</dt>
-        <dd><%= @research_session.start_datetime.to_s :short %></dd>
+        <dd><%= @research_session.start_datetime.to_s :long %></dd>
         <dt>Ends at</dt>
-        <dd><%= @research_session.end_datetime.to_s :short %></dd>
+        <dd><%= @research_session.end_datetime.to_s :long %></dd>
         <dt>Duration</dt>
         <dd><%= @research_session.duration %> minutes</dd>
         <dt>Creator</dt>
@@ -55,6 +55,12 @@ research_session_id = <%= @research_session.id%>;
       <%= form.hidden_field :commentable_id, :value => @research_session.id %>
       <%= form.text_area :content, rows: 6, class: "span4 input-block-level" %>
       <%= form.submit 'Add note', :class => "btn" %>
+      <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "This is where to capture information that other people might want to know about what happened. Who had particularly good insight, what was it? etc.",
+          title: 'popover',
+          original_title:"Add Notes!"} %>
     <% end %>
 
     <div id="comments">

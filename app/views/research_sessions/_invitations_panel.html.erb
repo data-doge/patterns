@@ -4,7 +4,12 @@
       <th>Remove</th>
       <th>Name</th>
       <th>Phone</th>
-      <th>Action</th>
+      <th>Action <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "This is meant for you to track if you have invited people, have they confirmed, did they cancel or attend. Note: you can only give gift cards to poeple who have attended",
+          title: 'Invitation State',
+          original_title:"Change the state of the invitation"} %></th>
       <th>Current State</th>
       <th>Gift Card #</th>
       <th>Add Cards</th>

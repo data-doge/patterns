@@ -36,11 +36,21 @@ table tr {
         <thead>
           <tr>
             <th>Full Card #</th>
-            <th>Secure Code</th>
+            <th>Secure&nbsp;Code</th>
             <th>Exp Date</th>
             <th>Amount</th>
-            <th>Sequence</th>
-            <th>Batch ID</th>
+            <th>Sequence&nbsp;<%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: j("It's a number that increments for each card, likely between 1 and 500. usually a bunch of leading zeros, and it's the first number in the upper right hand corner of the clear plastic window of the envelope."),
+          title: 'popover',
+          original_title:"Sequence Number"} %></th>
+            <th>Batch ID&nbsp;<%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "It's a number that stays the same for the whole batch of cards, fairly long, and is the last number on the right in the plastic window above where it says 'Robin Hood Foundation'",
+          title: 'popover',
+          original_title:"Sequence Number"} %></th>
             <th></th>
           </tr>
         </thead>
@@ -118,7 +128,12 @@ table tr {
             <th colspan="1">Batch</th>
             <th colspan="1">Sequence</th>
             <th colspan="1">Status</th>
-            <th colspan="1">Re-Run Check</th>
+            <th colspan="1">Re-Run Check <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Sometimes, this process fails, even though the card is good, and may in fact be activated. If this isn't working, ping KT or Bill on slack",
+          title: 'popover',
+          original_title:"Check Cards"} %></th>
             <% if current_user.admin? %>
             <th colspan='1'>User</th>
             <th colspan='3'>Admin</th>

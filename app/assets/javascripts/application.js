@@ -62,6 +62,8 @@ $(document).on('turbolinks:load',function() {
     Turbolinks.visit(window.location, { action: 'replace', scroll: false })
   }
 
+  $("[data-toggle=popover]").popover();
+
   $(document).ajaxComplete(function(event, request) {
     var msg = request.getResponseHeader('X-Message');
     var type = request.getResponseHeader('X-Message-Type');

@@ -39,9 +39,19 @@
     <div class='well'>
 
       <dl>
-        <dt>Current Pool:</dt>
+        <dt>Current Pool <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Must be unique on Patterns. Keep it informative!",
+          title: 'popover',
+          original_title:"Pool Name"} %></dt>
         <dd><h3><%= best_in_place @cart, :name %></h3></dd>
-        <dt>Description:</dt>
+        <dt>Description <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Not seen by anyone outside of Patterns. for internal use to keep track of pools.",
+          title: 'popover',
+          original_title:"Description"} %></dt>
         <dd><%= best_in_place @cart, :description %></dd>
         <dt>Size:</dt>
         <dd><span class='cart-size'><%= @cart.size %></span></dd>
@@ -71,7 +81,12 @@
             method: 'post',
             url: add_user_cart_index_path()
           }
-    %>
+    %> <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "You can invite other patterns users, KT, Bill, fellows, etc. to participate in your pool.",
+          title: 'popover',
+          original_title:"invite others to your pool"} %>
   
     <h4>Users</h4>
     <table class="table table-striped">
@@ -79,7 +94,6 @@
         <tr>
           <th>Name</th>
           <th>Remove</th>
-          
         </tr>
       </thead>
       <tbody id='users-list'>
@@ -92,6 +106,12 @@
       <%= form.hidden_field :commentable_id, :value => @cart.id %>
       <%= form.text_area :content, rows: 3, class: "span4 input-block-level" %>
       <%= form.submit 'Add note', :class => "btn" %>
+      <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "This is where to capture information that other people might want to know about this pool. Why you set it up, who is in it, etc.",
+          title: 'popover',
+          original_title:"Add Notes!"} %>
     <% end %>
 
     <div id="comments">
