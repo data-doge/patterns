@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+# handles emails sent to our inbox. essentially forwards to admins
 class InboxController < ApplicationController
   skip_before_action :authenticate_user!
   skip_before_action :verify_authenticity_token

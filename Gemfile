@@ -110,6 +110,9 @@ gem 'glyphicons-rails'
 gem 'momentjs-rails' # sane time management in js
 gem 'bootstrap3-datetimepicker-rails'
 
+# want to switch pagination to kaminari 
+# http://blogs.element-labs.com/2015/10/replacing-will_paginate-with-kaminari/
+
 # pagniate with will_paginate: https://github.com/mislav/will_paginate
 gem 'will_paginate'
 gem 'will_paginate-bootstrap', '~> 0.2.5' # Bootstrap 2 support breaks at v1.0
