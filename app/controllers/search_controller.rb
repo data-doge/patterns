@@ -11,7 +11,7 @@ class SearchController < ApplicationController
   def index_ransack
     if params[:q].present? && params[:q][:ransack_tagged_with].present?
       t = params[:q][:ransack_tagged_with].split(',').map(&:strip)
-      @tags = Person.tag_counts.where(name: t).order(taggings_count: :desc)
+      @tags = Person.active.tag_counts.where(name: t).order(taggings_count: :desc)
     else
       @tags = []
     end
@@ -26,9 +26,9 @@ class SearchController < ApplicationController
     end
 
     if current_user.admin?
-      @q = Person.ransack(params[:q])
+      @q = Person.active.ransack(params[:q])
     else
-      @q = Person.verified.ransack(params[:q])
+      @q = Person.active.verified.ransack(params[:q])
     end
 
     @results = @q.result.includes(:tags).page(params[:page])
@@ -43,7 +43,7 @@ class SearchController < ApplicationController
       format.html do
         if params[:segment_name].present?
           list_name = params.delete(:segment_name)
-          @q = Person.ransack(params[:q])
+          @q = Person.active.ransack(params[:q])
           @results_mailchimp = @q.result.includes(:tags)
           @mce = MailchimpExport.new(name: list_name, recipients: @results_mailchimp.collect(&:email_address), created_by: current_user.id)
           if @mce.with_user(current_user).save
@@ -123,7 +123,7 @@ class SearchController < ApplicationController
   def export
     # send all results to a new static segment in mailchimp
     list_name = params.delete(:segment_name)
-    @q = Person.ransack(params[:q])
+    @q = Person.active.ransack(params[:q])
     @people = @q.result.includes(:tags)
     @mce = MailchimpExport.new(name: list_name, recipients: @people.collect(&:email_address), created_by: current_user.id)
 
@@ -140,7 +140,7 @@ class SearchController < ApplicationController
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   def add_to_cart
-    @q = Person.ransack(params[:q])
+    @q = Person.active.ransack(params[:q])
     pids = current_cart.people_ids
     new_pids = @q.result.map(&:id).delete_if { |i| pids.include?(i) }
     current_cart.people << Person.find(new_pids)
@@ -162,7 +162,7 @@ class SearchController < ApplicationController
     message2 = to_gsm0338(message2) if message2.present?
     messages = Array[message1, message2]
     smsCampaign = params.delete(:twiliowufoo_campaign)
-    @q = Person.ransack(params[:q])
+    @q = Person.active.ransack(params[:q])
     @people = @q.result.includes(:tags)
     Rails.logger.info("[SearchController#exportTwilio] people #{@people}")
     phone_numbers = @people.collect(&:phone_number)

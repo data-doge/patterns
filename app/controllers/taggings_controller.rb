@@ -18,7 +18,7 @@
 class TaggingsController < ApplicationController
 
   TAGGABLE_TYPES = {
-    'Person'          => Person,
+    'Person'          => Person.active,
     'ResearchSession' => ResearchSession
   }.freeze
 
@@ -74,7 +74,7 @@ class TaggingsController < ApplicationController
 
   # rubocop:enable Metrics/MethodLength
   def search
-    klass = params[:type].blank? ? Person : TAGGABLE_TYPES.fetch(params[:type])
+    klass = params[:type].blank? ? Person.active : TAGGABLE_TYPES.fetch(params[:type])
 
     # this query is busted. waaaay too big. loads EVERY tag.
     # potentially the solution is to

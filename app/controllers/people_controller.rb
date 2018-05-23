@@ -57,13 +57,13 @@ class PeopleController < ApplicationController
     @verified_types = Person.pluck(:verified).uniq.select(&:present?)
     # this could be cleaner...
     search = if params[:tags].blank?
-                Person.includes(:taggings).paginate(page: params[:page]).
+                Person.active.includes(:taggings).paginate(page: params[:page]).
                   order(sort_column + ' ' + sort_direction)
               else
                 tags =  params[:tags].split(',').map(&:strip)
-                @tags = Person.tag_counts.where(name: tags)
+                @tags = Person.active.tag_counts.where(name: tags)
 
-                Person.includes(:taggings).paginate(page: params[:page]).
+                Person.active.includes(:taggings).paginate(page: params[:page]).
                   order(sort_column + ' ' + sort_direction).
                   tagged_with(tags)
               end

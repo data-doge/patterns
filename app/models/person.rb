@@ -115,8 +115,10 @@ class Person < ApplicationRecord
 
   scope :verified, -> { where('verified like ?', '%Verified%') }
   scope :not_verified, -> { where.not('verified like ?', '%Verified%') }
-
-  default_scope { where(active: true) }
+  scope :active, -> { where(active: true) }
+  scope :deactivated, -> {where(active: false) }
+  # no longer using this. now managing active elsewhere
+  #default_scope { where(active: true) }
 
   
 
