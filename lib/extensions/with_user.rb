@@ -10,4 +10,15 @@ class ActiveRecord::Base
     self
   end
 
+  def creator
+    if respond_to?(:created_by) && self.created_by.present?
+      User.find self.created_by
+    end
+  end
+
+  def last_updator
+    if respond_to?(:updated_by) && self.updated_by.present?
+      User.find self.updated_by
+    end
+  end
 end
