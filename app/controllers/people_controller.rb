@@ -226,6 +226,7 @@ class PeopleController < ApplicationController
     else
       # creating a person by hand
       @person = Person.new(person_params)
+      @person.created_by = current_user.id
     end
 
     respond_to do |format|

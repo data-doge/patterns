@@ -18,6 +18,7 @@ class Public::PeopleController < ApplicationController
       end
     end
     @person = ::Person.new
+    @person.created_by = current_user.id if current_user.present?
   end
 
   def show
@@ -62,6 +63,7 @@ class Public::PeopleController < ApplicationController
       @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
       if @current_user.present?
         @person = ::Person.new(api_create_params.except(:tags))
+        @person.referred_by('created via SMS')
         @person.signup_at = Time.current
         if params[:tags].present?
           tags = api_create_params[:tags].tr('_', ' ').split(',')
@@ -88,6 +90,9 @@ class Public::PeopleController < ApplicationController
     if params[:referral].present?
       @person.referred_by = params[:referral][0, 100] # only 100 characters
     end
+
+    @person.created_by = current_user.id if current_user.present?
+
 
     @msg = @person.save ? success_msg : error_msg
     respond_to do |format|
