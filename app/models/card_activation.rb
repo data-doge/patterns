@@ -167,6 +167,23 @@ class CardActivation < ApplicationRecord
     full_card_number.to_s.last(4)
   end
 
+  def sort_helper
+    case status
+    when 'active'
+      0
+    when 'activate_started'
+      1
+    when 'check_started'
+      2
+    when 'created'
+      3
+    when 'activate_errored'
+      4
+    when 'check_errored'
+      5
+    end
+  end
+
   def label
     case status
     when 'active'

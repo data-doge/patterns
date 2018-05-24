@@ -148,6 +148,7 @@ table tr {
                      as: :card_activation %>
         </tbody>
       </table>
+      <%= will_paginate @card_activations, :renderer => BootstrapPagination::Rails, inner_window:1, outer_window:1 %>
     </div>
   </div>
 </div>
