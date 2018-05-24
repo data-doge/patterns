@@ -75,7 +75,8 @@ class CardActivation < ApplicationRecord
     errors = []
     CSV.foreach(file, headers: true) do |row|
       next if row['full_card_number'].nil? # empty rows
-      ca = CardActivation.new(row.to_hash)
+      params = row.to_hash.delete(:"")
+      ca = CardActivation.new(params)
       ca.user_id = user.id
       ca.created_by = user.id
       # results is an array of errored card activatoins
