@@ -73,7 +73,7 @@ class CardActivationsController < ApplicationController
   # assignment happens in gift_card_controller
 
   def upload
-    if params[:file].empty?
+    if params[:file].nil?
       flash[:error] = 'No file uploaded'
     else
       cards_count = CSV.read(params[:file].path, headers: true).count
