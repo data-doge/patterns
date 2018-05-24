@@ -170,17 +170,17 @@ class CardActivation < ApplicationRecord
   def sort_helper
     case status
     when 'active'
-      0
-    when 'activate_started'
-      1
-    when 'check_started'
-      2
-    when 'created'
-      3
-    when 'activate_errored'
-      4
-    when 'check_errored'
       5
+    when 'activate_started'
+      4
+    when 'check_started'
+      3
+    when 'created'
+      2
+    when 'activate_errored'
+      1
+    when 'check_errored'
+      0
     end
   end
 

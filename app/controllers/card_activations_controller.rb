@@ -9,14 +9,14 @@ class CardActivationsController < ApplicationController
   def index
     @errors = []
     @new_card = CardActivation.new
-    @card_activations = if current_user.admin?
+    cards = if current_user.admin?
                           CardActivation.unassigned
                         else
                           CardActivation.unassigned.where(user_id: current_user.id)
                         end
     # busted ones first
-    @card_activations.sort! {|a,b| b.sort_helper <=> a.sort_helper }
-
+    
+    @card_activations = cards.sort {|a,b| a.sort_helper <=> b.sort_helper }
   end
 
   def template

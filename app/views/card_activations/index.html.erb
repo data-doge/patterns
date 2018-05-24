@@ -108,7 +108,6 @@ table tr {
   </div>
   <div class='row'>
     <h2>Unassigned Cards</h2>
-     <%= will_paginate @card_activations, :renderer => BootstrapPagination::Rails, inner_window:1, outer_window:1 %>
      <% if current_user.admin? %>
       <%= select_tag :user_id,
             options_from_collection_for_select(User.approved.all,
@@ -148,7 +147,6 @@ table tr {
                      as: :card_activation %>
         </tbody>
       </table>
-      <%= will_paginate @card_activations, :renderer => BootstrapPagination::Rails, inner_window:1, outer_window:1 %>
     </div>
   </div>
 </div>
