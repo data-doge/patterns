@@ -33,6 +33,8 @@ class ActivationCall < ApplicationRecord
   scope :checks, -> { where(call_type: 'check') }
   scope :activations, -> { where(call_type: 'activation') }
 
+  after_initialize :create_twilio
+
   def transcript_check
     # this will be very different.
     # needs more subtle checks for transcription errors. pehaps distance?
@@ -65,7 +67,7 @@ class ActivationCall < ApplicationRecord
   end
 
   def call
-    @call ||= sid.nil? ? nil : $twilio.calls.get(sid)
+    @call ||= sid.nil? ? nil : @twilio.calls.get(sid)
   end
 
   def timeout_error?
@@ -87,4 +89,10 @@ class ActivationCall < ApplicationRecord
   end
 
   delegate :update_front_end, to: :card_activation
+  
+  private
+  
+  def create_twilio
+    @twilio = Twilio::REST::Client.new()
+  end
 end

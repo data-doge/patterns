@@ -195,7 +195,7 @@ class PeopleController < ApplicationController
       @person = Person.initialize_from_wufoo(params)
       @person.save
       begin
-        @client ||= $twilio
+        @client ||= Twilio::REST::Client.new()
         @twilio_message = TwilioMessage.new
         @twilio_message.from = ENV['TWILIO_SIGNUP_VERIFICATION_NUMBER']
         @twilio_message.to = @person.normalized_phone_number
