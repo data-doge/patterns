@@ -62,9 +62,10 @@ class Public::PeopleController < ApplicationController
     if request.headers['AUTHORIZATION'].present?
       @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
       if @current_user.present?
-        @person = ::Person.new(api_create_params.except(:tags))
-        @person.referred_by('created via SMS')
+        @person = Person.new(api_create_params.except(:tags))
+        @person.referred_by ='created via SMS' 
         @person.signup_at = Time.current
+        @person.created_by = @current_user.id
         if params[:tags].present?
           tags = api_create_params[:tags].tr('_', ' ').split(',')
           @person.tag_list.add(tags)
