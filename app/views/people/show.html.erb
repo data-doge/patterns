@@ -10,24 +10,70 @@
       <div class="span3">
         <h3>About</h3>
         <dl>
-          <dt>Add/Remove from Pool: </dt>
+          <dt>Add/Remove from Pool: <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Pools are handy ways to keep track of a group of people. you can add and remove a person from your current pool with this button.",
+          title: 'popover',
+          original_title:"Pools"} %></dt>
           <dd><span id='current_pool'><%= link_to current_cart.name, cart_index_path(current_cart) %></span>: <%= render partial: 'add_remove_cart', locals: {person: @person} %></dd>
-          <dt>Verified?</dt>
+          
+          <dt>Verified? <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "This means that the name and contact info has been verified. We know this person is an actual person, and at one point the phone number/email address was correct.",
+          title: 'popover',
+          original_title:"Verification"} %></dt>
           <dd><%= best_in_place @person, :verified, as: :select, collection: @verified_types.map{|p| [p,p]} %></dd>
 
-          <dt>Low Income?</dt>
+          <dt>Low Income? <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "An optional question we ask when people sign up. Self reported.",
+          title: 'popover',
+          original_title:"Low Income"} %></dt>
           <dd><%= best_in_place @person, :low_income, as: :checkbox, collection: {false: "No", true: "Yes"} %></dd>
 
+          <dt>Dig Level <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: 'New = Just joined.
+                    Active DIG member = Participated in 3+ sessions, invited to join FB group; 
+                    Regular = Participated in at least one season in 6 months or with 2 teams
+                    DIG Ambassador = active for at least one year, 2+ projects/teams',
+          title: 'popover',
+          original_title:"Participation Level"} %></dt>
+          <dd><%= @person.participation_level %></dd>
           <dt>Preferred participation method</dt>
           <dd><%= best_in_place @person, :participation_type, as: :select, collection: %w(in-person remote) %></dd>
    
-          <dt>Session Invitations</dt>
+          <dt>Session Invitations <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: 'How many sessions have they been invited to?',
+          title: 'popover',
+          original_title:"Invitations"} %></dt>
           <dd><%= @person.invitations.invited.size %></dd>
-          <dt>Missed</dt>
+          <dt>Missed <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: 'How many sessions have they been missed without cancelling in advance?',
+          title: 'popover',
+          original_title:"Misses"} %></dt>
           <dd><%=@person.invitations.missed.size %></dd>
-          <dt>Cancel</dt>
+          <dt>Cancel <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: 'How many sessions have they cancelled in advance?',
+          title: 'popover',
+          original_title:"Cancels"} %></dt>
           <dd><%= @person.invitations.cancelled.size %> </dd>
-          <dt>Attended</dt>
+          <dt>Attended <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: 'How many sessions have they attended?',
+          title: 'popover',
+          original_title:"Attendance"} %></dt>
           <dd><%= @person.invitations.attended.size %></dd>
         </dl>
       </div>
@@ -45,11 +91,21 @@
           <dt>Preferred Contact Method</dt>
           <dd><%= best_in_place @person, :preferred_contact_method, as: :select, collection: [['SMS','SMS'], ['EMAIL','EMAIL']] %></dd>
           
-          <dt>Landline<dt>
+          <dt>Landline <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Some people have a landline that can't receive texts. Or maybe they like to get calls at night on their landline.",
+          title: 'popover',
+          original_title:"Landline"} %><dt>
           <dd><%= best_in_place @person, :landline %></dd>
           <dt>Postal Code</dt>
           <dd><%= best_in_place @person, :postal_code %></dd>
-          <dt>Neighborhood</dt>
+          <dt>Neighborhood <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Usually a guess based on zip code. Please update!",
+          title: 'popover',
+          original_title:"Neighborhood"} %></dt>
           <dd><%= best_in_place @person, :neighborhood %></dd>
           <dt>Referred by?</dt>
           <dd><%= best_in_place @person, :referred_by %></dd>
@@ -75,7 +131,12 @@
 
   <div class="span6">
     <div class='row'>
-      <h3>Location</h3>
+      <h3>Location <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "A rough estimate based on zip code",
+          title: 'popover',
+          original_title:"Map"} %></h3>
       <a href="https://maps.google.com?q=<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>" target="_blank" title="View in Google Maps"><img src="https://maps.googleapis.com/maps/api/staticmap?markers=|<%= CGI.escape(address_fields_to_sentence(@person)).html_safe %>&amp;zoom=14&amp;size=570x200&amp;sensor=false"></a>
     </div>
     <div class='row'>
@@ -123,8 +184,13 @@
 
 
 
-  <div class="span6" id="person-events">
-  <h3>Surveys</h3>
+<div class="span6" id="person-events">
+  <h3>Surveys <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Ignore this for now.",
+          title: 'popover',
+          original_title:"Ignore this for now."} %></h3>
   <table class="table">
     <tr>
         <th>Campaign Name</th>

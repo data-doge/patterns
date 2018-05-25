@@ -1,6 +1,6 @@
 <div class="upcoming-participant well" id='person-<%=person.id%>'>
   <% 
-    upcoming =  person.research_sessions.where('start_datetime > ?', Time.current).last 
+    upcoming =  person.research_sessions.where('start_datetime between NOW() and ?', 1.week.from_now).last 
      invite = upcoming.invitations.find_by(person_id: person.id)
   %>
   <span class="name">
