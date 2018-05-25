@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+ac# frozen_string_literal: true
 
 class ActivationCallsController < ApplicationController
   before_action :set_secret_activation_call, only: %i[check
