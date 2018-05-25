@@ -37,10 +37,7 @@
           <dt>Dig Level <%= content_tag :span,'?',class: 'badge', data:{
           toggle: "popover", 
           placement: "top", 
-          content: 'New = Just joined.
-                    Active DIG member = Participated in 3+ sessions, invited to join FB group; 
-                    Regular = Participated in at least one season in 6 months or with 2 teams
-                    DIG Ambassador = active for at least one year, 2+ projects/teams',
+          content: "'New' = Just joined. 'Active' = Participated in 3+ sessions. 'Regular' = Participated in at least one season in 6 months or with 2 teams. DIG Ambassador = active for at least one year, 2+ projects/teams",
           title: 'popover',
           original_title:"Participation Level"} %></dt>
           <dd><%= @person.participation_level %></dd>

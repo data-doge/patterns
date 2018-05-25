@@ -139,7 +139,7 @@ class Person < ApplicationRecord
   end
 
   def self.update_all_participation_levels
-    People.active.all.find_each(&:update_participation_level)
+    Person.active.all.find_each(&:update_participation_level)
   end
 
   def self.participation_levels
@@ -154,16 +154,16 @@ class Person < ApplicationRecord
   end
 
   def update_participation_level
-    participation_level = 'active' if gift_cards.size >= 3
-    participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).size >= 1
-    participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
-    participation_level = 'ambassador' if gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2
-    save!
-    if participation_level_changed?
+    self.participation_level = 'active' if gift_cards.size >= 3
+    self.participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).size >= 1
+    self.participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
+    self.participation_level = 'ambassador' if gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2
+    
+    if self.participation_level_changed?
       User.admin.each do |u|
         #AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was)
         u.carts.where(name: Person.participation_levels).find_each do |c|
-          if c.name == participation_level
+          if c.name == self.participation_level
             c.people << self
           else
             c.remove_person_id(id)
@@ -171,6 +171,7 @@ class Person < ApplicationRecord
         end
       end
     end
+    self.save
   end
 
   def self.verified_types
