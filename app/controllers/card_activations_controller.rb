@@ -25,8 +25,7 @@ class CardActivationsController < ApplicationController
     wb.add_worksheet(:name => "CardUploadTemplate") do |sheet|
       sheet.add_row %w[full_card_number sequence_number secure_code batch_id expiration_date amount, note]
       sheet.add_row ['4853980061441776','125', '074', '383311','10/18','25.00','delete me!'], types: 7.times.map {:string}
-      # prepopulating strings
-      100.times { sheet.add_row 7.times.map {" "}, types: 7.times.map {:string} }
+      
     end
 
     respond_to do |format|
@@ -111,7 +110,7 @@ class CardActivationsController < ApplicationController
     else
       xls =  Roo::Spreadsheet.open(params[:file].path)
       cards_count = 0
-      xls.sheet(0).each {|_row| cards_count += 1 }
+      xls.sheet(0).each {|row| cards_count += 1 if row[0].present? }
       flash[:notice] = "Import started for #{cards_count} cards."
       @errors = CardActivation.import(params[:file].path, current_user)
       if @errors.present?

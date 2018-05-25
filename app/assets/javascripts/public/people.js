@@ -1,7 +1,8 @@
 //= require seamless/build/seamless.child.min.js
 var people_ready;
 people_ready = function() {
-  $("#new_person").validate({
+  if ($('#public-person-form').length != 0) {
+    $("#new_person").validate({
     rules: {
       "person[first_name]": {
         required: true
@@ -29,6 +30,7 @@ people_ready = function() {
     //   error.appendTo( $("label:first") );
     // }
    });
+  }
  };
 
 // loading for turbolinks etc.
