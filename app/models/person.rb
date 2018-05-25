@@ -161,7 +161,7 @@ class Person < ApplicationRecord
     save!
     if participation_level_changed?
       User.admin.each do |u|
-        AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was)
+        #AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was)
         u.carts.where(name: Person.participation_levels).find_each do |c|
           if c.name == participation_level
             c.people << self
