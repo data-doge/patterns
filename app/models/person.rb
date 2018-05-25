@@ -145,6 +145,10 @@ class Person < ApplicationRecord
     Person.all.find_each(&:send_invitation_reminder)
   end
 
+  def self.verified_types
+    Person.pluck(:verified).uniq.select(&:present?)
+  end
+
   def signup_gc_sent
     signup_cards = gift_cards.where(reason: 1)
     return true unless signup_cards.empty?

@@ -227,6 +227,9 @@ class PeopleController < ApplicationController
       # creating a person by hand
       @person = Person.new(person_params)
       @person.created_by = current_user.id
+      if @person.errors.present?
+        @person.errors.full_messages.each{|m| flash[:error] = m }
+      end
     end
 
     respond_to do |format|

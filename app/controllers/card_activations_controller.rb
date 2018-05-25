@@ -115,7 +115,9 @@ class CardActivationsController < ApplicationController
       @errors = CardActivation.import(params[:file].path, current_user)
       if @errors.present?
         flash[:error] = "Error! #{@errors.size} cards not valid."
-        # show individual errors in ui
+        @errors.each do |error|
+          error.full_messages.each{|m| flash[:error] = m }
+        end
       end
     end
     redirect_to card_activations_path
