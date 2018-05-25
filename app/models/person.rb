@@ -89,13 +89,6 @@ class Person < ApplicationRecord
   validates :first_name, presence: true
   validates :last_name, presence: true
 
-  # if ENV['BLUE_RIDGE'].nil?
-  #   validates :primary_device_id, presence: true
-  #   validates :primary_device_description, presence: true
-  #   validates :primary_connection_id, presence: true
-  #   validates :primary_connection_description, presence: true
-  # end
-
   validates :postal_code, presence: true
   validates :postal_code, zipcode: { country_code: :us }
 
@@ -142,7 +135,36 @@ class Person < ApplicationRecord
   def self.send_all_reminders
     # this is where reservation_reminders
     # called by whenever in /config/schedule.rb
-    Person.all.find_each(&:send_invitation_reminder)
+    Person.active.all.find_each(&:send_invitation_reminder)
+  end
+
+  def self.update_all_participation_levels
+    People.active.all.find_each(&:update_participation_level)
+  end
+
+  def self.participation_levels
+    # * Active DIG member =“Participated in 3+ sessions” = invited to join FB group; 
+    # * [Need another name for level 2] = “Participated in at least one season-- 
+    #     (could code as 6 months active) OR at least 2 different projects/teams 
+    #     (could code based on being tagged in a session by at least 2 different teams)
+    # * DIG Ambassador = “active for at least one year, 2+ projects/teams
+    # if there’s any way to automate that info to flow into dashboard/pool — 
+    # and notify me when new person gets added-- that would be amazing
+    %w[brandnew active regular ambassador]
+  end
+
+  def update_participation_level
+    participation_level = 'active' if gift_cards.size >= 3
+    participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).size >= 1
+    participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
+    participation_level = 'ambassador' if gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2
+    save!
+    if participation_level_changed?
+      User.admin.each do |u|
+        AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was)
+        u.carts.first << self
+      end
+    end
   end
 
   def self.verified_types
@@ -487,6 +509,9 @@ class Person < ApplicationRecord
     @duplicates
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+  private
+
 
 end
 # rubocop:enable ClassLength

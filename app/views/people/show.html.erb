@@ -55,7 +55,7 @@
           <dd><%= best_in_place @person, :referred_by %></dd>
           <% if current_user.admin? %>
           <dt>Created by</dt>
-          <dd><%= link_to @person.creator.name, @person.creator %></dd>
+          <dd><%= link_to @person.creator&.name, @person&.creator %></dd>
           <% end %>
           <dt>Signup at</dt>
           <dd><%= @person.signup_at ? @person.signup_at.to_s(:long) : 'unknown' %></dd>

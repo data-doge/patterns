@@ -49,12 +49,12 @@ if File.exist?(path) # handling cold start
   end
 
   every :day, at: local_time("2:00am") do
-    command "cd #{path} && bundle exec #{path}/bin/delayed_job restart"
+    runner "People.update_participation_level"
   end
 
   every :reboot do
     command "cd #{path} && #{path}/bin/unicorn_rails -c config/unicorn.rb -E #{ENV['RAILS_ENV']} -D "
-    command "cd #{path} && bundle exec #{path}/bin/delayed_job start"
+    command "cd #{path} && bundle exec #{path}/bin/sidekiq start"
   end
   #
   # every 4.days do
