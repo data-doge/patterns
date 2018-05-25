@@ -8,7 +8,6 @@ require 'yaml'
 require 'time'
 require 'tzinfo'
 
-
 path = "/var/www/logan-#{ENV['RAILS_ENV']}/current"
 
 if File.exist?(path) # handling cold start
@@ -54,7 +53,7 @@ if File.exist?(path) # handling cold start
 
   every :reboot do
     command "cd #{path} && #{path}/bin/unicorn_rails -c config/unicorn.rb -E #{ENV['RAILS_ENV']} -D "
-    command "cd #{path} && bundle exec #{path}/bin/sidekiq start"
+    command "cd #{path} && bundle exec sidekiq -C config/sidekiq.yml"
   end
   #
   # every 4.days do
