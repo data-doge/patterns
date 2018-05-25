@@ -73,20 +73,23 @@ class CardActivation < ApplicationRecord
 
   def self.import(file, user)
     errors = []
-    CSV.foreach(file, headers: true) do |row|
-      next if row['full_card_number'].nil? # empty rows
-      params = row.to_hash
-      params.delete_if {|k,v| !CardActivation.column_names.include?(k.to_s) }
-      ca = CardActivation.new(params)
+    xls =  Roo::Spreadsheet.open(file)
+    cols = {full_card_number:'full_card_number',expiration_date:'expiration_date',amount:'amount',sequence_number:'sequence_number',secure_code:'secure_code',batch_id:'batch_id'}
+    xls.sheet(0).each(cols) do |row|
+      next if row[:full_card_number].nil? ||  row[:full_card_number] == 'full_card_number'# empty rows
+      ca = CardActivation.new(row)
       ca.user_id = user.id
       ca.created_by = user.id
       # results is an array of errored card activatoins
       if ca.save
         ca.start_activate!
       else
-        Airbrake.notify(ca.errors) if errors.present?
-        logger.info("Card Error: sequence: #{ca.sequence_number}, #{ca.full_card_number}")
-        errors << ca
+         if ca.errors.present?
+          err_msg = "Card Error: sequence: #{ca.sequence_number}, #{ca.full_card_number}, #{ca.errors[:base]}"
+          Airbrake.notify(err_msg)
+          logger.info(err_msg)
+          errors << ca
+        end
       end
     end
     errors

@@ -31,6 +31,11 @@ gem 'groupdate' # for graphing
 gem 'chartkick'
 gem 'nokogiri', '1.8.2'
 
+# csv files are TERRIBLE for importing. Excel messes with column formats
+gem 'axlsx'
+gem 'rubyzip'
+gem 'roo'
+
 
 group :development do
   # gem 'capistrano'

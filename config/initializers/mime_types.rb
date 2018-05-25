@@ -4,5 +4,6 @@
 # Mime::Type.register "text/richtext", :rtf
 # Mime::Type.register_alias "text/html", :iphone
 Mime::Type.register "text/calendar", :ics
-Mime::Type.register "application/xls", :xls
 Mime::Type.register "application/csv", :csv
+Mime::Type.register "application/vnd.ms-excel", :xls
+Mime::Type.register "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", :xlsx

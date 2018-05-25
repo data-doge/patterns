@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'csv'
 class CardActivationsController < ApplicationController
   before_action :set_card_activation, only: %i[show edit update destroy change_user check]
 
@@ -20,9 +19,22 @@ class CardActivationsController < ApplicationController
   end
 
   def template
+    axlsx = Axlsx::Package.new
+    wb = axlsx.workbook
+
+    wb.add_worksheet(:name => "CardUploadTemplate") do |sheet|
+      sheet.add_row %w[full_card_number sequence_number secure_code batch_id expiration_date amount, note]
+      sheet.add_row ['4853980061441776','125', '074', '383311','10/18','25.00','delete me!'], types: 7.times.map {:string}
+    end
+
     respond_to do |format|
+      format.xlsx do
+        response.headers['Content-Type'] = 'text/xlsx'
+        response.headers['Content-Disposition'] = 'attachment; filename=CardActivationTemplate.xlsx' 
+        send_data axlsx.to_stream.read, filename: 'CardActivationTemplate.xlsx'
+      end
       format.csv do
-        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Type'] = 'text/xlsx'
         response.headers['Content-Disposition'] = 'attachment; filename=CardActivationTemplate.csv'
         output = CSV.generate do |csv|
           csv << %w[full_card_number expiration_date amount sequence_number secure_code batch_id]
@@ -38,7 +50,23 @@ class CardActivationsController < ApplicationController
     else
       card_activations = current_user.card_activations.unassigned
     end
+    axlsx = Axlsx::Package.new
+    wb = axlsx.workbook
+
+    wb.add_worksheet(:name => "Signout Sheet") do |sheet|
+      sheet.add_row %w[last_4 sequence_number name email phone zip join_dig?]
+      card_activations.each do |ca|
+        sheet.add_row[ca.last_4.to_s, ca.sequence_number, '', '', '', '', '']
+      end
+    end
+
     respond_to do |format|
+      format.xlsx do
+        response.headers['Content-Type'] = 'text/xlsx'
+        response.headers['Content-Disposition'] = 'attachment; filename=CardActivationSignoutSheet.xlsx' 
+        send_data axlsx.to_stream.read, filename: 'CardActivationSignoutSheet.xlsx'
+      end
+      
       format.csv do
         response.headers['Content-Type'] = 'text/csv'
         response.headers['Content-Disposition'] = 'attachment; filename=CardActivationSignoutSheet.csv'
@@ -79,12 +107,14 @@ class CardActivationsController < ApplicationController
     if params[:file].nil?
       flash[:error] = 'No file uploaded'
     else
-      cards_count = CSV.read(params[:file].path, headers: true).count
+      xls =  Roo::Spreadsheet.open(params[:file].path)
+      cards_count = 0
+      xls.sheet(0).each_row{|_row| cards_count += 1 }
       flash[:notice] = "Import started for #{cards_count} cards."
       @errors = CardActivation.import(params[:file].path, current_user)
       if @errors.present?
         flash[:error] = "Error! #{@errors.size} cards not valid."
-        # show individual erros in ui
+        # show individual errors in ui
       end
     end
     redirect_to card_activations_path
