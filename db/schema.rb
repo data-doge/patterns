@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_23_210857) do
+ActiveRecord::Schema.define(version: 2018_05_25_222933) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "card_activation_id"
@@ -252,6 +252,12 @@ ActiveRecord::Schema.define(version: 2018_05_23_210857) do
     t.string "rapidpro_uuid"
     t.string "landline"
     t.integer "created_by"
+    t.string "screening_status", default: "new"
+    t.boolean "phone_confirmed", default: false
+    t.boolean "email_confirmed", default: false
+    t.boolean "confirmation_sent", default: false
+    t.boolean "welcome_sent", default: false
+    t.string "participation_level", default: "new"
   end
 
   create_table "programs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|

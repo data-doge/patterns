@@ -150,7 +150,7 @@ class Person < ApplicationRecord
     # * DIG Ambassador = “active for at least one year, 2+ projects/teams
     # if there’s any way to automate that info to flow into dashboard/pool — 
     # and notify me when new person gets added-- that would be amazing
-    %w[brandnew active regular ambassador]
+    %w[new active regular ambassador]
   end
 
   def update_participation_level
@@ -162,7 +162,13 @@ class Person < ApplicationRecord
     if participation_level_changed?
       User.admin.each do |u|
         AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was)
-        u.carts.first << self
+        u.carts.where(name: Person.participation_levels).find_each do |c|
+          if c.name == participation_level
+            c.people << self
+          else
+            c.remove_person_id(id)
+          end
+        end
       end
     end
   end

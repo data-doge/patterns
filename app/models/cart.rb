@@ -54,6 +54,11 @@ class Cart < ApplicationRecord
     users << User.find(user_id)
   end
 
+  def remove_person_id(person_id)
+    cart_person = carts_people.find_by(person_id: person_id)
+    cart_person.destroy if cart_person.present?
+  end
+
   def people_ids
     people.map(&:id)
   end
