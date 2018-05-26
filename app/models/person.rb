@@ -160,7 +160,7 @@ class Person < ApplicationRecord
     self.participation_level = 'ambassador' if gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2
     
     if self.participation_level_changed?
-      # AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was)
+      AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was).deliver_later
       Cart.where(name: Person.participation_levels).find_each do |c|
         if c.name == self.participation_level
           c.people << self rescue next 
