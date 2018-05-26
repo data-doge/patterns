@@ -4,6 +4,7 @@ redis_conn = proc {
 
 Sidekiq.configure_server do |config|
   config.redis = ConnectionPool.new(size: 30, &redis_conn)
+  config.average_scheduled_poll_interval = 1 # poll every second
 end
 
 Sidekiq.configure_client do |config|
