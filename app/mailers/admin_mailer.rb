@@ -19,10 +19,9 @@ class AdminMailer < ApplicationMailer
   def participation_level_change(to:, person:, old_level:)
     msg = %Q(Hi!
     Participation level for #{person.full_name} changed from #{old_level} to #{person.participation_level}
-    link: https://#{HOSTNAME}/people/#{person.id}
-    )
+    link: https://#{HOSTNAME}/people/#{person.id})
     mail(to: to,
-         subject: "from: #{from}, subj:#{subject}",
+         subject: "Participattion level Change: #{person.full_name}",
          body: msg)
   end
 end
