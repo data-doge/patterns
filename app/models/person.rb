@@ -161,11 +161,11 @@ class Person < ApplicationRecord
     
     if self.participation_level_changed?
       AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was).deliver_later
-      Cart.where(name: Person.participation_levels).find_each do |c|
-        if c.name == self.participation_level
-          c.people << self rescue next 
+      Cart.where(name: Person.participation_levels).find_each do |cart|
+        if cart.name == self.participation_level
+          cart.people << self rescue next
         else
-          c.remove_person_id(id)
+          cart.remove_person_id(id)
         end
       end
     end
