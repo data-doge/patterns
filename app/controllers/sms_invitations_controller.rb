@@ -11,7 +11,7 @@ class SmsInvitationsController < ApplicationController
     save_twilio_message # see receive_text_controller
 
     send_error_notification && return unless @person
-    PaperTrail.whodunnit = @person # auditing
+    PaperTrail.request.whodunnit = @person # auditing
     Rails.logger.info "#{person.full_name}: #{message}"
     Rails.logger.info "cancel: #{session[:cancel]}"
     Rails.logger.info "confirm: #{session[:confirm]}"

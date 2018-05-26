@@ -31,7 +31,7 @@ class Public::PeopleController < ApplicationController
 
   def update
     if find_user_and_person
-      PaperTrail.whodunnit = @current_user
+      PaperTrail.request.whodunnit = @current_user
 
       if update_params[:tags].present?
         tags = update_params[:tags]
@@ -63,13 +63,16 @@ class Public::PeopleController < ApplicationController
       @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
       if @current_user.present?
         @person = Person.new(api_create_params.except(:tags,:low_income))
-        @person.low_income = api_create_params[:low_income] == 'Y' ? true : false
+        
         @person.referred_by ='created via SMS' 
         @person.signup_at = Time.current
         @person.created_by = @current_user.id
         if params[:tags].present?
           tags = api_create_params[:tags].tr('_', ' ').split(',')
           @person.tag_list.add(tags)
+        end
+        if api_create_params[:low_income].present?
+          @person.low_income = api_create_params[:low_income] == 'Y' ? true : false
         end
         output[:success] = @person.save ? true : false
       end

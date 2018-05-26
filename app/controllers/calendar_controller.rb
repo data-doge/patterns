@@ -94,7 +94,7 @@ class CalendarController < ApplicationController
     # TODO fix this
     def visitor # this looks like it needs work
       @visitor ||= @person ? @person : current_user
-      # PaperTrail.whodunnit = @visitor
+      # PaperTrail.request.whodunnit = @visitor
       # @visitor
     end
 
