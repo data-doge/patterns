@@ -23,10 +23,8 @@ class RapidproDeleteJob
         retry_delay = res.headers['retry-after'].to_i + 5
         RapidproDeleteJob.perform_in(retry_delay, id)
       else
-        raise 'error'
+        raise 'RapidPro Web request Error. Is Rapidpro Up?'
       end
-    else
-      raise 'error' # no person found
     end
   end
 end
