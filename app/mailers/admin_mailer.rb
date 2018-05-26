@@ -20,8 +20,10 @@ class AdminMailer < ApplicationMailer
     msg = %Q(Hi!
     Participation level for #{person.full_name} changed from #{old_level} to #{person.participation_level}
     link: https://#{HOSTNAME}/people/#{person.id})
+    admin_email = ENV['MAIL_ADMIN']
     mail(to: to,
-         subject: "Participattion level Change: #{person.full_name}",
+         from: admin_email,
+         subject: "Participation level Change: #{person.full_name}",
          body: msg)
   end
 end

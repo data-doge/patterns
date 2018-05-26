@@ -34,7 +34,7 @@
           original_title:"Low Income"} %></dt>
           <dd><%= best_in_place @person, :low_income, as: :checkbox, collection: {false: "No", true: "Yes"} %></dd>
 
-          <dt>Dig Level <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>DIG Level <%= content_tag :span,'?',class: 'badge', data:{
           toggle: "popover", 
           placement: "top", 
           content: "'New' = Just joined. 'Active' = Participated in 3+ sessions. 'Regular' = Participated in at least one season in 6 months or with 2 teams. DIG Ambassador = active for at least one year, 2+ projects/teams",
