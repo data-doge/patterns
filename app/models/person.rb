@@ -164,7 +164,7 @@ class Person < ApplicationRecord
         #AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was)
         u.carts.where(name: Person.participation_levels).find_each do |c|
           if c.name == self.participation_level
-            c.people << self
+            c.people << self rescue next 
           else
             c.remove_person_id(id)
           end
