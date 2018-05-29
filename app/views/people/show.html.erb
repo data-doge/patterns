@@ -109,7 +109,7 @@
           <% if current_user.admin? %>
           <dt>Active?<dt>
           <dd><%= best_in_place @person, 
-                    :active 
+                    :active,
                     as: :checkbox,
                     collection: {false: "No", true: "Yes"} %></dd>
           <dt>Created by</dt>
