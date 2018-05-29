@@ -84,7 +84,20 @@
           original_title:"Type of participation?"} %>
     </div>
   </div>
-
+  <% if @current_user.admin? %>
+  <div class="control-group">
+    <%= f.label :active, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :active, %w(true false) %>
+      <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Set this person back to active",
+          title: 'popover',
+          original_title:"activate"} %>
+    </div>
+  </div>
+  <% end %>
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

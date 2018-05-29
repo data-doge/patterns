@@ -107,6 +107,11 @@
           <dt>Referred by?</dt>
           <dd><%= best_in_place @person, :referred_by %></dd>
           <% if current_user.admin? %>
+          <dt>Active?<dt>
+          <dd><%= best_in_place @person, 
+                    :active 
+                    as: :checkbox,
+                    collection: {false: "No", true: "Yes"} %></dd>
           <dt>Created by</dt>
           <dd><%= link_to @person.creator&.name, @person&.creator %></dd>
           <% end %>
