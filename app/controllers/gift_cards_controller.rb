@@ -80,6 +80,7 @@ class GiftCardsController < ApplicationController
         format.json {}
         format.html { redirect_to @gift_card, notice: 'Gift Card was successfully created.'  }
       else
+        flash[:error] = "Error adding giftcard! #{@gift_card.errors.full_messages.join(', ')}"
         format.js {}
         format.html { render action: 'edit' }
         format.json { render json: @gift_card.errors, status: :unprocessable_entity }
