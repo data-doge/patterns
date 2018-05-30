@@ -64,7 +64,6 @@ class GiftCardsController < ApplicationController
   # POST /gift_cards
   # POST /gift_cards.json
   def create
-    gift_card_params.delete(:card_activation_id) if gift_card_params[:card_activation_id].nil?
     @gift_card = GiftCard.new(gift_card_params)
 
     @total = @gift_card.person.blank? ? @gift_card.amount : @gift_card.person.gift_card_total

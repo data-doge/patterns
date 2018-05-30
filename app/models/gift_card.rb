@@ -147,6 +147,7 @@ class GiftCard < ApplicationRecord
       # tricksy: must allow creation of cards without activations
       # but must check to see if card has activation
       # AND throw error if we are duplicating.
+      return true if card_activation_id.blank?
       if card_activation.nil?
         # first check if we have an activation id, then a search
         ca = CardActivation.find card_activation_id unless card_activation_id.nil?
