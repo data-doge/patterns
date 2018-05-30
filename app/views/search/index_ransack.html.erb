@@ -27,6 +27,20 @@
 
     <%= f.label :preferred_contact_method_cont %>
     <%= f.select :preferred_contact_method_cont, [["Email", 'EMAIL'], ["SMS", 'SMS']], {include_blank: true}, {:class => "input" } %>
+    <% if current_user.admin? %>
+    <div class="control-group">
+      <label class='control-label'>search only active people</label>
+      <label class='toggle-check'>
+        <style>input[type="checkbox"]{display:none;} </style>
+        <div class="controls">
+          <%= f.check_box :active_eq, {checked: true, class:'toggle-check-input'} %>
+          <span class='toggle-check-text'></span>
+        </div>
+      </label>
+    </div>
+    <% else %>
+    <%= f.hidden_field :active_eq, value: true %>
+    <% end %>
   </div>
 
   <div class="span3">

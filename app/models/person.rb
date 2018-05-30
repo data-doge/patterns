@@ -430,6 +430,12 @@ class Person < ApplicationRecord
     deleteFromRapidPro # remove from rapidpro
   end
 
+  def reactivate!
+    self.active = true
+    save!
+    updateRapidPro
+  end
+
   def md5_email
     Digest::MD5.hexdigest(email_address.downcase) if email_address.present?
   end

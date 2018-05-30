@@ -221,6 +221,7 @@ Logan::Application.routes.draw do
     collection do
       post 'create_sms'
       post ':person_id/deactivate', action: :deactivate, as: :deactivate
+      post ':person_id/reactivate', action: :reactivate, as: :reactivate
     end
     resources :comments
     resources :gift_cards

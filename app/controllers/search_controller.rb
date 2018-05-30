@@ -25,10 +25,14 @@ class SearchController < ApplicationController
       Person.per_page = params[:per_page] 
     end
 
+    if params[:q].present? && params[:q][:active_eq].blank?
+      params[:q][:active_eq] = true
+    end
+
     if current_user.admin?
-      @q = Person.active.ransack(params[:q])
+      @q = Person.ransack(params[:q])
     else
-      @q = Person.active.verified.ransack(params[:q])
+      @q = Person.verified.ransack(params[:q])
     end
 
     @results = @q.result.includes(:tags).page(params[:page])

@@ -108,6 +108,19 @@ class PeopleController < ApplicationController
     end
   end
 
+  # POST /people/:person_id/deactivate
+  def reactivate
+    @person = Person.find_by id: params[:person_id], active: false
+    if @person.present?
+      @person.reactivate!
+      flash[:notice] = "#{@person.full_name} re-activated"
+      respond_to do |format|
+        format.js
+        format.html { redirect_to people_path }
+      end
+    end
+  end
+
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize,  Metrics/MethodLength, Rails/TimeZone
   #
