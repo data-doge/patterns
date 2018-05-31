@@ -43,7 +43,7 @@
       <h4>Last Logins, count</h4>
       <ul id='user-list'>
         <% @last_logins.each do |user| %>
-        <li><%= link_to user.name, user %>: <%= user.last_sign_in_at.to_s :short%>, <%= user.sign_in_count%></li>
+        <li><%= link_to user.name, user %>: <%= user&.last_sign_in_at&.to_s :short%>, <%= user.sign_in_count%></li>
         <% end %>
       </ul>
       <% end %>
