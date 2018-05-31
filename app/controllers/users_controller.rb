@@ -88,6 +88,7 @@ class UsersController < ApplicationController
         :approved,
         :phone_number,
         :email_address,
+        :team_id,
         :password,
         :password_confirmation)
     end
