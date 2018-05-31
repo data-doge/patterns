@@ -122,10 +122,11 @@ class User < ApplicationRecord
     ).deliver_later
   end
 
-  def create_cart(cart_name = "#{name}-cart", assign = false)
-    cart = Cart.create(name: cart_name)
-    cart.assign_current_cart(id) if assign # default do not assign
-    cart
+  def create_cart(cart_name = nil, assign = true)
+    cart_name = "#{self.name}-pool" if cart_name.nil?
+    cart = Cart.create(name: cart_name, user_id: id)
+    cart.assign_current_cart(id) if assign # default assign
+    cart.save
   end
 
   def current_cart
