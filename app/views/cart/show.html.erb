@@ -6,9 +6,6 @@
         <input id='cart-typeahead' type="text" placeholder="People Search" >  
       </div>
       <div class='span2'>
-        <%= link_to "Remove All", delete_person_cart_index_path({all: true}),
-                            class: "btn",
-                            remote: true, method: :get %>
       </div>
     </div>
     <%= will_paginate @people, :renderer => BootstrapPagination::Rails, inner_window:1,outer_window:1 %>
@@ -65,9 +62,13 @@
         <dd><%= @cart.created_at.to_s %></dd>
         <dt>Last Updated:</dt>
         <dd><%= @cart.updated_at.to_s %></dd>
-        <dt>Export</dt>
+        <dt>Export:</dt>
         <dd><%= link_to "Export to CSV", cart_path(@cart,format: :csv), class:'btn' %></dd>
-        <dt>&nbsp;</dt>
+        <dt>Remove all people:</dt>
+        <dd><%= link_to "Remove All", delete_person_cart_index_path({all: true}),
+                            class: "btn",
+                            remote: true, method: :get %></dd>
+        <dt>create a new pool:</dt>
         <dd><%= link_to "New Pool",new_cart_path, method: 'get', class:'btn' %> </dd>
       </dl>
     </div>

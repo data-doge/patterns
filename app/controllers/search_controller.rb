@@ -20,10 +20,9 @@ class SearchController < ApplicationController
     if params[:q].present? && params[:q][:phone_number_eq].present?
       params[:q][:phone_number_eq] = PhonyRails.normalize_number(params[:q][:phone_number_eq])
     end
-    
-    if params[:per_page].present? # allow for larger pages
-      Person.per_page = params[:per_page] 
-    end
+
+    # allow for larger pages
+    Person.per_page = params[:per_page] if params[:per_page].present?
 
     if params[:q].present? && params[:q][:active_eq].blank?
       params[:q][:active_eq] = true

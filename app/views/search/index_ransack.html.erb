@@ -60,7 +60,7 @@
                           %>
     <label for='gift_cards_gift_card_number_cont'>Gift card number contains</label>
     <%= f.search_field :gift_cards_gift_card_number_cont %>
-    <label for='additional'>&nbsp;</label>
+    <!-- <label for='additional'>&nbsp;</label>
     <span data-toggle="collapse" data-target="#additional-options"  class="btn btn-default">Click to Show Additional Options</span>
       <div class="collapse" id="additional-options">
         <%= f.label :participation_type_in %>
@@ -80,10 +80,13 @@
         <%= f.label :submissions_raw_content_cont %>
         <%= f.search_field :submissions_raw_content_cont %>
       </div>
-    <br>
+    <br> -->
     <%= select_tag :per_page, options_for_select([30,60,100,200,500,1000,1500],Person.per_page) %>
     <%= f.submit 'Search', class: "btn btn-primary" %>
     <%= link_to 'Clear Search', request.path, class:"btn" %>
+    <br>
+    <h5>Save all people in search to a pool:</h5>
+    <span><%= link_to "Save to pool: #{current_cart.name}", search_add_to_cart_path(params.permit!), remote: true, class:'btn', id:'save-to-pool' %></span>
   </div>
 <% end %>
 
@@ -146,7 +149,6 @@ Search Parameters:
     <%= link_to "Export this list to MailChimp", "#", class: "btn", id: "export-to-mailchimp-form-toggle" %>
     </span>
     <span><%= link_to "Send text messages to this list", "#", class: "btn", id: "export-to-twilio-form-toggle" %></span>
-    <span><%= link_to "Save to pool: #{current_cart.name}", search_add_to_cart_path(@q), remote: true, class:'btn', id:'save-to-pool' %></span>
   </div>
 </div>
 
