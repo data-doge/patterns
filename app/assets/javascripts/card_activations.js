@@ -1,4 +1,4 @@
-$(document).on('page:load turbolinks:load ready', function() {
+$(document).on('page:load turbolinks:load ready ajax:complete', function() {
   assign_cards_to_user = function(){
     var user_id = document.getElementById('select_user_for_cards').value;
     var checked = $('input:checked[name="card_activation_id_change[]"]').map(function() {
@@ -10,26 +10,24 @@ $(document).on('page:load turbolinks:load ready', function() {
       $.ajax({type: "POST",url: url,data:{user_id: user_id}});
     }
   }
-  
-  var $chkboxes = $(':checkbox');
-  var lastChecked = null;
 
-  $chkboxes.click(function(e) {
+  var multiselect_setup = function(){
+    console.log('setup multiselect');
+    var lastChecked = null;
+    var $chkboxes = $(':checkbox');  
+    $chkboxes.click(function(e) {
       if(!lastChecked) {
           lastChecked = this;
           return;
       }
-
       if(e.shiftKey) {
           var start = $chkboxes.index(this);
           var end = $chkboxes.index(lastChecked);
-
           $chkboxes.slice(Math.min(start,end), Math.max(start,end)+ 1).prop('checked', lastChecked.checked);
-
       }
-
       lastChecked = this;
-  });
-
-
+    });
+  }
+  multiselect_setup();
+  $(document).ajaxComplete(function(event, request) {multiselect_setup();});
 });
