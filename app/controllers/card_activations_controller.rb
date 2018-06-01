@@ -23,7 +23,7 @@ class CardActivationsController < ApplicationController
     wb = axlsx.workbook
 
     wb.add_worksheet(:name => "CardUploadTemplate") do |sheet|
-      sheet.add_row %w[full_card_number sequence_number secure_code batch_id expiration_date amount, note]
+      sheet.add_row %w[full_card_number sequence_number secure_code batch_id expiration_date amount note]
       sheet.add_row ['4853980061441776','125', '074', '383311','10/18','25.00','delete me!'], types: 7.times.map {:string}
       
     end
@@ -58,7 +58,7 @@ class CardActivationsController < ApplicationController
       sheet.add_row %w[last_4 sequence_number name email phone zip join_dig?]
       card_activations.each do |ca|
         sheet.add_row[ca.last_4.to_s, ca.sequence_number, '', '', '', '', '']
-      end
+      end if card_activations.present?
     end
 
     respond_to do |format|
