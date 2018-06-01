@@ -146,7 +146,9 @@ class SearchController < ApplicationController
     @q = Person.active.ransack(params[:q])
     pids = current_cart.people_ids
     new_pids = @q.result.map(&:id).delete_if { |i| pids.include?(i) }
-    current_cart.people << Person.find(new_pids)
+    people = Person.find(new_pids)
+    flash[:notice] = "adding #{people.size} to pool"
+    current_cart.people << people
     flash[:notice] = "#{new_pids.size} people added to #{current_cart.name}."
     respond_to do |format|
       format.js {}
