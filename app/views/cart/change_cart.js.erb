@@ -5,7 +5,7 @@
 $('#cart_mini_view').html("<%= j render 'cart/mini_view', people: current_cart.people %>");
 
 $('.cart-size').html('<%= current_cart.people.size %>');
-$('.current_cart').html('<%= link_to current_cart.name, cart_index_path(current_cart) %>');
+$('.current_cart').html('<%= link_to current_cart.name, cart_index_path(current_cart.id) %>');
 
 $( document ).ajaxComplete(function() {
   $(document).trigger('turbolinks:load');
