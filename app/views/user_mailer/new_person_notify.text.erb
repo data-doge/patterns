@@ -4,6 +4,8 @@ Name: <%= @person.full_name %>
 Email: <%= @person.email_address %>
 Phone: <%= @person.phone_number %>
 Low Income: <%= @person.low_income %>
+Referred by:<%= @person.referred_by %>
+Creator:<%= @person.creator&.name %>
 Tags: <%= @person.tag_list.to_s %>
 
 <%= link_to 'More Info',
