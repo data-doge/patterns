@@ -72,6 +72,9 @@ class TaggingsController < ApplicationController
     end
   end
 
+  def index
+    @tags = Person.active.tag_counts_on(:tags).order('taggings_count DESC')
+  end
   # rubocop:enable Metrics/MethodLength
   def search
     klass = params[:type].blank? ? Person.active : TAGGABLE_TYPES.fetch(params[:type])

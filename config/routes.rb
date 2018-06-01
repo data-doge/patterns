@@ -140,6 +140,7 @@ Logan::Application.routes.draw do
 
   # post "twil", to: 'twilio_messages/#newtwil'
 
+  get 'taggings/', as: :tag_index, to: 'taggings#index'
   get 'taggings/create', as: :tag_create
   get 'taggings/destroy', as: :tag_destroy
   get 'taggings/search', as: :tag_search
