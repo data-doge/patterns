@@ -218,14 +218,15 @@ class CardActivation < ApplicationRecord
     !active? && !ongoing_call?
   end
 
+  def scrub_input # sometimes we drop leading 0's in csv
+    secure_code = secure_code.gsub('.0', '')
+    sequence_number = sequence_number.gsub('.0', '')
+    batch_id = batch_id.gsub('.0', '')
+    secure_code.prepend('0') while secure_code.length < 3
+  end
+
   private
 
-    def scrub_input # sometimes we drop leading 0's in csv
-      secure_code = secure_code.gsub('.0', '')
-      sequence_number = sequence_number.gsub('.0', '')
-      batch_id = batch_id.gsub('.0', '')
-      secure_code.prepend('0') while secure_code.length < 3
-    end
 
     def set_created_by
       self.created_by = user_id
