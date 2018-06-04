@@ -220,7 +220,7 @@ class CardActivation < ApplicationRecord
 
   private
 
-    def Scrub_input # sometimes we drop leading 0's in csv
+    def scrub_input # sometimes we drop leading 0's in csv
       secure_code = secure_code.gsub('.0', '')
       sequence_number = sequence_number.gsub('.0', '')
       batch_id = batch_id.gsub('.0', '')
