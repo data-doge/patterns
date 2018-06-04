@@ -61,7 +61,7 @@ class CardActivation < ApplicationRecord
   belongs_to :gift_card, optional: true
   belongs_to :user
 
-  before_create :check_secure_code
+  before_create :scrub_input
   before_create :set_created_by
 
   # starts activation call process on create after commit happens
@@ -220,7 +220,7 @@ class CardActivation < ApplicationRecord
 
   private
 
-    def check_secure_code # sometimes we drop leading 0's in csv
+    def Scrub_input # sometimes we drop leading 0's in csv
       secure_code = secure_code.gsub('.0', '')
       sequence_number = sequence_number.gsub('.0', '')
       batch_id = batch_id.gsub('.0', '')
