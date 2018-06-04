@@ -77,7 +77,6 @@ class CardActivation < ApplicationRecord
     cols = {full_card_number:'full_card_number',expiration_date:'expiration_date',amount:'amount',sequence_number:'sequence_number',secure_code:'secure_code',batch_id:'batch_id'}
     xls.sheet(0).each(cols) do |row|
       next if row[:full_card_number].blank? ||  row[:full_card_number] == 'full_card_number'# empty rows
-      cleaned_row = row.inject({}) { |h, (k, v)| h[k] = v.gsub('.0',''); h } 
       ca = CardActivation.new(cleaned_row)
       ca.user_id = user.id
       ca.created_by = user.id
@@ -222,6 +221,9 @@ class CardActivation < ApplicationRecord
   private
 
     def check_secure_code # sometimes we drop leading 0's in csv
+      secure_code = secure_code.gsub('.0', '')
+      sequence_number = sequence_number.gsub('.0', '')
+      batch_id = batch_id.gsub('.0', '')
       secure_code.prepend('0') while secure_code.length < 3
     end
 

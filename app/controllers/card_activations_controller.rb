@@ -57,6 +57,7 @@ class CardActivationsController < ApplicationController
     wb.add_worksheet(:name => "Signout Sheet") do |sheet|
       sheet.add_row %w[last_4 sequence_number name email phone zip join_dig?]
       card_activations.each do |ca|
+        next if ca.nil? #WAT?
         sheet.add_row[ca.last_4.to_s, ca.sequence_number, '', '', '', '', '']
       end if card_activations.present?
     end
