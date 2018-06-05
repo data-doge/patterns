@@ -16,7 +16,8 @@ $(document).on('page:load turbolinks:load ready', function() {
   add_card_activation = function(el){
     // this is a horrible hack
     var card_data = $(el).data();
-    card_data.reason = $('#card-actionvation-reason-' + card_data.cardActivationId).val();
+    
+    card_data.reason = $('#card-activation-reason-' + card_data.cardActivationId).val();
     
     var myform = document.getElementById("new_gift_card");
     $('input[name="gift_card[reason]"]').val(card_data.reason);
@@ -25,7 +26,7 @@ $(document).on('page:load turbolinks:load ready', function() {
     $('input[name="gift_card[batch_id]"]').val(card_data.batchId);
     $('input[name="gift_card[expiration_date]"]').val(card_data.expirationDate);
     $('input[name="gift_card[card_activation_id]"]').val(card_data.cardActivationId);
-    $('input[name="amount"]').val(card_data.amount);
+    $('input[name="gift_card[amount]"]').val(card_data.amount);
     $('#add-gift-card-button').click();
   }
   //filters out tags that are already in the list
