@@ -28,7 +28,7 @@
 #
 
 class User < ApplicationRecord
-  has_paper_trail
+  has_paper_trail ignore: [:last_sign_in_at]
   # acts_as_tagger #if we want owned tags.
 
   devise :database_authenticatable,
