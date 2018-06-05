@@ -238,14 +238,16 @@ class CardActivation < ApplicationRecord
         type: :update,
         id: id,
         large: render_large_card_activation(current_user),
-        mini: render_mini_card_activation(current_user)
+        mini: render_mini_card_activation(current_user),
+        count: current_user.admin? ? CardActivation.active.unassigned.size : CardActivation.active.unassigned.where(user_id: current_user.id).size
     end
 
     def broadcast_delete(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
         type: :delete,
-        id: id
+        id: id,
+        count: current_user.admin? ? CardActivation.active.unassigned.size : CardActivation.active.unassigned.where(user_id: current_user.id).size
     end
 
     def render_large_card_activation(c_user = nil)
