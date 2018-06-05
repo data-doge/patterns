@@ -16,6 +16,7 @@ class CardActivationsController < ApplicationController
     # busted ones first
     
     @card_activations = @cards.sort {|a,b| a.sort_helper <=> b.sort_helper }
+    @cards = @cards.where(status:'active')
   end
 
   def template
