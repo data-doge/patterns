@@ -7,11 +7,12 @@
           <th>Person</th>
           <th>joined</th>
           <th>low income</th>
-          <th>reffered</th>
+          <th>refered</th>
+          <th>verified</th>
         </tr>
       </thead>
       <tbody>
-    <%= render partial: 'new_person', collection: @new_unverified_people, as: :person, cached: true %>
+    <%= render partial: 'new_person', collection: @new_people, as: :person, cached: true %>
       </tbody>
     </table>
   </div>

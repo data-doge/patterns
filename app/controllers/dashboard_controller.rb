@@ -11,13 +11,12 @@ class DashboardController < ApplicationController
   # Recent activity stream-> sessions, people edits, pool edits
 
   def index
-    @new_unverified_people = Person.includes(:taggings).not_verified.order('created_at DESC').where('signup_at > :startdate', { startdate: 1.month.ago })
-    @new_verified_people   = Person.includes(:taggings).verified.order('created_at DESC').where('signup_at > :startdate', { startdate: 1.month.ago })
+    @new_people = Person.active.includes(:taggings).order('created_at DESC').where('signup_at > :startdate', { startdate: 1.month.ago })
 
-    @verified_count = Person.verified.size
-    @unverified_count = Person.not_verified.size
-    @deactivated_count    = Person.unscoped.where(active: false).where('deactivated_at > ?', 1.month.ago).size
-    @deactivated_people = Person.unscoped.where(active: false).order('deactivated_at DESC').limit(10)
+    @verified_count = Person.active.verified.size
+    @unverified_count = Person.active.not_verified.size
+    @deactivated_count    = Person.deactivated.where('deactivated_at > ?', 1.month.ago).size
+    @deactivated_people = Person.deactivated.where(active: false).order('deactivated_at DESC').limit(10)
 
     @last_logins = User.approved.order('last_sign_in_at DESC').all
     @one_month_gc = GiftCard.where('created_at > ?', 1.month.ago).sum(&:amount)
