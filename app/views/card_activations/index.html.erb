@@ -13,7 +13,7 @@ table tr {
     <% end %>
   <% end %>
 </ul>
-<h1>Activate Cards <span class='badge' id='active-unassigned-cards-count'><%=@cards.size%></span></h1>
+<h1>Activate Cards</h1>
 <div class='container'>
   <div class='row'>
     <div class='span2'>
@@ -107,7 +107,7 @@ table tr {
     </div>
   </div>
   <div class='row'>
-    <h2>Unassigned Cards</h2>
+    <h2>Unassigned Cards <span class='badge' id='active-unassigned-cards-count'><%=@cards.size%></span></h2>
      <% if current_user.admin? %>
       <%= select_tag :user_id,
             options_from_collection_for_select(User.approved.all,
