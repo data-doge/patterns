@@ -49,6 +49,7 @@ class CardActivation < ApplicationRecord
 
   scope :unassigned, -> { where(gift_card_id: nil) }
   scope :assigned, -> { where.not(gift_card_id: nil) }
+
   default_scope { order(sequence_number: :asc) }
   # see force_immutable below. do we not want to allow people to
   # change the assigned activation to gift card? unclear
@@ -93,6 +94,10 @@ class CardActivation < ApplicationRecord
       end
     end
     errors
+  end
+
+  def self.active_unassigned_count(current_user)
+    current_user.admin? ? CardActivation.active.unassigned.size : CardActivation.active.unassigned.where(user_id: current_user.id).size
   end
 
   aasm column: 'status', requires_lock: true do
@@ -239,7 +244,7 @@ class CardActivation < ApplicationRecord
         id: id,
         large: render_large_card_activation(current_user),
         mini: render_mini_card_activation(current_user),
-        count: current_user.admin? ? CardActivation.active.unassigned.size : CardActivation.active.unassigned.where(user_id: current_user.id).size
+        count: CardActivation.active_unassigned_count(current_user)
     end
 
     def broadcast_delete(c_user = nil)
@@ -247,7 +252,7 @@ class CardActivation < ApplicationRecord
       ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
         type: :delete,
         id: id,
-        count: current_user.admin? ? CardActivation.active.unassigned.size : CardActivation.active.unassigned.where(user_id: current_user.id).size
+        count: CardActivation.active_unassigned_count(current_user)
     end
 
     def render_large_card_activation(c_user = nil)
