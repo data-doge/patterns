@@ -17,7 +17,7 @@
   <%= f.label "Person's Name" %>
   <%= f.search_field :people_full_name_cont %>
   <%= f.label "User" %>
-  <% selected_user = @s.user_name_cont.blank? ? @current_user.name : @s.user_name_cont %>
+  <% selected_user = @s.user_name_cont.blank? ? '' : @s.user_name_cont %>
   <%= f.select :user_name_cont, User.where(approved: true).map(&:name), {selected: selected_user, include_blank: true} %>
   <%= f.submit 'Search', class: 'btn btn-small' %>
   <%= link_to "Clear", research_sessions_path, class: 'btn btn-small' %>
