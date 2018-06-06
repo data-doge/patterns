@@ -1,4 +1,8 @@
-<tr id='card-activation-<%=card_activation.id%>' class='well well-small'>
+<tr id='card-activation-<%=card_activation.id%>' 
+  class='well well-small card-activation'
+  data-id='<%=card_activation.id%>' 
+  data-last-4='<%= card_activation.last_4 %>'
+  data-sequence-number='<%= card_activation.sequence_number %>'>
   <td>
     <%= card_activation.last_4 %>
   </td>

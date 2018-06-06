@@ -107,8 +107,9 @@ table tr {
     </div>
   </div>
   <div class='row'>
-    <h2>Unassigned Cards <span class='badge' id='active-unassigned-cards-count'><%=@cards.size%></span></h2>
-     <% if current_user.admin? %>
+    <div class='span6'>
+      <h2>Unassigned Cards <span class='badge' id='active-unassigned-cards-count'><%=@cards.size%></span></h2>
+      <% if current_user.admin? %>
       <%= select_tag :user_id,
             options_from_collection_for_select(User.approved.all,
                                           'id',
@@ -117,8 +118,19 @@ table tr {
             prompt: 'Bulk Assign To:', 
             id: 'select_user_for_cards',
             onchange: 'assign_cards_to_user()' %>
-  </td>
-     <% end %>
+
+      <% end %>
+    </div>
+    <div class='span6'>
+      <div class="input-group">
+        <input type="text" id='card-search' class="form-control has-clear" placeholder="search">
+        <span class="input-group-btn form-control-clear">
+          <button class="btn btn-secondary" type="button">Clear</button>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class='row'>
     <div class='span12'>
       <table class="table">
         <thead>

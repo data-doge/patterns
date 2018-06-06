@@ -29,6 +29,7 @@
 //= require cable
 //= require_tree .
 //= require jquery.mask
+//= require fuse/fuse.min
 
 $(document).on('turbolinks:load',function() {
   $.jMaskGlobals.watchDataMask = true;

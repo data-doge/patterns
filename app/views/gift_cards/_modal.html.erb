@@ -25,6 +25,12 @@
               locals: { gift_cards: @giftable.gift_cards } %>
         <hr>
         <h4>Available Cards</h4>
+        <div class="input-group">
+          <input type="text" id='card-search' class="form-control has-clear" placeholder="search">
+          <span class="input-group-btn form-control-clear">
+            <button class="btn btn-secondary" type="button">Clear</button>
+          </span>
+        </div>
         <div class='card_activations'>
           <table class='table table-striped'>
             <thead>
