@@ -31,6 +31,9 @@
               <th>Last 4</th>
               <th>Sequence</th>
               <th>Amount</th>
+              <% if current_user.admin? %>
+              <th>User</th>
+              <% end %>
               <th>Reason</th>
               <th>Add</th>
             </thead>

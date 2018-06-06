@@ -148,7 +148,11 @@ class GiftCardsController < ApplicationController
   def modal
     klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
     @giftable = klass.find(params[:giftable_id])
-    @card_activations = CardActivation.unassigned.active.where(user_id: current_user.id)
+    if current_user.admin?
+      @card_activations = CardActivation.unassigned.active
+    else
+      @card_activations = CardActivation.unassigned.active.where(user_id: current_user.id)
+    end
     @gift_card = GiftCard.new
     @last_gift_card = GiftCard.last # default scope is id: :desc
     respond_to do |format|

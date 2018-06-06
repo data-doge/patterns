@@ -8,6 +8,11 @@
     <td id='amount'>
       <%= card_activation.amount %>
     </td>
+    <% if current_user.admin? %>
+    <td>
+      <%= card_activation.user.name %>
+    </td>
+    <% end %>
     <td>
       <%= select_tag :reason,  options_for_select(GiftCard.reasons.keys.to_a,'interview'),
                       { class: 'input-small',
