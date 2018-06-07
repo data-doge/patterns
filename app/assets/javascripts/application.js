@@ -73,4 +73,16 @@ $(document).on('turbolinks:load',function() {
       show_ajax_message(msg, type);
     }
   });
+
+  $('body').keydown(function (e) {
+    if ($('#gift-card-modal').is(':visible')) {
+        var rx = /INPUT|SELECT|TEXTAREA/i;
+        if (e.keyCode == 8) {
+            if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
+                e.preventDefault();
+            }
+        }
+    }
+});
+
 });
