@@ -130,6 +130,7 @@ gem 'holder_rails'
 
 # use devise for auth/identity
 gem 'devise'
+gem 'devise_invitable'
 
 # use gibbon for easy Mailchimp API access
 gem 'gibbon'
