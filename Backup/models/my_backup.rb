@@ -103,6 +103,12 @@ Model.new(:my_backup, 'Description for my_backup') do
   #
   compress_with Gzip
 
+
+  encrypt_with GPG do |encryption|
+    encryption.keys = {}
+    encryption.keys[ENV['MAIL_ADMIN']] = File.read('/home/logan/backup_public_key.pub')
+    encryption.recipients = ENV['MAIL_ADMIN']
+  end
   ##
   # Mail [Notifier]
   #
