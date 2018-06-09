@@ -17,7 +17,7 @@
 
 class Reservation < ApplicationRecord
   has_paper_trail
-  validates_presence_of :person_id, :event_id
+  validates :person_id, :event_id, presence: true
 
   belongs_to :person
   belongs_to :event

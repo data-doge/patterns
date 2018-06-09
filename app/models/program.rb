@@ -15,7 +15,7 @@
 
 class Program < ApplicationRecord
 
-  validates_presence_of :name
+  validates :name, presence: true
 
   has_many :applications
 

@@ -158,7 +158,7 @@ class InvitationsController < ApplicationController
     end
 
     def visitor
-      @visitor ||= @person ? @person : current_user
+      @visitor ||= @person || current_user
       PaperTrail.request.whodunnit = @visitor
       @visitor
     end

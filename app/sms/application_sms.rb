@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 class ApplicationSms
@@ -12,7 +11,7 @@ class ApplicationSms
   Rails.application.routes.default_url_options[:host] = host
 
   def initialize(*)
-    @client ||= Twilio::REST::Client.new()
+    @client ||= Twilio::REST::Client.new
     @application_number = ENV['TWILIO_SCHEDULING_NUMBER']
   end
 

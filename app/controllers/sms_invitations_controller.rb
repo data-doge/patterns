@@ -46,9 +46,9 @@ class SmsInvitationsController < ApplicationController
 
     def number_or_all_or_none
       number = message.chars.find { |x| x =~ /\d+/ }
-      if message.downcase =~ /^all$/
+      if /^all$/.match?(message.downcase)
         :all
-      elsif message.downcase =~ /^none$/
+      elsif /^none$/.match?(message.downcase)
         :none
       elsif number.blank?
         false
@@ -74,7 +74,7 @@ class SmsInvitationsController < ApplicationController
 
     # perhaps a fuzzy_text here?
     def confirm?
-      if message.downcase =~ /^ok$|^confirm$|^yes$/
+      if /^ok$|^confirm$|^yes$/.match?(message.downcase)
         Rails.logger.info('confirm? message hit')
         true
       elsif session[:confirm] == true # in a confirm session
@@ -89,7 +89,7 @@ class SmsInvitationsController < ApplicationController
 
     def cancel? # can't use the word "Cancel!!!"
       # https://support.twilio.com/hc/en-us/articles/223134027-Twilio-support-for-STOP-BLOCK-and-CANCEL-SMS-STOP-filtering-
-      if message.downcase =~ /^no$|^nah$|^can\'t$|^nope$/
+      if /^no$|^nah$|^can\'t$|^nope$/.match?(message.downcase)
         true
       elsif session[:cancel] == true # in a cancel session
         true

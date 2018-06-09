@@ -20,9 +20,9 @@ class ActivationCall < ApplicationRecord
   has_paper_trail
   has_secure_token
 
-  validates_presence_of :card_activation_id
-  validates_presence_of :call_type
-  validates_inclusion_of :call_type, in: %w[activate check] # balance soon
+  validates :card_activation_id, presence: true
+  validates :call_type, presence: true
+  validates :call_type, inclusion: { in: %w[activate check] } # balance soon
 
   belongs_to :card_activation, dependent: :destroy
   after_commit :enqueue_call, on: :create
@@ -89,10 +89,10 @@ class ActivationCall < ApplicationRecord
   end
 
   delegate :update_front_end, to: :card_activation
-  
+
   private
-  
-  def create_twilio
-    @twilio = Twilio::REST::Client.new()
-  end
+
+    def create_twilio
+      @twilio = Twilio::REST::Client.new
+    end
 end

@@ -62,9 +62,9 @@ class Public::PeopleController < ApplicationController
     if request.headers['AUTHORIZATION'].present?
       @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
       if @current_user.present?
-        @person = Person.new(api_create_params.except(:tags,:low_income))
-        
-        @person.referred_by ='created via SMS' 
+        @person = Person.new(api_create_params.except(:tags, :low_income))
+
+        @person.referred_by ='created via SMS'
         @person.signup_at = Time.current
         @person.created_by = @current_user.id
         if params[:tags].present?
@@ -72,7 +72,7 @@ class Public::PeopleController < ApplicationController
           @person.tag_list.add(tags)
         end
         if api_create_params[:low_income].present?
-          @person.low_income = api_create_params[:low_income] == 'Y' ? true : false
+          @person.low_income = api_create_params[:low_income] == 'Y'
         end
         output[:success] = @person.save ? true : false
       end
@@ -97,7 +97,6 @@ class Public::PeopleController < ApplicationController
     end
 
     @person.created_by = current_user.id if current_user.present?
-
 
     @msg = @person.save ? success_msg : error_msg
     respond_to do |format|

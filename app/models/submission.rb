@@ -20,7 +20,7 @@
 
 class Submission < ApplicationRecord
   has_paper_trail
-  validates_presence_of :raw_content
+  validates :raw_content, presence: true
 
   belongs_to :person
   validates :person_id, numericality: { only_integer: true, allow_nil: true }

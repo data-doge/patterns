@@ -9,30 +9,29 @@ class CardActivationsController < ApplicationController
     @errors = []
     @new_card = CardActivation.new
     @cards = if current_user.admin?
-                          CardActivation.unassigned
-                        else
-                          CardActivation.unassigned.where(user_id: current_user.id)
+               CardActivation.unassigned
+             else
+               CardActivation.unassigned.where(user_id: current_user.id)
                         end
     # busted ones first
-    
-    @card_activations = @cards.sort {|a,b| a.sort_helper <=> b.sort_helper }
-    @cards = @cards.where(status:'active')
+
+    @card_activations = @cards.sort_by(&:sort_helper)
+    @cards = @cards.where(status: 'active')
   end
 
   def template
     axlsx = Axlsx::Package.new
     wb = axlsx.workbook
 
-    wb.add_worksheet(:name => "CardUploadTemplate") do |sheet|
+    wb.add_worksheet(name: 'CardUploadTemplate') do |sheet|
       sheet.add_row %w[full_card_number sequence_number secure_code batch_id expiration_date amount note]
-      sheet.add_row ['4853980061441776','125', '074', '383311','10/18','25.00','delete me!'], types: 7.times.map {:string}
-      
+      sheet.add_row ['4853980061441776', '125', '074', '383311', '10/18', '25.00', 'delete me!'], types: 7.times.map { :string }
     end
 
     respond_to do |format|
       format.xlsx do
         response.headers['Content-Type'] = 'text/xlsx'
-        response.headers['Content-Disposition'] = 'attachment; filename=CardActivationTemplate.xlsx' 
+        response.headers['Content-Disposition'] = 'attachment; filename=CardActivationTemplate.xlsx'
         send_data axlsx.to_stream.read, filename: 'CardActivationTemplate.xlsx'
       end
       format.csv do
@@ -45,28 +44,30 @@ class CardActivationsController < ApplicationController
       end
     end
   end
-  
+
   def signout_sheet
-    if current_user.admin?
-      card_activations = CardActivation.unassigned.all
-    else
-      card_activations = current_user.card_activations.unassigned
-    end
+    card_activations = if current_user.admin?
+                         CardActivation.unassigned.all
+                       else
+                         current_user.card_activations.unassigned
+                       end
     axlsx = Axlsx::Package.new
     wb = axlsx.workbook
 
-    wb.add_worksheet(:name => "Signout Sheet") do |sheet|
+    wb.add_worksheet(name: 'Signout Sheet') do |sheet|
       sheet.add_row %w[last_4 sequence_number name email phone zip join_dig?]
-      card_activations.each do |ca|
-        next if ca.nil? #WAT?
-        sheet.add_row[ca.last_4.to_s, ca.sequence_number, '', '', '', '', '']
-      end if card_activations.present?
+      if card_activations.present?
+        card_activations.each do |ca|
+          next if ca.nil? # WAT?
+          sheet.add_row[ca.last_4.to_s, ca.sequence_number, '', '', '', '', '']
+        end
+      end
     end
 
     respond_to do |format|
       format.xlsx do
         response.headers['Content-Type'] = 'text/xlsx'
-        response.headers['Content-Disposition'] = 'attachment; filename=CardActivationSignoutSheet.xlsx' 
+        response.headers['Content-Disposition'] = 'attachment; filename=CardActivationSignoutSheet.xlsx'
         send_data axlsx.to_stream.read, filename: 'CardActivationSignoutSheet.xlsx'
       end
 
@@ -112,13 +113,13 @@ class CardActivationsController < ApplicationController
     else
       xls =  Roo::Spreadsheet.open(params[:file].path)
       cards_count = 0
-      xls.sheet(0).each {|row| cards_count += 1 if row[0].present? }
+      xls.sheet(0).each { |row| cards_count += 1 if row[0].present? }
       flash[:notice] = "Import started for #{cards_count} cards."
       @errors = CardActivation.import(params[:file].path, current_user)
       if @errors.present?
         flash[:error] = "Error! #{@errors.size} cards not valid."
         @errors.each do |error|
-          error.full_messages.each{|m| flash[:error] = m }
+          error.full_messages.each { |m| flash[:error] = m }
         end
       end
     end

@@ -17,7 +17,7 @@ class SendTwilioMessagesJob
   def perform(messages, phone_numbers, smsCampaign)
     Rails.logger.info '[TwilioSender] job enqueued'
     # Instantiate a Twilio client
-    @twilio ||= Twilio::REST::Client.new()
+    @twilio ||= Twilio::REST::Client.new
 
     Rails.logger.info "[TwilioSender#perform] Send #{messages} to #{phone_numbers}"
     if phone_numbers.present?

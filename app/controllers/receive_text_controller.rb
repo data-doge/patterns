@@ -149,7 +149,7 @@ class ReceiveTextController < ApplicationController
       # If the question is a multiple choice using single letter response, check for single letter
       elsif fields[session['counter'] - 1]['Title'].include? 'A)'
         # if !( params["Body"].strip.upcase == "A")
-        if params['Body'].strip.upcase !~ /A|B|C|D|E/
+        if !/A|B|C|D|E/.match?(params['Body'].strip.upcase)
           if session['errorcount'].zero?
             message = 'Please type only the letter of your answer. Thank you!'
             session['counter'] -= 1

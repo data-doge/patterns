@@ -123,7 +123,7 @@ class User < ApplicationRecord
   end
 
   def create_cart(cart_name = nil, assign = true)
-    cart_name = "#{self.name}-pool" if cart_name.nil?
+    cart_name = "#{name}-pool" if cart_name.nil?
     cart = Cart.create(name: cart_name, user_id: id)
     cart.assign_current_cart(id) if assign # default assign
     cart.save

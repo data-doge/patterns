@@ -6,7 +6,7 @@ class CalendarController < ApplicationController
   # this is so that people can also visit the calendar.
   # identified by their secure token.
   skip_before_action :authenticate_user!, if: :person?
-  skip_after_action :update_user_activity, only: [:feed, :admin_feed]
+  skip_after_action :update_user_activity, only: %i[feed admin_feed]
 
   include ActionController::MimeResponds
 
@@ -93,7 +93,7 @@ class CalendarController < ApplicationController
     # both types can visit the page. they have the same interface
     # TODO fix this
     def visitor # this looks like it needs work
-      @visitor ||= @person ? @person : current_user
+      @visitor ||= @person || current_user
       # PaperTrail.request.whodunnit = @visitor
       # @visitor
     end
@@ -148,7 +148,7 @@ class CalendarController < ApplicationController
 
       # full calendar uses dashes, not slashes. argh.
       params.transform_values do |v|
-        v =~ /\d{4}-\d{2}-\d{2}/ ? Time.zone.parse(v).strftime('%m/%d/%Y') : v
+        /\d{4}-\d{2}-\d{2}/.match?(v) ? Time.zone.parse(v).strftime('%m/%d/%Y') : v
       end
     end
 end

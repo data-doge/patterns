@@ -52,31 +52,31 @@ class GiftCard < ApplicationRecord
 
   has_one :card_activation
 
-  validates_presence_of :amount
-  validates_presence_of :reason
-  validates_presence_of :batch_id
-  validates_presence_of :sequence_number
+  validates :amount, presence: true
+  validates :reason, presence: true
+  validates :batch_id, presence: true
+  validates :sequence_number, presence: true
 
-  validates_format_of :expiration_date,
-    with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i,
-    unless: proc { |c| c.expiration_date.blank? }
+  validates :expiration_date,
+    format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i,
+              unless: proc { |c| c.expiration_date.blank? } }
 
-  validates_length_of :sequence_number, minimum: 1, maximum: 7, unless: proc { |c| c.sequence_number.blank? }
+  validates :sequence_number, length: { minimum: 1, maximum: 7, unless: proc { |c| c.sequence_number.blank? } }
 
-  validates_uniqueness_of :sequence_number,
-    scope: %i[batch_id gift_card_number],
-    unless: proc { |c| c.sequence_number.blank? }
+  validates :sequence_number,
+    uniqueness: { scope: %i[batch_id gift_card_number],
+                  unless: proc { |c| c.sequence_number.blank? } }
 
-  validates_uniqueness_of :gift_card_number,
-    scope: %i[batch_id sequence_number],
-    unless: proc { |c| c.gift_card_number.blank? }
+  validates :gift_card_number,
+    uniqueness: { scope: %i[batch_id sequence_number],
+                  unless: proc { |c| c.gift_card_number.blank? } }
 
-  validates_format_of :gift_card_number,
-    with:  /\A([0-9]){4,5}\z/i,
-    unless: proc { |c| c.gift_card_number.blank? }
+  validates :gift_card_number,
+    format: { with:  /\A([0-9]){4,5}\z/i,
+              unless: proc { |c| c.gift_card_number.blank? } }
 
   # Validation to limit 1 signup per person
-  validates_uniqueness_of :reason, scope: :person_id, if: :reason_is_signup?
+  validates :reason, uniqueness: { scope: :person_id, if: :reason_is_signup? }
 
   validate :giftable_person_ownership
   # ransacker :created_at, type: :date do

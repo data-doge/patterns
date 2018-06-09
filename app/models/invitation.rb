@@ -96,7 +96,7 @@ class Invitation < ApplicationRecord
     end
 
     event :confirm, guard: :in_future? do
-       # after_commit: :notify_about_confirmation,
+      # after_commit: :notify_about_confirmation,
       transitions from: %i[confirmed invited reminded confirmed], to: :confirmed
     end
 

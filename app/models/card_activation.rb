@@ -30,22 +30,22 @@ class CardActivation < ApplicationRecord
   has_paper_trail
 
   validate :luhn_number_valid
-  validates_presence_of :expiration_date
-  validates_presence_of :batch_id
-  validates_presence_of :sequence_number
-  validates_presence_of :expiration_date
-  validates_presence_of :user_id
-  validates_presence_of :secure_code
+  validates :expiration_date, presence: true
+  validates :batch_id, presence: true
+  validates :sequence_number, presence: true
+  validates :expiration_date, presence: true
+  validates :user_id, presence: true
+  validates :secure_code, presence: true
   validates :gift_card_id, uniqueness: true, allow_nil: true
 
-  validates_format_of :expiration_date,
-    with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i
+  validates :expiration_date,
+    format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
 
-  validates_format_of :batch_id, with: /[0-9]*/
-  validates_format_of :secure_code, with: /[0-9]*/
-  validates_format_of :sequence_number, with: /[0-9]*/
+  validates :batch_id, format: { with: /[0-9]*/ }
+  validates :secure_code, format: { with: /[0-9]*/ }
+  validates :sequence_number, format: { with: /[0-9]*/ }
   # sequences are per batch
-  validates_uniqueness_of :sequence_number, scope: :batch_id
+  validates :sequence_number, uniqueness: { scope: :batch_id }
 
   scope :unassigned, -> { where(gift_card_id: nil) }
   scope :assigned, -> { where.not(gift_card_id: nil) }
@@ -75,9 +75,9 @@ class CardActivation < ApplicationRecord
   def self.import(file, user)
     errors = []
     xls =  Roo::Spreadsheet.open(file)
-    cols = {full_card_number:'full_card_number',expiration_date:'expiration_date',amount:'amount',sequence_number:'sequence_number',secure_code:'secure_code',batch_id:'batch_id'}
+    cols = { full_card_number: 'full_card_number', expiration_date: 'expiration_date', amount: 'amount', sequence_number: 'sequence_number', secure_code: 'secure_code', batch_id: 'batch_id' }
     xls.sheet(0).each(cols) do |row|
-      next if row[:full_card_number].blank? ||  row[:full_card_number] == 'full_card_number'# empty rows
+      next if row[:full_card_number].blank? ||  row[:full_card_number] == 'full_card_number' # empty rows
       ca = CardActivation.new(row)
       ca.user_id = user.id
       ca.created_by = user.id
@@ -85,12 +85,12 @@ class CardActivation < ApplicationRecord
       if ca.save
         ca.start_activate!
       else
-         if ca.errors.present?
+        if ca.errors.present?
           err_msg = "Card Error: sequence: #{ca.sequence_number}, #{ca.full_card_number}, #{ca.errors[:base]}"
           Airbrake.notify(err_msg)
           logger.info(err_msg)
           errors << ca
-        end
+       end
       end
     end
     errors
@@ -113,7 +113,7 @@ class CardActivation < ApplicationRecord
     end
 
     event :activate_error, after_commit: :activation_error_report do
-      transitions from: [:activate_started,:activate_errored], to: :activate_errored
+      transitions from: %i[activate_started activate_errored], to: :activate_errored
     end
 
     event :start_check, after_commit: :create_check_call do
@@ -224,14 +224,13 @@ class CardActivation < ApplicationRecord
   end
 
   def scrub_input # sometimes we drop leading 0's in csv
-    self.secure_code = self.secure_code&.gsub('.0', '')
-    self.sequence_number = self.sequence_number&.gsub('.0', '')
-    self.batch_id = self.batch_id&.gsub('.0', '')
-    self.secure_code.prepend('0') while self.secure_code.length < 3
+    self.secure_code = secure_code&.gsub('.0', '')
+    self.sequence_number = sequence_number&.gsub('.0', '')
+    self.batch_id = batch_id&.gsub('.0', '')
+    secure_code.prepend('0') while secure_code.length < 3
   end
 
   private
-
 
     def set_created_by
       self.created_by = user_id

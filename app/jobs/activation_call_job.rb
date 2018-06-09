@@ -15,7 +15,7 @@ class ActivationCallJob
     when 'check'
       url = "https://#{HOSTNAME}/activation_calls/check/#{call.token}.xml"
     end
-    twilio = Twilio::REST::Client.new()
+    twilio = Twilio::REST::Client.new
     res = twilio.account.calls.create(
       from: ENV['TWILIO_SCHEDULING_NUMBER'],   # From your Twilio number
       to: '+18663008288', # BOA activation number

@@ -1,7 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.3
-  Include:
-    - '**/Rakefile'
+  TargetRubyVersion: 2.4
   Exclude:
     - '**/bin/**/*'
     - 'vendor/**/*'
@@ -23,7 +21,7 @@ Rails:
 Rails/Validation:
   Enabled: true
 
-Style/AlignHash:
+Layout/AlignHash:
   EnforcedHashRocketStyle: table
   EnforcedLastArgumentHashStyle: always_ignore
 
@@ -33,19 +31,19 @@ Style/Lambda:
 Style/BracesAroundHashParameters:
   Enabled: false
 
-Style/DotPosition:
+Layout/DotPosition:
   EnforcedStyle: trailing
 
-Style/EmptyLinesAroundClassBody:
+Layout/EmptyLinesAroundClassBody:
   Enabled: false
 
-Style/EmptyLinesAroundModuleBody:
+Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
-Style/IndentationConsistency:
+Layout/IndentationConsistency:
   EnforcedStyle: rails
 
-Style/IndentHash:
+Layout/IndentHash:
   EnforcedStyle: consistent
 
 Style/RaiseArgs:
@@ -60,7 +58,7 @@ Style/Documentation:
 Style/GuardClause:
   Enabled: false
 
-Style/AlignParameters:
+Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
 Style/SignalException:
@@ -76,10 +74,10 @@ Style/BlockDelimiters:
 Style/ClassAndModuleChildren:
   Enabled: false
 
-Style/ExtraSpacing:
+Layout/ExtraSpacing:
   Enabled: false
 
-Style/SpaceAroundOperators:
+Layout/SpaceAroundOperators:
   Enabled: false
 
 Metrics/AbcSize:

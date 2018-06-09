@@ -99,7 +99,7 @@ class ResearchSession < ApplicationRecord
     end
 
     def clean_invitations
-      invitations.each {|inv| inv.delete unless inv.valid?}
+      invitations.each { |inv| inv.delete unless inv.valid? }
     end
 
 end

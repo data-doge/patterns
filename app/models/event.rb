@@ -22,13 +22,13 @@
 
 class Event < ApplicationRecord
 
-  validates_presence_of :name,
+  validates :name,
     :application_id,
     :location,
     :address,
     :start_datetime,
     :end_datetime,
-    :description
+    :description, presence: true
 
   belongs_to :application
 

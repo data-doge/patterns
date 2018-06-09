@@ -19,8 +19,8 @@
 
 class Application < ApplicationRecord
 
-  validates_presence_of :name, :description
-  validates_presence_of :program_id
+  validates :name, :description, presence: true
+  validates :program_id, presence: true
 
   belongs_to :program
   has_many   :events

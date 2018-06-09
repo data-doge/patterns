@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
     end
     true
   end
-  
+
   def flash_to_headers
     return unless request.xhr?
     response.headers['X-Message'] = flash_message if flash_message

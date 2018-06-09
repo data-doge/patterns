@@ -50,22 +50,20 @@ class PeopleController < ApplicationController
 
   # rubocop:disable Metrics/AbcSize
   def index
-    if params[:per_page].present? # allow for larger pages
-      Person.per_page = params[:per_page] 
-    end
+    Person.per_page = params[:per_page] if params[:per_page].present? # allow for larger pages
 
     @verified_types = Person.pluck(:verified).uniq.select(&:present?)
     # this could be cleaner...
     search = if params[:tags].blank?
-                Person.active.includes(:taggings).paginate(page: params[:page]).
-                  order(sort_column + ' ' + sort_direction)
-              else
-                tags =  params[:tags].split(',').map(&:strip)
-                @tags = Person.active.tag_counts.where(name: tags)
+               Person.active.includes(:taggings).paginate(page: params[:page]).
+                 order(sort_column + ' ' + sort_direction)
+             else
+               tags =  params[:tags].split(',').map(&:strip)
+               @tags = Person.active.tag_counts.where(name: tags)
 
-                Person.active.includes(:taggings).paginate(page: params[:page]).
-                  order(sort_column + ' ' + sort_direction).
-                  tagged_with(tags)
+               Person.active.includes(:taggings).paginate(page: params[:page]).
+                 order(sort_column + ' ' + sort_direction).
+                 tagged_with(tags)
               end
     # only show verified people to non-admins
     @people = current_user.admin? ? search : search.verified
@@ -208,7 +206,7 @@ class PeopleController < ApplicationController
       @person = Person.initialize_from_wufoo(params)
       @person.save
       begin
-        @client ||= Twilio::REST::Client.new()
+        @client ||= Twilio::REST::Client.new
         @twilio_message = TwilioMessage.new
         @twilio_message.from = ENV['TWILIO_SIGNUP_VERIFICATION_NUMBER']
         @twilio_message.to = @person.normalized_phone_number
@@ -241,7 +239,7 @@ class PeopleController < ApplicationController
       @person = Person.new(person_params)
       @person.created_by = current_user.id
       if @person.errors.present?
-        @person.errors.full_messages.each{|m| flash[:error] = m }
+        @person.errors.full_messages.each { |m| flash[:error] = m }
       end
     end
 

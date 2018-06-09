@@ -17,7 +17,7 @@ class AdminMailer < ApplicationMailer
   end
 
   def participation_level_change(to:, person:, old_level:)
-    msg = %Q(Hi!
+    msg = %(Hi!
     Participation level for #{person.full_name} changed from #{old_level} to #{person.participation_level}
     link: https://#{HOSTNAME}/people/#{person.id})
     admin_email = ENV['MAIL_ADMIN']

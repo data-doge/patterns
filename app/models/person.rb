@@ -50,7 +50,7 @@ class Person < ApplicationRecord
   acts_as_taggable
 
   page 50
-  
+
   # include Searchable
   include ExternalDataMappings
   include Neighborhoods
@@ -100,7 +100,7 @@ class Person < ApplicationRecord
   #   unless: proc { |person| person.email_address.present? }
   validates :phone_number, allow_blank: true, uniqueness: true
   validates :landline, allow_blank: true, uniqueness: true
-  
+
   # validates :email_address, presence: true,
   #   unless: proc { |person| person.phone_number.present? }
   validates :email_address, email: true, allow_blank: true, uniqueness: true
@@ -111,11 +111,9 @@ class Person < ApplicationRecord
   scope :verified, -> { where('verified like ?', '%Verified%') }
   scope :not_verified, -> { where.not('verified like ?', '%Verified%') }
   scope :active, -> { where(active: true) }
-  scope :deactivated, -> {where(active: false) }
+  scope :deactivated, -> { where(active: false) }
   # no longer using this. now managing active elsewhere
-  #default_scope { where(active: true) }
-
-  
+  # default_scope { where(active: true) }
 
   ransacker :full_name, formatter: proc { |v| v.mb_chars.downcase.to_s } do |parent|
     Arel::Nodes::NamedFunction.new('lower',
@@ -143,12 +141,12 @@ class Person < ApplicationRecord
   end
 
   def self.participation_levels
-    # * Active DIG member =“Participated in 3+ sessions” = invited to join FB group; 
-    # * [Need another name for level 2] = “Participated in at least one season-- 
-    #     (could code as 6 months active) OR at least 2 different projects/teams 
+    # * Active DIG member =“Participated in 3+ sessions” = invited to join FB group;
+    # * [Need another name for level 2] = “Participated in at least one season--
+    #     (could code as 6 months active) OR at least 2 different projects/teams
     #     (could code based on being tagged in a session by at least 2 different teams)
     # * DIG Ambassador = “active for at least one year, 2+ projects/teams
-    # if there’s any way to automate that info to flow into dashboard/pool — 
+    # if there’s any way to automate that info to flow into dashboard/pool —
     # and notify me when new person gets added-- that would be amazing
     %w[new active regular ambassador]
   end
@@ -158,18 +156,22 @@ class Person < ApplicationRecord
     self.participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).size >= 1
     self.participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
     self.participation_level = 'ambassador' if gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2
-    
-    if self.participation_level_changed?
+
+    if participation_level_changed?
       AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was).deliver_later
       Cart.where(name: Person.participation_levels).find_each do |cart|
-        if cart.name == self.participation_level
-          cart.people << self rescue next
+        if cart.name == participation_level
+          begin
+            cart.people << self
+          rescue StandardError
+            next
+          end
         else
           cart.remove_person_id(id)
         end
       end
     end
-    self.save
+    save
   end
 
   def self.verified_types
@@ -522,7 +524,6 @@ class Person < ApplicationRecord
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   private
-
 
 end
 # rubocop:enable ClassLength
