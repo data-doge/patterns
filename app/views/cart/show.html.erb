@@ -62,8 +62,10 @@
         <dd><%= @cart.created_at.to_s %></dd>
         <dt>Last Updated:</dt>
         <dd><%= @cart.updated_at.to_s %></dd>
+        <% if current_user.admin? %>
         <dt>Export:</dt>
         <dd><%= link_to "Export to CSV", cart_path(@cart,format: :csv), class:'btn' %></dd>
+        <% end %>
         <dt>Remove all people:</dt>
         <dd><%= link_to "Remove All", delete_person_cart_index_path({all: true}),
                             class: "btn",

@@ -145,7 +145,7 @@
 <div class="row">
   <div class="offset4 span8"><%= will_paginate @results, :renderer => BootstrapPagination::Rails %></div>
 </div>
-
+<% if current_user.admin? %>
 <div class="row">
   <div class="span12">
     <%= link_to "Save this list as CSV", search_index_path(params.merge(:format => :csv).permit!), :class => "btn"  %>
@@ -154,7 +154,6 @@
 <!--     <span><a href="#" id="export-to-mailchimp-form-toggle">Export this list to MailChimp</a></span>
  -->  </div>
 </div>
-
 <div class="row">
   <div class="span12">
     <div id="export-to-mailchimp-form">
@@ -182,13 +181,13 @@
     </div>
   </div>
 </div>
-
+<% end %> <!-- end admin stuff-->
 
 <% else %>
 
 <div class="row">
   <div class="span12" style="margin-top: 30px;">
-    <p>There are no CUTGroup members that match your search.</p>
+    <p>There are no Design Insight Group members that match your search.</p>
   </div>
 </div>
 <% end %>

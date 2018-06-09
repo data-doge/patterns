@@ -15,11 +15,15 @@ class CartController < ApplicationController
       format.html
       format.json { render json: @people.map(&:id) }
       format.csv do
-        output = CSV.generate do |csv|
-          csv << Person.column_names.map(&:titleize)
-          @people.each { |person| csv << person.to_a }
+        if current_user.admin?
+          output = CSV.generate do |csv|
+            csv << Person.column_names.map(&:titleize)
+            @people.each { |person| csv << person.to_a }
+          end
+          send_data output, filename: "Pool-#{@cart.name}.csv"
+        else
+          flash[:error] = 'not permitted'
         end
-        send_data output, filename: "Pool-#{@cart.name}.csv"
       end
     end
   end
