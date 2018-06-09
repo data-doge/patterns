@@ -44,6 +44,7 @@ group :development do
 
   gem 'capistrano', '~> 2.15.4'
   gem 'capistrano-sidekiq'
+  gem 'bcrypt_pbkdf'
   gem 'rvm-capistrano', require: false
   gem 'rbnacl', '~> 4.0.0' # for modern ssh keys
   gem 'rbnacl-libsodium' # same as above
