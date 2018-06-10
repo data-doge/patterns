@@ -132,6 +132,7 @@ gem 'holder_rails'
 # use devise for auth/identity
 gem 'devise'
 gem 'devise_invitable'
+gem 'devise_zxcvbn' # password strength filter
 
 # use gibbon for easy Mailchimp API access
 gem 'gibbon'

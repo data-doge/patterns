@@ -31,13 +31,16 @@ class User < ApplicationRecord
   has_paper_trail ignore: [:last_sign_in_at]
   # acts_as_tagger #if we want owned tags.
 
-  devise :invitable, :database_authenticatable,
-    :registerable,
-    :recoverable,
-    :rememberable,
-    :trackable,
-    :validatable,
-    stretches: Rails.env.production? ? 1 : 10
+  devise :invitable, 
+         :database_authenticatable,
+         :registerable,
+         :recoverable,
+         :rememberable,
+         :trackable,
+         :validatable,
+         :zxcvbnable, # password strength
+         stretches: Rails.env.production? ? 1 : 10
+
 
   has_many :research_sessions
   has_many :invitations, through: :research_sessions
@@ -155,5 +158,9 @@ class User < ApplicationRecord
       cart.assign_current_cart(id)
       cart.save
     end
+  end
+
+  def weak_words
+    ['patterns', ENV['SITE_NAME'], self.name, self.email]
   end
 end
