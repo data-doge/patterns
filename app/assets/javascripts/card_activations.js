@@ -11,6 +11,11 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
     }
   }
 
+
+  $('#card-all').on('click',function(){
+    $(':checkbox').prop('checked', this.checked);
+  });
+
   var multiselect_setup = function(){
     console.log('setup multiselect');
     var lastChecked = null;

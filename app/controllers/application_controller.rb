@@ -44,6 +44,16 @@ class ApplicationController < ActionController::Base
     flash.discard # don't want the flash to appear when you reload page
   end
 
+  def after_sign_in_path_for(resource)
+    if current_user.sign_in_count >= 1
+      flash[:error] = 'please update your password'
+      edit_user_registration_path
+    else
+      root_path
+    end
+end
+
+
   private
 
     def flash_message
