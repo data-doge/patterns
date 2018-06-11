@@ -17,7 +17,6 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
   });
 
   var multiselect_setup = function(){
-    console.log('setup multiselect');
     var lastChecked = null;
     var $chkboxes = $(':checkbox');  
     $chkboxes.click(function(e) {

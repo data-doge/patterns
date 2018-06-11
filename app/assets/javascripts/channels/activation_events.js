@@ -36,7 +36,6 @@ jQuery(document).on('turbolinks:load', function() {
       channel: "ActivationEventChannel"
     }, {
       connected: function() {
-        console.log('connected');
         this.perform('log_me')
       },
       disconnected: function() {
