@@ -43,6 +43,13 @@
           <dd><%= @person.participation_level %></dd>
           <dt>Preferred participation method</dt>
           <dd><%= best_in_place @person, :participation_type, as: :select, collection: %w(in-person remote) %></dd>
+          <dt>Preferred Language <%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "EN = english, ES = Spanish, ZH = Chinese.",
+          title: 'popover',
+          original_title:"Preferred Language"} %></dt>
+          <dd><%= best_in_place @person, :locale, as: :select, collection: %w(en es zh) %></dd>
    
           <dt>Session Invitations <%= content_tag :span,'?',class: 'badge', data:{
           toggle: "popover", 
@@ -334,12 +341,13 @@
                 people_path, :class => 'btn'  %>
     <%= link_to t('.edit', default: t("helpers.links.edit")),
                 edit_person_path(@person), :class => 'btn' %>
+    <%= if current_user.admin? %>
     <%= link_to t('.destroy', default: t("helpers.links.destroy")),
                 person_path(@person),
                 method: 'delete',
                 data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
                 class: 'btn btn-danger' %>
-    <% if @person.active %>
+    <% if @person.active %> <!-- active or inactive? -->
     <%= link_to 'deactivate',
               deactivate_people_path(@person),
               method: :post,
@@ -351,6 +359,7 @@
               method: :post,
               data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
               :class => 'btn btn-danger' %>
-    <% end  %>
+    <% end %>
+    <% end %> <!-- end admin -->
   </div>
 </div>

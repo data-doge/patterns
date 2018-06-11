@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_09_182228) do
+ActiveRecord::Schema.define(version: 2018_06_11_173252) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "card_activation_id"
@@ -258,6 +258,7 @@ ActiveRecord::Schema.define(version: 2018_06_09_182228) do
     t.boolean "confirmation_sent", default: false
     t.boolean "welcome_sent", default: false
     t.string "participation_level", default: "new"
+    t.string "locale", default: "en"
   end
 
   create_table "programs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
