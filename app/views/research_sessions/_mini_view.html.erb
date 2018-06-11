@@ -6,9 +6,12 @@
   </tr>
 
   <% person.research_sessions.tag_counts.limit(10).each do |tag| %>
+
     <tr class='tag' id='tag-<%=tag.id%>'>
+      <a href='<%= research_sessions_path(q:{ransack_tagged_with: tag.name}) %>'>
         <td><span class='badge'><%=tag.taggings_count%></span></td>
         <td><%= tag.name %></td>
+      </a>
     </tr>
   <% end %>
 </table>
