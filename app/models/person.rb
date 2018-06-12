@@ -127,6 +127,11 @@ class Person < ApplicationRecord
     %i[no_signup_card ransack_tagged_with]
   end
 
+  def self.locale_name_to_locale(locale_name)
+    obj = {'english': 'en','spanish': 'es', 'chinese': 'zh'}
+    obj[locale_name.downcase]
+  end
+  
   ransack_alias :comments, :comments_content
   ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number
 

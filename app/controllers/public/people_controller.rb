@@ -62,7 +62,7 @@ class Public::PeopleController < ApplicationController
     if request.headers['AUTHORIZATION'].present?
       @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
       if @current_user.present?
-        @person = Person.new(api_create_params.except(:tags, :low_income))
+        @person = Person.new(api_create_params.except(:tags, :low_income, :locale_name))
 
         @person.referred_by ='created via SMS'
         @person.signup_at = Time.current
@@ -74,6 +74,12 @@ class Public::PeopleController < ApplicationController
         if api_create_params[:low_income].present?
           @person.low_income = api_create_params[:low_income] == 'Y'
         end
+
+        if api_create_params[:locale_name].present?
+          locale = Person.locale_name_to_locale(locale_name)
+          @person.locale = locale if locale.present?
+        end
+
         output[:success] = @person.save ? true : false
       end
     end
@@ -126,6 +132,11 @@ class Public::PeopleController < ApplicationController
         :preferred_contact_method,
         :postal_code,
         :email_address,
+        :locale,
+        :locale_name,
+        :landline,
+        :referred_by,
+        :note,
         :low_income,
         :phone_number,
         :rapidpro_uuid,
@@ -155,6 +166,8 @@ class Public::PeopleController < ApplicationController
         :low_income,
         :address_1,
         :address_2,
+        :locale,
+        :locale_name,
         :city,
         :state,
         :postal_code,
