@@ -12,6 +12,7 @@
           <th colspan="1">email</th>
           <th colspan="1">phone</th>
           <th colspan="1">approved</th>
+          <th colspan="1">team</th>
           <th colspan="2">actions</th>
         </tr>
       </thead>
@@ -30,6 +31,14 @@
                       :approved,
                       as: :checkbox,
                       collection: {false: "No", true: "Yes"} %></td>
+            <td><%= best_in_place user, :team_id,
+                      as: :select,
+                      collection: Team.all.inject({}){ |acc,el|
+                        acc[el.id]=el.name
+                        acc
+                      },
+                      ok_button: 'Save',
+                      cancel_button: 'Cancel' %></td>
             <td><%= link_to 'Show', user %></td>
             <td><%= link_to 'Edit', edit_user_path(user) %></td>
           </tr>
