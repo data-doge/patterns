@@ -21,19 +21,27 @@ research_session_id = <%= @research_session.id%>;
         <dt>Clone</dt>
         <dd><%= link_to 'Clone me', research_session_clone_path(@research_session), class:'btn btn-small' %></dd>
         <dt>Description</dt>
-        <dd><%= @research_session.description %>
+
+        <dd><%= best_in_place @research_session, :description %>
         <!-- <dt>SMS Description</dt>
         <dd><%= @research_session.sms_description %> -->
         <dt>Location</dt>
-        <dd><%= @research_session.location %>
+        <dd><%= best_in_place @research_session, :location %>
         <dt>Starts at</dt>
-        <dd><%= @research_session.start_datetime.to_s :long %></dd>
+        <dd>
+          <%= best_in_place @research_session, :start_datetime, type: :input, :display_with => Proc.new { |f| f.to_s :short } %>
+        </dd>
         <dt>Ends at</dt>
-        <dd><%= @research_session.end_datetime.to_s :long %></dd>
+        <dd><%= best_in_place @research_session, :end_datetime, type: :input, :display_with => Proc.new { |f| f.to_s :short } %></dd>
         <dt>Duration</dt>
         <dd><%= @research_session.duration %> minutes</dd>
         <dt>Creator</dt>
+        <% if current_user.admin? %>
+        <% users = User.where(approved: true).all.inject({}){|acc,el| acc[el.id] = el.name; acc} %>
+        <dd><%= best_in_place @research_session, :user_id, as: :select, collection: users, value: @research_session.user.id %></dd>
+        <% else %>
         <dd><%= @research_session.user.name %></dd>
+        <% end %>
         <dt>Invited</dt>
         <dd><%= @research_session.invitations.size %></dd>
         <dt>Attended</dt>
