@@ -72,4 +72,6 @@
 <%= will_paginate @gift_cards, :renderer => BootstrapPagination::Rails %>
 <br>
 <%= link_to "Save this list as CSV", gift_cards_path(params.merge(format: 'csv').permit!), :class => "btn"  %>
-<%= link_to 'New Gift card', new_gift_card_path %>
+<% if current_user.admin? %>
+  <%= link_to 'New Gift card', new_gift_card_path %>
+<% end %>
