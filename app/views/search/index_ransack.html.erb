@@ -25,6 +25,9 @@
     <%= f.label :postal_code_start %>
     <%= f.search_field :postal_code_start %>
 
+    <%= f.label :referred_by_cont %>
+    <%= f.search_field :referred_by_cont %>
+
     <%= f.label :preferred_contact_method_cont %>
     <%= f.select :preferred_contact_method_cont, [["Email", 'EMAIL'], ["SMS", 'SMS']], {include_blank: true}, {:class => "input" } %>
     <% if current_user.admin? %>
