@@ -177,7 +177,12 @@
 
 <div class="row">
   <div class="span6">
-    <h3>Notes</h3>
+    <h3>Notes&nbsp;<%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Markdown friendly: https://daringfireball.net/projects/markdown/",
+          title: 'popover',
+          original_title:"Markdown"} %></h3>
     <%= form_for([@person, @comment], remote: true) do |form| %>
       <%= form.hidden_field :commentable_type, :value => 'Person' %>
       <%= form.hidden_field :commentable_id, :value => @person.id %>

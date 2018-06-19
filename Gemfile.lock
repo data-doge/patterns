@@ -375,6 +375,7 @@ GEM
       ffi
     rbnacl-libsodium (1.0.16)
       rbnacl (>= 3.0.1)
+    redcarpet (3.4.0)
     redis (4.0.1)
     redis-actionpack (5.0.2)
       actionpack (>= 4.0, < 6)
@@ -634,6 +635,7 @@ DEPENDENCIES
   ransack
   rbnacl (~> 4.0.0)
   rbnacl-libsodium
+  redcarpet
   redis
   redis-rails
   roo

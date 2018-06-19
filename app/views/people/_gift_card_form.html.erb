@@ -57,3 +57,10 @@
     <%= f.submit %>
   </div>
 <% end %>
+
+<% if @gift_card.card_activation.present? %>
+<p>
+  <strong>Card Activation</strong>
+  <%= link_to @gift_card.card_activation.id, card_activation_path(@gift_card.card_activation) %>
+</p>
+<% end %>

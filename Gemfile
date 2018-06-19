@@ -37,6 +37,8 @@ gem 'axlsx'
 gem 'rubyzip'
 gem 'roo'
 
+gem 'redcarpet' # for markdown notes
+
 
 group :development do
   # gem 'capistrano'

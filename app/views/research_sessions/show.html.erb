@@ -57,7 +57,12 @@ research_session_id = <%= @research_session.id%>;
     <%= render partial: 'taggings/tagging', collection: @research_session.taggings %>
     </ul>
     <%= render partial: 'taggings/tag_form', locals: { taggable_obj: @research_session } %>
-    <h3>Notes</h3>
+    <h3>Notes&nbsp;<%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Markdown friendly: https://daringfireball.net/projects/markdown/",
+          title: 'popover',
+          original_title:"Markdown"} %></h3>
     <%= form_for([@research_session, Comment.new], remote: true) do |form| %>
       <%= form.hidden_field :commentable_type, :value => 'ResearchSession' %>
       <%= form.hidden_field :commentable_id, :value => @research_session.id %>
