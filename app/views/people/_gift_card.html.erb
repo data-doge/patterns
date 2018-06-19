@@ -7,6 +7,9 @@
     <td><%= gift_card.expiration_date %></td>
     <td><%= humanized_money_with_symbol gift_card.amount %></td>
     <td><%= gift_card.created_at.strftime('%m/%d/%Y') %></td>
+    <% if current_user.admin? %>
     <td><%= link_to 'Edit', edit_gift_card_path(gift_card) %></td>
-    <td><%= link_to 'Destroy', gift_card, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% remove_text = gift_card.card_activation.present? ? 'Unassign' : 'Destroy' %>
+    <td><%= link_to remove_text, gift_card, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% end %>
 </tr>
