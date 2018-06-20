@@ -29,7 +29,7 @@ if File.exist?(path) # handling cold start
   set :output, "#{path}/log/cron_log.log"
   #
 
-  every 5.minutes do
+  every 15.minutes do
     command "backup perform --trigger my_backup -r #{path}/Backup/"
   end
 

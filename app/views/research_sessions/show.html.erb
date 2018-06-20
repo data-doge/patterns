@@ -68,10 +68,10 @@ research_session_id = <%= @research_session.id%>;
       <%= form.hidden_field :commentable_id, :value => @research_session.id %>
       <%= form.text_area :content, rows: 6, class: "span4 input-block-level" %>
       <%= form.submit 'Add note', :class => "btn" %>
-      <%= content_tag :span,'?',class: 'badge', data:{
+      <%= content_tag :span,'?', class: 'badge', data:{
           toggle: "popover", 
           placement: "top", 
-          content: "This is where to capture information that other people might want to know about what happened. Who had particularly good insight, what was it? etc.",
+          content: "This is where to capture information that other people might want to know about what happened. Who had particularly good insight, what was it? etc. Markdown Friendly",
           title: 'popover',
           original_title:"Add Notes!"} %>
     <% end %>

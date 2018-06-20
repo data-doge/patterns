@@ -177,17 +177,18 @@
 
 <div class="row">
   <div class="span6">
-    <h3>Notes&nbsp;<%= content_tag :span,'?',class: 'badge', data:{
-          toggle: "popover", 
-          placement: "top", 
-          content: "Markdown friendly: https://daringfireball.net/projects/markdown/",
-          title: 'popover',
-          original_title:"Markdown"} %></h3>
+    <h3>Notes</h3>
     <%= form_for([@person, @comment], remote: true) do |form| %>
       <%= form.hidden_field :commentable_type, :value => 'Person' %>
       <%= form.hidden_field :commentable_id, :value => @person.id %>
       <%= form.text_area :content, rows: 3, class: "span6 input-block-level" %>
       <%= form.submit 'Add note', :class => "btn" %>
+      <%= content_tag :span,'?', class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "This is where to capture information that other people might want to know about what happened. Who had particularly good insight, what was it? etc. Markdown Friendly",
+          title: 'popover',
+          original_title:"Add Notes!"} %>
     <% end %>
 
     <div id="comments">
