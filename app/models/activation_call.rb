@@ -24,7 +24,7 @@ class ActivationCall < ApplicationRecord
   validates :call_type, presence: true
   validates :call_type, inclusion: { in: %w[activate check] } # balance soon
 
-  belongs_to :card_activation, dependent: :destroy
+  belongs_to :card_activation
   after_commit :enqueue_call, on: :create
   after_commit :update_front_end
 
