@@ -56,7 +56,7 @@ class CardActivation < ApplicationRecord
   # IMMUTABLE = %w{gift_card_id}
   # validate :force_immutable
 
-  has_many :activation_calls, dependent: :destroy
+  has_many :activation_calls
   alias_attribute :calls, :activation_calls
 
   belongs_to :gift_card, optional: true
