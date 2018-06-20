@@ -15,9 +15,21 @@ class RapidproUpdateJob
     if person.phone_number.present?
       base_url = 'https://rapidpro.brl.nyc/api/v2/contacts.json'
 
+
+      lang = case person.locale
+              when 'en'
+                'eng'
+              when 'es'
+                'spa'
+              when 'zh'
+                'chi'
+              else
+                'eng'
+              end
+
       body = { name: person.full_name,
                first_name: person.first_name,
-               language: 'eng' }
+               language: lang }
       # eventual fields: # first_name: person.first_name,
       # last_name: person.last_name,
       # email_address: person.email_address,
