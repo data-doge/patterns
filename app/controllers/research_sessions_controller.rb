@@ -76,7 +76,6 @@ class ResearchSessionsController < ApplicationController
 
   def index
     @s = ResearchSession.ransack(params[:q])
-    params[:q][:user_name_cont] = current_user.name
 
     tags =  @s.ransack_tagged_with&.split(',')&.map { |t| t.delete(' ') } || []
     @tags = ResearchSession.tag_counts.where(name: tags).to_a
