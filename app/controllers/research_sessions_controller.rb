@@ -75,10 +75,12 @@ class ResearchSessionsController < ApplicationController
   end
 
   def index
-    @s = ResearchSession.ransack(params[:q])
+    
 
-    unless current_user.admin?
-      @s.where(user_id: current_user.id)
+    if current_user.admin?
+      @s = ResearchSession.ransack(params[:q])
+    else
+      @s = ResearchSession.where(user_id: current_user.id).ransack(params[:q])
       params[:q][:user_name_cont] = current_user.name
     end
 

@@ -8,3 +8,6 @@ receive_text controller
 sms_invitations_controller -> probably just invitations controller with magic links
 
 to repurpose: twilio_messages, probably should be all inbound and outbound messages in general. perhaps replace with mailbox
+
+https://github.com/zdennis/activerecord-import/wiki
+for adding a whole boatload of people to carts
