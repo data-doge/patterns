@@ -75,14 +75,8 @@ class ResearchSessionsController < ApplicationController
   end
 
   def index
-    
-
-    if current_user.admin?
-      @s = ResearchSession.ransack(params[:q])
-    else
-      @s = ResearchSession.where(user_id: current_user.id).ransack(params[:q])
-      params[:q][:user_name_cont] = current_user.name
-    end
+    @s = ResearchSession.ransack(params[:q])
+    params[:q][:user_name_cont] = current_user.name
 
     tags =  @s.ransack_tagged_with&.split(',')&.map { |t| t.delete(' ') } || []
     @tags = ResearchSession.tag_counts.where(name: tags).to_a
