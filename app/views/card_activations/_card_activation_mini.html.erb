@@ -3,13 +3,16 @@
       data-id='<%=card_activation.id%>' 
       data-last-4='<%= card_activation.last_4 %>'
       data-sequence-number='<%= card_activation.sequence_number %>' >
-    <td id='last_4'>
+    <td class='batch_id'>
+      <%= card_activation.batch_id %>
+    </td>
+    <td class='last_4'>
       <%= card_activation.last_4 %>
     </td>
-    <td id='sequence_number'>
+    <td class='sequence_number'>
       <%= card_activation.sequence_number %>
     </td>
-    <td id='amount'>
+    <td class='amount'>
       <%= card_activation.amount %>
     </td>
     <% if current_user.admin? %>

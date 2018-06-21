@@ -85,6 +85,7 @@ class PeopleController < ApplicationController
     @twilio_wufoo_formids = @outgoingmessages.pluck(:wufoo_formid).uniq
     @twilio_wufoo_forms = TwilioWufoo.where(id: @twilio_wufoo_formids)
     @allmessages =  TwilioMessage.where('to = :number or from = :number', number: @person.normalized_phone_number)
+    fresh_when(@person)
   end
 
   # GET /people/new

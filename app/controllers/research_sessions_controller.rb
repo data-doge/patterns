@@ -76,6 +76,12 @@ class ResearchSessionsController < ApplicationController
 
   def index
     @s = ResearchSession.ransack(params[:q])
+
+    unless current_user.admin?
+      @s.where(user_id: current_user.id)
+      params[:q][:user_name_cont] = current_user.name
+    end
+
     tags =  @s.ransack_tagged_with&.split(',')&.map { |t| t.delete(' ') } || []
     @tags = ResearchSession.tag_counts.where(name: tags).to_a
     @research_sessions = @s.result(distinct: true).includes(:people, :tags, :user).page(params[:page])
@@ -83,6 +89,7 @@ class ResearchSessionsController < ApplicationController
 
   def show
     @research_session = ResearchSession.find(params[:id])
+    fresh_when(@research_session)
   end
 
   def invitations_panel

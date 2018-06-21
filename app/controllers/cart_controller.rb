@@ -11,6 +11,7 @@ class CartController < ApplicationController
     @users = @cart.users
     @comment = Comment.new commentable: @cart
     @selectable_users = User.approved.where.not(id: @users.map(&:id))
+    fresh_when(@cart)
     respond_to do |format|
       format.html
       format.json { render json: @people.map(&:id) }

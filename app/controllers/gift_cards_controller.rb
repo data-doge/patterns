@@ -50,7 +50,9 @@ class GiftCardsController < ApplicationController
 
   # GET /gift_cards/1
   # GET /gift_cards/1.json
-  def show; end
+  def show 
+    fresh_when(@gift_card)
+  end
 
   # GET /gift_cards/new
   def new

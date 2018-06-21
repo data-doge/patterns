@@ -18,6 +18,7 @@ class TeamsController < ApplicationController
                order(created_at: :desc).
                page(params[:changes_page]).
                limit(10)
+    fresh_when(@team)
   end
 
   # GET /teams/new
