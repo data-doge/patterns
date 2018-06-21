@@ -84,7 +84,6 @@ class ResearchSessionsController < ApplicationController
 
   def show
     @research_session = ResearchSession.find(params[:id])
-    fresh_when(@research_session)
   end
 
   def invitations_panel
