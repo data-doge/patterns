@@ -38,17 +38,20 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
 
   // searches for workers. simple Fuse search.
   var filter = function() {
-    // map through each worker, hide it, and return a searchable obj.
+    // map through each card, hide it, and return a searchable obj.
     var searchable_cards = $('.card-activation').map(function() {
           $(this).hide(); // hide em all.
           console.log($(this));
-          return { sequence: $(this).data('sequence-number'), last4:$(this).data('last-4'), obj: $(this)}
+          return { 
+            sequence: $(this).data('sequence-number'), 
+            last4:$(this).data('last-4'), 
+            username:$(this).data('user-name'),
+            obj: $(this)}
         })
 
-    // we search only name, could possibly search slackname or device...
-    // should be "fuzzy" enough to be usefull
+    //small search area, so way less fuzzy
     var options = {
-      keys: ['sequence', 'last4'],
+      keys: ['sequence', 'username'],
       distance: 0,
       threshold: 0.1
     };
