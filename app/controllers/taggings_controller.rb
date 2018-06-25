@@ -36,7 +36,8 @@ class TaggingsController < ApplicationController
       unless obj.tags.map(&:name).include?(tag)
         obj.tag_list.add(tag)
         res = obj.save
-        found_tag = klass.tag_counts.find_by(name: tag)
+        # super awkward way of finding the right *kind* of tag
+        found_tag = klass.tagged_with(tag).first.tags.select{|t| t.name == tag}
         @tagging = obj.taggings.find_by(tag_id: found_tag.id)
       end
     end
