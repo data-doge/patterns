@@ -76,7 +76,7 @@ class Public::PeopleController < ApplicationController
         end
 
         if api_create_params[:locale_name].present?
-          locale = Person.locale_name_to_locale(locale_name)
+          locale = Person.locale_name_to_locale(api_create_params[:locale_name])
           @person.locale = locale if locale.present?
         end
 
