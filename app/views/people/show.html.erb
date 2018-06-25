@@ -88,7 +88,7 @@
 
         <dl>
           <dt>Phone</dt>
-          <dd><%= best_in_place @person, :phone_number, display_with: :number_to_phone %></dd>
+          <dd><%= best_in_place @person, :phone_number, display_with: lambda{|p| number_to_phone(p, area_code: true) } %></dd>
 
           <dt>Email</dt>
           <dd><%= best_in_place @person, :email_address %></dd>
