@@ -1,5 +1,7 @@
 <tr id='card-activation-<%=card_activation.id%>' 
-  class='well well-small card-activation'
+  <% row_style = cycle('dark', 'light') %>
+  class='well well-small card-activation <%= row_style %>'
+
   data-user-name='<%= card_activation.user.name %>'
   data-id='<%=card_activation.id%>' 
   data-last-4='<%= card_activation.last_4 %>'
