@@ -10,10 +10,16 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
       $.ajax({type: "POST",url: url,data:{user_id: user_id}});
     }
   }
-
+  
+  $(':checkbox').on('click',function(){
+    var checked_count = $('input[type="checkbox"]:checked').length
+    $('#checkedcount').html(checked_count);
+  })
 
   $('#card-all').on('click',function(){
     $(':checkbox').prop('checked', this.checked);
+    var checked_count = $('input[type="checkbox"]:checked').length
+    $('#checkedcount').html(checked_count);
   });
 
   var multiselect_setup = function(){
@@ -31,6 +37,11 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
       }
       lastChecked = this;
     });
+    
+    $(':checkbox').on('click',function(){
+      var checked_count = $('input[type="checkbox"]:checked').length
+      $('#checkedcount').html(checked_count);
+    })
   }
   multiselect_setup();
   $(document).ajaxComplete(function(event, request) {multiselect_setup();});
