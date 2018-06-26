@@ -25,6 +25,8 @@
       <%= f.select :user_id, options_for_select(users, current_user.id) %>
     </div>
   </div>
+  <% else %>
+  <%= f.hidden_field :user_id, current_user.id %>
   <% end %>
   <div class="control-group">
     <%= f.label :title, 'Session Title',  :class => 'control-label' %>
