@@ -46,14 +46,16 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
             sequence: $(this).data('sequence-number'), 
             last4:$(this).data('last-4'), 
             username:$(this).data('user-name'),
+            sequsername:$(this).data('sequence-number') + ' ' + $(this).data('user-name'),
             obj: $(this)}
         })
 
     //small search area, so way less fuzzy
     var options = {
-      keys: ['sequence', 'username'],
-      distance: 0,
-      threshold: 0.1
+      keys: ['sequence', 'username','sequsername'],
+      shouldSort: true,
+      threshold: 0.1,
+      location: 0
     };
 
     var fuse = new Fuse(searchable_cards, options);
