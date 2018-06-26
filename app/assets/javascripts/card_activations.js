@@ -22,6 +22,52 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
     $('#checkedcount').html(checked_count);
   });
 
+  
+  var attr_sort_state = {'user-name':false, 'sequence-number':false}
+  var cur_attr = 'user-name';
+
+  function toggleSortState(attr){
+    if (attr_sort_state[attr]) {
+     attr_sort_state[attr] = false; 
+    } else {
+     attr_sort_state[attr] = true; 
+    }
+  }
+
+  function sortTableAttr(a,b){
+    var A = $(a).data(cur_attr);
+    var B = $(b).data(cur_attr);
+    if (attr_sort_state[cur_attr]) {
+      if (A > B) return 1;
+      if( A < B) return -1;
+    } else {
+      if (A > B) return -1;
+      if( A < B) return 1;
+    }
+      return 0;
+  }
+
+  $("#sequence-title").on('click', function(){
+    cur_attr = 'sequence-number'
+    var rows = $("#card-activations-large tr").get();
+    rows.sort(sortTableAttr);
+    $.each(rows, function(index, row){
+            $("#card-activations-large").append(row);
+    });
+    toggleSortState(cur_attr);
+  });
+
+  $("#user-title").on('click', function(){
+    cur_attr = 'user-name';
+    var rows = $("#card-activations-large tr").get();
+    rows.sort(sortTableAttr);
+    $.each(rows, function(index, row){
+            $("#card-activations-large").append(row);
+    });
+    toggleSortState(cur_attr);
+  });
+
+
   var multiselect_setup = function(){
     var lastChecked = null;
     var $chkboxes = $(':checkbox');  
