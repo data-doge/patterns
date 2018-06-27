@@ -81,7 +81,7 @@ class ActivationCall < ApplicationRecord
 
   def failure
     self.call_status = 'failure'
-    card_activation.send("#{call_type}_error!".to_sym)
+    card_activation.send("#{call_type}_error!".to_sym) if card_activation.present?
   end
 
   def enqueue_call
