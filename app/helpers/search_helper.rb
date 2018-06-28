@@ -7,7 +7,7 @@ module SearchHelper
     # given a value and an optional search facet, highlight the value in the string
     terms = [params[:q].to_s, params[search_facet].to_s].compact.delete_if(&:blank?)
     Rails.logger.debug("\tterms: #{terms}")
-    terms.exists? ? highlight(value.to_s, terms) : value
+    terms.any? ? highlight(value.to_s, terms) : value
   end
 
   def action
