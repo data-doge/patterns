@@ -34,7 +34,7 @@ class SearchController < ApplicationController
            Person.verified.ransack(params[:q])
          end
 
-    @results = @q.result.includes(:tags).page(params[:page])
+    @results = @q.result.distinct(:person).includes(:tags).page(params[:page])
 
     # Need to better define these
     @participation_list = Person.pluck(:participation_type).uniq
