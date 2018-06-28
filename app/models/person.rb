@@ -133,7 +133,7 @@ class Person < ApplicationRecord
   end
   
   ransack_alias :comments, :comments_content
-  ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number
+  ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number_or_comments_content
 
   def self.send_all_reminders
     # this is where reservation_reminders

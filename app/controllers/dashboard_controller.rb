@@ -35,7 +35,7 @@ class DashboardController < ApplicationController
 
     @upcoming_participants = ResearchSession.includes(:invitations).where('research_sessions.start_datetime between NOW() and ?', 1.week.from_now).map(&:people).flatten.uniq
     @upcoming_sessions = ResearchSession.includes(:invitations).where('start_datetime between NOW() and ?', 1.week.from_now)
-    @cart_people = CartsPerson.includes(:cart,:person).all.limit(20)
+    @cart_people = CartsPerson.includes(:cart, :person).all.limit(20)
   end
 
 end
