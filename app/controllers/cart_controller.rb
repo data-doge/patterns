@@ -10,10 +10,10 @@ class CartController < ApplicationController
     @people = @cart.people.paginate(page: params[:page])
     @users = @cart.users
     @comment = Comment.new commentable: @cart
-    @selectable_users = User.approved.where.not(id: @users.map(&:id))
+    @selectable_users = User.approved.where.not(id: @users.pluck(:id))
     respond_to do |format|
       format.html
-      format.json { render json: @people.map(&:id) }
+      format.json { render json: @people.pluck(:id) }
       format.csv do
         if current_user.admin?
           output = CSV.generate do |csv|
@@ -83,8 +83,8 @@ class CartController < ApplicationController
     flash[:notice] = "#{delta} people added to #{@cart.name}" if  delta > 0
     respond_to do |format|
       format.js
-      format.json { render json: @cart.people.map(&:id) }
-      format.html { render json: @cart.people.map(&:id) }
+      format.json { render json: @cart.people.pluck(:id) }
+      format.html { render json: @cart.people.pluck(:id) }
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -93,7 +93,7 @@ class CartController < ApplicationController
   # rubocop:disable Metrics/MethodLength
   def delete
     if cart_params[:person_id].blank?
-      @deleted = @cart.people.map(&:id)
+      @deleted = @cart.people.pluck(:id)
       @cart.people = []
       @deleted_all = true
     else

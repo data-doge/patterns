@@ -80,7 +80,7 @@ class PeopleController < ApplicationController
     @gift_card = GiftCard.new
     @reservation = Reservation.new person: @person
     @verified_types = Person.pluck(:verified).uniq.select(&:present?)
-    @tags = @person.tags.map(&:name)
+    @tags = @person.tags.pluck(:name)
     @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
     @twilio_wufoo_formids = @outgoingmessages.pluck(:wufoo_formid).uniq
     @twilio_wufoo_forms = TwilioWufoo.where(id: @twilio_wufoo_formids)

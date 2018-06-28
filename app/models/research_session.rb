@@ -81,11 +81,11 @@ class ResearchSession < ApplicationRecord
   end
 
   def is_invited?(person)
-    invitations.map(&:person_id).include? person.id
+    invitations.pluck(:person_id).include? person.id
   end
 
   def gift_cards
-    invitations.map(&:gift_cards).flatten
+    invitations.pluck(:gift_cards).flatten
   end
 
   def send_invitation_notifications

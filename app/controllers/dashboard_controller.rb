@@ -30,10 +30,10 @@ class DashboardController < ApplicationController
     @popular_tags   = Person.includes(:taggings).active.tag_counts.order('taggings_count DESC').limit(10)
     @new_tags       = Person.includes(:taggings).active.tag_counts.order('id desc').limit(10)
 
-    @recent_participants   = ResearchSession.includes(:invitations).order('created_at DESC').where('start_datetime < ?', Time.current).limit(10).map(&:people).flatten.uniq
+    @recent_participants   = ResearchSession.includes(:invitations).order('research_sessions.created_at DESC').where('start_datetime < ?', Time.current).limit(10).map(&:people).flatten.uniq
     @recent_sessions   = ResearchSession.includes(:invitations).order('created_at DESC').limit(10)
 
-    @upcoming_participants = ResearchSession.includes(:invitations).where('start_datetime between NOW() and ?', 1.week.from_now).map(&:people).flatten.uniq
+    @upcoming_participants = ResearchSession.includes(:invitations).where('research_sessions.start_datetime between NOW() and ?', 1.week.from_now).map(&:people).flatten.uniq
     @upcoming_sessions = ResearchSession.includes(:invitations).where('start_datetime between NOW() and ?', 1.week.from_now)
     @cart_people = CartsPerson.includes(:cart,:person).all.limit(20)
   end

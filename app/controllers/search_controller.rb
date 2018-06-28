@@ -188,7 +188,7 @@ class SearchController < ApplicationController
 
   def advanced
     @search = ransack_params
-    @search.build_grouping unless @search.groupings.any?
+    @search.build_grouping unless @search.groupings.exists?
     @people  = ransack_result
   end
 

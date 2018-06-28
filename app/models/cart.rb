@@ -60,7 +60,7 @@ class Cart < ApplicationRecord
   end
 
   def people_ids
-    people.map(&:id)
+    people.pluck(:id)
   end
 
   private
