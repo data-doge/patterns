@@ -151,7 +151,7 @@ class GiftCard < ApplicationRecord
       if card_activation.nil?
         # first check if we have an activation id, then a search
         ca = CardActivation.find card_activation_id unless card_activation_id.nil?
-        ca ||= CardActivation.where(sequence_number: sequence_number, batch_id: batch_id).first
+        ca ||= CardActivation.find_by(sequence_number: sequence_number, batch_id: batch_id)
 
         if ca.present? && ca.gift_card_id.nil?
           self.card_activation = ca
