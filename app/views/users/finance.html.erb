@@ -4,9 +4,9 @@
   <h3>Finance Codes</h3>
     <dl class='dl-horizontal'>
       <dt>Start Date</dt>
-      <dd><%= @start_date.to_s :short %></dd>
+      <dd><%= @start_date.to_date %></dd>
       <dt>End Date</dt>
-      <dd><%= @end_date.to_s :short %></dd>
+      <dd><%= @end_date.to_date %></dd>
     </dl>
     <table class="table table-striped">
       <thead>
@@ -20,7 +20,8 @@
       <tbody>
         <% @results.each do |code| %>
         <tr>
-          <td><%= code[:code] %></td>
+          <% q_param = {finance_code_eq:code[:code],created_at_date_gteq:@start_date.to_date, created_at_date_lteq: @end_date.to_date} %> 
+          <td><%= link_to code[:code], gift_cards_path(q:q_param) %></td>
           <td><%= code[:count] %></td>
           <td><%= humanized_money_with_symbol code[:amount] %></td>
         <% end %>
