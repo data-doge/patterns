@@ -56,11 +56,12 @@ class TeamsController < ApplicationController
     respond_to do |format|
       if @team.update(team_params)
         format.html { redirect_to @team, notice: 'Team was successfully updated.' }
-        format.json { render :show, status: :ok, location: @team }
+        format.json { respond_with_bip(@team) }
         format.js
       else
+        flash[:error] = @team.errors
         format.html { render :edit }
-        format.json { render json: @team.errors, status: :unprocessable_entity }
+        format.json { respond_with_bip(@team) }
         format.js
       end
     end
