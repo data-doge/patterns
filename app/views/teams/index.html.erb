@@ -17,7 +17,7 @@
           <tr>
             <td><%= link_to team.name, team %></td>
             <td><%= team.users.size %></td>
-            <td><%= team.users.gift_card_total %></td>
+            <td><%= team.gift_card_total %></td>
             <td><%= link_to 'Show', team, class: 'btn' %>
             <%= link_to 'Edit', edit_team_path(team), class: 'btn' %>
             <%= link_to 'Destroy', team, class: 'btn btn-warn', method: :delete, data: { confirm: 'Are you sure?' } %></td>
