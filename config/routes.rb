@@ -165,6 +165,7 @@ Logan::Application.routes.draw do
   scope "/admin" do
     resources :teams
     resources :users
+    get 'finance', to: 'users#finance', as: :finance_code
     get 'changes', to: 'users#changes', as: :user_changes
   end
 

@@ -1,0 +1,30 @@
+<%= render partial: 'layouts/admin_menu' %>
+<div class='row'>
+  <div class='span12'>
+  <h3>Finance Codes</h3>
+    <dl class='dl-horizontal'>
+      <dt>Start Date</dt>
+      <dd><%= @start_date.to_s :short %></dd>
+      <dt>End Date</dt>
+      <dd><%= @end_date.to_s :short %></dd>
+    </dl>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="1">Code</th>
+          <th colspan="1">Count</th>
+          <th colspan="1">Amount</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @results.each do |code| %>
+        <tr>
+          <td><%= code[:code] %></td>
+          <td><%= code[:count] %></td>
+          <td><%= humanized_money_with_symbol code[:amount] %></td>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

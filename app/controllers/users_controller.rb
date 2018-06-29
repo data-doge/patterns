@@ -31,6 +31,18 @@ class UsersController < ApplicationController
     @changes = PaperTrail::Version.order('id desc').page(params[:page])
   end
 
+  def finance
+    @start_date = params[:start_date].present? ? params[:start_date] : Time.current.beginning_of_year
+    @end_date = params[:end_date].present? ? params[:end_date] : Time.current
+    codes = GiftCard.distinct.pluck(:finance_code).compact
+    @results = codes.map do |code|
+      amt = Money.new(GiftCard.where(created_at: @start_date..@end_date, finance_code: code).sum(:amount_cents), 'USD')
+      count = GiftCard.where(created_at: @start_date..@end_date, finance_code: code).size
+      {code: code, amount: amt, count: count}
+    end
+  end
+
+
   # POST /users
   def create
     @user = User.new(user_create_params)
