@@ -1,5 +1,10 @@
 <h2>Card Activation</h2>
 <h4>Created By: <%= User.find(@card_activation.created_by).name %></h4>
+<% if @card_activation.gift_card.present? %>
+<% gift_card = @card_activation.gift_card %>
+<h5>Given to: <%= link_to gift_card.person.full_name, person_path(gift_card.person) %></h5>
+<h5>For: <%= link_to(find_name(gift_card.giftable), url_for(gift_card.giftable)) %></h5>
+<% end %>
 <table class="table">
   <thead>
     <tr>
