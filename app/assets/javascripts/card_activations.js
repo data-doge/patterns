@@ -131,7 +131,7 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
 
   //setup before functions
   var typingTimer;                //timer identifier
-  var doneTypingInterval = 50;  //time in ms, 5 second for example
+  var doneTypingInterval = 100;  //time in ms, 5 second for example
   var $input = $('#card-search');
 
   //on keyup, start the countdown
