@@ -1,5 +1,8 @@
-$('#users-list').append("<%= j render partial: "cart/cart_user", locals: {user: @user} %>");
+$('#users-list').append("<%= j render partial: "cart/cart_user", locals: {user: @user, cart: @cart} %>");
 $('#user_id option[value="<%=@user.id%>"]').remove();
+$('#cart-<%=@cart.id%>-user-<%=@user.id%>-add').hide();
+$('#cart-<%=@cart.id%>-user-<%=@user.id%>-remove').show();
+
 if(typeof research_session_id !== "undefined")
 {
   Turbolinks.reload(); // horrible hack

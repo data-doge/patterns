@@ -3,3 +3,6 @@ $('#user_id').append($('<option/>', {
         value: '<%= @user.id %>',
         text : '<%= @user.name %>' 
     }));
+
+$('#cart-<%=@cart.id%>-user-<%=@user.id%>-add').show();
+$('#cart-<%=@cart.id%>-user-<%=@user.id%>-remove').hide();

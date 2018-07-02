@@ -1,4 +1,4 @@
-<%= render :partial => 'layouts/research_sessions_menu' %>
+<%= render partial: 'layouts/admin_menu' %>
 <h3> All Carts
 <div class="row">
   <div class="span6">
@@ -14,14 +14,17 @@
       <tbody id='all-cart'>
         <% @carts.each do |cart| %>
         <tr id='cart-<%= cart.id %>'>
-          <td><%= cart.name %></td>
+          <td><%= link_to cart.name, cart_path(cart) %></td>
           <td><%= cart.people.size %></td>
           <td><%= cart.users.size %></td>
           <td><% if cart.users.include?(current_user) %>
-            <%= button_to "remove", delete_user_cart_index_path(current_user.id), remote: true %>
-            <% else %>
-            <%= button_to "add", add_user_cart_index_path(current_user.id), remote: true %>
-            <% end %>
+                <%= button_to "add", add_user_cart_index_path(user_id: current_user.id, id: cart.id), remote: true, style: 'display:none', id:"cart-#{cart.id}-user-#{current_user.id}-add" %>
+                <%= button_to "remove", delete_user_cart_index_path(user_id: current_user.id, id: cart.id), remote: true,id:"cart-#{cart.id}-user-#{current_user.id}-remove" %>  
+              <% else %>
+                <%= button_to "add", add_user_cart_index_path(user_id: current_user.id, id: cart.id), remote: true,  id:"cart-#{cart.id}-user-#{current_user.id}-add" %>
+                <%= button_to "remove", delete_user_cart_index_path(user_id: current_user.id, id: cart.id), remote: true, style: 'display:none',id:"cart-#{cart.id}-user-#{current_user.id}-remove" %>  
+              <% end %>
+            
           </td>
         </tr>
         <% end %>

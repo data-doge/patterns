@@ -82,7 +82,7 @@
           data: {
             remote: true,
             method: 'post',
-            url: add_user_cart_index_path()
+            url: add_user_cart_index_path(id: @cart.id)
           }
     %> <%= content_tag :span,'?',class: 'badge', data:{
           toggle: "popover", 
@@ -100,7 +100,7 @@
         </tr>
       </thead>
       <tbody id='users-list'>
-        <%= render partial: 'cart/cart_user', collection: @users, as: :user %>
+        <%= render partial: 'cart/cart_user', collection: @users, as: :user, locals: {cart: @cart} %>
       </tbody>
     </table>
     <h3>Notes</h3>
