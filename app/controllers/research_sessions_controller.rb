@@ -126,11 +126,10 @@ class ResearchSessionsController < ApplicationController
   def add_person
     @research_session =  ResearchSession.find(params[:research_session_id])
     state = params[:invited].presence || 'created'
-    inv = Invitation.new(person_id: params[:person_id], aasm_state: state)
+    inv = Invitation.create(person_id: params[:person_id], aasm_state: state, research_session_id: @research_session.id)
     @research_session.invitations << inv
-    @research_session.save
     @person = inv.person
-    if @research_session.save
+    if @research_session.save && @research_session.is_invited?(@person)
       flash[:notice] = "#{@person.full_name} added to session!"
     end
     respond_to do |format|
