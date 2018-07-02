@@ -10,16 +10,17 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
       $.ajax({type: "POST",url: url,data:{user_id: user_id}});
     }
   }
-  
-  $(':checkbox').on('click',function(){
-    var checked_count = $('input[type="checkbox"]:checked').length
+
+  function update_checkbox_count(){
+    var checked_count = $('#card-activations-large tr input[type="checkbox"]:checked:visible').length
     $('#checkedcount').html(checked_count);
-  })
+  }
+  
+  $(':checkbox').on('click', update_checkbox_count)
 
   $('#card-all').on('click',function(){
-    $(':checkbox').prop('checked', this.checked);
-    var checked_count = $('input[type="checkbox"]:checked').length
-    $('#checkedcount').html(checked_count);
+    $('#card-activations-large tr input[type="checkbox"]:visible').prop('checked', this.checked);
+    update_checkbox_count();
   });
 
   
@@ -70,7 +71,7 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
 
   var multiselect_setup = function(){
     var lastChecked = null;
-    var $chkboxes = $(':checkbox');  
+    var $chkboxes = $('#card-activations-large tr input[type="checkbox"]:visible');  
     $chkboxes.click(function(e) {
       if(!lastChecked) {
           lastChecked = this;
@@ -84,9 +85,8 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
       lastChecked = this;
     });
     
-    $(':checkbox').on('click',function(){
-      var checked_count = $('input[type="checkbox"]:checked').length
-      $('#checkedcount').html(checked_count);
+    $('#card-activations-large tr input[type="checkbox"]').on('click',function(){
+      update_checkbox_count()
     })
   }
   multiselect_setup();
@@ -98,7 +98,7 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
     // map through each card, hide it, and return a searchable obj.
     var searchable_cards = $('.card-activation').map(function() {
           $(this).hide(); // hide em all.
-          console.log($(this));
+          $(':checkbox').prop('checked', false); //uncheck all of the boxes
           return { 
             sequence: $(this).data('sequence-number'), 
             last4:$(this).data('last-4'), 
@@ -127,25 +127,40 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
       $('.card-activation').each(function(i, v) { $(v).show(); });
     }
   };
-  // should we think about a typeahead +filter here? for ease of use?
-  // similar to register.js for slack ids, would need to ajax.
-  // searching, simple debounce
-  var t = null;
-  $('#card-search').keyup(function() {
-      if (t) {
-          clearTimeout(t);
-      }
-      t = setTimeout(filter(), 100);
-      if ($('#card-search').val() != '') {
-        $('.form-control-clear button').removeClass('btn-secondary').addClass('btn-primary');
-      } else {
-        $('.form-control-clear button').removeClass('btn-primary').addClass('btn-secondary');
-      }
+  
+
+  //setup before functions
+  var typingTimer;                //timer identifier
+  var doneTypingInterval = 50;  //time in ms, 5 second for example
+  var $input = $('#card-search');
+
+  //on keyup, start the countdown
+  $input.on('keyup', function () {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(doneTyping, doneTypingInterval);
   });
+
+  //on keydown, clear the countdown 
+  $input.on('keydown', function () {
+    clearTimeout(typingTimer);
+  });
+
+  //user is "finished typing," do something
+  function doneTyping () {
+    filter();
+    if ($('#card-search').val() != '') {
+      $('.form-control-clear button').removeClass('btn-secondary').addClass('btn-primary');
+    } else {
+      $('.form-control-clear button').removeClass('btn-primary').addClass('btn-secondary');
+    }
+    update_checkbox_count();
+  }
+
   $('.form-control-clear').click(function() {
     $(this).siblings('input[type="text"]').val('').trigger('propertychange').focus();
     $('.form-control-clear button').removeClass('btn-primary').addClass('btn-secondary');
     $(this).siblings('input[type="text"]').blur();
     $('.card-activation').each(function(i, v) { $(v).show(); });
+    update_checkbox_count()
   });
 });
