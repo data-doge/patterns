@@ -136,6 +136,7 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
 
   //on keyup, start the countdown
   $input.on('keyup', function () {
+    $('#card-search').addClass('loading');
     clearTimeout(typingTimer);
     typingTimer = setTimeout(doneTyping, doneTypingInterval);
   });
@@ -147,6 +148,7 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
 
   //user is "finished typing," do something
   function doneTyping () {
+    $('#card-search').removeClass('loading');
     filter();
     if ($('#card-search').val() != '') {
       $('.form-control-clear button').removeClass('btn-secondary').addClass('btn-primary');
