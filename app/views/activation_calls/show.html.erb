@@ -1,4 +1,6 @@
 <p id="notice"><%= notice %></p>
 
+<%= link_to "Card Activation", card_activation_path(@activation_call.card) %>
+
 <%= link_to 'Edit', edit_activation_call_path(@activation_call) %> |
 <%= link_to 'Back', activation_calls_path %>
