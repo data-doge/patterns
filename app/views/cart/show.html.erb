@@ -8,10 +8,6 @@
       <div class='span2'>
       </div>
     </div>
-    <%= will_paginate @people, :renderer => BootstrapPagination::Rails, inner_window:1,outer_window:1 %>
-    <% if @people.size > 15 %>
-      <%= page_entries_info @people %>
-    <% end %>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -27,10 +23,6 @@
         <%= render partial: 'cart/full_item', collection: @people, as: :person %>
       </tbody>
     </table>
-    <%= will_paginate @people, :renderer => BootstrapPagination::Rails, inner_window:1,outer_window:1 %>
-    <% if @people.size > 15 %>
-      <%= page_entries_info @people %>
-    <% end %>
   </div>
   <div class='span4 offset2'>
     <div class='well'>

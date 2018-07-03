@@ -8,7 +8,8 @@ class CartController < ApplicationController
   # Index
   def show
     current_user.current_cart = @cart
-    @people = @cart.people.paginate(page: params[:page])
+
+    @people = @cart.people
     @users = @cart.users
     @comment = Comment.new commentable: @cart
     @selectable_users = User.approved.where.not(id: @users.pluck(:id))
