@@ -116,7 +116,8 @@ class CartController < ApplicationController
   def index
     if current_user.admin?
       current_user.reload
-      @carts = Cart.includes(:users, :people).all
+      @carts = Cart.includes(:users, :people).all.select {|c| c.owner.approved? }
+      
       respond_to do |format|
         # format.js
         format.json { render json: @carts.to_json }
