@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_11_173252) do
+ActiveRecord::Schema.define(version: 2018_07_10_210306) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "card_activation_id"
@@ -23,22 +23,6 @@ ActiveRecord::Schema.define(version: 2018_06_11_173252) do
     t.string "call_status", default: "created"
     t.string "token"
     t.index ["token"], name: "index_activation_calls_on_token", unique: true
-  end
-
-  create_table "activities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "trackable_id"
-    t.string "trackable_type"
-    t.integer "owner_id"
-    t.string "owner_type"
-    t.string "key"
-    t.text "parameters"
-    t.integer "recipient_id"
-    t.string "recipient_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type"
-    t.index ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type"
-    t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
   end
 
   create_table "applications", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
@@ -271,7 +255,7 @@ ActiveRecord::Schema.define(version: 2018_06_11_173252) do
   end
 
   create_table "research_sessions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "description"
+    t.text "description"
     t.integer "buffer", default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -412,7 +396,7 @@ ActiveRecord::Schema.define(version: 2018_06_11_173252) do
     t.index ["team_id"], name: "fk_rails_b2bbf87303"
   end
 
-  create_table "versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "item_type", limit: 191, null: false
     t.integer "item_id", null: false
     t.string "event", null: false
