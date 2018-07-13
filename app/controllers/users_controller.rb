@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   before_action :is_admin?
   # GET /users
   def index
+    User.per_page = 100
     @users = User.order('approved desc').paginate(page: params[:page])
   end
 
