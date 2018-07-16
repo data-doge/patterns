@@ -101,7 +101,7 @@ class GiftCard < ApplicationRecord
       JSON.parse(post_content).each do |gift_card_hash|
         # create a new gift card
         GiftCard.create!(gift_card_hash)
-      end # json.parse
+      end # json.parse.
     end # transaction
   rescue StandardError
     Rails.logger('There was a problem.')
@@ -118,7 +118,7 @@ class GiftCard < ApplicationRecord
         row_items = [gift_card.id,
                      gift_card.user.name,
                      gift_card.team&.name || '',
-                     gift_card.team&.finance_code || '',
+                     gift_card.finance_code || '',
                      gift_card.research_session&.title || '',
                      gift_card.research_session&.created_at&.to_date&.to_s || '',
                      gift_card.created_at.to_s(:rfc822),
