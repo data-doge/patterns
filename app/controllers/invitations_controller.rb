@@ -67,6 +67,12 @@ class InvitationsController < ApplicationController
     events = @invitation.aasm.events(permitted: true).map(&:name).map(&:to_s)
     event = events.detect { |a| a == params[:event] }
 
+    if event.nil?
+      render :status => :bad_request
+      return
+    end
+
+    # want explicit 'and' here.
     if @invitation.send("may_#{event}?")
       @invitation.send("#{event}!") && @invitation.save
       flash[:notice] = "#{event.capitalize} for #{@invitation.person.full_name}"
