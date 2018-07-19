@@ -98,6 +98,7 @@ class PeopleController < ApplicationController
   def amount
     @people = Person.order_by_giftcard_sum.page(params[:page])
   end
+
   # POST /people/:person_id/deactivate
   def deactivate
     @person = Person.find_by id: params[:person_id]

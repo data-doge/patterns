@@ -1,5 +1,3 @@
-
-
 # frozen_string_literal: true
 
 # == Schema Information
@@ -37,7 +35,7 @@ class TaggingsController < ApplicationController
         obj.tag_list.add(tag)
         res = obj.save
         # super awkward way of finding the right *kind* of tag
-        found_tag = klass.tagged_with(tag).first.tags.select {|t| t.name == tag }.first
+        found_tag = klass.tagged_with(tag).first.tags.select { |t| t.name == tag }.first
         @tagging = obj.taggings.find_by(tag_id: found_tag.id)
       end
     end
@@ -78,6 +76,7 @@ class TaggingsController < ApplicationController
   def index
     @tags = Person.active.tag_counts_on(:tags).order('taggings_count DESC')
   end
+
   # rubocop:enable Metrics/MethodLength
   def search
     klass = params[:type].blank? ? Person.active : TAGGABLE_TYPES.fetch(params[:type])

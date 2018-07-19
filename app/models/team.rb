@@ -16,8 +16,8 @@ class Team < ApplicationRecord
   has_many :users
   has_many :research_sessions, through: :users
   has_many :gift_cards
-  validates_inclusion_of :finance_code, in: %w[BRL CATA1 CATA2 FELL]
-  
+  validates :finance_code, inclusion: { in: %w[BRL CATA1 CATA2 FELL] }
+
   def self.finance_codes
     %w[BRL CATA1 CATA2 FELL]
   end

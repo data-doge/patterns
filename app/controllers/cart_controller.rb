@@ -2,7 +2,7 @@
 
 class CartController < ApplicationController
   include ApplicationHelper
-  before_action :cart_init, except: [:change_cart, :add_user, :delete_user]
+  before_action :cart_init, except: %i[change_cart add_user delete_user]
   before_action :type_init
 
   # Index
@@ -117,8 +117,8 @@ class CartController < ApplicationController
   def index
     if current_user.admin?
       current_user.reload
-      @carts = Cart.includes(:users, :people).all.select {|c| c.owner.approved? }
-      
+      @carts = Cart.includes(:users, :people).all.select { |c| c.owner.approved? }
+
       respond_to do |format|
         # format.js
         format.json { render json: @carts.to_json }
@@ -216,7 +216,7 @@ class CartController < ApplicationController
       # type is if it's mini or not, for views
       @type = cart_params[:type].presence || 'full'
     end
-    
+
     def cart_init
       if cart_params[:id].present?
         @cart = Cart.find(cart_params[:id])

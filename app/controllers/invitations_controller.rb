@@ -68,7 +68,7 @@ class InvitationsController < ApplicationController
     event = events.detect { |a| a == params[:event] }
 
     if event.nil?
-      render :status => :bad_request
+      render status: :bad_request
       return
     end
 

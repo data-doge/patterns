@@ -113,9 +113,9 @@ class Person < ApplicationRecord
   scope :active, -> { where(active: true) }
   scope :deactivated, -> { where(active: false) }
 
-  scope :order_by_giftcard_sum, -> {joins(:gift_cards).includes(:research_sessions).where('gift_cards.created_at >= ?',Time.current.beginning_of_year).select('people.id, people.first_name,people.last_name, people.active,sum(gift_cards.amount_cents) as total_gc').group('people.id').order('total_gc desc')}
+  scope :order_by_giftcard_sum, -> { joins(:gift_cards).includes(:research_sessions).where('gift_cards.created_at >= ?', Time.current.beginning_of_year).select('people.id, people.first_name,people.last_name, people.active,sum(gift_cards.amount_cents) as total_gc').group('people.id').order('total_gc desc') }
   # no longer using this. now managing active elsewhere
-  # default_scope { where(active: 
+  # default_scope { where(active:
 
   ransacker :full_name, formatter: proc { |v| v.mb_chars.downcase.to_s } do |parent|
     Arel::Nodes::NamedFunction.new('lower',
@@ -130,10 +130,10 @@ class Person < ApplicationRecord
   end
 
   def self.locale_name_to_locale(locale_name)
-    obj = {'english': 'en','spanish': 'es', 'chinese': 'zh'}
+    obj = { 'english': 'en', 'spanish': 'es', 'chinese': 'zh' }
     obj[locale_name.downcase]
   end
-  
+
   ransack_alias :comments, :comments_content
   ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number_or_comments_content
 

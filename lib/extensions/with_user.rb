@@ -1,5 +1,3 @@
-
-
 # frozen_string_literal: true
 
 class ActiveRecord::Base
@@ -11,14 +9,10 @@ class ActiveRecord::Base
   end
 
   def creator
-    if respond_to?(:created_by) && self.created_by.present?
-      User.find self.created_by
-    end
+    User.find created_by if respond_to?(:created_by) && created_by.present?
   end
 
   def last_updator
-    if respond_to?(:updated_by) && self.updated_by.present?
-      User.find self.updated_by
-    end
+    User.find updated_by if respond_to?(:updated_by) && updated_by.present?
   end
 end

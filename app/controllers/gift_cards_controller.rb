@@ -50,8 +50,7 @@ class GiftCardsController < ApplicationController
 
   # GET /gift_cards/1
   # GET /gift_cards/1.json
-  def show
-  end
+  def show; end
 
   # GET /gift_cards/new
   def new
@@ -68,7 +67,7 @@ class GiftCardsController < ApplicationController
     @gift_card = GiftCard.new(gift_card_params)
 
     @total = @gift_card.person.blank? ? @gift_card.amount : @gift_card.person.gift_card_total
-    
+
     @gift_card.created_by = current_user.id
     @gift_card.finance_code = current_user&.team&.finance_code
     @gift_card.team = current_user&.team
@@ -149,11 +148,11 @@ class GiftCardsController < ApplicationController
   def modal
     klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
     @giftable = klass.find(params[:giftable_id])
-    if current_user.admin?
-      @card_activations = CardActivation.unassigned.active
-    else
-      @card_activations = CardActivation.unassigned.active.where(user_id: current_user.id)
-    end
+    @card_activations = if current_user.admin?
+                          CardActivation.unassigned.active
+                        else
+                          CardActivation.unassigned.active.where(user_id: current_user.id)
+                        end
     @gift_card = GiftCard.new
     @last_gift_card = GiftCard.last # default scope is id: :desc
     respond_to do |format|
