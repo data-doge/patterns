@@ -14,6 +14,7 @@
           <th>Active</th>
           <th>Amount</th>
           <th>Last Rearch Session</th>
+          <th>Last Session User</th>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +24,7 @@
             <td><%= person.active? %>
             <td><%= person.total_gc / 100 %></td>
             <td><%= link_to person.research_sessions.last.title, research_session_path(person.research_sessions.last) %></td>
+            <td><%= link_to person.research_sessions.last.user.name, user_path(person.research_sessions.last.user) %></td>
           </tr>
         <% end %>
       </tbody>
