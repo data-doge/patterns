@@ -7,6 +7,8 @@
       <dd><%= @start_date.to_date %></dd>
       <dt>End Date</dt>
       <dd><%= @end_date.to_date %></dd>
+      <dt>Sum</dt>
+      <dd><%= humanized_money_with_symbol @results.sum{|c| c[:amount]} %></dd>
     </dl>
     <table class="table table-striped">
       <thead>
