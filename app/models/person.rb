@@ -167,7 +167,7 @@ class Person < ApplicationRecord
       self.participation_level = 'ambassador'
     end
 
-    if participation_level_changed?
+    if participation_level_changed? 
       tag_list.remove(participation_level_was)
       tag_list.add(self.participation_level)
       
@@ -460,6 +460,7 @@ class Person < ApplicationRecord
 
   def update_neighborhood
     n = zip_to_neighborhood(postal_code)
+    self.signup_at = created_at if signup_at.nil?
     if n.present?
       self.neighborhood = n
       save
