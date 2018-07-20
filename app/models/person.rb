@@ -163,7 +163,7 @@ class Person < ApplicationRecord
     self.participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).size >= 1
     self.participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
     
-    if gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >=3
+    if created_at >= 1.year.ago && gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >=3
       self.participation_level = 'ambassador'
     end
 
@@ -171,10 +171,12 @@ class Person < ApplicationRecord
       tag_list.remove(participation_level_was)
       tag_list.add(self.participation_level)
       
-      User.admin.all.each {|u| 
-        AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was).deliver_later
-      } if participation_level_was != self.participation_level
-      
+      if participation_level_was != self.participation_level
+        User.approved.admin.all.find_each do |u| 
+          AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was).deliver_later
+        end 
+      end
+
       Cart.where(name: Person.participation_levels).find_each do |cart|
         if cart.name == participation_level
           begin
