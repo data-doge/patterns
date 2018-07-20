@@ -158,17 +158,30 @@ class Person < ApplicationRecord
     %w[new active regular ambassador]
   end
 
-  def update_participation_level
-    self.participation_level = 'active' if gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
-    self.participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
-    self.participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
-    
-    # onlder than a year and 2 or more sessions with two teams and either 3 research sessions or 6 cards in the last year
-    if created_at <= 1.year.ago && gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && (gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >=3 || gift_cards.where('created_at > ?', 1.year.ago) >= 6)
-      self.participation_level = 'ambassador'
-    end
+  def yaseen_hack
+    # research sessions didn't really exist long enough for this to make sense. hence the hack. For Yaseen and other
+    gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >=3 || gift_cards.where('created_at > ?', 1.year.ago).size >= 6
+  end
 
-    if participation_level_changed? 
+  def regular_criteria
+    gift_cards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1 || gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
+  end
+
+  def active_criteria
+    gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
+  end
+
+  def ambassador_criteria
+    # onlder than a year and 2 or more sessions with two teams and either 3 research sessions or 6 cards in the last year
+    created_at <= 1.year.ago && gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && yaseen_hack
+  end
+
+  def update_participation_level
+    self.participation_level = 'active' if active_criteria
+    self.participation_level = 'regular' if regular_criteria
+    self.participation_level = 'ambassador' if ambassador_criteria
+
+    if participation_level_changed?
       tag_list.remove(participation_level_was)
       tag_list.add(self.participation_level)
       
