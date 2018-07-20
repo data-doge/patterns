@@ -164,7 +164,7 @@ class Person < ApplicationRecord
     self.participation_level = 'regular' if gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
     
     # onlder than a year and 2 or more sessions with two teams and either 3 research sessions or 6 cards in the last year
-    if created_at <= 1.year.ago && gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && (gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >=3 || gift_card.where('created_at > ?', 1.year.ago) >= 6)
+    if created_at <= 1.year.ago && gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && (gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >=3 || gift_cards.where('created_at > ?', 1.year.ago) >= 6)
       self.participation_level = 'ambassador'
     end
 
