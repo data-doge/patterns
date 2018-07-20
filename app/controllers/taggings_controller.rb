@@ -75,6 +75,14 @@ class TaggingsController < ApplicationController
 
   def index
     @tags = Person.active.tag_counts_on(:tags).order('taggings_count DESC')
+    # this gets $/tag and count for each tag.
+    # result = Person.active.tag_counts_on(:tags).inject({}) do |acc, t|
+    #   acc[t.name] = {}
+    #   acc[t.name][:count] = t.count
+    #   acc[t.name][:amount] = GiftCard.where(person_id: Person.tagged_with(t.name).distinct(:id).pluck(:id)).sum(:amount_cents)/100
+    #   acc
+    # end
+    # result.sort_by { |_k, v| v[:amount] }.reverse
   end
 
   # rubocop:enable Metrics/MethodLength
