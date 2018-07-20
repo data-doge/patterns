@@ -48,7 +48,7 @@ if File.exist?(path) # handling cold start
   end
 
   every :day, at: local_time("2:00am") do
-    runner "People.update_participation_level"
+    runner "People.active.all.find_each(&:update_participation_level)"
   end
 
   every :reboot do
