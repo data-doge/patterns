@@ -48,6 +48,11 @@
 </p>
 
 <p>
+  <strong>Created at:</strong>
+  <%= @gift_card.created_at.to_s %>
+</p>
+
+<p>
   <strong>Team:</strong>
   <%= best_in_place @gift_card, :team_id,
                       as: :select,

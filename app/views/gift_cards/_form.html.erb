@@ -17,7 +17,9 @@
       </ul>
     </div>
   <% end %>
-
+  <div class='field'>
+    <%= @gift_card.created_at.to_s %>
+  </div>
   <div class="field">
     <%= f.label :batch_id %><br>
     <%= f.text_field :batch_id,
