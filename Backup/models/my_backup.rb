@@ -60,9 +60,9 @@ Model.new(:my_backup, 'Description for my_backup') do
   database MySQL do |db|
     # To dump all databases, set `db.name = :all` (or leave blank)
     db.name               = ENV['RAILS_ENV']
-    db.username           = 'root'
-    db.password           = 'password'
-    db.host               = 'localhost'
+    db.username           = ENV['MYSQL_USER']
+    db.password           = ENV['MYSQL_PASSWORD']
+    db.host               = ENV['MYSQL_HOST']
     db.port               = 3306
     # Note: when using `skip_tables` with the `db.name = :all` option,
     # table names should be prefixed with a database name.
