@@ -49,8 +49,10 @@
           card_activation.id, false,
           id: "card_activation_id_change_#{card_activation.id}" %> |
     <%= link_to 'Show', card_activation %> | 
-    <%= link_to 'Edit', edit_card_activation_path(card_activation) %> |
-    <%= link_to 'Destroy', card_activation, method: :delete, data: { confirm: 'Are you sure?' } %>
+    <%= link_to 'Edit', edit_card_activation_path(card_activation) %>
+    <!--
+      <%= link_to 'Destroy', card_activation, method: :delete, data: { confirm: 'Are you sure?' } %>
+    -->
   </td>
   <% end %>
 </tr>

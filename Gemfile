@@ -39,6 +39,8 @@ gem 'roo'
 
 gem 'redcarpet' # for markdown notes
 
+#giftrocekt API for automagic giftcarding
+gem 'tremendous_ruby'
 
 group :development do
   # gem 'capistrano'
