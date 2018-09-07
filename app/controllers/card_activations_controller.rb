@@ -6,7 +6,7 @@ class CardActivationsController < ApplicationController
   # GET /card_activations
   # GET /card_activations.json
   def index
-    @errors = []
+    @errored_cards = []
     @new_card = CardActivation.new
     @cards = if current_user.admin?
                CardActivation.unassigned
@@ -115,12 +115,9 @@ class CardActivationsController < ApplicationController
       cards_count = 0
       xls.sheet(0).each { |row| cards_count += 1 if row[0].present? }
       flash[:notice] = "Import started for #{cards_count} cards."
-      @errors = CardActivation.import(params[:file].path, current_user)
-      if @errors.present?
-        flash[:error] = "Error! #{@errors.size} cards not valid."
-        @errors.each do |error|
-          error.full_messages.each { |m| flash[:error] = m }
-        end
+      @errored_cards = CardActivation.import(params[:file].path, current_user)
+      if @errored_cards.present?
+        flash[:error] = "Error! #{@errored_cards.size} cards not valid."
       end
     end
     redirect_to card_activations_path

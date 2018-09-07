@@ -89,11 +89,11 @@ class CardActivation < ApplicationRecord
           err_msg = "Card Error: sequence: #{ca.sequence_number}, #{ca.full_card_number}, #{ca.errors[:base]}"
           Airbrake.notify(err_msg)
           logger.info(err_msg)
-          errors << ca
+          errored_cards << ca
        end
       end
     end
-    errors
+    errored_cards
   end
 
   def self.active_unassigned_count(current_user)
