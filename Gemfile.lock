@@ -296,6 +296,7 @@ GEM
     paper_trail (10.0.1)
       activerecord (>= 4.2, < 5.3)
       request_store (~> 1.1)
+    paper_trail-association_tracking (1.0.0)
     paper_trail-globalid (0.2.0)
       globalid
       paper_trail (>= 3.0.0)
@@ -616,6 +617,7 @@ DEPENDENCIES
   mysql2
   nokogiri (= 1.8.2)
   paper_trail
+  paper_trail-association_tracking
   paper_trail-globalid
   phony_rails
   pry
@@ -667,4 +669,4 @@ RUBY VERSION
    ruby 2.5.1p57
 
 BUNDLED WITH
-   1.16.2
+   1.16.4
