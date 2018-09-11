@@ -114,7 +114,7 @@ class CardActivationsController < ApplicationController
       xls =  Roo::Spreadsheet.open(params[:file].path)
       cards_count = 0
       xls.sheet(0).each { |row| cards_count += 1 if row[0].present? }
-      flash[:notice] = "Import started for #{cards_count} cards."
+      flash[:notice] = "Import started for #{cards_count - 1} cards."
       @errored_cards = CardActivation.import(params[:file].path, current_user)
       if @errored_cards.present?
         flash[:error] = "Error! #{@errored_cards.size} cards not valid."

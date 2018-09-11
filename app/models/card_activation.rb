@@ -225,10 +225,10 @@ class CardActivation < ApplicationRecord
   end
 
   def scrub_input # sometimes we drop leading 0's in csv
-    self.secure_code = secure_code&.delete('.0')
-    self.sequence_number = sequence_number&.delete('.0')
-    self.batch_id = batch_id&.delete('.0')
+    self.sequence_number = sequence_number&.to_i
+    self.batch_id = batch_id&.to_i
     self.full_card_number = full_card_number&.delete('-')
+    self.secure_code = secure_code&.gsub('.0', '')
     secure_code.prepend('0') while secure_code.length < 3
   end
 
