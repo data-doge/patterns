@@ -73,7 +73,7 @@ class CardActivation < ApplicationRecord
   after_commit :update_front_end, on: :update
 
   def self.import(file, user)
-    errors = []
+    errored_cards = []
     xls =  Roo::Spreadsheet.open(file)
     cols = { full_card_number: 'full_card_number', expiration_date: 'expiration_date', amount: 'amount', sequence_number: 'sequence_number', secure_code: 'secure_code', batch_id: 'batch_id' }
     xls.sheet(0).each(cols) do |row|
@@ -224,9 +224,10 @@ class CardActivation < ApplicationRecord
   end
 
   def scrub_input # sometimes we drop leading 0's in csv
-    self.secure_code = secure_code&.gsub('.0', '')
-    self.sequence_number = sequence_number&.gsub('.0', '')
-    self.batch_id = batch_id&.gsub('.0', '')
+    self.secure_code = secure_code&.delete('.0')
+    self.sequence_number = sequence_number&.delete('.0')
+    self.batch_id = batch_id&.delete('.0')
+    self.full_card_number = full_card_number&.delete('-')
     secure_code.prepend('0') while secure_code.length < 3
   end
 

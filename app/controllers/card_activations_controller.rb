@@ -25,7 +25,7 @@ class CardActivationsController < ApplicationController
 
     wb.add_worksheet(name: 'CardUploadTemplate') do |sheet|
       sheet.add_row %w[full_card_number sequence_number secure_code batch_id expiration_date amount note]
-      sheet.add_row ['4853980061441776', '125', '074', '383311', '10/18', '25.00', 'delete me!'], types: 7.times.map { :string }
+      sheet.add_row ['4853-9800-6144-1776', '125', '074', '383311', '10/18', '25.00', '<- delete me!'], types: 7.times.map { :string }
     end
 
     respond_to do |format|

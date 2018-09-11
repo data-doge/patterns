@@ -168,7 +168,7 @@ class Person < ApplicationRecord
   end
 
   def active_criteria
-    gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
+    gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >= 1
   end
 
   def ambassador_criteria
@@ -177,6 +177,8 @@ class Person < ApplicationRecord
   end
 
   def update_participation_level
+    return true if tag_list.include? 'not dig'
+
     self.participation_level = 'active' if active_criteria
     self.participation_level = 'regular' if regular_criteria
     self.participation_level = 'ambassador' if ambassador_criteria
@@ -184,7 +186,7 @@ class Person < ApplicationRecord
     if participation_level_changed?
       tag_list.remove(participation_level_was)
       tag_list.add(self.participation_level)
-      
+
       if participation_level_was != self.participation_level
         User.approved.admin.all.find_each do |u| 
           AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was).deliver_later
