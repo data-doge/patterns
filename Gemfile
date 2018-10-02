@@ -204,6 +204,8 @@ gem 'jquery_mask_rails'
 # the standard rails tagging library
 gem 'acts-as-taggable-on'
 
+# mapping, because maps rock and google sucks
+gem 'leaflet-rails'
 
 group :test do
   # mock tests w/mocha
