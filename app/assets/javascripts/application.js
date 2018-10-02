@@ -30,6 +30,7 @@
 //= require_tree .
 //= require jquery.mask
 //= require fuse/fuse.min
+//= require leaflet
 
 $(document).on('turbolinks:load',function() {
   $.jMaskGlobals.watchDataMask = true;
