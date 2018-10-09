@@ -195,7 +195,7 @@ class Public::PeopleController < ApplicationController
         @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
 
         phone = PhonyRails.normalize_number(update_params[:phone_number])
-        @person = Person.find_by(phone_number: phone)
+        @person = Person.active.find_by(phone_number: phone)
 
         if @current_user.nil? || @person.nil?
           false
