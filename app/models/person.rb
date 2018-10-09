@@ -79,8 +79,8 @@ class Person < ApplicationRecord
   has_secure_token :token
 
   if ENV['RAILS_ENV'] == 'production'
-    after_commit :sendToMailChimp, on: %i[update create]
-    after_commit :updateRapidPro, on: %i[update create]
+    after_commit :send_to_mailchimp, on: %i[update create]
+    after_commit :update_rapidpro, on: %i[update create]
   end
 
   after_create  :update_neighborhood
@@ -325,17 +325,21 @@ class Person < ApplicationRecord
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Rails/TimeZone
 
-  def sendToMailChimp
+  def send_to_mailchimp
     status = active? ? 'subscribed' : 'unsubscribed'
     MailchimpUpdateJob.perform_async(id, status)
   end
 
-  def deleteFromRapidPro
-    RapidproDeleteJob.perform_async(id) unless active
+  def delete_from_papidpro
+    RapidproDeleteJob.perform_async(id) unless active || tag_list.include?('not dig')
   end
 
-  def updateRapidPro
-    RapidproUpdateJob.perform_async(id) if active
+  def update_rapidpro
+    if active && !tag_list.include?('not dig')
+      RapidproUpdateJob.perform_async(id)
+    else
+      delete_from_rapidpro
+    end
   end
 
   # FIXME: Refactor and re-enable cop
@@ -463,13 +467,13 @@ class Person < ApplicationRecord
     self.deactivated_method = type if type
 
     save! # sends background mailchimp update
-    deleteFromRapidPro # remove from rapidpro
+    delete_from_rapidpro # remove from rapidpro
   end
 
   def reactivate!
     self.active = true
     save!
-    updateRapidPro
+    update_rapidpro
   end
 
   def md5_email
