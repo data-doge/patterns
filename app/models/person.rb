@@ -330,7 +330,7 @@ class Person < ApplicationRecord
     MailchimpUpdateJob.perform_async(id, status)
   end
 
-  def delete_from_papidpro
+  def delete_from_rapidpro
     RapidproDeleteJob.perform_async(id) unless active || tag_list.include?('not dig')
   end
 
