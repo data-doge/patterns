@@ -3,7 +3,7 @@
   <span class="deactivated-at">Time:<%= person.deactivated_at.to_s :short %></span><br/>
   <span class="deactivated-method">Method:<%= person.deactivated_method %></span><br/>
   <% if person.versions&.last&.whodunnit.present? %>
-    <% user = User.find person.versions.last.whodunnit %>
+    <% user = User.find person.versions.last.whodunnit.split('/').last %>
   <span class="deactivated-by">by:<%= user.name %></span><br/>
   <% end %>
   <span class="gift-cards">Gift Cards: <%= person.gift_cards.size %></span><br/>
