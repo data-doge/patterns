@@ -128,6 +128,7 @@ class CalendarController < ApplicationController
       if allowed_params['default_time']
         return Time.zone.parse(allowed_params['default_time']).strftime('%F')
       end
+
       Time.current.strftime('%F')
     end
 
@@ -135,6 +136,7 @@ class CalendarController < ApplicationController
       return 'invitation' if invitation
 
       return 'research_session' if research_session
+
       false
     end
 

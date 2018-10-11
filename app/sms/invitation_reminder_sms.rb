@@ -16,6 +16,7 @@ class InvitationReminderSms < ApplicationSms
     msg += "--------------------\n"
     invitations.each do |inv|
       next if inv.end_datetime < Time.current # don't remind people of past events
+
       msg += "What: #{inv.sms_description}\n\n"
       msg += "When: #{inv.start_datetime_human}\n"
       msg += "Where: #{inv.location}\n"

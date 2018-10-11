@@ -160,6 +160,7 @@ class InvitationsController < ApplicationController
       @invitation ||= Invitation.find_by(id: params[:id])
 
       return false unless @invitation&.owner_or_invitee?(@visitor)
+
       @visitor.nil? ? false : true
     end
 

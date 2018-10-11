@@ -73,6 +73,7 @@ class CartController < ApplicationController
     current_size = @cart.people.size
     people.each do |person|
       next if @cart.people.include? person
+
       @added << person.id
       begin
         @cart.people << person

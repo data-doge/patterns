@@ -144,6 +144,7 @@ class User < ApplicationRecord
   def current_cart=(cart) # this is tedious. could be better
     cart = Cart.find cart if cart.class.to_s != 'Cart'
     return if cart == current_cart
+
     cart_id = cart.id
     begin
       cu = CartsUser.find_by(user_id: id, cart_id: cart_id)

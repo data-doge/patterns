@@ -133,6 +133,7 @@ class Invitation < ApplicationRecord
     return true if user == person_or_user
     return true if person == person_or_user
     return false if person_or_user.nil?
+
     false
   end
 

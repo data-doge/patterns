@@ -39,6 +39,7 @@ class ActivationCall < ApplicationRecord
     # this will be very different.
     # needs more subtle checks for transcription errors. pehaps distance?
     return false if transcript.nil?
+
     transcript.downcase.include? type_transcript
   end
 

@@ -78,6 +78,7 @@ class CardActivation < ApplicationRecord
     cols = { full_card_number: 'full_card_number', expiration_date: 'expiration_date', amount: 'amount', sequence_number: 'sequence_number', secure_code: 'secure_code', batch_id: 'batch_id' }
     xls.sheet(0).each(cols) do |row|
       next if row[:full_card_number].blank? ||  row[:full_card_number] == 'full_card_number' # empty rows
+
       row[:full_card_number].delete!('-')
       ca = CardActivation.new(row)
       ca.user_id = user.id
@@ -216,11 +217,13 @@ class CardActivation < ApplicationRecord
 
   def ongoing_call?
     return false if active? # there may be, but we don't care.
+
     calls.ongoing.size.positive?
   end
 
   def can_run_check?
     return false if active? # don't run any more checks if active
+
     !active? && !ongoing_call?
   end
 
@@ -282,6 +285,7 @@ class CardActivation < ApplicationRecord
       if persisted?
         IMMUTABLE.each do |attr|
           next if self[attr].nil? # allow updates to nil
+
           changed.include?(attr) &&
             errors.add(attr, :immutable) &&
             self[attr] = changed_attributes[attr]

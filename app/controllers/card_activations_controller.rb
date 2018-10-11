@@ -59,6 +59,7 @@ class CardActivationsController < ApplicationController
       if card_activations.present?
         card_activations.each do |ca|
           next if ca.nil? # WAT?
+
           sheet.add_row [ca.last_4.to_s, ca.sequence_number, '', '', '', '', '']
         end
       end

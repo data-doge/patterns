@@ -44,6 +44,7 @@ class SendInvitationsSmsJob
       # yes if before 8:30am and yes if after 8pm
       return true if Time.current < DateTime.current.change({ hour: 8, minute: 30 })
       return true if Time.current > DateTime.current.change({ hour: 20, minute: 0 })
+
       false
     end
 

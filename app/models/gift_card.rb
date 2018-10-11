@@ -89,6 +89,7 @@ class GiftCard < ApplicationRecord
 
   def research_session
     return nil if giftable.nil? && giftable_type != 'Invitation'
+
     giftable&.research_session # double check unnecessary, but I like it.
   end
 
@@ -148,6 +149,7 @@ class GiftCard < ApplicationRecord
       # but must check to see if card has activation
       # AND throw error if we are duplicating.
       return true if card_activation_id.blank?
+
       if card_activation.nil?
         # first check if we have an activation id, then a search
         ca = CardActivation.find card_activation_id unless card_activation_id.nil?

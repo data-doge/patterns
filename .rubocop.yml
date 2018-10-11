@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.5
   Exclude:
     - '**/bin/**/*'
     - 'vendor/**/*'
@@ -17,6 +17,9 @@ AllCops:
     - '**/*.jbuilder'
 Rails:
   Enabled: true
+
+Performance:
+  enabled: true
 
 Rails/Validation:
   Enabled: true
