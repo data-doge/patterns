@@ -57,7 +57,7 @@
   <div class="control-group">
     <%= f.label :finance_code, :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :finance_code, options_for_select([[@gift_card.finance_code, @gift_card.finance_code], Teams.pluck(:finance_code).uniq])%>
+      <%= f.select :finance_code, options_for_select([[@gift_card.finance_code, @gift_card.finance_code], Team.pluck(:finance_code).uniq])%>
     </div>
   </div>
   <div class="control-group">
