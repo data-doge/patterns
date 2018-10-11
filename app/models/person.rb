@@ -81,10 +81,12 @@ class Person < ApplicationRecord
   if ENV['RAILS_ENV'] == 'production'
     after_commit :send_to_mailchimp, on: %i[update create]
     after_commit :update_rapidpro, on: %i[update create]
+    before_destroy :delete_from_rapidpro
   end
 
   after_create  :update_neighborhood
   after_commit  :send_new_person_notifications, on: :create
+
 
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -332,7 +334,7 @@ class Person < ApplicationRecord
   end
 
   def delete_from_rapidpro
-    RapidproDeleteJob.perform_async(id) unless active || tag_list.include?('not dig')
+    RapidproDeleteJob.perform_async(id) unless active
   end
 
   def update_rapidpro
