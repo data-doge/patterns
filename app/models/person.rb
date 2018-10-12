@@ -156,33 +156,49 @@ class Person < ApplicationRecord
     # * DIG Ambassador = “active for at least one year, 2+ projects/teams
     # if there’s any way to automate that info to flow into dashboard/pool —
     # and notify me when new person gets added-- that would be amazing
-    %w[new active regular ambassador]
+    %w[new inactive participant active ambassador]
   end
 
   def yaseen_hack
     # research sessions didn't really exist long enough for this to make sense. hence the hack. For Yaseen and other
-    gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >=3 || gift_cards.where('created_at > ?', 1.year.ago).size >= 6
+    gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3 || gift_cards.where('created_at > ?', 1.year.ago).size >= 6
   end
 
-  def regular_criteria
-    gift_cards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1 || gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
+  def inactive_criteria
+    # have gotten a gift card, but not in the past year.
+    gift_cards.where('created_at < ?', 1.year.ago).size >= 1
+  end
+
+  def participant_criteria
+    # gotten a gift card in the past year.
+    gift_cards.where('created_at > ?', 1.year.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
   end
 
   def active_criteria
-    gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >= 1
+    # gotten a gift card for a research session in the past 6 months
+    # and two teams
+    gift_cards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1 || gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
   end
 
   def ambassador_criteria
-    # onlder than a year and 2 or more sessions with two teams and either 3 research sessions or 6 cards in the last year
-    created_at <= 1.year.ago && gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && yaseen_hack
+    # older than a year and 2 or more sessions with two teams and
+    # either 3 research sessions or 6 cards in the last year
+    if tag_list.include?('brl special ambassador')
+      true
+    else
+      gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && yaseen_hack
+    end
   end
 
   def update_participation_level
     return true if tag_list.include? 'not dig'
-
-    self.participation_level = 'active' if active_criteria
-    self.participation_level = 'regular' if regular_criteria
-    self.participation_level = 'ambassador' if ambassador_criteria
+ 
+    pl = 'new' # needs outreach
+    pl = 'inactive'    if inactive_criterias
+    pl = 'participant' if participant_criteria
+    pl = 'active'      if active_criteria
+    pl = 'ambassador'  if ambassador_criteria
+    self.participation_level = pl
 
     if participation_level_changed?
       tag_list.remove(participation_level_was)
