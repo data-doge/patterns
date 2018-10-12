@@ -194,7 +194,7 @@ class Person < ApplicationRecord
     return true if tag_list.include? 'not dig'
  
     pl = 'new' # needs outreach
-    pl = 'inactive'    if inactive_criterias
+    pl = 'inactive'    if inactive_criteria
     pl = 'participant' if participant_criteria
     pl = 'active'      if active_criteria
     pl = 'ambassador'  if ambassador_criteria
