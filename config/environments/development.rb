@@ -30,6 +30,8 @@ Logan::Application.configure do
     'Access-Control-Request-Method' => %w{GET POST OPTIONS}.join(",")
   }
 
+  config.sass.inline_source_maps = true
+  
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
   config.log_formatter = ::Logger::Formatter.new
