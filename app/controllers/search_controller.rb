@@ -37,8 +37,8 @@ class SearchController < ApplicationController
     @results = @q.result.distinct(:person).includes(:tags).page(params[:page])
 
     # Need to better define these
-    @participation_list = Person.uniq.pluck(:participation_type)
-    @verified_list = Person.uniq.pluck(:verified)
+    @participation_list = Person.distinct.pluck(:participation_type).group_by(:participation_type)
+    @verified_list = Person.distinct.pluck(:verified)
     @mailchimp_result = 'Mailchimp export not attempted with this search'
 
     respond_to do |format|

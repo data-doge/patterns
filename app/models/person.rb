@@ -210,7 +210,7 @@ class Person < ApplicationRecord
   end
 
   def self.verified_types
-    Person.uniq.pluck(:verified).select(&:present?)
+    Person.distinct.pluck(:verified).select(&:present?)
   end
 
   def signup_gc_sent
