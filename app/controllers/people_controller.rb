@@ -52,7 +52,7 @@ class PeopleController < ApplicationController
   def index
     Person.per_page = params[:per_page] if params[:per_page].present? # allow for larger pages
 
-    @verified_types = Person.pluck(:verified).uniq.select(&:present?)
+    @verified_types = Person.uniq.pluck(:verified).select(&:present?)
     # this could be cleaner...
     search = if params[:tags].blank?
                Person.active.includes(:taggings).paginate(page: params[:page]).
@@ -79,10 +79,10 @@ class PeopleController < ApplicationController
     @last_gift_card = GiftCard.last # default scope is id: :desc
     @gift_card = GiftCard.new
     @reservation = Reservation.new person: @person
-    @verified_types = Person.pluck(:verified).uniq.select(&:present?)
+    @verified_types = Person.uniq.pluck(:verified).select(&:present?)
     @tags = @person.tags.pluck(:name)
     @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
-    @twilio_wufoo_formids = @outgoingmessages.pluck(:wufoo_formid).uniq
+    @twilio_wufoo_formids = @outgoingmessages.uniq.pluck(:wufoo_formid)
     @twilio_wufoo_forms = TwilioWufoo.where(id: @twilio_wufoo_formids)
     @allmessages =  TwilioMessage.where('to = :number or from = :number', number: @person.normalized_phone_number)
   end

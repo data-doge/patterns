@@ -35,7 +35,7 @@ class TaggingsController < ApplicationController
         obj.tag_list.add(tag)
         res = obj.save
         # super awkward way of finding the right *kind* of tag
-        found_tag = klass.tagged_with(tag).first.tags.select { |t| t.name == tag }.first
+        found_tag = klass.tagged_with(tag).first.tags.detect { |t| t.name == tag }
         @tagging = obj.taggings.find_by(tag_id: found_tag.id)
       end
     end

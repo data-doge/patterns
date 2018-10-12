@@ -2,7 +2,6 @@
 
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy]
-  skip_before_action :authenticate_user!, only: %i[activate card_check]
   helper_method :sort_column, :sort_direction
 
   GIFTABLE_TYPES = {
@@ -161,32 +160,6 @@ class GiftCardsController < ApplicationController
     end
   end
 
-  # def activate
-  #   @card_number = params[:number]&.gsub(/[^0-9]/, '')
-  #   @valid =  CreditCardValidations::Luhn.valid?(@card_number)
-  #   @secure_code = params[:code]&.gsub(/[^0-9]/, '')
-  #   respond_to do |format|
-  #     format.xml
-  #   end
-  # end
-
-  # # def activate_response # this is where the gather endpoint it.
-  # #   # sets card to active
-  # # end
-
-  # def card_check
-  #   @card_number = params[:number]&.gsub(/[^0-9]/, '')
-  #   @valid =  CreditCardValidations::Luhn.valid?(@card_number)
-  #   @secure_code = params[:code]&.gsub(/[^0-9]/, '') # three digits
-  #   @expiration = params[:expiration]&.gsub(/[^0-9]/, '') # four digits
-  #   respond_to do |format|
-  #     format.xml
-  #   end
-  # end
-
-  # def check_response # this is the gather endpoint for checking cards
-  #   # returns true, and sets current value for card
-  # end
 
   def sort_column
     GiftCard.column_names.include?(params[:sort]) ? params[:sort] : 'people.id'

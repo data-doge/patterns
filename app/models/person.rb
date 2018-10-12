@@ -87,7 +87,6 @@ class Person < ApplicationRecord
   after_create  :update_neighborhood
   after_commit  :send_new_person_notifications, on: :create
 
-
   validates :first_name, presence: true
   validates :last_name, presence: true
 
@@ -211,7 +210,7 @@ class Person < ApplicationRecord
   end
 
   def self.verified_types
-    Person.pluck(:verified).uniq.select(&:present?)
+    Person.uniq.pluck(:verified).select(&:present?)
   end
 
   def signup_gc_sent

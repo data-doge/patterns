@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DashboardController < ApplicationController
-  # New people that aren’t “verified”,
+  # New people that aren't 'verified',
   # Total # of verified dig members
   # Recent participants
   # Recent sessions

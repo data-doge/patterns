@@ -149,7 +149,8 @@ class InvitationsController < ApplicationController
   private
 
     def set_invitation
-      @invitation ||= Invitation.find_by(id: params[:id])
+      @set_invitation ||= Invitation.find_by(id: params[:id])
+      @invitation = @set_invitation
     end
 
     def set_visitor
