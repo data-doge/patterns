@@ -82,6 +82,7 @@ group :production do
   #gem 'newrelic_rpm'
   gem 'skylight' # perf
   gem 'lograge' # sane logs
+  gem 'faster_path' # crazy performance improvement. need rust
 end
 
 # Gems used only for assets and not required
