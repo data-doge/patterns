@@ -204,11 +204,11 @@ class Person < ApplicationRecord
       tag_list.remove(participation_level_was)
       tag_list.add(participation_level)
 
-      if participation_level_was != participation_level
-        User.approved.admin.all.find_each do |u|
-          AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was).deliver_later
-        end
-      end
+      # if participation_level_was != participation_level
+      #   User.approved.admin.all.find_each do |u|
+      #     AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was).deliver_later
+      #   end
+      # end
 
       Cart.where(name: Person.participation_levels).find_each do |cart|
         if cart.name == participation_level
