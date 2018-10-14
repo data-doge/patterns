@@ -190,24 +190,28 @@ class Person < ApplicationRecord
     end
   end
 
-  def update_participation_level
-    return true if tag_list.include? 'not dig'
- 
+  def calc_participation_level
     pl = 'new' # needs outreach
     pl = 'inactive'    if inactive_criteria
     pl = 'participant' if participant_criteria
     pl = 'active'      if active_criteria
     pl = 'ambassador'  if ambassador_criteria
-    self.participation_level = pl
+    pl
+  end
 
-    if participation_level_changed?
-      tag_list.remove(participation_level_was)
-      tag_list.add(participation_level)
+  def update_participation_level
+    return if tag_list.include? 'not dig'
+    new_pl = calc_participation_level
 
-      if participation_level_was != participation_level
-        User.approved.admin.all.find_each do |u|
-          AdminMailer.participation_level_change(person: self, to: u.email, old_level: participation_level_was).deliver_later
-        end
+    if participation_level != new_pl
+      old_level = participation_level
+      self.participation_level = new_pl
+
+      tag_list.remove(old_level)
+      tag_list.add(new_pl)
+
+      User.approved.admin.all.find_each do |u|
+        AdminMailer.participation_level_change(person: self, to: u.email, old_level: old_level).deliver_later
       end
 
       Cart.where(name: Person.participation_levels).find_each do |cart|
