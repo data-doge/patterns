@@ -5,5 +5,4 @@ task cart_people_counter: :environment do
   Cart.select(:id).find_each do |p|
     Cart.reset_counters p.id, :people
   end
-  puts "foo"
 end
