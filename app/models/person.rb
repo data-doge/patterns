@@ -145,7 +145,14 @@ class Person < ApplicationRecord
   end
 
   def self.update_all_participation_levels
-    Person.active.all.find_each(&:update_participation_level)
+    @results = []
+    Person.active.all.find_each{|person| @results << person.update_participation_level}
+    @results.compact!
+    if @results.length.positive?
+      User.approved.admin.all.find_each do |u|
+        AdminMailer.participation_level_change(results: @results, to: u.email_address).deliver_later
+      end
+    end
   end
 
   def self.participation_levels
@@ -201,18 +208,14 @@ class Person < ApplicationRecord
 
   def update_participation_level
     return if tag_list.include? 'not dig'
-    new_pl = calc_participation_level
+    new_level = calc_participation_level
 
-    if participation_level != new_pl
+    if participation_level != new_level
       old_level = participation_level
-      self.participation_level = new_pl
+      self.participation_level = new_level
 
       tag_list.remove(old_level)
-      tag_list.add(new_pl)
-
-      User.approved.admin.all.find_each do |u|
-        AdminMailer.participation_level_change(person: self, to: u.email, old_level: old_level).deliver_later
-      end
+      tag_list.add(new_level)
 
       Cart.where(name: Person.participation_levels).find_each do |cart|
         if cart.name == participation_level
@@ -225,8 +228,9 @@ class Person < ApplicationRecord
           cart.remove_person_id(id)
         end
       end
+      save!
+      return {pid: id, old: old_level, new: new_level}
     end
-    save
   end
 
   def self.verified_types
