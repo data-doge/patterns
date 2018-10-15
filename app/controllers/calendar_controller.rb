@@ -31,7 +31,7 @@ class CalendarController < ApplicationController
   def admin_feed
     calendar = Icalendar::Calendar.new
     if visitor&.admin?
-      sessions = ResearchSession.includes(:invitations, :user).in_range(6.months.ago..3.months.from_now)
+      sessions = ResearchSession.includes(:invitations, user: :team).in_range(6.months.ago..3.months.from_now)
 
       sessions.each { |e| calendar.add_event(e.to_ics) }
     end
