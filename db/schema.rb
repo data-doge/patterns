@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_10_210306) do
+ActiveRecord::Schema.define(version: 2018_10_15_182250) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "card_activation_id"
@@ -267,6 +267,7 @@ ActiveRecord::Schema.define(version: 2018_07_10_210306) do
     t.integer "session_type", default: 1
     t.string "location"
     t.integer "duration", default: 60
+    t.string "cached_tag_list"
     t.index ["user_id"], name: "index_research_sessions_on_user_id"
   end
 
