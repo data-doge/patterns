@@ -27,7 +27,7 @@ class Cart < ApplicationRecord
   has_many :comments, as: :commentable, dependent: :destroy
 
   before_create :set_owner_as_user
-  validates :name, length: { in: 5..30 }
+  validates :name, length: { in: 3..30 }
   validates :name, uniqueness: { message: 'Pool must have a unique name' }
 
   # keep current cart in carts_users,
