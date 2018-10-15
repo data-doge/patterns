@@ -166,11 +166,6 @@ class Person < ApplicationRecord
     %w[new inactive participant active ambassador]
   end
 
-  def yaseen_hack
-    # research sessions didn't really exist long enough for this to make sense. hence the hack. For Yaseen and other
-    gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3 || gift_cards.where('created_at > ?', 1.year.ago).size >= 6
-  end
-
   def inactive_criteria
     # have gotten a gift card, but not in the past year.
     gift_cards.where('created_at < ?', 1.year.ago).size >= 1
@@ -193,7 +188,7 @@ class Person < ApplicationRecord
     if tag_list.include?('brl special ambassador')
       true
     else
-      gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && yaseen_hack
+      gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
     end
   end
 
@@ -208,6 +203,7 @@ class Person < ApplicationRecord
 
   def update_participation_level
     return if tag_list.include? 'not dig'
+
     new_level = calc_participation_level
 
     if participation_level != new_level
@@ -229,7 +225,7 @@ class Person < ApplicationRecord
         end
       end
       save!
-      return {pid: id, old: old_level, new: new_level}
+      return { pid: id, old: old_level, new: new_level }
     end
   end
 
