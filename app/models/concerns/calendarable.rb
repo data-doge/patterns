@@ -90,7 +90,7 @@ module Calendarable
 Team: #{user.team.name}
 People: #{invitations.size}
 Description:#{description}
-tags: #{tag_list})
+tags: #{cached_tag_list})
       else
         description
       end
