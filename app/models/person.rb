@@ -210,21 +210,16 @@ class Person < ApplicationRecord
       old_level = self.participation_level
       self.participation_level = new_level
 
-      tag_list.remove(old_level)
-      tag_list.add(new_level)
-      save
+      self.tag_list.remove(old_level)
+      self.tag_list.add(new_level)
+      self.save
       Cart.where(name: Person.participation_levels).find_each do |cart|
         if cart.name == new_level
-          begin
-            cart.people << self
-          rescue ActiveRecord::RecordInvalid
-            # already in the cart somehow
-            next
-          end
+          cart.people << self rescue ActiveRecord::RecordInvalid
         else
-          cart.remove_person_id(id) # no-op if person not in cart
+          cart.remove_person_id(self.id) # no-op if person not in cart
         end
-      end      
+      end # end cart update
       return { pid: id, old: old_level, new: new_level }
     end
   end
