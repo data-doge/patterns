@@ -146,7 +146,7 @@ class Person < ApplicationRecord
 
   def self.update_all_participation_levels
     @results = []
-    Person.active.all.find_each{|person| @results << person.update_participation_level}
+    Person.active.all.find_each{|person| @results << person.update_participation_level; person.save}
     @results.compact!
     if @results.length.positive?
       User.approved.admin.all.find_each do |u|
@@ -206,25 +206,25 @@ class Person < ApplicationRecord
 
     new_level = calc_participation_level
 
-    if participation_level != new_level
-      old_level = participation_level
+    if self.participation_level != new_level
+      old_level = self.participation_level
       self.participation_level = new_level
 
       tag_list.remove(old_level)
       tag_list.add(new_level)
-
+      save
       Cart.where(name: Person.participation_levels).find_each do |cart|
-        if cart.name == participation_level
+        if cart.name == new_level
           begin
             cart.people << self
-          rescue StandardError
+          rescue ActiveRecord::RecordInvalid
+            # already in the cart somehow
             next
           end
         else
-          cart.remove_person_id(id)
+          cart.remove_person_id(id) # no-op if person not in cart
         end
-      end
-      save!
+      end      
       return { pid: id, old: old_level, new: new_level }
     end
   end
