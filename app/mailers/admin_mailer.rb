@@ -20,6 +20,7 @@ class AdminMailer < ApplicationMailer
     msg = %(Hi!\n
     Participation level changes:\n)
     results.each do |r|
+      next if r[:id].nil?
       person = Person.find r[:id]
       msg += %(*   #{person.full_name} changed from #{r[:old]} to #{r[:new]}. link: https://#{HOSTNAME}/people/#{person.id} \n)
     end
