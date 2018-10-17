@@ -146,7 +146,7 @@ class Person < ApplicationRecord
 
   def self.update_all_participation_levels
     @results = []
-    Person.active.all.find_each{|person| @results << person.update_participation_level; person.save}
+    Person.active.all.find_each {|person| @results << person.update_participation_level }
     @results.compact!
     if @results.length.positive?
       User.approved.admin.all.find_each do |u|
