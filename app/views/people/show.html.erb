@@ -121,7 +121,11 @@
                     as: :checkbox,
                     collection: {false: "No", true: "Yes"} %></dd> -->
           <dt>Created by</dt>
-          <dd><%= link_to @person.creator&.name, @person&.creator %></dd>
+            <% if @person&.creator.present? %>
+              <dd><%= link_to @person.creator&.name, @person&.creator %></dd>
+            <% else %>
+              <dd>via website</dd>
+            <% end %>
           <% end %>
           <dt>Signup at</dt>
           <dd><%= @person.signup_at ? @person.signup_at.to_s(:long) : 'unknown' %></dd>
