@@ -428,6 +428,10 @@ class Person < ApplicationRecord
     end
   end
 
+  def lat_long
+    ::ZIP_LAT_LONG[postal_code.to_s]
+  end
+
   def full_name
     [first_name, last_name].join(' ')
   end
