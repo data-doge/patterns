@@ -22,7 +22,7 @@ class RapidproGroupJob
       url = base_url + 'groups.json'
       res = HTTParty.post(url, headers: headers, body: { name: cart.name }.to_json)
       case res.code
-      when 201 || 200 || 204# new group in rapidpro
+      when 201 # new group in rapidpro
         # update column to skip callbacks
         cart.update_column(:rapidpro_uuid, res.parsed_response['uuid'])
       when 429 # throttled
@@ -44,7 +44,7 @@ class RapidproGroupJob
         res = HTTParty.post(url, headers: headers, body: body.to_json)
 
         case res.code
-        when 201 || 200 || 204 # new person in rapidpro
+        when 204 # new person in rapidpro
           Rails.logger.info "success for #{cart.name}"
         when 429 # throttled
           retry_delay = res.headers['retry-after'].to_i + 5
@@ -54,6 +54,7 @@ class RapidproGroupJob
           Rails.logger.error res.code
           raise 'error'
         end
+      end
     end
   end
 end
