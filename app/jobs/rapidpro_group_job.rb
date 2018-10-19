@@ -19,7 +19,7 @@ class RapidproGroupJob
     # cart isn't in rapidpro
     if cart&.rapidpro_uuid.nil?
       # create group and save uuid
-      url = base_url + 'contacts.json'
+      url = base_url + 'groups.json'
       res = HTTParty.post(url, headers: headers, body: { name: cart.name }.to_json)
       case res.code
       when 201 || 200 # new group in rapidpro
@@ -33,22 +33,23 @@ class RapidproGroupJob
         raise 'error'
       end
     end
+    if cart.people.positive?
+      uuids = cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:rapidpro_uuid)
+      body = { contacts: uuids, action: 'add', group: cart.rapidpro_uuid }
+      url = base_url + 'contact_actions.json' # bulk actions
 
-    uuids = cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:rapidpro_uuid)
-    body = { contacts: uuids, action: 'add', group: cart.rapidpro_uuid }
-    url = base_url + 'contact_actions.json' # bulk actions
+      res = HTTParty.post(url, headers: headers, body: body.to_json)
 
-    res = HTTParty.post(url, headers: headers, body: body.to_json)
-
-    case res.code
-    when 201 || 200 # new person in rapidpro
-      return true
-    when 429 # throttled
-      retry_delay = res.headers['retry-after'].to_i + 5
-      RapidproGroupJob.perform_in(retry_delay, id) # re-queue job
-    else
-      Rails.logger.error res.code
-      raise 'error'
+      case res.code
+      when 201 || 200 # new person in rapidpro
+        return true
+      when 429 # throttled
+        retry_delay = res.headers['retry-after'].to_i + 5
+        RapidproGroupJob.perform_in(retry_delay, id) # re-queue job
+      else
+        Rails.logger.error res.code
+        raise 'error'
+      end
     end
   end
 end
