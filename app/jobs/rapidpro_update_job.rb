@@ -69,7 +69,7 @@ class RapidproUpdateJob
         return true
       else
         puts res.code
-        raise 'error'
+        raise "error: #{res.code}"
       end
     end
   end

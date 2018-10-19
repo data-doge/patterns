@@ -33,7 +33,7 @@ class RapidproGroupJob
         raise 'error'
       end
     end
-    if cart.people.positive?
+    if cart.people.size.positive?
       uuids = cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:rapidpro_uuid)
       body = { contacts: uuids, action: 'add', group: cart.rapidpro_uuid }
       url = base_url + 'contact_actions.json' # bulk actions
