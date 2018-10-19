@@ -13,23 +13,23 @@
 
       function getColor(d) {
           return d > <%= @max %> ? '#800026' :
-                 d > <%= @max - @max * 0.8 %>  ? '#BD0026' :
-                 d > <%= @max - @max * 0.6 %>  ? '#E31A1C' :
-                 d > <%= @max - @max * 0.4 %>  ? '#FC4E2A' :
-                 d > <%= @max - @max * 0.2 %>   ? '#FD8D3C' :
-                 d > <%= @max - @max * 0.1 %>   ? '#FEB24C' :
-                 d > 2   ? '#FED976' :
+                 d > <%= @max * 0.8 %>  ? '#BD0026' :
+                 d > <%= @max * 0.6 %>  ? '#E31A1C' :
+                 d > <%= @max * 0.4 %>  ? '#FC4E2A' :
+                 d > <%= @max * 0.2 %>   ? '#FD8D3C' :
+                 d > <%= @max * 0.1 %>   ? '#FEB24C' :
+                 d > 3   ? '#FED976' :
                             '#FFEDA0';
       }
 
       function getSize(d){
          return  d >= <%= @max %> ? 700 :
-                 d > <%= @max - @max * 0.8 %>  ? 600 :
-                 d > <%= @max - @max * 0.6 %>  ? 500 :
-                 d > <%= @max - @max * 0.4 %>  ? 400 :
-                 d > <%= @max - @max * 0.2 %>  ? 300 :
-                 d > <%= @max - @max * 0.1 %>  ? 200 :
-                 d > 2   ? 100 :
+                 d > <%= @max * 0.8 %>  ? 600 :
+                 d > <%= @max * 0.6 %>  ? 500 :
+                 d > <%= @max * 0.4 %>  ? 400 :
+                 d > <%= @max * 0.2 %>  ? 300 :
+                 d > <%= @max * 0.1 %>  ? 200 :
+                 d > 3   ? 100 :
                            50 ;
       }
       var mymap = L.map('bigmap').setView([40.650002, -73.949997], 10);
