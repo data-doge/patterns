@@ -35,21 +35,25 @@ class RapidproGroupJob
     end
     if cart.people.size.positive?
       uuids = cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:rapidpro_uuid)
-      body = { contacts: uuids, action: 'add', group: cart.rapidpro_uuid }
-      url = base_url + 'contact_actions.json' # bulk actions
+      
+      done = false # can only do 100 at a time.
+      while uuids.size.positive? || done == true
+        body = { contacts: uuids.pop(100), action: 'add', group: cart.rapidpro_uuid }
+        url = base_url + 'contact_actions.json' # bulk actions
 
-      res = HTTParty.post(url, headers: headers, body: body.to_json)
+        res = HTTParty.post(url, headers: headers, body: body.to_json)
 
-      case res.code
-      when 201 || 200 || 204 # new person in rapidpro
-        return true
-      when 429 # throttled
-        retry_delay = res.headers['retry-after'].to_i + 5
-        RapidproGroupJob.perform_in(retry_delay, id) # re-queue job
-      else
-        Rails.logger.error res.code
-        raise 'error'
-      end
+        case res.code
+        when 201 || 200 || 204 # new person in rapidpro
+          Rails.logger.info "success for #{cart.name}"
+        when 429 # throttled
+          retry_delay = res.headers['retry-after'].to_i + 5
+          RapidproGroupJob.perform_in(retry_delay, id) # re-queue job
+          done = true
+        else
+          Rails.logger.error res.code
+          raise 'error'
+        end
     end
   end
 end
