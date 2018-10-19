@@ -29,7 +29,7 @@ class Cart < ApplicationRecord
   before_create :set_owner_as_user
   validates :name, length: { in: 3..30 }
   validates :name, uniqueness: { message: 'Pool must have a unique name' }
-  after_create :update_rapidpro
+  after_create :update_rapidpro if ENV['RAPIDPRO_TOKEN']
 
   # keep current cart in carts_users,
   # add validation that it must be unique on scope of user.
