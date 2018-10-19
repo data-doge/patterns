@@ -163,7 +163,7 @@
         accessToken: '<%= ENV['MAPBOX_TOKEN'] %>'
       }).addTo(mymap);
       var marker = L.marker([<%= @person.lat_long[:lat].to_f%>, <%= @person.lat_long[:long].to_f %>]).addTo(mymap);
-      marker.bindPopup("<b>Center of</b><br><%= @person.postal_code %> </br><%=@person.neighborhood%>").openPopup();
+      marker.bindPopup("<b>Center of</b><br><%= @person.postal_code %> </br><%=@person.neighborhood%><br> <a href='/search/index_ransack?utf8=✓&q%5Bpostal_code_cont%5D=<%=@person.postal_code%>'>search nearby</a>").openPopup();
     </script>
     </div>
     <div class='row'>

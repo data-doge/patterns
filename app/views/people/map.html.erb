@@ -51,7 +51,7 @@
             fillOpacity: 0.5,
             radius: getSize(<%=count%>)
           }).addTo(mymap);
-            circle.bindPopup("zip: <%=zip%> </br>count: <%= count %></br> <a href='/search/index_ransack?utf8=✓&q%5Bpostal_code_cont%5D=<%=zip%>'> search in area").openPopup();
+            circle.bindPopup("zip: <%=zip%> </br>count: <%= count %></br> <a href='/search/index_ransack?utf8=✓&q%5Bpostal_code_cont%5D=<%=zip%>'> search in area</a>").openPopup();
             
             <% end %>
       <% end %>
