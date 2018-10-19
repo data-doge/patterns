@@ -13,14 +13,14 @@ class RapidproGroupJob
     base_url = 'https://rapidpro.brl.nyc/api/v2/'
 
     Rails.logger.info '[RapidProGroup] job enqueued'
-    
+
     cart = Cart.find(id)
 
     # cart isn't in rapidpro
     if cart&.rapidpro_uuid.nil?
       # create group and save uuid
       url = base_url + 'contacts.json'
-      res = HTTParty.post(url, headers: headers, body: {name:cart.name}.to_json)
+      res = HTTParty.post(url, headers: headers, body: { name: cart.name }.to_json)
       case res.code
       when 201 || 200 # new group in rapidpro
         # update column to skip callbacks
@@ -34,8 +34,8 @@ class RapidproGroupJob
       end
     end
 
-    uuids = cart.people.where.not(rapidpro_uuid: nil,phone_number: nil).pluck(:rapidpro_uuid)
-    body ={contacts: uuids, action:'add', group: cart.rapidpro_uuid }
+    uuids = cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:rapidpro_uuid)
+    body = { contacts: uuids, action: 'add', group: cart.rapidpro_uuid }
     url = base_url + 'contact_actions.json' # bulk actions
 
     res = HTTParty.post(url, headers: headers, body: body.to_json)

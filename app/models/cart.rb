@@ -65,6 +65,7 @@ class Cart < ApplicationRecord
   end
 
   private
+
     def update_rapidpro
       RapidproGroupJob.perform_async(id)
     end

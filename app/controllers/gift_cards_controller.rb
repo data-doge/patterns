@@ -160,7 +160,6 @@ class GiftCardsController < ApplicationController
     end
   end
 
-
   def sort_column
     GiftCard.column_names.include?(params[:sort]) ? params[:sort] : 'people.id'
   end
