@@ -46,7 +46,7 @@
           lat_long = ZIP_LAT_LONG[zip]
           unless lat_long.nil?%>
           var circle = L.circle([<%= lat_long[:lat].to_f %>, <%= lat_long[:long].to_f %>], {
-            color: 'grey',
+            color: 'blue',
             fillColor: getColor(<%=count%>),
             fillOpacity: 0.5,
             radius: getSize(<%=count%>)
