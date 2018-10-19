@@ -61,10 +61,15 @@ class TaggingsController < ApplicationController
   # rubocop:disable Metrics/MethodLength
   def destroy
     @tagging = ActsAsTaggableOn::Tagging.find(params[:id])
-    @tagging_id = @tagging.id
-    if @tagging.destroy
+
+    if @tagging.present?
+      klass = TAGGABLE_TYPES.fetch(@tagging.taggable_type)
+      obj = klass.find @tagging.taggable_id
+      obj.tag_list.remove(@tagging.tag.name)
+      obj.save
+      @tagging_id = @tagging.id
       respond_to do |format|
-        format.js {}
+        format.js
       end
     else
       respond_to do |format|

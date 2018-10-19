@@ -44,6 +44,8 @@ class RapidproUpdateJob
         body[:urns] = [urn] # adds new phone number if need be.
         body[:urns] << "mailto:#{person.email_address}" if person.email_address.present?
         body[:groups] = ['DIG']
+        # rapidpro tags are space delimited and have underscores for spaces
+        body[:fields] = {tags: person.tag_list.map{|t| t.gsub(' ','_')}.join(' ')}
       else # person doesn't yet exist in rapidpro
         cgi_urn = CGI.escape(urn)
         url = base_url + "?urn=#{cgi_urn}" # uses phone number to identify.

@@ -16,4 +16,10 @@ class CartsPerson < ApplicationRecord
   validates :person_id,
     uniqueness: { scope: :cart_id,
                   message: 'Person can only be in a cart once.' }
+  
+  after_commit :update_rapidpro if ENV['RAPIDPRO_TOKEN']
+
+  def update_rapidpro
+    RapidproGroupJob.perform_async(cart.id)
+  end
 end

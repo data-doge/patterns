@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_15_182250) do
+ActiveRecord::Schema.define(version: 2018_10_19_202506) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "card_activation_id"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 2018_10_15_182250) do
     t.datetime "updated_at", null: false
     t.text "description"
     t.integer "people_count", default: 0
+    t.string "rapidpro_uuid"
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
@@ -243,6 +244,7 @@ ActiveRecord::Schema.define(version: 2018_10_15_182250) do
     t.boolean "welcome_sent", default: false
     t.string "participation_level", default: "new"
     t.string "locale", default: "en"
+    t.text "cached_tag_list"
   end
 
   create_table "programs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|

@@ -79,9 +79,10 @@ class Person < ApplicationRecord
   has_secure_token :token
 
   if ENV['RAILS_ENV'] == 'production'
-    after_commit :send_to_mailchimp, on: %i[update create]
-    after_commit :update_rapidpro, on: %i[update create]
-    before_destroy :delete_from_rapidpro
+    after_commit :send_to_mailchimp, on: %i[update create] if env['MAILCHIMP_API_KEY']
+
+    after_commit :update_rapidpro, on: %i[update create] if env['RAPIDPRO_TOKEN']
+    before_destroy :delete_from_rapidpro  if env['RAPIDPRO_TOKEN']
   end
 
   after_create  :update_neighborhood
