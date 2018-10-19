@@ -69,6 +69,11 @@ class PeopleController < ApplicationController
     @people = current_user.admin? ? search : search.verified
     @tags ||= []
   end
+
+  def map
+    @zips = Person.active.group(:postal_code).size
+    @max =  @zips.values.max
+  end
   # rubocop:enable Metrics/AbcSize
 
   # GET /people/1
