@@ -56,7 +56,7 @@
         <dd><%= @cart.updated_at.to_s %></dd>
         <% if current_user.admin? %>
         <dt>Sync to Rapidpro</dt>
-        <dd><%=b est_in_place @cart, :rapidpro_sync, as: :checkbox, collection: {false: "No", true: "Yes"} %></dd>
+        <dd><%= best_in_place @cart, :rapidpro_sync, as: :checkbox, collection: {false: "No", true: "Yes"} %></dd>
         <dt>Export:</dt>
         <dd><%= link_to "Export to CSV", cart_path(@cart,format: :csv), class:'btn' %></dd>
         <% end %>
