@@ -73,7 +73,8 @@ class RapidproGroupJob
   def sync_all_people_to_group
     if @cart.people.size.positive?
       people_ids = @cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:id)
-      RapidproPersonGroupJob.perform_async(people_ids, @cart.id, 'add')
+      # need a delay for rapidpro to catch up
+      RapidproPersonGroupJob.perform_in(5, people_ids, @cart.id, 'add')
     end
   end
 
