@@ -63,7 +63,7 @@ class RapidproGroupJob
         raise 'error'
       end
     end
-
+    @cart.save
     people_ids = @cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:id)
     # need a delay for rapidpro to catch up, maybe?
     RapidproPersonGroupJob.perform_in(5, people_ids, @cart.id, 'add')
