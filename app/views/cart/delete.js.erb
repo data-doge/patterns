@@ -1,5 +1,6 @@
 <% if @deleted_all %>
-  $('#full-cart').html('<%= j render partial: 'cart/full_item', collection: current_cart.people, as: :person %>');  
+  $('#full-cart').html('<%= j render partial: 'cart/full_item', collection: current_cart.people, as: :person %>'); 
+  $('#best_in_place_cart_2_rapidpro_sync').html('No'); // no longer synced.
 <% else %>
   <% @deleted.each do |delete| %>
     $('#<%= delete %>-cart-delete').hide();

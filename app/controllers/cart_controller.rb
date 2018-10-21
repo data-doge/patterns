@@ -99,7 +99,8 @@ class CartController < ApplicationController
       @deleted = @cart.people.pluck(:id)
       @cart.people = []
       # callbacks don't happen here, for soem reason.
-      RapidproPersonGroupJob.perform_async(@deleted, @cart.id, 'remove')
+      @cart.rapidpro_sync = false
+      @cart.save
       @deleted_all = true
     else
       @deleted = [cart_params[:person_id]]
