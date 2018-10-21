@@ -98,6 +98,8 @@ class CartController < ApplicationController
     if cart_params[:person_id].blank?
       @deleted = @cart.people.pluck(:id)
       @cart.people = []
+      # callbacks don't happen here, for soem reason.
+      RapidproPersonGroupJob.perform_async(@deleted, @cart.id, 'remove')
       @deleted_all = true
     else
       @deleted = [cart_params[:person_id]]
