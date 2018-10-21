@@ -198,6 +198,7 @@ class CartController < ApplicationController
         :user_id,
         :user,
         :person,
+        :rapidpro_sync,
         :person_id)
     end
 
@@ -208,6 +209,7 @@ class CartController < ApplicationController
         :name,
         :id,
         :user,
+        :rapidpro_sync,
         :user_id,
         :description,
         :notes)
