@@ -71,7 +71,7 @@ class Cart < ApplicationRecord
 
     def update_rapidpro
       if rapidpro_sync == true
-        RapidproGroupJob.perform_async(id)
+        RapidproGroupJob.perform_async(id, 'create')
       else # creating 
         RapidproGroupJob.perform_async(id, 'delete')
       end
