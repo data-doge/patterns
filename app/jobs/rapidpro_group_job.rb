@@ -19,7 +19,7 @@ class RapidproGroupJob
   # to nil
   # for individual person adds/removes use other job
 
-  def perform(cart_id, action: 'create')
+  def perform(cart_id, action)
     Rails.logger.info "[RapidProGroup] job enqueued: cart: #{cart_id}, action: #{action}"
     @cart = Cart.find(cart_id)
     case action
@@ -71,28 +71,8 @@ class RapidproGroupJob
 
   def sync_all_people_to_group
     if @cart.people.size.positive?
-      uuids = @cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:rapidpro_uuid)
-      
-      throttled = false # can only do 100 at a time.
-      while uuids.size.positive? || throttled == true
-        body = { contacts: uuids.pop(100), action: 'add', group: @cart.rapidpro_uuid }
-        url = base_url + 'contact_actions.json' # bulk actions
-
-        res = HTTParty.post(url, headers: headers, body: body.to_json)
-
-        case res.code
-        when 204 # new person in rapidpro
-          Rails.logger.info "success for #{cart.name}"
-        when 429 # throttled
-          retry_delay = res.headers['retry-after'].to_i + 5
-          # should use people add here with list of uuids
-          RapidproGroupJob.perform_in(retry_delay, id) # re-queue job
-          throttled = true
-        else
-          Rails.logger.error res.code
-          raise 'error'
-        end
-      end
+      people_ids = @cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:id)
+      RapidproPersonGroupJob.perform_async(people_ids, @cart.id, 'add')
     end
   end
 
