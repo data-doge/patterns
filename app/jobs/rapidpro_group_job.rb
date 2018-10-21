@@ -4,9 +4,9 @@ class RapidproGroupJob
   include Sidekiq::Worker
   sidekiq_options retry: 5
 
-  @headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
+  @@headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
                'Content-Type'  => 'application/json' }
-  @base_url = 'https://rapidpro.brl.nyc/api/v2/'
+  @@base_url = 'https://rapidpro.brl.nyc/api/v2/'
 
   # two possible actions for groups: create or delete.
   # need another job which is add/remove to group for individuals.
@@ -14,7 +14,7 @@ class RapidproGroupJob
   # if cart has rapidpro UUID, check if it exists in RP, if not, create
   # finally, use contact actions to sync up whole group.
 
-  # for delete the group, pull down all UUIDS, use contact actions to remove 
+  # for delete the group, pull down all UUIDS, use contact actions to remove
   # all UUID from group, and then when empty, delete group and set rapidpro_uuid
   # to nil
   # for individual person adds/removes use other job
@@ -36,12 +36,12 @@ class RapidproGroupJob
   end
 
   def initialize_group
-    url = @base_url + "groups.json"
+    url = @@base_url + 'groups.json'
     if @cart.rapidpro_uuid.present?
       found = false
       while found == false
-        res = HTTParty.get(url, headers: @headers)
-        found = res.parsed_response['results'].find{|r| r['uuid'] == @cart.rapidpro_uuid}.present?
+        res = HTTParty.get(url, headers: @@headers)
+        found = res.parsed_response['results'].find { |r| r['uuid'] == @cart.rapidpro_uuid }.present?
         if res.parsed_response['next'].nil?
           break
         else
@@ -53,7 +53,7 @@ class RapidproGroupJob
 
     if @cart.rapidpro_uuid.nil?
       # create group and save uuid
-      res = HTTParty.post(url, headers: @headers, body: { name: @cart.name }.to_json)
+      res = HTTParty.post(url, headers: @@headers, body: { name: @cart.name }.to_json)
       case res.code
       when 201 # new group in rapidpro
         # update column to skip callbacks
@@ -78,7 +78,7 @@ class RapidproGroupJob
 
   def delete
     if @cart.rapidpro_uuid.present?
-      res = HTTParty.delete(@base_url + "groups.json?uuid=#{@cart.rapidpro_uuid}", headers: @headers)
+      res = HTTParty.delete(@@base_url + "groups.json?uuid=#{@cart.rapidpro_uuid}", headers: @@headers)
       case res.code
       when 204
         return true

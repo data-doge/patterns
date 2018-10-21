@@ -21,7 +21,7 @@ class CartsPerson < ApplicationRecord
     after_create :add_to_rapidpro
     after_destroy :remove_from_rapidpro
   end
-  
+
   def add_to_rapidpro
     RapidproPersonGroupJob.perform_async(person_id, cart.id, 'add')
   end
