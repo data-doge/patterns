@@ -33,18 +33,9 @@ class RapidproGroupJob
 
   def create
     url = @base_url + 'groups.json'
+    
     if @cart.rapidpro_uuid.present?
-      found = false
-      while found == false
-        res = HTTParty.get(url, headers: @headers)
-        found = res.parsed_response['results'].find { |r| r['uuid'] == @cart.rapidpro_uuid }.present?
-        if res.parsed_response['next'].nil?
-          break
-        else
-          url = res.parsed_response['next']
-        end
-      end
-      @cart.rapidpro_uuid = nil unless found
+      @cart.rapidpro_uuid = nil unless find_group
     end
 
     if @cart.rapidpro_uuid.nil?
@@ -63,10 +54,10 @@ class RapidproGroupJob
         raise 'error'
       end
     end
-    @cart.save
-    people_ids = @cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:id)
     # need a delay for rapidpro to catch up, maybe?
-    RapidproPersonGroupJob.perform_in(5, people_ids, @cart.id, 'add')
+    sleep(1) until find_group
+    people_ids = @cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:id)
+    RapidproPersonGroupJob.perform_async(people_ids, @cart.id, 'add')
   end
 
   def delete
@@ -82,5 +73,20 @@ class RapidproGroupJob
         raise "delete error:#{@cart.id}, code: #{res.code}"
       end
     end
+  end
+
+  def find_group
+    url = @base_url + 'groups.json'
+    found = false
+    while found == false
+      res = HTTParty.get(url, headers: @headers)
+      found = res.parsed_response['results'].find { |r| r['uuid'] == @cart.rapidpro_uuid }.present?
+      if res.parsed_response['next'].nil?
+        break
+      else
+        url = res.parsed_response['next']
+      end
+    end
+    found
   end
 end
