@@ -29,7 +29,10 @@ class Cart < ApplicationRecord
   before_create :set_owner_as_user
   validates :name, length: { in: 3..30 }
   validates :name, uniqueness: { message: 'Pool must have a unique name' }
-  after_create :update_rapidpro if ENV['RAPIDPRO_TOKEN']
+  
+  if ENV['RAPIDPRO_TOKEN']
+    after_save :update_rapidpro, if: :saved_change_to_rapidpro_sync?
+  end
 
   # keep current cart in carts_users,
   # add validation that it must be unique on scope of user.
@@ -67,7 +70,11 @@ class Cart < ApplicationRecord
   private
 
     def update_rapidpro
-      RapidproGroupJob.perform_async(id)
+      if rapidpro_sync == true
+        RapidproGroupJob.perform_async(id)
+      else # creating 
+        RapidproGroupJob.perform_async(id, 'delete')
+      end
     end
 
     def set_owner_as_user

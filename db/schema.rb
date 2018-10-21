@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_19_202506) do
+ActiveRecord::Schema.define(version: 2018_10_21_200403) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "card_activation_id"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(version: 2018_10_19_202506) do
     t.text "description"
     t.integer "people_count", default: 0
     t.string "rapidpro_uuid"
+    t.boolean "rapidpro_sync", default: false
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 

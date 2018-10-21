@@ -4,41 +4,78 @@ class RapidproGroupJob
   include Sidekiq::Worker
   sidekiq_options retry: 5
 
-  # works like so, if person has no rapidpro uuid, we post with phone,
-  # otherwise use uuid. this will allow changes to phone numbers.
-  # additionally, it means we only need one worker.
-  def perform(id)
-    headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
-                'Content-Type'  => 'application/json' }
-    base_url = 'https://rapidpro.brl.nyc/api/v2/'
+  @headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
+               'Content-Type'  => 'application/json' }
+  @base_url = 'https://rapidpro.brl.nyc/api/v2/'
 
-    Rails.logger.info '[RapidProGroup] job enqueued'
+  # two possible actions for groups: create or delete.
+  # need another job which is add/remove to group for individuals.
+  # works like so: if cart doesnt' have rapidpro UUID, then create group on RP
+  # if cart has rapidpro UUID, check if it exists in RP, if not, create
+  # finally, use contact actions to sync up whole group.
 
-    cart = Cart.find(id)
+  # for delete the group, pull down all UUIDS, use contact actions to remove 
+  # all UUID from group, and then when empty, delete group and set rapidpro_uuid
+  # to nil
+  # for individual person adds/removes use other job
 
-    # cart isn't in rapidpro
-    if cart&.rapidpro_uuid.nil?
+  def perform(cart_id, action: 'create')
+    Rails.logger.info "[RapidProGroup] job enqueued: cart: #{cart_id}, action: #{action}"
+    @cart = Cart.find(cart_id)
+    case action
+    when 'create'
+      create
+    when 'delete'
+      delete
+    end
+  end
+
+  def create
+    initialize_group
+    sync_all_people_to_group
+  end
+
+  def initialize_group
+    url = @base_url + "groups.json"
+    if @cart.rapidpro_uuid.present?
+      found = false
+      while found == false
+        res = HTTParty.get(url, headers: @headers)
+        found = res.parsed_response['results'].find{|r| r['uuid'] == @cart.rapidpro_uuid}.present?
+        if res.parsed_response['next'].nil?
+          break
+        else
+          url = res.parsed_response['next']
+        end
+      end
+      @cart.rapidpro_uuid = nil unless found
+    end
+
+    if @cart.rapidpro_uuid.nil?
       # create group and save uuid
-      url = base_url + 'groups.json'
-      res = HTTParty.post(url, headers: headers, body: { name: cart.name }.to_json)
+      res = HTTParty.post(url, headers: headers, body: { name: @cart.name }.to_json)
       case res.code
       when 201 # new group in rapidpro
         # update column to skip callbacks
-        cart.update_column(:rapidpro_uuid, res.parsed_response['uuid'])
+        @cart.rapidpro_uuid = res.parsed_response['uuid']
+        @cart.save
       when 429 # throttled
         retry_delay = res.headers['retry-after'].to_i + 5
-        RapidproGroupJob.perform_in(retry_delay, id) # re-queue job
+        RapidproGroupJob.perform_in(retry_delay, @cart.id, 'create') # re-queue job
       else
         Rails.logger.error res.code
         raise 'error'
       end
     end
-    if cart.people.size.positive?
-      uuids = cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:rapidpro_uuid)
+  end
+
+  def sync_all_people_to_group
+    if @cart.people.size.positive?
+      uuids = @cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:rapidpro_uuid)
       
-      done = false # can only do 100 at a time.
-      while uuids.size.positive? || done == true
-        body = { contacts: uuids.pop(100), action: 'add', group: cart.rapidpro_uuid }
+      throttled = false # can only do 100 at a time.
+      while uuids.size.positive? || throttled == true
+        body = { contacts: uuids.pop(100), action: 'add', group: @cart.rapidpro_uuid }
         url = base_url + 'contact_actions.json' # bulk actions
 
         res = HTTParty.post(url, headers: headers, body: body.to_json)
@@ -48,12 +85,28 @@ class RapidproGroupJob
           Rails.logger.info "success for #{cart.name}"
         when 429 # throttled
           retry_delay = res.headers['retry-after'].to_i + 5
+          # should use people add here with list of uuids
           RapidproGroupJob.perform_in(retry_delay, id) # re-queue job
-          done = true
+          throttled = true
         else
           Rails.logger.error res.code
           raise 'error'
         end
+      end
+    end
+  end
+
+  def delete
+    if @cart.rapidpro_uuid.present?
+      res = HTTParty.delete(@base_url + "groups.json?uuid=#{@cart.rapidpro_uuid}", headers: headers)
+      case res.code
+      when 204
+        return true
+      when 429
+        retry_delay = res.headers['retry-after'].to_i + 5
+        RapidproGroupJob.perform_in(retry_delay, @cart.id, 'delete') # re-queue job
+      else
+        raise "delete error:#{@cart.id}, code: #{res.code}"
       end
     end
   end
