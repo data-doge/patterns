@@ -32,11 +32,6 @@ class RapidproGroupJob
   end
 
   def create
-    initialize_group
-    sync_all_people_to_group
-  end
-
-  def initialize_group
     url = @base_url + 'groups.json'
     if @cart.rapidpro_uuid.present?
       found = false
@@ -68,14 +63,10 @@ class RapidproGroupJob
         raise 'error'
       end
     end
-  end
 
-  def sync_all_people_to_group
-    if @cart.people.size.positive?
-      people_ids = @cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:id)
-      # need a delay for rapidpro to catch up
-      RapidproPersonGroupJob.perform_in(5, people_ids, @cart.id, 'add')
-    end
+    people_ids = @cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:id)
+    # need a delay for rapidpro to catch up, maybe?
+    RapidproPersonGroupJob.perform_in(5, people_ids, @cart.id, 'add')
   end
 
   def delete
