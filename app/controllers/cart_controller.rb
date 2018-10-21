@@ -56,7 +56,7 @@ class CartController < ApplicationController
     respond_to do |format|
       if @cart.update(cart_update_params)
         format.html { redirect_to cart_path(@cart), notice: 'Cart was successfully updated.' }
-        format.json { head :no_content }
+        format.json { respond_with_bip(@cart) }
       else
         flash[:error] = @cart.errors
         format.html { render action: 'edit' }
