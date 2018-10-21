@@ -39,7 +39,7 @@ class RapidproPersonGroupJob
 
       retry_delay = res.headers['retry-after'].to_i + 5
       pids = Person.where(rapidpro_uuid: @people)
-      retry_later(pids, action, retry_delay)
+      retry_later(pids, retry_delay)
       not_throttled = false
     end
   end
