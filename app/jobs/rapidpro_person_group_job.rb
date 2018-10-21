@@ -32,7 +32,7 @@ class RapidproPersonGroupJob
     while @people.size.positive? && not_throttled
       uuids = @people.pop(100)
       body = { 'action': action, contacts: uuids, group: @cart.rapidpro_uuid }
-      res = HTTParty.post(url: url,headers: @headers, body: body.to_json)
+      res = HTTParty.post(url: url, headers: @headers, body: body.to_json)
       if res.code == 429 # throttled
         retry_delay = res.headers['retry-after'].to_i + 5
         pids = Person.where(rapidpro_uuid: @people)

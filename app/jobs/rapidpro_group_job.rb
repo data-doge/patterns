@@ -53,7 +53,7 @@ class RapidproGroupJob
 
     if @cart.rapidpro_uuid.nil?
       # create group and save uuid
-      res = HTTParty.post(url, headers: headers, body: { name: @cart.name }.to_json)
+      res = HTTParty.post(url, headers: @headers, body: { name: @cart.name }.to_json)
       case res.code
       when 201 # new group in rapidpro
         # update column to skip callbacks
@@ -78,7 +78,7 @@ class RapidproGroupJob
 
   def delete
     if @cart.rapidpro_uuid.present?
-      res = HTTParty.delete(@base_url + "groups.json?uuid=#{@cart.rapidpro_uuid}", headers: headers)
+      res = HTTParty.delete(@base_url + "groups.json?uuid=#{@cart.rapidpro_uuid}", headers: @headers)
       case res.code
       when 204
         return true
