@@ -4,9 +4,7 @@ class RapidproGroupJob
   include Sidekiq::Worker
   sidekiq_options retry: 5
 
-  @@headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
-               'Content-Type'  => 'application/json' }
-  @@base_url = 'https://rapidpro.brl.nyc/api/v2/'
+  
 
   # two possible actions for groups: create or delete.
   # need another job which is add/remove to group for individuals.
@@ -20,6 +18,9 @@ class RapidproGroupJob
   # for individual person adds/removes use other job
 
   def perform(cart_id, action)
+    @headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
+               'Content-Type'  => 'application/json' }
+    @base_url = 'https://rapidpro.brl.nyc/api/v2/'
     Rails.logger.info "[RapidProGroup] job enqueued: cart: #{cart_id}, action: #{action}"
     @cart = Cart.find(cart_id)
     case action
@@ -36,11 +37,11 @@ class RapidproGroupJob
   end
 
   def initialize_group
-    url = @@base_url + 'groups.json'
+    url = @base_url + 'groups.json'
     if @cart.rapidpro_uuid.present?
       found = false
       while found == false
-        res = HTTParty.get(url, headers: @@headers)
+        res = HTTParty.get(url, headers: @headers)
         found = res.parsed_response['results'].find { |r| r['uuid'] == @cart.rapidpro_uuid }.present?
         if res.parsed_response['next'].nil?
           break
@@ -53,7 +54,7 @@ class RapidproGroupJob
 
     if @cart.rapidpro_uuid.nil?
       # create group and save uuid
-      res = HTTParty.post(url, headers: @@headers, body: { name: @cart.name }.to_json)
+      res = HTTParty.post(url, headers: @headers, body: { name: @cart.name }.to_json)
       case res.code
       when 201 # new group in rapidpro
         # update column to skip callbacks
@@ -78,7 +79,7 @@ class RapidproGroupJob
 
   def delete
     if @cart.rapidpro_uuid.present?
-      res = HTTParty.delete(@@base_url + "groups.json?uuid=#{@cart.rapidpro_uuid}", headers: @@headers)
+      res = HTTParty.delete(@base_url + "groups.json?uuid=#{@cart.rapidpro_uuid}", headers: @headers)
       case res.code
       when 204
         return true

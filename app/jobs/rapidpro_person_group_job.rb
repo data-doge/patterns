@@ -15,13 +15,10 @@ class RapidproPersonGroupJob
   # to nil
   # for individual person adds/removes use other job
 
-  def initialize
+  def perform(people_ids, cart_id, action)
     @headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
                  'Content-Type'  => 'application/json' }
     @base_url = 'https://rapidpro.brl.nyc/api/v2/'
-  end
-
-  def perform(people_ids, cart_id, action)
     Rails.logger.info "[RapidProPersonGroup] job enqueued: cart: #{cart_id}, action: #{action}"
     @cart = Cart.find(cart_id)
     @people = Person.where(id: people_ids).pluck(:rapidpro_uuid).compact
