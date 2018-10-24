@@ -46,7 +46,7 @@ class RapidproUpdateJob
       # patterns_token: person.token,
       # patterns_id: person.id
 
-      urn = "tel:#{person.phone_number}"
+      urn = "tel:#{@person.phone_number}"
 
       if @person&.rapidpro_uuid.present? # already created in rapidpro
         url = endpoint_url + "?uuid=#{@person.rapidpro_uuid}"
