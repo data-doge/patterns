@@ -21,6 +21,9 @@ class RapidproPersonGroupJob
     @base_url = 'https://rapidpro.brl.nyc/api/v2/'
     Rails.logger.info "[RapidProPersonGroup] job enqueued: cart: #{cart_id}, action: #{action}"
     @cart = Cart.find(cart_id)
+    
+    return unless @cart.rapidpro_sync # perhaps cart is no longer synced
+
     @people = Person.where(id: people_ids).tagged_with('not dig', exclude: true).pluck(:rapidpro_uuid).compact
     @action = action
     raise 'cart not in rapidpro' if @cart.rapidpro_uuid.nil?

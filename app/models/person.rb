@@ -588,7 +588,5 @@ class Person < ApplicationRecord
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-  private
-
 end
 # rubocop:enable ClassLength
