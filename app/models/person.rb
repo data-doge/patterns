@@ -353,7 +353,7 @@ class Person < ApplicationRecord
   end
 
   def delete_from_rapidpro
-    RapidproDeleteJob.perform_async(id) unless active
+    RapidproDeleteJob.perform_async(id)
   end
 
   def update_rapidpro
