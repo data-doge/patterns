@@ -37,6 +37,7 @@ class RapidproUpdateJob
       body = { name: @person.full_name,
                first_name: @person.first_name,
                language: lang }
+      
       # eventual fields: # first_name: person.first_name,
       # last_name: person.last_name,
       # email_address: person.email_address,
