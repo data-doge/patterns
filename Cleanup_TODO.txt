@@ -24,6 +24,11 @@ all reward types have a reward ID.
   Can have many manual and activated cards.
   only one giftrocket.
 
+Budgets:
+  teams have a Gift Rocket budget, we allocate to them
+  gift rocket rewards draw down on budget.
+  teams have a max,min per GR amount. $5/$100 etc.
+  Check GR budget before sending reward.
 
 Research Sessions can be a rapidpro group? maybe hit a button and export them?
 rapidpro endpoint for sending gift cards?
