@@ -60,14 +60,9 @@ class Person < ApplicationRecord
 
   has_many :comments, as: :commentable, dependent: :destroy
 
-  # has_many :submissions, dependent: :destroy
-
   has_many :gift_cards
   accepts_nested_attributes_for :gift_cards, reject_if: :all_blank
   attr_accessor :gift_cards_attributes
-
-  # has_many :reservations, dependent: :destroy
-  # has_many :events, through: :reservations
 
   has_many :invitations
   has_many :research_sessions, through: :invitations
