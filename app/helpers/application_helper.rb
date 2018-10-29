@@ -46,7 +46,7 @@ module ApplicationHelper
     end
   end
 
-  # currently busted. gotta figre out why never descending
+  # currently busted. gotta figure out why never descending
   def sortable(column, title = nil)
     title ||= column.titleize
     sort_direction = params['direction']
@@ -55,6 +55,7 @@ module ApplicationHelper
     link_to title, { sort: column, direction: direction }, { class: css_class }
   end
 
+  # for building search forms, eventually
   def setup_search_form(builder)
     fields = builder.grouping_fields builder.object.new_grouping,
       object_name: 'new_object_name', child_index: 'new_grouping' do |f|
