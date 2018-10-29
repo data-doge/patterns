@@ -44,9 +44,7 @@ module ExternalDataMappings
               :tablet
             end
 
-      ret = Logan::Application.config.device_mappings[sym]
-      Rails.logger.debug "[map_device_to_id] given <<#{val}>> returning <<#{ret}>>"
-      ret
+      Logan::Application.config.device_mappings[sym]
     end
     # rubocop:enable Metrics/MethodLength
 

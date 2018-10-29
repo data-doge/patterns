@@ -133,10 +133,10 @@ Logan::Application.routes.draw do
   #   end
   # end
 
-  post 'receive_text/index', defaults: { format: 'xml' }
-  post 'receive_text/smssignup', defaults: { format: 'xml' }
+  # post 'receive_text/index', defaults: { format: 'xml' }
+  # post 'receive_text/smssignup', defaults: { format: 'xml' }
 
-  post "twilio_messages/updatestatus", to: 'twilio_messages/#updatestatus'
+  # post "twilio_messages/updatestatus", to: 'twilio_messages/#updatestatus'
 
   # post "twil", to: 'twilio_messages/#newtwil'
 
@@ -147,18 +147,6 @@ Logan::Application.routes.draw do
 
   get 'mailchimp_export/index'
   get 'mailchimp_export/create'
-
-
-  # resources :events do
-  #   member do
-  #     post :export
-  #   end
-  # end
-
-  # resources :applications
-  # resources :programs
-
-  # weirdo stuff to get around devise. has to be a better way
 
   devise_for :users
 
@@ -172,7 +160,6 @@ Logan::Application.routes.draw do
   end
 
   get 'dashboard/index'
-  resources :submissions
 
   resources :comments
   resources :taggings, only: [:create, :destroy]
