@@ -4,8 +4,6 @@ class RapidproGroupJob
   include Sidekiq::Worker
   sidekiq_options retry: 5
 
-  
-
   # two possible actions for groups: create or delete.
   # need another job which is add/remove to group for individuals.
   # works like so: if cart doesnt' have rapidpro UUID, then create group on RP
@@ -19,7 +17,7 @@ class RapidproGroupJob
 
   def perform(cart_id, action)
     @headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
-               'Content-Type'  => 'application/json' }
+                 'Content-Type'  => 'application/json' }
     @base_url = 'https://rapidpro.brl.nyc/api/v2/'
     Rails.logger.info "[RapidProGroup] job enqueued: cart: #{cart_id}, action: #{action}"
     @cart = Cart.find(cart_id)
@@ -33,7 +31,7 @@ class RapidproGroupJob
 
   def create
     url = @base_url + 'groups.json'
-    
+
     if @cart.rapidpro_uuid.present?
       @cart.rapidpro_uuid = nil unless find_group
     end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # FIXME: Refactor and re-enable cop
+# this is primarily used by admins to track upcoming sessions...
 # rubocop:disable ClassLength
 class CalendarController < ApplicationController
   # this is so that people can also visit the calendar.

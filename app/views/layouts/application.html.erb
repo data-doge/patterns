@@ -49,21 +49,6 @@
                 <% end %>
                 </ul>
               </li>
-              <% if current_user.admin? %>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">More<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li class=""><%= link_to "Submissions <span class='badge'>#{Submission.where('person_id is ?', nil).count}</span>".html_safe, submissions_path %></li>
-                  <li><%= link_to "SMS Campaigns", twilio_wufoos_path %></li>
-                  <li><%= link_to "Import Phone Numbers", '/twilio_messages/sendmessages' %></li>
-                  <li><%= link_to "Add Submission", new_submission_path %></li>
-                  <li><%= link_to "MailChimp Updates", mailchimp_updates_path %></li>
-                  <li><%= link_to "Text Message Log", twilio_messages_path %></li>
-                  <li><%= link_to "Programs", programs_path %></li>
-                  <li><%= link_to "Applications", applications_path %></li>
-                </ul>
-              </li>
-              <% end %>
             </ul>
 
             <!-- account dropdown -->
