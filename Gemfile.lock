@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/BlueRidgeLabs/tremendous-ruby.git
+  revision: c5a64d758c1de72b7df0dc455e178195adad35eb
+  branch: bump_httparty
+  specs:
+    tremendous_ruby (1.2.0)
+      activesupport (>= 3.2, <= 5.2.1)
+      httparty (~> 0.15.0)
+      jwt (= 1.5.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -81,13 +91,14 @@ GEM
     capistrano-sidekiq (0.10.0)
       capistrano
       sidekiq (>= 3.4)
-    capybara (3.9.0)
+    capybara (3.10.0)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
-      xpath (~> 3.1)
+      regexp_parser (~> 1.2)
+      xpath (~> 3.2)
     chartkick (3.0.1)
     chronic (0.10.2)
     codemirror-rails (5.16.0)
@@ -119,7 +130,7 @@ GEM
       railties (>= 4.1.0, < 6.0)
       responders
       warden (~> 1.2.3)
-    devise_invitable (1.7.4)
+    devise_invitable (1.7.5)
       actionmailer (>= 4.1.0)
       devise (>= 4.0.0)
     devise_zxcvbn (4.4.1)
@@ -158,7 +169,7 @@ GEM
     glyphicons-rails (0.1.2)
       sass (~> 3.3)
       sass-rails
-    groupdate (4.0.1)
+    groupdate (4.0.2)
       activesupport (>= 4.2)
     gsm_encoder (0.1.6)
     guard (2.14.2)
@@ -194,7 +205,7 @@ GEM
     htmlentities (4.3.4)
     httparty (0.15.7)
       multi_xml (>= 0.5.2)
-    i18n (1.0.1)
+    i18n (1.1.1)
       concurrent-ruby (~> 1.0)
     icalendar (2.5.0)
       ice_cube (~> 0.16)
@@ -213,7 +224,7 @@ GEM
     jquery-validation-rails (1.16.0)
     jquery_mask_rails (0.1.0)
     json (2.1.0)
-    jwt (1.5.6)
+    jwt (1.5.0)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.1.1)
@@ -243,7 +254,7 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.13)
-    mail (2.7.0)
+    mail (2.7.1)
       mini_mime (>= 0.1.1)
     mandrill-rails (1.5.0)
       activesupport (>= 4)
@@ -261,7 +272,7 @@ GEM
     mimemagic (0.3.2)
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
-    minitar (0.6.1)
+    minitar (0.7)
     minitest (5.11.3)
     mocha (1.7.0)
       metaclass (~> 0.0.1)
@@ -270,12 +281,12 @@ GEM
       railties (>= 3.1)
     monetize (1.9.0)
       money (~> 6.12)
-    money (6.12.0)
-      i18n (>= 0.6.4, < 1.1)
-    money-rails (1.12.0)
+    money (6.13.1)
+      i18n (>= 0.6.4, <= 2)
+    money-rails (1.13.0)
       activesupport (>= 3.0)
       monetize (~> 1.9.0)
-      money (~> 6.12.0)
+      money (~> 6.13.0)
       railties (>= 3.0)
     msgpack (1.2.4)
     multi_json (1.13.1)
@@ -305,7 +316,7 @@ GEM
       globalid
       paper_trail (>= 3.0.0)
     parallel (1.12.1)
-    parser (2.5.1.2)
+    parser (2.5.3.0)
       ast (~> 2.4.0)
     phony (2.16.5)
     phony_rails (0.14.11)
@@ -346,15 +357,15 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
-    rails-i18n (5.1.1)
+    rails-i18n (5.1.2)
       i18n (>= 0.7, < 2)
       railties (>= 5.0, < 6)
-    rails_db (2.0.3)
+    rails_db (2.0.4)
       codemirror-rails
       kaminari
       rails (>= 5.0.0)
       ransack
-      simple_form
+      simple_form (~> 4.0.1)
       terminal-table
     railties (5.2.1)
       actionpack (= 5.2.1)
@@ -365,7 +376,7 @@ GEM
     rainbow (3.0.0)
     raindrops (0.19.0)
     rake (12.3.1)
-    ransack (2.0.1)
+    ransack (2.1.0)
       actionpack (>= 5.0)
       activerecord (>= 5.0)
       activesupport (>= 5.0)
@@ -396,6 +407,7 @@ GEM
     redis-store (1.6.0)
       redis (>= 2.2, < 5)
     ref (2.0.0)
+    regexp_parser (1.2.0)
     request_store (1.4.1)
       rack (>= 1.4)
     responders (2.4.0)
@@ -417,7 +429,7 @@ GEM
     rspec-mocks (3.8.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
-    rspec-rails (3.8.0)
+    rspec-rails (3.8.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
@@ -428,14 +440,14 @@ GEM
     rspec-retry (0.6.1)
       rspec-core (> 3.3)
     rspec-support (3.8.0)
-    rubocop (0.59.2)
+    rubocop (0.60.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (~> 1.0, >= 1.0.1)
+      unicode-display_width (~> 1.4.0)
     ruby-ole (1.2.12.1)
     ruby-prof (0.17.0)
     ruby-progressbar (1.10.0)
@@ -479,9 +491,9 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    skylight (3.0.0)
-      skylight-core (= 3.0.0)
-    skylight-core (3.0.0)
+    skylight (3.1.1)
+      skylight-core (= 3.1.1)
+    skylight-core (3.1.1)
       activesupport (>= 4.2.0)
     sms-spec (0.2.0)
       rspec (~> 3.1)
@@ -511,15 +523,15 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.8)
     timecop (0.9.1)
-    tins (1.16.3)
+    tins (1.17.0)
     tomlrb (1.2.7)
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    twilio-ruby (4.13.0)
-      builder (>= 2.1.2)
-      jwt (~> 1.0)
-      multi_json (>= 1.3.0)
+    twilio-ruby (5.15.2)
+      faraday (~> 0.9)
+      jwt (>= 1.5, <= 2.5)
+      nokogiri (>= 1.6, < 2.0)
     twitter-bootstrap-rails (2.2.8)
       actionpack (>= 3.1)
       execjs
@@ -539,7 +551,7 @@ GEM
       raindrops (~> 0.7)
     validates_overlap (0.8.6)
       rails (>= 3.0.0)
-    validates_zipcode (0.1.0)
+    validates_zipcode (0.1.1)
       activemodel (>= 3.2.0)
     warden (1.2.7)
       rack (>= 1.0)
@@ -560,7 +572,7 @@ GEM
       httparty (>= 0.6.1)
       mime-types (>= 1.16)
       multipart-post (>= 1.0.1)
-    xpath (3.1.0)
+    xpath (3.2.0)
       nokogiri (~> 1.8)
     zxcvbn-js (4.4.3)
       execjs
@@ -666,8 +678,9 @@ DEPENDENCIES
   stackprof
   therubyracer
   timecop
+  tremendous_ruby!
   turbolinks
-  twilio-ruby (~> 4.13.0)
+  twilio-ruby
   twitter-bootstrap-rails (~> 2.2.0)
   twitter-typeahead-rails
   uglifier
@@ -681,7 +694,7 @@ DEPENDENCIES
   wuparty
 
 RUBY VERSION
-   ruby 2.5.3p105
+   ruby 2.5.1p57
 
 BUNDLED WITH
    1.16.6

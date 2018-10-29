@@ -40,7 +40,7 @@ gem 'roo'
 gem 'redcarpet' # for markdown notes
 
 #giftrocekt API for automagic giftcarding
-gem 'tremendous_ruby'
+gem 'tremendous_ruby', git: 'https://github.com/BlueRidgeLabs/tremendous-ruby.git', branch:'bump_httparty'
 
 group :development do
   # gem 'capistrano'
@@ -143,7 +143,7 @@ gem 'devise_zxcvbn' # password strength filter
 gem 'gibbon'
 
 # use twilio-ruby for twilio
-gem 'twilio-ruby', '~> 4.13.0'
+gem 'twilio-ruby'
 
 gem 'httparty', '0.15.7'
 # use Wuparty for wufoo

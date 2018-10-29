@@ -13,7 +13,9 @@ https://github.com/zdennis/activerecord-import/wiki
 for adding a whole boatload of people to carts
 
 GiftRocket Cards:
-rename the giftcard model to "reward"?
+rename the giftcard model to "reward"
+rename card_activation to giftcard
+add cash/manual reward type: all 5555 batches go here. all old school gift cards go here.
 add a reward type and reward ID.
 rapidpro endpoint for sending gift cards for surveys only right now
   must have a research session ID. Adds person to RS, then gives reward.
@@ -29,12 +31,14 @@ all reward types have a reward ID.
   only one giftrocket per RS
 
 Budgets:
-  teams have a Gift Rocket budget, we allocate to them
+  teams have a Gift Rocket budget, we allocate to them. Draws down on total.
   gift rocket rewards draw down on budget.
   teams have a max,min per GR amount. $5/$100 etc.
   Check GR budget before sending reward.
 
-  Transaction Table of all GR things.
+Transaction Table of all GR things.
+  BRL team is where GR budget starts, then BRL sends money to teams, and that goes into transactions
+  nightly transaction check: does it all add up?
 
 
 
