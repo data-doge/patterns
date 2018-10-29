@@ -13,16 +13,20 @@ https://github.com/zdennis/activerecord-import/wiki
 for adding a whole boatload of people to carts
 
 GiftRocket Cards:
-rename the giftcard model to "reward".
+rename the giftcard model to "reward"?
 add a reward type and reward ID.
+rapidpro endpoint for sending gift cards for surveys only right now
+  must have a research session ID. Adds person to RS, then gives reward.
+  checks if person is in RS before starting survey.
+
 Reward type is:
 	gift card (card activation)
-	legacy Card (manual input)
+	legacy Card/Cash (manual input)
 	giftrocket (run out and make the request after create/commit)
 
 all reward types have a reward ID.
-  Can have many manual and activated cards.
-  only one giftrocket.
+  Can have many manual and activated cards per RS
+  only one giftrocket per RS
 
 Budgets:
   teams have a Gift Rocket budget, we allocate to them
@@ -30,5 +34,17 @@ Budgets:
   teams have a max,min per GR amount. $5/$100 etc.
   Check GR budget before sending reward.
 
-Research Sessions can be a rapidpro group? maybe hit a button and export them?
-rapidpro endpoint for sending gift cards?
+  Transaction Table of all GR things.
+
+
+
+
+
+Reward:
+  id
+  rewardable_type: gift card, gift rocket, cash
+  reward_id: foreign key
+  research_session:
+  person_id:
+  user_id:
+  finance_code:
