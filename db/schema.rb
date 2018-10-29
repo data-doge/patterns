@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_21_200403) do
+ActiveRecord::Schema.define(version: 2018_10_22_182227) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "card_activation_id"
@@ -23,19 +23,6 @@ ActiveRecord::Schema.define(version: 2018_10_21_200403) do
     t.string "call_status", default: "created"
     t.string "token"
     t.index ["token"], name: "index_activation_calls_on_token", unique: true
-  end
-
-  create_table "applications", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.string "url"
-    t.string "source_url"
-    t.string "creator_name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "program_id"
-    t.integer "created_by"
-    t.integer "updated_by"
   end
 
   create_table "card_activations", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -110,21 +97,6 @@ ActiveRecord::Schema.define(version: 2018_10_21_200403) do
     t.index ["queue"], name: "delayed_jobs_queue"
   end
 
-  create_table "events", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.datetime "start_datetime"
-    t.datetime "end_datetime"
-    t.text "location"
-    t.text "address"
-    t.integer "capacity"
-    t.integer "application_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "created_by"
-    t.integer "updated_by"
-  end
-
   create_table "gift_cards", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "gift_card_number"
     t.string "expiration_date"
@@ -183,23 +155,6 @@ ActiveRecord::Schema.define(version: 2018_10_21_200403) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "old_taggings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "taggable_type"
-    t.integer "taggable_id"
-    t.integer "created_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "tag_id"
-  end
-
-  create_table "old_tags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "name"
-    t.integer "created_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "taggings_count", default: 0, null: false
-  end
-
   create_table "people", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -248,15 +203,6 @@ ActiveRecord::Schema.define(version: 2018_10_21_200403) do
     t.text "cached_tag_list"
   end
 
-  create_table "programs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "created_by"
-    t.integer "updated_by"
-  end
-
   create_table "research_sessions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.text "description"
     t.integer "buffer", default: 0, null: false
@@ -272,30 +218,6 @@ ActiveRecord::Schema.define(version: 2018_10_21_200403) do
     t.integer "duration", default: 60
     t.string "cached_tag_list"
     t.index ["user_id"], name: "index_research_sessions_on_user_id"
-  end
-
-  create_table "reservations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "person_id"
-    t.integer "event_id"
-    t.datetime "confirmed_at"
-    t.integer "created_by"
-    t.datetime "attended_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "updated_by"
-  end
-
-  create_table "submissions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.text "raw_content"
-    t.integer "person_id"
-    t.string "ip_addr"
-    t.string "entry_id"
-    t.text "form_structure"
-    t.text "field_structure"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string "form_id"
-    t.integer "form_type", default: 0
   end
 
   create_table "taggings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -352,17 +274,6 @@ ActiveRecord::Schema.define(version: 2018_10_21_200403) do
     t.string "signup_verify"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "twilio_wufoos", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "wufoo_formid"
-    t.string "twilio_keyword"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean "status", default: false, null: false
-    t.string "end_message"
-    t.string "form_type"
   end
 
   create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
