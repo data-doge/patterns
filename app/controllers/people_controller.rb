@@ -41,8 +41,11 @@ class PeopleController < ApplicationController
 
   before_action :set_person, only: %i[show edit update destroy]
 
+  # should delete
   skip_before_action :authenticate_user!, if: :should_skip_janky_auth?
+  # should delete
   skip_before_action :verify_authenticity_token, only: %i[create create_sms]
+  
   helper_method :sort_column, :sort_direction
 
   # GET /people
@@ -131,7 +134,7 @@ class PeopleController < ApplicationController
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize,  Metrics/MethodLength, Rails/TimeZone
   #
   # POST /people/create_sms
-  def create_sms
+  def create_sms # delete me
     if params['HandshakeKey'].present?
       if Logan::Application.config.wufoo_handshake_key != params['HandshakeKey']
         Rails.logger.warn("[wufoo] received request with invalid handshake. Full request: #{request.inspect}")
@@ -196,6 +199,7 @@ class PeopleController < ApplicationController
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize,  Metrics/MethodLength, Rails/TimeZone
 
   # FIXME: Refactor and re-enable cop
+  # TODO: killoff wufoo
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   #
   # POST /people
