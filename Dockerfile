@@ -1,5 +1,5 @@
-FROM ruby:2.5.0
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs && apt-get autoremove -y && apt-get clean
+FROM ruby:2.5.1
+RUN apt-get update -qq && apt-get install -y build-essential libsodium-dev libpq-dev nodejs && apt-get autoremove -y && apt-get clean
 RUN mkdir /app
 WORKDIR /app
 COPY Gemfile /app/Gemfile

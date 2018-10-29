@@ -6,12 +6,33 @@ services: # configuring each container
     volumes: 
       - '.:/app'
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    links:
+      - redis
+      - db
     ports:
       - "3000:3000" 
     environment:
-      MYSQL_URL: 'db'
-      MYSQL_PASSWORD: 'root'
-      MYSQL_USER: 'root'
+      - MYSQL_URL='db'
+      - MYSQL_PASSWORD='root'
+      - MYSQL_USER='root'
+      - VIRTUAL_HOST=${PRODUCTION_SERVER:-localhost}
+      - LETSENCRYPT_HOST=${PRODUCTION_SERVER:-localhost} # for letsencrypt
+      - LETSENCRYPT_EMAIL=${MAIL_ADMIN:-admin@example.com}
+      - LETSENCRYPT_TEST=${LETSENCRYPT_TEST:-true}
+  background:
+    build: .
+    volumes: 
+      - '.:/app'
+    command: bundle exec sidekiq
+    links:
+      - redis
+      - db
+    environment:
+      - MYSQL_URL='db'
+      - MYSQL_PASSWORD='root'
+      - MYSQL_USER='root'
+  redis:
+    image: redis:alpine
   db: # name of our mysql container
     image: mysql:latest # which image to pull, in this case specifying v. 5.7
     restart: always # always restart the container after reboot
