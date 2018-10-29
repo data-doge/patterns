@@ -1,0 +1,3 @@
+[submodule "rapidpro/rapidpro-docker-compose"]
+	path = rapidpro/rapidpro-docker-compose
+	url = https://github.com/cromulus/rapidpro-docker-compose.git
