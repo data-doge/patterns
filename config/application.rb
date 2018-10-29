@@ -55,8 +55,8 @@ module Logan
 
 
     config.action_cable.mount_path = '/cable'
-    
-    config.cache_store = :redis_store, "redis://localhost:6379/0/cache", { expires_in: 90.minutes }
+    redis_str = ENV['REDIS_URL'] || "redis://localhost:6379/0/cache"
+    config.cache_store = :redis_store, redis_str , { expires_in: 90.minutes }
 
     config.active_job.queue_adapter = :sidekiq
 

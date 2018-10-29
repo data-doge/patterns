@@ -9,9 +9,9 @@ development:
   encoding: utf8
   pool: 5
   timeout: 5000
-  host: localhost
-  username: root
-  password:
+  host: <%= ENV['MYSQL_HOST'] || 'localhost' %>
+  username: <%= ENV['MYSQL_USER'] || 'logan' %>
+  password: <%= ENV['MYSQL_PWD'] || '' %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

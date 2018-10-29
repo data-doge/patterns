@@ -6,15 +6,17 @@ services: # configuring each container
     volumes: 
       - '.:/app'
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    restart: always
     links:
       - redis
       - db
     ports:
       - "3000:3000" 
     environment:
-      - MYSQL_URL='db'
-      - MYSQL_PASSWORD='root'
-      - MYSQL_USER='root'
+      - MYSQL_HOST='db'
+      - MYSQL_PWD='patterns'
+      - MYSQL_USER='patterns'
+      - REDIS_URL=redis://redis:6379/0
       - VIRTUAL_HOST=${PRODUCTION_SERVER:-localhost}
       - LETSENCRYPT_HOST=${PRODUCTION_SERVER:-localhost} # for letsencrypt
       - LETSENCRYPT_EMAIL=${MAIL_ADMIN:-admin@example.com}
@@ -24,22 +26,28 @@ services: # configuring each container
     volumes: 
       - '.:/app'
     command: bundle exec sidekiq
+    restart: always
     links:
       - redis
       - db
     environment:
-      - MYSQL_URL='db'
-      - MYSQL_PASSWORD='root'
-      - MYSQL_USER='root'
+      - MYSQL_HOST='db'
+      - MYSQL_PWD='patterns'
+      - MYSQL_USER='patterns'
+      - REDIS_URL=redis://redis:6379/0
   redis:
     image: redis:alpine
+    restart: always
   db: # name of our mysql container
-    image: mysql:latest # which image to pull, in this case specifying v. 5.7
+    image: mysql:5.7 # which image to pull, in this case specifying v. 5.7
     restart: always # always restart the container after reboot
     environment: # environment variables -- mysql options in this case
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: development
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_USER: patterns
+      MYSQL_PASSWORD: patterns
     volumes: # data to map to the container
-      - ./databases:/docker-entrypoint-initdb.d # where to find our data autoimport any sql
+      - ./databases:/docker-entrypoint-initdb.d
+      - db-datavolume:/var/lib/mysql # where to find our data autoimport any sql
+volumes:
+  db-datavolume:
