@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2018_10_22_182227) do
 
-  create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "card_activation_id"
     t.string "sid"
     t.text "transcript"
@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 2018_10_22_182227) do
     t.index ["token"], name: "index_activation_calls_on_token", unique: true
   end
 
-  create_table "card_activations", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "card_activations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "full_card_number"
     t.string "expiration_date"
     t.string "sequence_number"
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 2018_10_22_182227) do
     t.integer "created_by"
   end
 
-  create_table "carts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "carts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name", default: "default"
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
@@ -53,14 +53,14 @@ ActiveRecord::Schema.define(version: 2018_10_22_182227) do
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
-  create_table "carts_people", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "carts_people", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.bigint "cart_id", null: false
     t.bigint "person_id", null: false
     t.index ["cart_id", "person_id"], name: "index_carts_people_on_cart_id_and_person_id"
     t.index ["person_id", "cart_id"], name: "index_carts_people_on_person_id_and_cart_id"
   end
 
-  create_table "carts_users", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "carts_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.bigint "cart_id", null: false
     t.bigint "user_id", null: false
     t.boolean "current_cart", default: false
@@ -97,7 +97,7 @@ ActiveRecord::Schema.define(version: 2018_10_22_182227) do
     t.index ["queue"], name: "delayed_jobs_queue"
   end
 
-  create_table "gift_cards", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "gift_cards", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "gift_card_number"
     t.string "expiration_date"
     t.integer "person_id"
@@ -220,7 +220,7 @@ ActiveRecord::Schema.define(version: 2018_10_22_182227) do
     t.index ["user_id"], name: "index_research_sessions_on_user_id"
   end
 
-  create_table "taggings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "taggings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "tag_id"
     t.integer "taggable_id"
     t.string "taggable_type"
@@ -239,13 +239,13 @@ ActiveRecord::Schema.define(version: 2018_10_22_182227) do
     t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
   end
 
-  create_table "tags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "tags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name", collation: "utf8_bin"
     t.integer "taggings_count", default: 0
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
-  create_table "teams", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "teams", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "finance_code"
     t.text "description"
@@ -311,7 +311,7 @@ ActiveRecord::Schema.define(version: 2018_10_22_182227) do
     t.index ["team_id"], name: "fk_rails_b2bbf87303"
   end
 
-  create_table "versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "item_type", limit: 191, null: false
     t.integer "item_id", null: false
     t.string "event", null: false
