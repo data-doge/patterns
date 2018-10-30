@@ -83,13 +83,12 @@ class PeopleController < ApplicationController
 
     @last_gift_card = GiftCard.last # default scope is id: :desc
     @gift_card = GiftCard.new
-    @reservation = Reservation.new person: @person
     @verified_types = Person.distinct.pluck(:verified).select(&:present?)
     @tags = @person.tags.pluck(:name)
-    @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
-    @twilio_wufoo_formids = @outgoingmessages.distinct.pluck(:wufoo_formid)
-    @twilio_wufoo_forms = TwilioWufoo.where(id: @twilio_wufoo_formids)
-    @allmessages =  TwilioMessage.where('to = :number or from = :number', number: @person.normalized_phone_number)
+    # @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
+    # @twilio_wufoo_formids = @outgoingmessages.distinct.pluck(:wufoo_formid)
+    
+    # @allmessages =  TwilioMessage.where('to = :number or from = :number', number: @person.normalized_phone_number)
   end
 
   # GET /people/new

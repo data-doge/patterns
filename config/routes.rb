@@ -122,16 +122,16 @@ Logan::Application.routes.draw do
   post '/api/create_person', to: 'public/people#api_create', as: :api_create
   get '/api/show', to: 'public/people#show', as: :public_show_person
 
-  resources :twilio_wufoos
+  # resources :twilio_wufoos
 
-  resources :twilio_messages do
-    collection do
-      post 'newtwil'
-      get 'newtwil'
-      post 'uploadnumbers'
-      get 'sendmessages'
-    end
-  end
+  # resources :twilio_messages do
+  #   collection do
+  #     post 'newtwil'
+  #     get 'newtwil'
+  #     post 'uploadnumbers'
+  #     get 'sendmessages'
+  #   end
+  # end
 
   post 'receive_text/index', defaults: { format: 'xml' }
   post 'receive_text/smssignup', defaults: { format: 'xml' }
@@ -147,16 +147,16 @@ Logan::Application.routes.draw do
 
   get 'mailchimp_export/index'
   get 'mailchimp_export/create'
-  resources :reservations
 
-  resources :events do
-    member do
-      post :export
-    end
-  end
 
-  resources :applications
-  resources :programs
+  # resources :events do
+  #   member do
+  #     post :export
+  #   end
+  # end
+
+  # resources :applications
+  # resources :programs
 
   # weirdo stuff to get around devise. has to be a better way
 

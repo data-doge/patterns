@@ -222,7 +222,6 @@ class SearchController < ApplicationController
         :event_id,
         :address,
         :city,
-        :submissions,
         :tags,
         :preferred_contact_method,
         :page)

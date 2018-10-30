@@ -217,28 +217,7 @@
 
 
 
-<div class="span6" id="person-events">
-  <h3>Surveys <%= content_tag :span,'?',class: 'badge', data:{
-          toggle: "popover", 
-          placement: "top", 
-          content: "Ignore this for now.",
-          title: 'popover',
-          original_title:"Ignore this for now."} %></h3>
-  <table class="table">
-    <tr>
-        <th>Campaign Name</th>
-    </tr>
-    <% @twilio_wufoo_forms.each do |form| %>
-      <tr>
-        <td>
-          <%= form.name %>
-        </td>
-      </tr>
-    <% end %>
-    </table>
-  </div>
-</div>
-<% if @current_user.new_person_notification #this is an admin %>
+<% if @current_user.admin? #this is an admin %>
 <div class="row">
   <div class="span12">
     <h3>Add New Gift Card</h3>
@@ -317,47 +296,6 @@
 
 </div>
 
-
-<div class="row">
-  <div class="span12">
-    <% if @person.submissions.any? %>
-    <h3>Form Submissions</h3>
-    <table class="table">
-      <tr>
-        <th>Form</th>
-        <th>Content</th>
-      </tr>
-      <% for submission in @person.submissions %>
-
-      <tr id="submission-<%= submission.id %>">
-        <td>
-          <strong><%= link_to submission.form_name,edit_submission_path(submission) %></strong>
-          <br/>Form Type: <%= submission.form_type %><br/>
-          <span title="<%= submission.created_at %>"><%= time_ago_in_words submission.created_at %> ago</span>
-          <br/>
-          <span class="" style="font-size:small; color:#ccc; font-style:italic">
-            <%= submission.ip_addr %>
-
-          </span>
-        </td>
-        <td>
-          <table class="table table-striped">
-            <% for field_id,field_desc in submission.fields do %>
-              <tr>
-                <td><%= field_desc[:title] %></td>
-                <td><%= submission.field_value(field_id) %></td>
-              </tr>
-            <% end %>
-          </table>
-        </td>
-      </tr>
-      <% end %>
-    </table>
-  <% else %>
-  <!-- no form submissions. FIXME: null state? -->
-  <% end %>
-  </div>
-</div>
 
 <div class="row">
   <div class="form-actions span12">

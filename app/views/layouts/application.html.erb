@@ -40,7 +40,7 @@
               <li><%= link_to 'Gift Cards', card_activations_path%></li>
               <li><%= link_to "New Session", new_research_session_path %></li>
               <li><%= link_to "Session List", research_sessions_path %></li>
-              <li><%= link_to "Pool: <span class='current_cart'>#{current_user.current_cart.name}</span>&nbsp;<span class='badge cart-size'>#{current_cart.people.size} </span>".html_safe, cart_path(current_user.current_cart) %></li>
+              <li><%= link_to "Pool: <span class='current_cart'>#{current_user.current_cart.name}</span>&nbsp;<span class='badge cart-size'>#{current_user.current_cart.people.size} </span>".html_safe, cart_path(current_user.current_cart) %></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Your Pools<b class="caret"></b></a>
                 <ul class="dropdown-menu">

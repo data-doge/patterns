@@ -57,7 +57,7 @@
             <% else %>
             <td><%= sesh.user.name %></td>
             <% end %>
-            <td><%= sesh.people.count %></td>
+            <td><%= sesh.invitations.size %></td>
             <td><%= sesh.invitations.where(aasm_state:'attended').size %></td>
             <!-- probably link to the reservations for this event -->
           </tr>
