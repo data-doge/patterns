@@ -46,6 +46,7 @@ class Transaction < ApplicationRecord
       klass = from_type.classify.constantize
       creditor = klass.find(from_id)
       return false if creditor.nil?
+
       creditor.amount >= amount # should always have an amount
     end
 end

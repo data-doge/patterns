@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: people
@@ -69,9 +70,9 @@ class Person < ApplicationRecord
 
   has_many :comments, as: :commentable, dependent: :destroy
 
-  has_many :gift_cards
-  accepts_nested_attributes_for :gift_cards, reject_if: :all_blank
-  attr_accessor :gift_cards_attributes
+  has_many :rewards
+  accepts_nested_attributes_for :rewards, reject_if: :all_blank
+  attr_accessor :rewards_attributes
 
   has_many :invitations
   has_many :research_sessions, through: :invitations
@@ -111,15 +112,15 @@ class Person < ApplicationRecord
   #   unless: proc { |person| person.phone_number.present? }
   validates :email_address, email: true, allow_blank: true, uniqueness: true
 
-  # scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM gift_cards where gift_cards.reason = 1)') }
-  # scope :signup_card_needed, -> { joins(:gift_cards).where('gift_cards.reason !=1') }
+  # scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM rewards where rewards.reason = 1)') }
+  # scope :signup_card_needed, -> { joins(:rewards).where('rewards.reason !=1') }
 
   scope :verified, -> { where('verified like ?', '%Verified%') }
   scope :not_verified, -> { where.not('verified like ?', '%Verified%') }
   scope :active, -> { where(active: true) }
   scope :deactivated, -> { where(active: false) }
 
-  scope :order_by_reward_sum, -> { joins(:rewards).includes(:research_sessions).where('gift_cards.created_at >= ?', Time.current.beginning_of_year).select('people.id, people.first_name,people.last_name, people.active,sum(gift_cards.amount_cents) as total_gc').group('people.id').order('total_gc desc') }
+  scope :order_by_reward_sum, -> { joins(:rewards).includes(:research_sessions).where('rewards.created_at >= ?', Time.current.beginning_of_year).select('people.id, people.first_name,people.last_name, people.active,sum(rewards.amount_cents) as total_gc').group('people.id').order('total_gc desc') }
   # no longer using this. now managing active elsewhere
   # default_scope { where(active:
 
@@ -173,18 +174,18 @@ class Person < ApplicationRecord
 
   def inactive_criteria
     # have gotten a gift card, but not in the past year.
-    gift_cards.where('created_at < ?', 1.year.ago).size >= 1
+    rewards.where('created_at < ?', 1.year.ago).size >= 1
   end
 
   def participant_criteria
     # gotten a gift card in the past year.
-    gift_cards.where('created_at > ?', 1.year.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
+    rewards.where('created_at > ?', 1.year.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
   end
 
   def active_criteria
     # gotten a gift card for a research session in the past 6 months
     # and two teams
-    gift_cards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1 || gift_cards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
+    rewards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1 || rewards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
   end
 
   def ambassador_criteria
@@ -193,7 +194,7 @@ class Person < ApplicationRecord
     if tag_list.include?('brl special ambassador')
       true
     else
-      gift_cards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && gift_cards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
+      rewards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && rewards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
     end
   end
 
@@ -238,7 +239,7 @@ class Person < ApplicationRecord
   end
 
   def signup_gc_sent
-    signup_cards = gift_cards.where(reason: 1)
+    signup_cards = rewards.where(reason: 1)
     return true unless signup_cards.empty?
 
     false
@@ -248,38 +249,15 @@ class Person < ApplicationRecord
     verified&.start_with?('Verified')
   end
 
-  def gift_card_total
+  def reward_total
     end_of_last_year = Time.zone.today.beginning_of_year - 1.day
-    total = gift_cards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
+    total = rewards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
     Money.new(total, 'USD')
   end
 
-  def gift_card_count
-    gift_cards.size
+  def reward_count
+    rewards.size
   end
-
-  WUFOO_FIELD_MAPPING = {
-    'Field1'   => :first_name,
-    'Field2'   => :last_name,
-    'Field10'  => :email_address,
-    'Field276' => :voted,
-    'Field277' => :called_311,
-    'Field39'  => :primary_device_id, # type of primary
-    'Field21'  => :primary_device_description, # desc of primary
-    'Field40'  => :secondary_device_id,
-    'Field24'  => :secondary_device_description, # desc of secondary
-    'Field41'  => :primary_connection_id, # connection type
-    # 'Field41' =>  :primary_connection_description, # description of connection
-    'Field42'  => :secondary_connection_id, # connection type
-    # 'Field42' =>  :secondary_connection_description, # description of connection
-    'Field268' => :address_1, # address_1
-    'Field269' => :city, # city
-    # 'Field47' =>  :state, # state
-    'Field271' => :postal_code, # postal_code
-    'Field9'   => :phone_number, # phone_number
-    'IP'       => :signup_ip, # client IP, ignored for the moment
-
-  }.freeze
 
   def tag_values
     tags.collect(&:name)
@@ -292,64 +270,6 @@ class Person < ApplicationRecord
   def screened?
     tag_list.include?('screened')
   end
-
-  def submission_values
-    submissions.collect(&:submission_values)
-  end
-
-  # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Rails/TimeZone
-  #
-  def self.initialize_from_wufoo_sms(params)
-    new_person = Person.new
-
-    # Save to Person
-    new_person.first_name = params['Field275']
-    new_person.last_name = params['Field276']
-    new_person.address_1 = params['Field268']
-    new_person.postal_code = params['Field271']
-    new_person.email_address = params['Field279']
-    new_person.phone_number = params['field281']
-    new_person.primary_device_id = case params['Field39'].upcase
-                                   when 'A'
-                                     Person.map_device_to_id('Desktop computer')
-                                   when 'B'
-                                     Person.map_device_to_id('Laptop')
-                                   when 'C'
-                                     Person.map_device_to_id('Tablet')
-                                   when 'D'
-                                     Person.map_device_to_id('Smart phone')
-                                   else
-                                     params['Field39']
-                                   end
-
-    new_person.primary_device_description = params['Field21']
-
-    new_person.primary_connection_id = case params['Field41'].upcase
-                                       when 'A'
-                                         Person.primary_connection_id('Broadband at home')
-                                       when 'B'
-                                         Person.primary_connection_id('Phone plan with data')
-                                       when 'C'
-                                         Person.primary_connection_id('Public wi-fi')
-                                       when 'D'
-                                         Person.primary_connection_id('Public computer center')
-                                       else
-                                         params['Field41']
-                                       end
-
-    new_person.preferred_contact_method = if params['Field278'].casecmp('TEXT')
-                                            'SMS'
-                                          else
-                                            'EMAIL'
-                                          end
-
-    new_person.verified = 'Verified by Text Message Signup'
-    new_person.signup_at = Time.now
-
-    new_person
-  end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Rails/TimeZone
 
   def send_to_mailchimp
     status = active? ? 'subscribed' : 'unsubscribed'
@@ -367,51 +287,6 @@ class Person < ApplicationRecord
       delete_from_rapidpro
     end
   end
-
-  # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity
-  #
-  def self.initialize_from_wufoo(params)
-    new_person = Person.new
-    params.each_pair do |k, v|
-      new_person[WUFOO_FIELD_MAPPING[k]] = v if WUFOO_FIELD_MAPPING[k].present?
-    end
-
-    # Special handling of participation type. New form uses 2 fields where old form used 1. Need to combine into one. Manually set to "Either one" if both field53 & field54 are populated.
-    new_person.participation_type = if params['Field53'] != '' && params['Field54'] != ''
-                                      'Either one'
-                                    elsif params['Field53'] != ''
-                                      params['Field53']
-                                    else
-                                      params['Field54']
-                                    end
-
-    new_person.preferred_contact_method = if params['Field273'] == 'Email'
-                                            'EMAIL'
-                                          else
-                                            'SMS'
-                                          end
-
-    # Copy connection descriptions to description fields
-    new_person.primary_connection_description = new_person.primary_connection_id
-    new_person.secondary_connection_description = new_person.secondary_connection_id
-
-    # rewrite the device and connection identifiers to integers
-    new_person.primary_device_id        = Person.map_device_to_id(params[WUFOO_FIELD_MAPPING.rassoc(:primary_device_id).first])
-    new_person.secondary_device_id      = Person.map_device_to_id(params[WUFOO_FIELD_MAPPING.rassoc(:secondary_device_id).first])
-    new_person.primary_connection_id    = Person.map_connection_to_id(params[WUFOO_FIELD_MAPPING.rassoc(:primary_connection_id).first])
-    new_person.secondary_connection_id  = Person.map_connection_to_id(params[WUFOO_FIELD_MAPPING.rassoc(:secondary_connection_id).first])
-
-    # FIXME: this is a hack, since we need to initialize people
-    # with a city/state, but don't ask for it in the Wufoo form
-    # new_person.city  = "Chicago" With update we ask for city
-    new_person.state = 'Illinois'
-
-    new_person.signup_at = params['DateCreated']
-
-    new_person
-  end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity
 
   def primary_device_type_name
     Logan::Application.config.device_mappings.rassoc(primary_device_id)[0].to_s if primary_device_id.present?

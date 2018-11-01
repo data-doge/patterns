@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -48,8 +49,7 @@ class User < ApplicationRecord
 
   has_many :research_sessions
   has_many :invitations, through: :research_sessions
-  has_many :gift_cards, foreign_key: :created_by
-  has_many :card_activations
+  has_many :rewards
   has_many :carts_user
   has_many :carts, through: :carts_user, foreign_key: :user_id
   belongs_to :team
@@ -63,8 +63,10 @@ class User < ApplicationRecord
   scope :upcoming_sessions, ->(d = 7) {
     joins(:research_sessions).merge(ResearchSession.upcoming(d))
   }
+
   scope :approved, -> { where(approved: true) }
   scope :admin, -> { where(new_person_notification: true) }
+  
   # for sanity's sake
   alias_attribute :email_address, :email
 
@@ -99,7 +101,8 @@ class User < ApplicationRecord
     Rails.logger.info("Unapproved user #{email}")
   end
 
-  def full_name # convienence for calendar view.
+  def full_name
+    # convienence for calendar view.
     name
   end
 

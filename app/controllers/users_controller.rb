@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update destroy set_team]
-  before_action :is_admin?
+  before_action :set_user, only: %i[show edit update destroy]
+  before_action :admin?
   # GET /users
   def index
     User.per_page = 100
@@ -89,7 +89,7 @@ class UsersController < ApplicationController
         :team_id)
     end
 
-    def is_admin?
+    def admin?
       redirect_to root_url unless @current_user.admin?
     end
 

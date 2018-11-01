@@ -43,7 +43,7 @@ class Reward < ApplicationRecord
   }
 
   belongs_to :rewardable, polymorphic: true, touch: true
-  belongs_to :giftable, polymorphic: true, touch: true
+  belongs_to :giftable,   polymorphic: true, touch: true
   belongs_to :person
   belongs_to :user
   belongs_to :team

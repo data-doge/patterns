@@ -2,12 +2,12 @@ class ChangingRewardsToRewards < ActiveRecord::Migration[5.2]
   def change
     rename :gift_cards, :rewards
     rename :card_activation, :gift_cards
-    add_column :rewards, :rewardable_id, :integer
-    add_column :rewards, :rewardable_type, :string
+    add_reference :rewards, :rewardable, polymorphic: true, index: true
     rename_column :activation_calls, :card_activation_id, :gift_card_id
 
     Rewards.reset_column_information
-    Rewards.find_each{|r|
+    
+    Rewards.find_each do |r|
       if r.card_activation_id.present?
         r.rewardable_type = 'GiftCard'
         r.rewardable_id = r.card_activation_id
@@ -27,6 +27,7 @@ class ChangingRewardsToRewards < ActiveRecord::Migration[5.2]
         r.rewardable_id = c.id
         r.save
       end
-    }
+    end
+    
   end
 end
