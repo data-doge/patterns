@@ -1,0 +1,63 @@
+<p id="notice"><%= notice %></p>
+
+<!-- TODO -- >
+<% if @reward.rewardable_id.present? %>
+<p>
+  <strong>link to edit the Rewardable thing:</strong>
+</p>
+<% end %>
+<p>
+  <strong>Amount:</strong>
+  <%= @reward.amount %>
+</p>
+
+<p>
+  <strong>Person:</strong>
+  <%= link_to @reward.person.full_name, @reward.person %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @reward.notes %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @reward.user.email_address %>
+</p>
+
+<p>
+  <strong>Created at:</strong>
+  <%= @reward.created_at.to_s %>
+</p>
+
+<p>
+  <strong>Team:</strong>
+  <%= best_in_place @reward, :team_id,
+                      as: :select,
+                      collection: Team.all.inject({}){ |acc,el|
+                        acc[el.id]=el.name
+                        acc
+                      },
+                      ok_button: 'Save',
+                      cancel_button: 'Cancel' %></dd>
+</p>
+
+<p>
+  <strong>Finance Code:</strong>
+  <%= best_in_place @reward, :finance_code,
+                      as: :select,
+                      collection: { 'BRL'=> 'BRL',
+                                    'CATA'=>'CATA',
+                                    'FELL'=>'FELL'},
+                      ok_button: 'Save',
+                      cancel_button: 'Cancel' %></dd>
+</p>
+
+<p>
+  <strong>Reason:</strong>
+  <%= @reward.reason %>
+</p>
+
+<%= link_to 'Edit', edit_reward_path(@reward) %> |
+<%= link_to 'Back', :back %>

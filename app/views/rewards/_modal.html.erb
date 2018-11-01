@@ -5,24 +5,24 @@
       <div class='modal-header'>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3>Gift Cards:<%= @giftable.person.full_name %></h3>
-        <h5>YTD Total: <span id='gift_card_total'><%= @giftable.person.gift_card_total %></span>
+        <h5>YTD Total: <span id='reward_total'><%= @giftable.person.reward_total %></span>
       </div>
       <div class="modal-body">
         <div id="error-div"></div>
-          <% if @gift_card.errors.any? %>
+          <% if @reward.errors.any? %>
             <div id="error_explanation">
-              <h2><%= pluralize(@gift_card.errors.count, "error") %> prohibited this gift_card from being saved:</h2>
+              <h2><%= pluralize(@reward.errors.count, "error") %> prohibited this reward from being saved:</h2>
 
               <ul>
-              <% @gift_card.errors.full_messages.each do |message| %>
+              <% @reward.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
               <% end %>
               </ul>
             </div>
           <% end %>
         <h4>Assigned Cards</h4>
-        <%= render partial: 'gift_cards/mini_view',
-              locals: { gift_cards: @giftable.gift_cards } %>
+        <%= render partial: 'rewards/mini_view',
+              locals: { rewards: @giftable.rewards } %>
         <hr>
         <h4>Available Cards</h4>
         <div class="input-group">
@@ -31,7 +31,7 @@
             <button class="btn btn-secondary" type="button">Clear</button>
           </span>
         </div>
-        <div class='card_activations'>
+        <div class='gift_cards'>
           <table class='table table-striped'>
             <thead>
               <th>Batch</th>
@@ -44,18 +44,19 @@
               <th>Reason</th>
               <th>Add</th>
             </thead>
-            <tbody id='card-activations-mini'>
-              <%= render partial: "card_activations/card_activation_mini",
+            <tbody id='gift-cards-mini'>
+              <%= render partial: "gift_cards/gift_card_mini",
                      collection: @card_activations, 
                      as: :card_activation %>
             </tbody>
           </table>
         </div>
-        <%= button_tag 'Manually Enter Card', 
+        <!--  TODO -->
+        <%= button_tag 'Manually Enter Cash Card', 
           onclick: '$("#manual-card-form").toggle()', 
           class: 'btn'%>
         <div id='manual-card-form' style='display:none'>
-              <%= form_for( @gift_card, remote: true) do |form| %>
+              <%= form_for( @reward, remote: true) do |form| %>
                 <%= form.hidden_field :person_id, value: @giftable.person_id %>
                 <%= form.hidden_field :giftable_id, value: @giftable.id %>
                 <%= form.hidden_field :giftable_type, value: @giftable.class.to_s %>
@@ -77,7 +78,7 @@
 
                 <td>
                 <%= form.select :reason,
-                        GiftCard.reasons.keys.to_a,
+                        Reward.reasons.keys.to_a,
                         { prompt: "Reason", selected: 'interview' },
                           class: 'input-small',
                           id: "new-reason"
@@ -88,7 +89,7 @@
                         class: 'input-mini',
                         id: "new-sequencenumber" %>
                 </td><td>
-                <%= form.text_field :gift_card_number,
+                <%= form.text_field :reward_number,
                         placeholder: "Card #",
                         class: 'input-mini',
                         id: "new-cardnumber" %>
@@ -97,13 +98,13 @@
                         placeholder: "BatchID",
                         class: 'input-mini',
                         id: "new-batchid",
-                        value: @last_gift_card.batch_id %>
+                        value: @last_reward.batch_id %>
                 </td><td>
                 <%= form.text_field :expiration_date,
                         placeholder: "MM/YY",
                         class: 'input-mini',
                         id: "new-expirationdate",
-                        value: @last_gift_card.expiration_date %>
+                        value: @last_reward.expiration_date %>
                 </td><td>
                 <%= form.text_field :amount,
                         placeholder: "####",

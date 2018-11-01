@@ -1,0 +1,44 @@
+  <tr id='card-activation-<%= gift_card.id %>' 
+      class='well well-small card-activation' 
+      data-id='<%=gift_card.id%>' 
+      data-last-4='<%= gift_card.last_4 %>'
+      data-batch-id='<%= gift_card.batch_id %>'
+      data-sequence-number='<%= gift_card.sequence_number %>' >
+    <td class='batch_id'>
+      <%= gift_card.batch_id %>
+    </td>
+    <td class='last_4'>
+      <%= gift_card.last_4 %>
+    </td>
+    <td class='sequence_number'>
+      <%= gift_card.sequence_number %>
+    </td>
+    <td class='amount'>
+      <%= gift_card.amount %>
+    </td>
+    <% if current_user.admin? %>
+    <td>
+      <%= gift_card.user.name %>
+    </td>
+    <% end %>
+    <td>
+      <%= select_tag :reason,  options_for_select(GiftCard.reasons.keys.to_a,'interview'),
+                      { class: 'input-small',
+                        id: "card-actionvation-reason-#{gift_card.id}" }
+        %>
+    </td>
+    <td>
+      <%= button_tag "Add",
+            data:{
+              gift_card_id: gift_card.id,
+              gift_card_number: gift_card.last_4.to_s,
+              sequence_number: gift_card.sequence_number,
+              batch_id: gift_card.batch_id.to_s,
+              amount: gift_card.amount.to_s,
+              expiration_date: gift_card.expiration_date,
+            },
+            id: "add-card-activation-#{gift_card.id}",
+            class: 'add-card-activation' ,
+            onclick: "add_gift_card(this);"  %>
+    </td>
+  </tr>

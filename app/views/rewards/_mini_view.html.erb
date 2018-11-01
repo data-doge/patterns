@@ -1,0 +1,20 @@
+<table class="table table-striped rewards">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>sequence</th>
+      <th>Batch ID</th>
+      <th>amount</th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody id='mini-reward'>
+    <%= render partial: 'rewards/mini_reward',
+          collection: rewards,
+          as: :reward %>
+  </tbody>
+</thread>
+</table>
+

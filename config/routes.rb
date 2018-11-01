@@ -18,7 +18,7 @@ Logan::Application.routes.draw do
     end
   end
   
-  resources :card_activations do
+  resources :gift_cards do
     collection do
       get 'template', 
           action: :template, 
@@ -43,9 +43,9 @@ Logan::Application.routes.draw do
   end
 
   resource :inbox, :controller => 'inbox', :only => [:show,:create]
-  resources :gift_cards do
+  resources :rewards do
     collection do
-      post 'assign/:card_activation_id', action: :assign, as: :assign
+      post 'assign/:gift_card_id', action: :assign, as: :assign
       get 'recent_signups', action: :recent_signups, as: :recent_signups
       get 'modal/:giftable_type/:giftable_id', action: :modal, as: :modal
     end
@@ -215,7 +215,7 @@ Logan::Application.routes.draw do
       post ':person_id/reactivate', action: :reactivate, as: :reactivate
     end
     resources :comments
-    resources :gift_cards
+    resources :rewards
   end
   # post "people/create_sms"
 

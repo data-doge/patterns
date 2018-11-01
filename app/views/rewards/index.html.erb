@@ -1,0 +1,77 @@
+<%= render :partial => 'layouts/reward_menu' %>
+
+<h1>Listing Rewards</h1>
+ <div class='span12'>
+
+  <%= search_form_for @q_rewards, url: rewards_path, method: :get, class: 'form-inline' do |f| %>
+    <%= f.label :reward_number_cont %>
+    <%= f.search_field :reward_number_cont, class: 'input-mini' %>
+    <%= f.label "sequence" %>
+    <%= f.search_field :sequence_number_eq, class: 'input-mini' %>
+    <label for='created_at_date_gteq'>Created on or after</label>
+    <%= f.text_field :created_at_date_gteq, class: 'text_field input-small', id: 'datepicker_start', placeholder: 'yyyy-mm-dd' %>
+    <label for='created_at_date_lteq'>Created on or before</label>
+    <%= f.text_field :created_at_date_lteq, class: 'text_field input-small', id: 'datepicker_end', placeholder: 'yyyy-mm-dd'  %>
+    <%= f.submit 'Search', class: "btn btn-primary" %>
+    <%= link_to 'Clear Search', request.path, class:"btn" %>
+  <% end %>
+  </div>
+<%= will_paginate @rewards, :renderer => BootstrapPagination::Rails %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <!-- <th><%= sortable 'id', 'Gift Card ID'%></th>
+      <th>Person ID</th> -->
+    <% if current_user.admin? %>
+      <th>User</th>
+    <% end %>
+      <th>Person</th>
+      <th>Reason</th>
+      <th>Giftable Object</th>
+      <th>Batch</th>
+      <th><%= sortable 'sequence_number', 'Sequence #' %></th>
+      <th>Card Number</th>
+      <th>Expiration Date</th>
+      <th>Amount</th>
+      <th>Created On</th>
+      <th>Edit?</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody id="rewards">
+    <% @rewards.each do |reward| %>
+      <tr id="reward-<%= reward.id%>">
+        <!-- <td><%= reward.id %></td>
+        <td><%= reward.person_id %></td> -->
+      <% if current_user.admin? %>
+        <td><%= link_to reward.user.name, reward.user %></td>
+      <% end %>
+        <% person = Person.unscoped.find(reward.person_id) %>
+        <td><%= link_to "#{person.full_name}", person_path(person) %></td>
+        <td><%= reward.reason.titleize %></td>
+        <td><%= if reward.giftable.present?
+                  link_to(find_name(reward.giftable), url_for(reward.giftable))
+                else
+                  "None"
+                end
+        %></td>
+        <td><%= reward.batch_id %></td>
+        <td><%= reward.sequence_number %></td>
+        <td><%= reward.reward_number %></td>
+        <td><%= reward.expiration_date %></td>
+        <td><%= humanized_money_with_symbol reward.amount %></td>
+        <td><%= reward.created_at.strftime('%m/%d/%Y') %></td>
+        <td><%= link_to 'Show', reward %></td>
+        <td><%= link_to 'Edit', edit_reward_path(reward) %></td>
+        <td><%= link_to 'Destroy', reward, remote: true, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= will_paginate @rewards, :renderer => BootstrapPagination::Rails %>
+<br>
+<%= link_to "Save this list as CSV", rewards_path(params.merge(format: 'csv').permit!), :class => "btn"  %>
+<% if current_user.admin? %>
+  <%= link_to 'New Gift card', new_reward_path %>
+<% end %>

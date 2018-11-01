@@ -1,0 +1,82 @@
+<%
+  # wacky, I know. For more easily accesible modals
+  @reward ||= Reward.new
+  @last_reward ||= Reward.last # default scope is id: :desc
+
+%>
+
+<%= form_for @reward do |f| %>
+  <% if @reward.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@reward.errors.count, "error") %> prohibited this reward from being saved:</h2>
+
+      <ul>
+      <% @reward.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class='field'>
+    <%= @reward.created_at.to_s %>
+  </div>
+  <div class="field">
+    <%= f.label :batch_id %><br>
+    <%= f.text_field :batch_id,
+          class: 'input-mini',
+          placeholder: '4321',
+          value: @reward.batch_id %>
+  </div>
+  <div class="field">
+    <%= f.label "sequence" %><br>
+    <%= f.text_field :sequence_number, class: 'input-mini', placeholder: 999 %>
+  </div>
+  <div class='field input-prepend'>
+    <%= f.label :reward_number %><br>
+    <span class='add-on'>****-****-***</span>
+    <%= f.text_field :reward_number, placeholder: "#####", class: 'input-small', id: "new-cardnumber" %>
+  </div>
+  <div class="field">
+    <%= f.label :expiration_date %><br>
+    <%= f.text_field :expiration_date,
+          class: 'input-mini',
+          value: @reward.expiration_date  %>
+  </div>
+  <div class="field">
+    <%= f.label :person_id %><br>
+    <%= f.number_field :person_id %>
+  </div>
+  <div class="field">
+    <%= f.label :notes %><br>
+    <%= f.text_field :notes %>
+  </div>
+  <div class="field">
+    <%= f.label :created_by %><br>
+    <%= f.collection_select :created_by, User.all, :id, :name%>
+  </div>
+  <div class="control-group">
+    <%= f.label :finance_code, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :finance_code, options_for_select(Team.all.pluck(:finance_code).uniq, selected: @reward.finance_code)%>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :team, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.collection_select :team_id, Team.all, :id, :name %>
+    </div>
+  </div>
+  <div class="field">
+    <%= f.label :reason %><br>
+    <%= f.select :reason,
+          Reward.reasons.keys.to_a,
+          { prompt: "Reason", selected: @reward.reason } %>
+  </div>
+  <% if @reward.giftable.present? %>
+    <%= f.hidden_field :giftable_id, value: @reward.giftable_id %>
+    <%= f.hidden_field :giftable_type, value: @reward.giftable.class.to_s %>
+  <% end %>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

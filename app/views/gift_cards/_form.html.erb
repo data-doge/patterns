@@ -1,82 +1,55 @@
-<%
-  # wacky, I know. For more easily accesible modals
-  @gift_card ||= GiftCard.new
-  @last_gift_card ||= GiftCard.last # default scope is id: :desc
-
-%>
-
-<%= form_for @gift_card do |f| %>
-  <% if @gift_card.errors.any? %>
+<%= form_with(model: gift_card, local: true) do |form| %>
+  <% if gift_card.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@gift_card.errors.count, "error") %> prohibited this gift_card from being saved:</h2>
+      <h2><%= pluralize(gift_card.errors.count, "error") %> prohibited this gift_card from being saved:</h2>
 
       <ul>
-      <% @gift_card.errors.full_messages.each do |message| %>
+      <% gift_card.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
       </ul>
     </div>
   <% end %>
+    <dl class="dl-horizontal well">
+      <dt>Card ID</dt>
+      <dd><%= gift_card.id %></dd>
+      <dt>Created By</dt>
+      <% created_by = User.find(gift_card.created_by) %>
+      <dd><%= link_to created_by.name, created_by %></dd>
+      <dt>Status</dt>
+      <dd><%= gift_card.status %></dd>
+    </dl>
+    <h4>Card id: <%= gift_card.id %></h4>
+  
+   <div class="field">
+    <%= form.label :batch_id %><br>
+    <%= form.text_field :batch_id,
+          class: 'input-mini' %>
+  </div>
+  <div class="field">
+    <%= form.label "sequence" %><br>
+    <%= form.text_field :sequence_number, class: 'input-mini'%>
+  </div>
   <div class='field'>
-    <%= @gift_card.created_at.to_s %>
+    <%= form.label :full_card_number %><br>
+    <%= form.text_field :full_card_number, class: 'input-large'%>
   </div>
   <div class="field">
-    <%= f.label :batch_id %><br>
-    <%= f.text_field :batch_id,
-          class: 'input-mini',
-          placeholder: '4321',
-          value: @gift_card.batch_id %>
+    <%= form.label :expiration_date %><br>
+    <%= form.text_field :expiration_date,
+          class: 'input-mini'%>
   </div>
   <div class="field">
-    <%= f.label "sequence" %><br>
-    <%= f.text_field :sequence_number, class: 'input-mini', placeholder: 999 %>
-  </div>
-  <div class='field input-prepend'>
-    <%= f.label :gift_card_number %><br>
-    <span class='add-on'>****-****-***</span>
-    <%= f.text_field :gift_card_number, placeholder: "#####", class: 'input-small', id: "new-cardnumber" %>
+    <%= form.label :secure_code %><br>
+    <%= form.text_field :secure_code,
+          class: 'input-mini'%>
   </div>
   <div class="field">
-    <%= f.label :expiration_date %><br>
-    <%= f.text_field :expiration_date,
-          class: 'input-mini',
-          value: @gift_card.expiration_date  %>
+    <%= form.label :amount %><br>
+    <%= form.text_field :amount,
+          class: 'input-mini'%>
   </div>
-  <div class="field">
-    <%= f.label :person_id %><br>
-    <%= f.number_field :person_id %>
-  </div>
-  <div class="field">
-    <%= f.label :notes %><br>
-    <%= f.text_field :notes %>
-  </div>
-  <div class="field">
-    <%= f.label :created_by %><br>
-    <%= f.collection_select :created_by, User.all, :id, :name%>
-  </div>
-  <div class="control-group">
-    <%= f.label :finance_code, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.select :finance_code, options_for_select(Team.all.pluck(:finance_code).uniq, selected: @gift_card.finance_code)%>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :team, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.collection_select :team_id, Team.all, :id, :name %>
-    </div>
-  </div>
-  <div class="field">
-    <%= f.label :reason %><br>
-    <%= f.select :reason,
-          GiftCard.reasons.keys.to_a,
-          { prompt: "Reason", selected: @gift_card.reason } %>
-  </div>
-  <% if @gift_card.giftable.present? %>
-    <%= f.hidden_field :giftable_id, value: @gift_card.giftable_id %>
-    <%= f.hidden_field :giftable_type, value: @gift_card.giftable.class.to_s %>
-  <% end %>
   <div class="actions">
-    <%= f.submit %>
+    <%= form.submit %>
   </div>
 <% end %>

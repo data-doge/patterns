@@ -1,7 +1,7 @@
-<%= render :partial => 'layouts/gift_card_menu' %>
+<%= render :partial => 'layouts/reward_menu' %>
 <%= will_paginate @recent_signups, :renderer => BootstrapPagination::Rails %>
 <h1>Recent sign-ups who need gift cards</h1>
-<%= search_form_for @q_recent_signups, as: :q_signups, url: gift_cards_path, method: :get, class: 'form-inline' do |f_rs| %>
+<%= search_form_for @q_recent_signups, as: :q_signups, url: recent_signups_rewards_path, method: :get, class: 'form-inline' do |f_rs| %>
 <label for='created_at_date_gteq'>People created on or after</label>
 <%= f_rs.text_field :created_at_date_gteq, class: 'text_field input-small', id: 'datepicker_start', placeholder: 'yyyy-mm-dd' %>
 <%= f_rs.submit 'Search', class: "btn btn-primary" %>
@@ -25,14 +25,14 @@
     </tr>
   </thead>
   <tbody>
-    <% @new_gift_cards.each_with_index do |gift_card, index| %>
+    <% @new_rewards.each_with_index do |reward, index| %>
       <tr>
-        <%= form_for([@recent_signups[index], gift_card], remote: true) do |form| %>
-            <% if gift_card.errors.any? %>
+        <%= form_for([@recent_signups[index], reward], remote: true) do |form| %>
+            <% if reward.errors.any? %>
               <div id="error_explanation">
-                <h2><%= pluralize(gift_card.errors.count, "error") %> prohibited this gift_card from being saved:</h2>
+                <h2><%= pluralize(reward.errors.count, "error") %> prohibited this reward from being saved:</h2>
                 <ul>
-                <% gift_card.errors.full_messages.each do |message| %>
+                <% reward.errors.full_messages.each do |message| %>
                   <li><%= message %></li>
                 <% end %>
                 </ul>
@@ -54,11 +54,11 @@
               <%= form.text_field :batch_id, class: 'input-small', :placeholder => "Batch ID"  %>
             </td>
             <td id="new-sequencenumber-<%= @recent_signups[index].id %>">
-              <%= form.text_field :sequance_number, class: 'input-mini sequance-number', :placeholder => "Sequence"  %>
+              <%= form.text_field :sequence_number, class: 'input-mini sequence-number', :placeholder => "Sequence #"  %>
             </td>
             <td id="new-cardnumber-<%= @recent_signups[index].id %>" class='input-prepend'>
               <span class='add-on'>****-****-***</span>
-              <%= form.text_field :gift_card_number,class: 'input-small batch-id', :placeholder => "#####"  %>
+              <%= form.text_field :reward_number,class: 'input-small batch-id', :placeholder => "#####"  %>
             </td>
             <td id="new-expirationdate-<%= @recent_signups[index].id %>">
               <%= form.text_field :expiration_date, class: 'input-mini gift-card-expiration-date',:placeholder => "MM/YY" %>

@@ -1,0 +1,58 @@
+<tr id='card-activation-<%=gift_card.id%>' 
+  class='well well-small card-activation <%= cycle('dark', 'light') %>'
+  data-user-name='<%= gift_card.user.name %>'
+  data-id='<%=gift_card.id%>' 
+  data-last-4='<%= gift_card.last_4 %>'
+  data-sequence-number='<%= gift_card.sequence_number %>'>
+  <td>
+    <%= gift_card.last_4 %>
+  </td>
+  <td>
+    <%= gift_card.batch_id %>
+  </td>
+  <td>
+    <%= gift_card.sequence_number %>
+  </td>
+  <td>
+    <%= gift_card.amount %>
+  </td>
+  <td class='label label-<%= gift_card.label %>'>
+    <%= gift_card.status %>
+  </td>
+  <td>
+    <% if gift_card.can_run_check? %>
+      <%= button_to "Check", 
+            check_gift_cards_path(gift_card),
+            remote: true, 
+            class: 'btn btn-small', 
+            id: "check-card-#{gift_card.id}" %>
+    <% elsif gift_card.ongoing_call? %>
+      <%= image_tag("/spinner.gif",size: '20x20') %>
+    <% else %>
+      Ready for use.
+    <% end %>
+  </td>
+  <% if current_user.admin? %>
+  <td> <!-- admin -->
+    <%= select_tag :user_id,
+        options_from_collection_for_select(User.approved.all,
+                                          'id',
+                                          'name', gift_card.user_id),
+          class: 'input-small',
+          data: {
+           remote: true,
+           method: 'post',
+          url: change_user_gift_cards_path(gift_card)} %>
+    </td>
+    <td>
+    <%= check_box_tag "gift_card_id_change[]", 
+          gift_card.id, false,
+          id: "gift_card_id_change_#{gift_card.id}" %> |
+    <%= link_to 'Show', gift_card %> | 
+    <%= link_to 'Edit', edit_gift_card_path(gift_card) %>
+    <!--
+      <%= link_to 'Destroy', gift_card, method: :delete, data: { confirm: 'Are you sure?' } %>
+    -->
+  </td>
+  <% end %>
+</tr>

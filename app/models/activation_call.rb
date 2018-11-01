@@ -20,15 +20,16 @@ class ActivationCall < ApplicationRecord
   has_paper_trail
   has_secure_token
 
-  validates :card_activation_id, presence: true
+  validates :gift_card_id, presence: true
   validates :call_type, presence: true
   validates :call_type, inclusion: { in: %w[activate check] } # balance soon
 
-  belongs_to :card_activation
+  belongs_to :gift_card
   after_commit :enqueue_call, on: :create
   after_commit :update_front_end
 
-  alias_attribute :card, :card_activation
+  alias_attribute :card, :gift_card
+
   scope :ongoing, -> { where(call_status: 'started') }
   scope :checks, -> { where(call_type: 'check') }
   scope :activations, -> { where(call_type: 'activation') }
@@ -89,7 +90,7 @@ class ActivationCall < ApplicationRecord
     ActivationCallJob.perform_async(id)
   end
 
-  delegate :update_front_end, to: :card_activation
+  delegate :update_front_end, to: :gift_card
 
   private
 
