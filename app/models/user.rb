@@ -66,7 +66,7 @@ class User < ApplicationRecord
 
   scope :approved, -> { where(approved: true) }
   scope :admin, -> { where(new_person_notification: true) }
-  
+
   # for sanity's sake
   alias_attribute :email_address, :email
 
@@ -106,9 +106,9 @@ class User < ApplicationRecord
     name
   end
 
-  def gift_card_total
+  def reward_total
     end_of_last_year = Time.zone.today.beginning_of_year - 1.day
-    total = gift_cards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
+    total = rewards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
     Money.new(total, 'USD')
   end
 

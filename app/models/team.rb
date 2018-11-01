@@ -15,17 +15,17 @@
 class Team < ApplicationRecord
   has_many :users
   has_many :research_sessions, through: :users
-  has_many :gift_cards
+  has_many :rewards
   validates :finance_code, inclusion: { in: %w[BRL CATA1 CATA2 FELL] }
 
   def self.finance_codes
     %w[BRL CATA1 CATA2 FELL]
   end
 
-  def gift_card_total(since = Time.zone.today.beginning_of_year - 1.day)
+  def rewards_total(since = Time.zone.today.beginning_of_year - 1.day)
     raise ArgumentError if since.class != Date
 
-    total = gift_cards.where('created_at > ?', since).sum(:amount_cents)
+    total = rewards.where('created_at > ?', since).sum(:amount_cents)
     Money.new(total, 'USD')
   end
 

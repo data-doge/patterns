@@ -57,13 +57,12 @@ class TeamsController < ApplicationController
       if @team.update(team_params)
         format.html { redirect_to @team, notice: 'Team was successfully updated.' }
         format.json { respond_with_bip(@team) }
-        format.js
       else
         flash[:error] = @team.errors
         format.html { render :edit }
         format.json { respond_with_bip(@team) }
-        format.js
       end
+      format.js
     end
   end
 

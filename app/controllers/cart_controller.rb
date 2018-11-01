@@ -83,7 +83,7 @@ class CartController < ApplicationController
     end
     new_size = @cart.people.size
     delta = new_size - current_size
-    flash[:notice] = "#{delta} people added to #{@cart.name}" if  delta > 0
+    flash[:notice] = "#{delta} people added to #{@cart.name}" if  delta.positive?
     respond_to do |format|
       format.js
       format.json { render json: @cart.people.pluck(:id) }

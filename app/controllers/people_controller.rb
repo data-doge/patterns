@@ -61,7 +61,7 @@ class PeopleController < ApplicationController
                Person.active.includes(:taggings).paginate(page: params[:page]).
                  order(sort_column + ' ' + sort_direction).
                  tagged_with(tags)
-              end
+            end
     # only show verified people to non-admins
     @people = current_user.admin? ? search : search.verified
     @tags ||= []
@@ -137,12 +137,11 @@ class PeopleController < ApplicationController
 
     respond_to do |format|
       if @person.save
-        format.html { render action: 'new' }
         format.json { render action: 'show', status: :created, location: @person }
       else
-        format.html { render action: 'new' }
         format.json { render json: @person.errors, status: :unprocessable_entity }
       end
+      format.html { render action: 'new' }
     end
   end
   # rubocop:enable Metrics/MethodLength

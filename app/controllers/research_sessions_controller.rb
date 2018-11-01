@@ -93,11 +93,10 @@ class ResearchSessionsController < ApplicationController
     respond_to do |format|
       if @research_session.update(research_session_params)
         format.html { redirect_to(@research_session, notice: 'Session was successfully updated.') }
-        format.json { respond_with_bip(@research_session) }
       else
         format.html { render :edit }
-        format.json { respond_with_bip(@research_session) }
       end
+      format.json { respond_with_bip(@research_session) }
     end
   end
 

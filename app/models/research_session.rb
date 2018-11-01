@@ -34,6 +34,7 @@ class ResearchSession < ApplicationRecord
 
   belongs_to :user
   has_many :invitations
+  # has_many :rewards, through: :invitations
   has_many :people, through: :invitations
   has_many :comments, as: :commentable, dependent: :destroy
   before_create :update_missing_attributes
@@ -85,7 +86,7 @@ class ResearchSession < ApplicationRecord
     invitations.pluck(:person_id).include? person.id
   end
 
-  def gift_cards
+  def rewards
     invitations.map(&:gift_cards).flatten
   end
 

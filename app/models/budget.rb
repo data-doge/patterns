@@ -16,17 +16,19 @@ class Budget < ApplicationRecord
   has_paper_trail
   monetize :amount_cents
 
-  has_many :credits,
+  has_many :credits, -> { where(from_type: 'Budget') },
     class_name: 'Transaction',
-    foreign_key: 'creditor_id',
-    dependent: :destroy
+    foreign_key: 'from_id',
+    dependent: :nullify,
+    inverse_of: :debits
 
-  has_many :debits,
+  has_many :debits, -> { where(to_type: 'Budget') },
     class_name: 'Transaction',
-    foreign_key: 'debtor_id',
-    dependent: :destroy
+    foreign_key: 'to_id',
+    dependent: :nullify,
+    inverse_of: :credits
 
   def transactions
-    Transactions.where(creditor_id: id).or(Transactions.where(debtor_id: id))
+    Transactions.where(to_type: 'Budget', to_id: id).or(Transactions.where(to_type: 'Budget', from_id: id))
   end
 end

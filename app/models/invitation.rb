@@ -115,8 +115,8 @@ class Invitation < ApplicationRecord
       transitions from: %i[created invited reminded confirmed], to: :missed
 
       error do |_e|
-        if gift_cards.empty?
-          errors.add(:base, "Can't set to miss with gift cards. Delete them first")
+        if rewards.empty?
+          errors.add(:base, "Can't set to miss with rewards. Delete them first?")
         elsif in_past?
           errors.add(:base, "Event isn't in the past. Maybe delete invitation?")
         end
@@ -213,7 +213,7 @@ class Invitation < ApplicationRecord
   end
 
   def can_miss?
-    in_past? && gift_cards.empty?
+    in_past? && rewards.empty?
   end
 
   def in_future?
