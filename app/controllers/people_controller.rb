@@ -145,7 +145,7 @@ class PeopleController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/MethodLength
 
   # PATCH/PUT /people/1
   # PATCH/PUT /people/1.json

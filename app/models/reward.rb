@@ -3,27 +3,24 @@
 #
 # == Schema Information
 #
-# Table name: gift_cards
+# Table name: rewards
 #
-#  id               :integer          not null, primary key
-#  gift_card_number :string(255)
-#  expiration_date  :string(255)
-#  person_id        :integer
-#  notes            :string(255)
-#  created_by       :integer
-#  reason           :integer
-#  amount_cents     :integer          default(0), not null
-#  amount_currency  :string(255)      default("USD"), not null
-#  giftable_id      :integer
-#  giftable_type    :string(255)
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  batch_id         :string(255)
-#  sequence_number  :integer
-#  active           :boolean          default(FALSE)
-#  secure_code      :string(255)
-#  team_id          :bigint(8)
-#  finance_code     :string(255)
+#  id              :bigint(8)        not null, primary key
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  rewardable_type :string(255)
+#  rewardable_id   :bigint(8)
+#  user_id         :integer          not null
+#  person_id       :integer          not null
+#  giftable_type   :string(255)
+#  giftable_id     :bigint(8)
+#  created_by      :integer          not null
+#  reason          :string(255)
+#  notes           :text(65535)
+#  team_id         :integer
+#  finance_code    :string(255)
+#  amount_cents    :integer          default(0), not null
+#  amount_currency :string(255)      default("USD"), not null
 #
 
 class Reward < ApplicationRecord
@@ -51,28 +48,28 @@ class Reward < ApplicationRecord
   belongs_to :user
   belongs_to :team
 
-  validates :amount, presence: true
-  validates :reason, presence: true
-  validates :batch_id, presence: true
-  validates :sequence_number, presence: true
+  # validates :amount, presence: true
+  # validates :reason, presence: true
+  # validates :batch_id, presence: true
+  # validates :sequence_number, presence: true
 
-  validates :expiration_date,
-    format: { with: %r{\A(0|1)([0-9])\/([0-9]{2})\z}i,
-              unless: proc { |c| c.expiration_date.blank? } }
+  # validates :expiration_date,
+  #   format: { with: %r{\A(0|1)([0-9])\/([0-9]{2})\z}i,
+  #             unless: proc { |c| c.expiration_date.blank? } }
 
-  validates :sequence_number, length: { minimum: 1, maximum: 7, unless: proc { |c| c.sequence_number.blank? } }
+  # validates :sequence_number, length: { minimum: 1, maximum: 7, unless: proc { |c| c.sequence_number.blank? } }
 
-  validates :sequence_number,
-    uniqueness: { scope: %i[batch_id gift_card_number],
-                  unless: proc { |c| c.sequence_number.blank? } }
+  # validates :sequence_number,
+  #   uniqueness: { scope: %i[batch_id gift_card_number],
+  #                 unless: proc { |c| c.sequence_number.blank? } }
 
-  validates :gift_card_number,
-    uniqueness: { scope: %i[batch_id sequence_number],
-                  unless: proc { |c| c.gift_card_number.blank? } }
+  # validates :gift_card_number,
+  #   uniqueness: { scope: %i[batch_id sequence_number],
+  #                 unless: proc { |c| c.gift_card_number.blank? } }
 
-  validates :gift_card_number,
-    format: { with: /\A([0-9]){4,5}\z/i,
-              unless: proc { |c| c.gift_card_number.blank? } }
+  # validates :gift_card_number,
+  #   format: { with: /\A([0-9]){4,5}\z/i,
+  #             unless: proc { |c| c.gift_card_number.blank? } }
 
   # Validation to limit 1 signup per person
   validates :reason, uniqueness: { scope: :person_id, if: :reason_is_signup? }
@@ -85,6 +82,7 @@ class Reward < ApplicationRecord
       }
     }
   validate :giftable_person_ownership
+
   # ransacker :created_at, type: :date do
   #   Arel.sql('date(created_at)')
   # end
@@ -154,13 +152,13 @@ class Reward < ApplicationRecord
 
   private
 
-    def assign_card_activation
+    def assign_reward
       # tricksy: must allow creation of cards without activations
       # but must check to see if card has activation
       # AND throw error if we are duplicating.
-      return true if card_activation_id.blank?
+      return true if rewardable_id.blank?
 
-      if card_activation.nil?
+      if rewardable.nil?
         # first check if we have an activation id, then a search
         ca = CardActivation.find card_activation_id unless card_activation_id.nil?
         ca ||= CardActivation.find_by(sequence_number: sequence_number, batch_id: batch_id)
@@ -178,10 +176,10 @@ class Reward < ApplicationRecord
       end
     end
 
-    def unassign_card_activation
-      if card_activation.present?
-        card_activation.gift_card_id = nil
-        card_activation.save
+    def unassign_reward
+      if rewardable.present?
+        rewardable.reward_id = nil
+        rewardable.save
       end
     end
 

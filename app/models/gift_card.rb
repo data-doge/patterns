@@ -1,33 +1,42 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
-# Table name: card_activations
+# Table name: gift_cards
 #
-#  id               :bigint(8)        not null, primary key
-#  full_card_number :string(255)
+#  id               :integer          not null, primary key
+#  gift_card_number :string(255)
 #  expiration_date  :string(255)
-#  sequence_number  :string(255)
-#  secure_code      :string(255)
-#  batch_id         :string(255)
-#  status           :string(255)      default("created")
-#  user_id          :integer
-#  gift_card_id     :integer
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
+#  person_id        :integer
+#  notes            :string(255)
+#  created_by       :integer
+#  reason           :integer
 #  amount_cents     :integer          default(0), not null
 #  amount_currency  :string(255)      default("USD"), not null
-#  created_by       :integer
+#  giftable_id      :integer
+#  giftable_type    :string(255)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  batch_id         :string(255)
+#  sequence_number  :integer
+#  active           :boolean          default(FALSE)
+#  secure_code      :string(255)
+#  team_id          :bigint(8)
+#  finance_code     :string(255)
 #
 
 # records card details for activation and check calls
 class GiftCard < ApplicationRecord
+  has_paper_trail
   include AASM
   page 20
   monetize :amount_cents
   attr_accessor :old_user_id
 
-  has_paper_trail
+  has_many :activation_calls, dependent: :destroy
+  alias_attribute :calls, :activation_calls
+
+  has_one :reward, as: :rewardable, dependent: :nullify
+  belongs_to :user
 
   validate :luhn_number_valid
   validates :expiration_date, presence: true
@@ -55,12 +64,6 @@ class GiftCard < ApplicationRecord
   # change the assigned activation to gift card? unclear
   # IMMUTABLE = %w{gift_card_id}
   # validate :force_immutable
-
-  has_many :activation_calls
-  alias_attribute :calls, :activation_calls
-
-  belongs_to :rewards, as: :rewardable
-  belongs_to :user
 
   before_create :scrub_input
   before_create :set_created_by

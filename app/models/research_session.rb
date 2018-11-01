@@ -6,7 +6,7 @@
 # Table name: research_sessions
 #
 #  id              :integer          not null, primary key
-#  description     :string(255)
+#  description     :text(65535)
 #  buffer          :integer          default(0), not null
 #  created_at      :datetime
 #  updated_at      :datetime
@@ -18,6 +18,7 @@
 #  session_type    :integer          default(1)
 #  location        :string(255)
 #  duration        :integer          default(60)
+#  cached_tag_list :string(255)
 #
 
 class ResearchSession < ApplicationRecord

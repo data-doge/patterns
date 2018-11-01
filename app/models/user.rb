@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: users
@@ -25,6 +24,13 @@
 #  phone_number            :string(255)
 #  new_person_notification :boolean          default(FALSE)
 #  team_id                 :bigint(8)
+#  invitation_created_at   :datetime
+#  invitation_sent_at      :datetime
+#  invitation_accepted_at  :datetime
+#  invitation_limit        :integer
+#  invited_by_type         :string(255)
+#  invited_by_id           :bigint(8)
+#  invitations_count       :integer          default(0)
 #
 
 class User < ApplicationRecord

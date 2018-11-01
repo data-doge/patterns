@@ -38,6 +38,16 @@
 #  referred_by                      :string(255)
 #  low_income                       :boolean
 #  rapidpro_uuid                    :string(255)
+#  landline                         :string(255)
+#  created_by                       :integer
+#  screening_status                 :string(255)      default("new")
+#  phone_confirmed                  :boolean          default(FALSE)
+#  email_confirmed                  :boolean          default(FALSE)
+#  confirmation_sent                :boolean          default(FALSE)
+#  welcome_sent                     :boolean          default(FALSE)
+#  participation_level              :string(255)      default("new")
+#  locale                           :string(255)      default("en")
+#  cached_tag_list                  :text(65535)
 #
 
 require 'faker'
