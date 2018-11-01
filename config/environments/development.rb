@@ -54,6 +54,8 @@ Logan::Application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
+  config.active_storage.service = :local
+  
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker

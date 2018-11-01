@@ -16,7 +16,7 @@
 class TaggingsController < ApplicationController
 
   TAGGABLE_TYPES = {
-    'Person'          => Person.active,
+    'Person'          => Person,
     'ResearchSession' => ResearchSession
   }.freeze
 
@@ -80,25 +80,11 @@ class TaggingsController < ApplicationController
 
   def index
     @tags = Person.active.tag_counts_on(:tags).order('taggings_count DESC')
-    # this gets $/tag and count for each tag.
-    # result = Person.active.tag_counts_on(:tags).inject({}) do |acc, t|
-    #   acc[t.name] = {}
-    #   acc[t.name][:count] = t.count
-    #   acc[t.name][:amount] = GiftCard.where(person_id: Person.tagged_with(t.name).distinct(:id).pluck(:id)).sum(:amount_cents)/100
-    #   acc
-    # end
-    # result.sort_by { |_k, v| v[:amount] }.reverse
   end
 
   # rubocop:enable Metrics/MethodLength
   def search
     klass = params[:type].blank? ? Person.active : TAGGABLE_TYPES.fetch(params[:type])
-
-    # this query is busted. waaaay too big. loads EVERY tag.
-    # potentially the solution is to
-    # search the tags only, THEN filter through taggings by taggable_type?
-    # tags = ActsAsTaggableOn::Tag.where('name like ?',"%#{params[:q]}%")
-    # taggings = ActsAsTaggableOn::Tagging.include(:tags).where(taggable_type: klass.to_s, tag_id: tags.map(&:id)).group(:tag_id).count(:tag_id)
 
     @tags = klass.tag_counts.where('name like ?', "%#{params[:q].downcase}%").
             order(taggings_count: :desc)

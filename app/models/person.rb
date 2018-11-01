@@ -102,15 +102,15 @@ class Person < ApplicationRecord
   #   unless: proc { |person| person.phone_number.present? }
   validates :email_address, email: true, allow_blank: true, uniqueness: true
 
-  scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM gift_cards where gift_cards.reason = 1)') }
-  scope :signup_card_needed, -> { joins(:gift_cards).where('gift_cards.reason !=1') }
+  # scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM gift_cards where gift_cards.reason = 1)') }
+  # scope :signup_card_needed, -> { joins(:gift_cards).where('gift_cards.reason !=1') }
 
   scope :verified, -> { where('verified like ?', '%Verified%') }
   scope :not_verified, -> { where.not('verified like ?', '%Verified%') }
   scope :active, -> { where(active: true) }
   scope :deactivated, -> { where(active: false) }
 
-  scope :order_by_giftcard_sum, -> { joins(:gift_cards).includes(:research_sessions).where('gift_cards.created_at >= ?', Time.current.beginning_of_year).select('people.id, people.first_name,people.last_name, people.active,sum(gift_cards.amount_cents) as total_gc').group('people.id').order('total_gc desc') }
+  scope :order_by_reward_sum, -> { joins(:rewards).includes(:research_sessions).where('gift_cards.created_at >= ?', Time.current.beginning_of_year).select('people.id, people.first_name,people.last_name, people.active,sum(gift_cards.amount_cents) as total_gc').group('people.id').order('total_gc desc') }
   # no longer using this. now managing active elsewhere
   # default_scope { where(active:
 

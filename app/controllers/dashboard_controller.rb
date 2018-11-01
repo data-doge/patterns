@@ -19,13 +19,13 @@ class DashboardController < ApplicationController
     @deactivated_people = Person.deactivated.where(active: false).order('deactivated_at DESC').limit(10)
 
     @last_logins = User.approved.order('last_sign_in_at DESC').all
-    @one_month_gc = GiftCard.where('created_at > ?', 1.month.ago).sum(&:amount)
-    @six_month_gc = GiftCard.where('created_at > ?', 6.months.ago).sum(&:amount)
-    @twelve_month_gc = GiftCard.where('created_at > ?', 1.year.ago).sum(&:amount)
+    @one_month_gc = Reward.where('created_at > ?', 1.month.ago).sum(&:amount)
+    @six_month_gc = Reward.where('created_at > ?', 6.months.ago).sum(&:amount)
+    @twelve_month_gc = Reward.where('created_at > ?', 1.year.ago).sum(&:amount)
 
-    @one_month_people = Person.active.where(id: GiftCard.select('distinct person_id').where('created_at > ?', 1.month.ago).pluck(:person_id).uniq).size
-    @six_month_people = Person.active.where(id: GiftCard.select('distinct person_id').where('created_at > ?', 6.months.ago).pluck(:person_id).uniq).size
-    @twelve_month_people = Person.active.where(id: GiftCard.select('distinct person_id').where('created_at > ?', 1.year.ago).pluck(:person_id).uniq).size
+    @one_month_people = Person.active.where(id: Reward.select('distinct person_id').where('created_at > ?', 1.month.ago).pluck(:person_id).uniq).size
+    @six_month_people = Person.active.where(id: Reward.select('distinct person_id').where('created_at > ?', 6.months.ago).pluck(:person_id).uniq).size
+    @twelve_month_people = Person.active.where(id: Reward.select('distinct person_id').where('created_at > ?', 1.year.ago).pluck(:person_id).uniq).size
 
     @popular_tags   = Person.includes(:taggings).active.tag_counts.order('taggings_count DESC').limit(10)
     @new_tags       = Person.includes(:taggings).active.tag_counts.order('id desc').limit(10)

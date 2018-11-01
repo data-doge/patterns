@@ -1,185 +1,295 @@
 # frozen_string_literal: true
 
-#
 # == Schema Information
 #
-# Table name: gift_cards
+# Table name: card_activations
 #
-#  id               :integer          not null, primary key
-#  gift_card_number :string(255)
+#  id               :bigint(8)        not null, primary key
+#  full_card_number :string(255)
 #  expiration_date  :string(255)
-#  person_id        :integer
-#  notes            :string(255)
-#  created_by       :integer
-#  reason           :integer
-#  amount_cents     :integer          default(0), not null
-#  amount_currency  :string(255)      default("USD"), not null
-#  giftable_id      :integer
-#  giftable_type    :string(255)
+#  sequence_number  :string(255)
+#  secure_code      :string(255)
+#  batch_id         :string(255)
+#  status           :string(255)      default("created")
+#  user_id          :integer
+#  gift_card_id     :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  batch_id         :string(255)
-#  sequence_number  :integer
-#  active           :boolean          default(FALSE)
-#  secure_code      :string(255)
-#  team_id          :bigint(8)
-#  finance_code     :string(255)
+#  amount_cents     :integer          default(0), not null
+#  amount_currency  :string(255)      default("USD"), not null
+#  created_by       :integer
 #
 
+# records card details for activation and check calls
 class GiftCard < ApplicationRecord
-  attr_accessor :card_activation_id
-  has_paper_trail
-  page 50
+  include AASM
+  page 20
   monetize :amount_cents
+  attr_accessor :old_user_id
 
-  before_destroy :unassign_card_activation
-  after_create :assign_card_activation
+  has_paper_trail
 
-  enum reason: {
-    unknown: 0,
-    signup: 1,
-    user_test: 2,
-    referral: 3,
-    interview: 4,
-    other: 5,
-    focus_group: 6
-  }
-
-  belongs_to :giftable, polymorphic: true, touch: true
-  belongs_to :person
-  belongs_to :user, foreign_key: :created_by
-  belongs_to :team
-
-  has_one :card_activation
-
-  validates :amount, presence: true
-  validates :reason, presence: true
+  validate :luhn_number_valid
+  validates :expiration_date, presence: true
   validates :batch_id, presence: true
   validates :sequence_number, presence: true
+  validates :expiration_date, presence: true
+  validates :user_id, presence: true
+  validates :secure_code, presence: true
+  validates :gift_card_id, uniqueness: true, allow_nil: true
 
   validates :expiration_date,
-    format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i,
-              unless: proc { |c| c.expiration_date.blank? } }
+    format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
 
-  validates :sequence_number, length: { minimum: 1, maximum: 7, unless: proc { |c| c.sequence_number.blank? } }
+  validates :batch_id, format: { with: /[0-9]*/ }
+  validates :secure_code, format: { with: /[0-9]*/ }
+  validates :sequence_number, format: { with: /[0-9]*/ }
+  # sequences are per batch
+  validates :sequence_number, uniqueness: { scope: :batch_id }
 
-  validates :sequence_number,
-    uniqueness: { scope: %i[batch_id gift_card_number],
-                  unless: proc { |c| c.sequence_number.blank? } }
+  scope :unassigned, -> { where(gift_card_id: nil) }
+  scope :assigned, -> { where.not(gift_card_id: nil) }
 
-  validates :gift_card_number,
-    uniqueness: { scope: %i[batch_id sequence_number],
-                  unless: proc { |c| c.gift_card_number.blank? } }
+  default_scope { order(sequence_number: :asc) }
+  # see force_immutable below. do we not want to allow people to
+  # change the assigned activation to gift card? unclear
+  # IMMUTABLE = %w{gift_card_id}
+  # validate :force_immutable
 
-  validates :gift_card_number,
-    format: { with:  /\A([0-9]){4,5}\z/i,
-              unless: proc { |c| c.gift_card_number.blank? } }
+  has_many :activation_calls
+  alias_attribute :calls, :activation_calls
 
-  # Validation to limit 1 signup per person
-  validates :reason, uniqueness: { scope: :person_id, if: :reason_is_signup? }
+  belongs_to :rewards, as: :rewardable
+  belongs_to :user
 
-  validate :giftable_person_ownership
-  # ransacker :created_at, type: :date do
-  #   Arel.sql('date(created_at)')
-  # end
+  before_create :scrub_input
+  before_create :set_created_by
 
-  def reason_is_signup?
-    reason == 'signup'
-  end
+  # starts activation call process on create after commit happens
+  # only hook we're using here
+  # after_commit :create_activation_call, on: :create
 
-  def research_session
-    return nil if giftable.nil? && giftable_type != 'Invitation'
+  # uses action cable to update card.
+  after_commit :update_front_end, on: :update
 
-    giftable&.research_session # double check unnecessary, but I like it.
-  end
+  def self.import(file, user)
+    errored_cards = []
+    xls =  Roo::Spreadsheet.open(file)
+    cols = { full_card_number: 'full_card_number', expiration_date: 'expiration_date', amount: 'amount', sequence_number: 'sequence_number', secure_code: 'secure_code', batch_id: 'batch_id' }
+    xls.sheet(0).each(cols) do |row|
+      next if row[:full_card_number].blank? ||  row[:full_card_number] == 'full_card_number' # empty rows
 
-  def self.batch_create(post_content)
-    # begin exception handling
-
-    # begin a transaction on the gift card model
-    GiftCard.transaction do
-      # for each gift card record in the passed json
-      JSON.parse(post_content).each do |gift_card_hash|
-        # create a new gift card
-        GiftCard.create!(gift_card_hash)
-      end # json.parse.
-    end # transaction
-  rescue StandardError
-    Rails.logger('There was a problem.')
-    # exception handling
-  end  # batch_create
-
-  # rubocop:disable Metrics/MethodLength
-  def self.export_csv
-    CSV.generate do |csv|
-      csv_column_names =  ['Gift Card ID', 'Given By', 'Team', 'FinanceCode', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
-      csv << csv_column_names
-      all.find_each do |gift_card|
-        this_person = Person.unscoped.find gift_card.person_id
-        row_items = [gift_card.id,
-                     gift_card.user.name,
-                     gift_card.team&.name || '',
-                     gift_card.finance_code || '',
-                     gift_card.research_session&.title || '',
-                     gift_card.research_session&.created_at&.to_date&.to_s || '',
-                     gift_card.created_at.to_s(:rfc822),
-                     gift_card.batch_id.to_s,
-                     gift_card.sequence_number.to_s,
-                     gift_card.amount.to_s,
-                     gift_card.reason.titleize,
-                     this_person.id || '',
-                     this_person.full_name || '',
-                     this_person.address_fields_to_sentence || '']
-        if this_person.phone_number.present?
-          row_items.push(this_person.phone_number.phony_formatted(format: :national, spaces: '-'))
-        else
-          row_items.push('')
-        end
-        row_items.push(this_person.email_address)
-        row_items.push(gift_card.notes)
-        csv << row_items
+      row[:full_card_number].delete!('-')
+      ca = CardActivation.new(row)
+      ca.user_id = user.id
+      ca.created_by = user.id
+      # results is an array of errored card activatoins
+      if ca.save
+        ca.start_activate!
+      else
+        if ca.errors.present?
+          err_msg = "Card Error: sequence: #{ca.sequence_number}, #{ca.full_card_number}, #{ca.errors[:base]}"
+          Airbrake.notify(err_msg)
+          logger.info(err_msg)
+          errored_cards << ca
+       end
       end
     end
+    errored_cards
+  end
+
+  def self.active_unassigned_count(current_user)
+    current_user.admin? ? CardActivation.active.unassigned.size : CardActivation.active.unassigned.where(user_id: current_user.id).size
+  end
+
+  aasm column: 'status', requires_lock: true do
+    state :created, initial: true
+    state :activate_started
+    state :activate_errored
+    state :check_started
+    state :check_errored
+    state :active
+
+    event :start_activate, after_commit: :create_activation_call do
+      transitions from: %i[created activate_started], to: :activate_started
+    end
+
+    event :activate_error, after_commit: :activation_error_report do
+      transitions from: %i[activate_started activate_errored], to: :activate_errored
+    end
+
+    event :start_check, after_commit: :create_check_call do
+      transitions from: %i[activate_errored check_errored active],
+                  to: :check_started
+    end
+
+    # after_commit here because we want to ensure that
+    # the history is present
+    event :check_error, after_commit: :create_check_call do
+      transitions from: %i[activate_started check_started activate_errored active check_errored], to: :check_errored
+    end
+
+    event :success, after_commit: :do_success_notification do
+      transitions to: :active
+    end
+  end
+
+  def create_activation_call
+    ActivationCall.create(card_activation_id: id, call_type: 'activate')
+  end
+
+  # override allows manual check calls
+  def create_check_call(override: false)
+    if override || activation_calls.where(call_type: 'check').size < 5
+      ActivationCall.create(card_activation_id: id, call_type: 'check')
+    end
+  end
+
+  def do_success_notification
+    # action cable update to front end.
+    true
+  end
+
+  def activation_error_report
+    # transition into start check
+    start_check
+  end
+
+  # almost always backend
+  def update_front_end
+    # if assigned, delete.
+    # otherwise, update
+    if gift_card_id.nil?
+      User.admin.each { |u|  broadcast_update(u) }
+      broadcast_update
+    else
+      User.admin.each { |u|  broadcast_delete(u) }
+      broadcast_delete
+    end
+  end
+
+  def last_balance
+    ca = calls.checks.order(created_at: 'DESC').first
+    ca.nil? ? amount : ca.balance
+  end
+
+  def last_4
+    full_card_number.to_s.last(4)
+  end
+
+  def sort_helper
+    case status
+    when 'active'
+      id.to_i
+    when 'activate_started'
+      -6
+    when 'check_started'
+      -7
+    when 'created'
+      -8
+    when 'activate_errored'
+      -9
+    when 'check_errored'
+      -10
+    end
+  end
+
+  def label
+    case status
+    when 'active'
+      'success'
+    when 'activate_started'
+      'warning'
+    when 'check_started'
+      'warning'
+    when 'created'
+      'warning'
+    when 'activate_errored'
+      'important'
+    when 'check_errored'
+      'important'
+    end
+  end
+
+  def update_balance
+    create_check_call(override: true)
+  end
+
+  def ongoing_call?
+    return false if active? # there may be, but we don't care.
+
+    calls.ongoing.size.positive?
+  end
+
+  def can_run_check?
+    return false if active? # don't run any more checks if active
+
+    !active? && !ongoing_call?
+  end
+
+  def scrub_input # sometimes we drop leading 0's in csv
+    self.sequence_number = sequence_number&.to_i
+    self.batch_id = batch_id&.to_i
+    self.full_card_number = full_card_number&.delete('-')
+    self.secure_code = secure_code&.gsub('.0', '')
+    secure_code.prepend('0') while secure_code.length < 3
   end
 
   private
 
-    def assign_card_activation
-      # tricksy: must allow creation of cards without activations
-      # but must check to see if card has activation
-      # AND throw error if we are duplicating.
-      return true if card_activation_id.blank?
+    def set_created_by
+      self.created_by = user_id
+    end
 
-      if card_activation.nil?
-        # first check if we have an activation id, then a search
-        ca = CardActivation.find card_activation_id unless card_activation_id.nil?
-        ca ||= CardActivation.find_by(sequence_number: sequence_number, batch_id: batch_id)
+    def broadcast_update(c_user = nil)
+      current_user = c_user.nil? ? user : c_user
+      ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
+        type: :update,
+        id: id,
+        large: render_large_card_activation(current_user),
+        mini: render_mini_card_activation(current_user),
+        count: CardActivation.active_unassigned_count(current_user)
+    end
 
-        if ca.present? && ca.gift_card_id.nil?
-          self.card_activation = ca
-          return true
-        elsif ca.gift_card_id.present?
-          # error case, duplicating
-          errors.add(:base, 'This card as already been assigned')
-          raise ActiveRecord::RecordInvalid.new(self)
-        else
-          return true # no card activation for this gift card
+    def broadcast_delete(c_user = nil)
+      current_user = c_user.nil? ? user : c_user
+      ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
+        type: :delete,
+        id: id,
+        count: CardActivation.active_unassigned_count(current_user)
+    end
+
+    def render_large_card_activation(c_user = nil)
+      current_user = c_user.nil? ? user : c_user
+      ApplicationController.render partial: 'card_activations/single_card_activation',
+        locals: { card_activation: self, current_user: current_user }
+    end
+
+    def render_mini_card_activation(c_user = nil)
+      current_user = c_user.nil? ? user : c_user
+      ApplicationController.render partial: 'card_activations/card_activation_mini',
+      locals: { card_activation: self, current_user: current_user }
+    end
+
+    def luhn_number_valid
+      errors[:base].push('Must include a card number.') if full_card_number.blank?
+      errors[:base].push('Card Number is not long enough.') if full_card_number.length != 16
+      unless CreditCardValidations::Luhn.valid?(full_card_number)
+        errors[:base].push("Card number #{full_card_number} is not valid.")
+      end
+    end
+
+    # gift_card_id can't change one set.
+    # dunno if we really want it.
+    def force_immutable
+      if persisted?
+        IMMUTABLE.each do |attr|
+          next if self[attr].nil? # allow updates to nil
+
+          changed.include?(attr) &&
+            errors.add(attr, :immutable) &&
+            self[attr] = changed_attributes[attr]
         end
       end
     end
-
-    def unassign_card_activation
-      if card_activation.present?
-        card_activation.gift_card_id = nil
-        card_activation.save
-      end
-    end
-
-    def giftable_person_ownership
-      # if there is no giftable object, means this card was given directly. no invitation/session, etc.
-      return true if giftable.nil?
-
-      giftable.respond_to?(:person_id) ? person_id == giftable.person_id : false
-    end
-  # rubocop:enable Metrics/MethodLength
 end

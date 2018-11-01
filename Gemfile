@@ -41,6 +41,8 @@ gem 'redcarpet' # for markdown notes
 #giftrocekt API for automagic giftcarding
 gem 'tremendous_ruby', git: 'https://github.com/BlueRidgeLabs/tremendous-ruby.git', branch:'bump_httparty'
 
+gem "aws-sdk-s3", require: false
+
 group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.

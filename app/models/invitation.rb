@@ -26,8 +26,8 @@ class Invitation < ApplicationRecord
   # so users can take notes.
   has_many :comments, as: :commentable, dependent: :destroy
 
-  # this is how we give gift cards for sessions.
-  has_many :gift_cards, as: :giftable, dependent: :destroy
+  # this is how we give rewards for sessions.
+  has_many :rewards, as: :giftable, dependent: :destroy
 
   # one person can't have multiple invitations for the same event
   validates :person_id, uniqueness: { scope: :research_session_id }

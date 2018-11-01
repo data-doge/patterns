@@ -43,7 +43,7 @@ Logan::Application.configure do
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
   
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  config.active_storage.service = :local
+  config.active_storage.service = :amazon
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil

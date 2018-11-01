@@ -133,8 +133,7 @@ class CartController < ApplicationController
     end
   end
 
-  # DELETE /gift_cards/1
-  # DELETE /gift_cards/1.json
+
   def destroy
     @cart.destroy_all
     flash[:notice] = "#{@cart.name} has been destroyed"

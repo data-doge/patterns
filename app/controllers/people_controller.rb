@@ -78,8 +78,8 @@ class PeopleController < ApplicationController
   def show
     @comment = Comment.new commentable: @person
 
-    @last_gift_card = GiftCard.last # default scope is id: :desc
-    @gift_card = GiftCard.new
+    @last_gift_card = Reward.last # default scope is id: :desc
+    @gift_card = Reward.new
     @verified_types = Person.distinct.pluck(:verified).select(&:present?)
     @tags = @person.tags.pluck(:name)
     # @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
@@ -97,7 +97,7 @@ class PeopleController < ApplicationController
   def edit; end
 
   def amount
-    @people = Person.order_by_giftcard_sum.page(params[:page])
+    @people = Person.order_by_Reward_sum.page(params[:page])
   end
 
   # POST /people/:person_id/deactivate

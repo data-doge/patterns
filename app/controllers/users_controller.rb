@@ -35,10 +35,10 @@ class UsersController < ApplicationController
   def finance
     @start_date = params[:start_date].presence || Time.current.beginning_of_year
     @end_date = params[:end_date].presence || Time.current
-    codes = GiftCard.distinct.pluck(:finance_code).compact
+    codes = Reward.distinct.pluck(:finance_code).compact
     @results = codes.map do |code|
-      amt = Money.new(GiftCard.where(created_at: @start_date..@end_date, finance_code: code).sum(:amount_cents), 'USD')
-      count = GiftCard.where(created_at: @start_date..@end_date, finance_code: code).size
+      amt = Money.new(Reward.where(created_at: @start_date..@end_date, finance_code: code).sum(:amount_cents), 'USD')
+      count = Reward.where(created_at: @start_date..@end_date, finance_code: code).size
       { code: code, amount: amt, count: count }
     end
   end

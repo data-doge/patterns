@@ -23,7 +23,7 @@ rapidpro endpoint for sending gift cards for surveys only right now
 
 Reward type is:
 	gift card (card activation)
-	legacy Card/Cash (manual input)
+	legacy Card/Cash (manual input) -> has a receipt ID, add receipt upload
 	giftrocket (run out and make the request after create/commit)
 
 all reward types have a reward ID.
@@ -41,6 +41,16 @@ Transaction Table of all GR things.
   nightly transaction check: does it all add up?
 
 
+
+
+Attempt #2:
+keep gift card, rename to reward. 
+  rewardable_id, rewardable_type
+  remove all batch/sequence, etc. that all lives in activation
+
+card activation becomes gift card
+add giftrocket model
+add cashcard model -> holder for legacy cards
 
 
 
