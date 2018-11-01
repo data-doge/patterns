@@ -20,16 +20,16 @@ module ApplicationHelper
 
   def markdown(text)
     options = {
-      filter_html:     true,
-      hard_wrap:       true,
+      filter_html: true,
+      hard_wrap: true,
       link_attributes: { rel: 'nofollow', target: '_blank' },
       space_after_headers: true,
       fenced_code_blocks: true
     }
 
     extensions = {
-      autolink:           true,
-      superscript:        true,
+      autolink: true,
+      superscript: true,
       disable_indented_code_blocks: true
     }
 
@@ -102,10 +102,10 @@ module ApplicationHelper
   end
 
   def button_label
-    { value:     'Add Value',
+    { value: 'Add Value',
       condition: 'Add Condition',
-      sort:      'Add Sort',
-      grouping:  'Add Condition Group' }.freeze
+      sort: 'Add Sort',
+      grouping: 'Add Condition Group' }.freeze
   end
 
 end

@@ -84,7 +84,7 @@ class PeopleController < ApplicationController
     @tags = @person.tags.pluck(:name)
     # @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
     # @twilio_wufoo_formids = @outgoingmessages.distinct.pluck(:wufoo_formid)
-    
+
     # @allmessages =  TwilioMessage.where('to = :number or from = :number', number: @person.normalized_phone_number)
   end
 
@@ -124,19 +124,16 @@ class PeopleController < ApplicationController
     end
   end
 
-
   # FIXME: Refactor and re-enable cop
   # TODO: killoff wufoo
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/MethodLength
   #
   # POST /people
   # POST /people.json
   def create
     @person = Person.new(person_params)
     @person.created_by = current_user.id
-    if @person.errors.present?
-      @person.errors.full_messages.each { |m| flash[:error] = m }
-    end
+    @person.errors.full_messages.each { |m| flash[:error] = m } if @person.errors.present?
 
     respond_to do |format|
       if @person.save
@@ -223,7 +220,6 @@ class PeopleController < ApplicationController
         ])
     end
     # rubocop:enable Metrics/MethodLength
-
 
     def sort_column
       Person.column_names.include?(params[:sort]) ? params[:sort] : 'people.id'

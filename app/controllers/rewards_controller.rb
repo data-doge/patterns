@@ -14,8 +14,8 @@ class RewardsController < ApplicationController
   def index
     @q_rewards = if current_user.admin?
                    Reward.ransack(params[:q])
-                  else
-                    Reward.where(created_by: current_user.id).ransack(params[:q])
+                 else
+                   Reward.where(created_by: current_user.id).ransack(params[:q])
                   end
     @q_rewards.sorts = [sort_column + ' ' + sort_direction] if @q_Rewards.sorts.empty?
     respond_to do |format|
@@ -35,9 +35,7 @@ class RewardsController < ApplicationController
   def recent_signups
     @q_recent_signups = Person.no_signup_card.ransack(params[:q_signups], search_key: :q_signups)
 
-    unless params[:q_signups]
-      @q_recent_signups.created_at_date_gteq = 3.weeks.ago.strftime('%Y-%m-%d')
-    end
+    @q_recent_signups.created_at_date_gteq = 3.weeks.ago.strftime('%Y-%m-%d') unless params[:q_signups]
 
     @recent_signups = @q_recent_signups.result.order(id: :desc).page(params[:page_signups])
 
@@ -61,9 +59,13 @@ class RewardsController < ApplicationController
 
   # POST /rewards
   # POST /rewards.json
-  # TODO 
+  # TODO
   # FIXME
-  def create # this is gonna be a doozy
+  def create
+    # this is gonna be a doozy
+    # we don't create rewards directly. First we find the rewardable obj, then
+    # we associate it with the created reward.
+    # this endpoint is likely unecessary
     @reward = Reward.new(reward_params)
 
     @total = @reward.person.blank? ? @reward.amount : @reward.person.reward_total
@@ -90,10 +92,10 @@ class RewardsController < ApplicationController
 
   # takes an card_activation_id, person_id, and sessionid
   # FIXME
-  # TODO 
-  def assign 
+  # TODO
+  def assign
     ## todo, gotta find the right class and object
-    @card = GiftCard.find(params[:reward_id]) 
+    @card = GiftCard.find(params[:reward_id])
 
     ca = @card # for shortness.
     @reward = Reward.new(sequence_number: ca.sequence_number,
@@ -153,9 +155,9 @@ class RewardsController < ApplicationController
     klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
     @giftable = klass.find(params[:giftable_id])
     @rewards = if current_user.admin?
-                          GiftCard.unassigned.active
-                        else
-                          GiftCard.unassigned.active.where(user_id: current_user.id)
+                 GiftCard.unassigned.active
+               else
+                 GiftCard.unassigned.active.where(user_id: current_user.id)
                         end
     @reward = Reward.new
     @last_reward = Reward.last # default scope is id: :desc

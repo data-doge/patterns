@@ -14,9 +14,7 @@ class RapidproUpdateJob
     Rails.logger.info '[RapidProUpdate] job enqueued'
     @person = Person.find(id)
 
-    if @person.tag_list.include?('not dig') || @person.active == false
-      RapidproDeleteJob.perform_async(id)
-    end
+    RapidproDeleteJob.perform_async(id) if @person.tag_list.include?('not dig') || @person.active == false
 
     # we may deal with a word where rapidpro does email...
     # but not now.
@@ -37,7 +35,7 @@ class RapidproUpdateJob
       body = { name: @person.full_name,
                first_name: @person.first_name,
                language: lang }
-      
+
       # eventual fields: # first_name: person.first_name,
       # last_name: person.last_name,
       # email_address: person.email_address,

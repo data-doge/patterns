@@ -57,7 +57,7 @@ class Reward < ApplicationRecord
   validates :sequence_number, presence: true
 
   validates :expiration_date,
-    format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i,
+    format: { with: %r{\A(0|1)([0-9])\/([0-9]{2})\z}i,
               unless: proc { |c| c.expiration_date.blank? } }
 
   validates :sequence_number, length: { minimum: 1, maximum: 7, unless: proc { |c| c.sequence_number.blank? } }
@@ -71,16 +71,27 @@ class Reward < ApplicationRecord
                   unless: proc { |c| c.gift_card_number.blank? } }
 
   validates :gift_card_number,
-    format: { with:  /\A([0-9]){4,5}\z/i,
+    format: { with: /\A([0-9]){4,5}\z/i,
               unless: proc { |c| c.gift_card_number.blank? } }
 
   # Validation to limit 1 signup per person
   validates :reason, uniqueness: { scope: :person_id, if: :reason_is_signup? }
 
+  validates :rewardable_type,
+    inclusion: {
+      in: %w[GiftCard CashCard GiftRocket],
+      if: proc { |r|
+        r.rewardable_id.present?
+      }
+    }
   validate :giftable_person_ownership
   # ransacker :created_at, type: :date do
   #   Arel.sql('date(created_at)')
   # end
+
+  def self.available_types
+    %w[GiftCard CashCard GiftRocket]
+  end
 
   def reason_is_signup?
     reason == 'signup'

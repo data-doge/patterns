@@ -35,13 +35,13 @@ class ApplicationSms
   private
 
     def twilio_params(res)
-      { from:       @application_number,
-        to:         @to.phone_number,
-        body:       body,
-        direction:  'outbound-api',
-        date_sent:  Time.current,
+      { from: @application_number,
+        to: @to.phone_number,
+        body: body,
+        direction: 'outbound-api',
+        date_sent: Time.current,
         message_sid: res.sid,
         account_sid: res.account_sid,
-        status:      res.status }
+        status: res.status }
     end
 end

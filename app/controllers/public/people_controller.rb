@@ -71,9 +71,7 @@ class Public::PeopleController < ApplicationController
           tags = api_create_params[:tags].tr('_', ' ').split(',')
           @person.tag_list.add(tags)
         end
-        if api_create_params[:low_income].present?
-          @person.low_income = api_create_params[:low_income] == 'Y'
-        end
+        @person.low_income = api_create_params[:low_income] == 'Y' if api_create_params[:low_income].present?
 
         if api_create_params[:locale_name].present?
           locale = Person.locale_name_to_locale(api_create_params[:locale_name])

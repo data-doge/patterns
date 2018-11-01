@@ -21,7 +21,7 @@ class RapidproPersonGroupJob
     @base_url = 'https://rapidpro.brl.nyc/api/v2/'
     Rails.logger.info "[RapidProPersonGroup] job enqueued: cart: #{cart_id}, action: #{action}"
     @cart = Cart.find(cart_id)
-    
+
     return unless @cart.rapidpro_sync # perhaps cart is no longer synced
 
     @people_uuids = Person.where(id: people_ids).tagged_with('not dig', exclude: true).pluck(:rapidpro_uuid).compact
@@ -35,12 +35,12 @@ class RapidproPersonGroupJob
       uuids = @people_uuids.pop(100)
       body = { 'action': @action, contacts: uuids, group: @cart.rapidpro_uuid }
       res = HTTParty.post(url, headers: @headers, body: body.to_json)
-      if res.code == 429 # throttled
-        retry_delay = res.headers['retry-after'].to_i + 5
-        pids = Person.where(rapidpro_uuid: @people_uuids)
-        retry_later(pids, retry_delay)
-        not_throttled = false
-      end
+      next unless res.code == 429 # throttled
+
+      retry_delay = res.headers['retry-after'].to_i + 5
+      pids = Person.where(rapidpro_uuid: @people_uuids)
+      retry_later(pids, retry_delay)
+      not_throttled = false
     end
   end
 

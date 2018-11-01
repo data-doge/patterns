@@ -112,23 +112,17 @@ class CalendarController < ApplicationController
     end
 
     def research_session
-      if allowed_params['research_session_id']
-        @research_session ||= ResearchSession.find_by(id: allowed_params['research_session_id'])
-      end
+      @research_session ||= ResearchSession.find_by(id: allowed_params['research_session_id']) if allowed_params['research_session_id']
     end
 
     def invitation
-      if allowed_params['invitation_id']
-        @invitation ||= Invitation.find_by(id: allowed_params['invitation_id'])
-      end
+      @invitation ||= Invitation.find_by(id: allowed_params['invitation_id']) if allowed_params['invitation_id']
     end
 
     def default_time
       return invitation.start_datetime.strftime('%F') if invitation
       return research_session.start_datetime.strftime('%F') if research_session
-      if allowed_params['default_time']
-        return Time.zone.parse(allowed_params['default_time']).strftime('%F')
-      end
+      return Time.zone.parse(allowed_params['default_time']).strftime('%F') if allowed_params['default_time']
 
       Time.current.strftime('%F')
     end

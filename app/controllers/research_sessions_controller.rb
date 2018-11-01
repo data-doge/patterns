@@ -42,14 +42,10 @@ class ResearchSessionsController < ApplicationController
     if @research_session.save
       if params['research_session']['tags'].present?
         tags = params['research_session']['tags']
-        if tags != 'research_session[tags]'
-          @research_session.tag_list.add(tags, parse: true)
-        end
+        @research_session.tag_list.add(tags, parse: true) if tags != 'research_session[tags]'
       end
 
-      if @research_session.location.blank?
-        @research_session.location = "Call #{current_user.name} at #{current_user.phone_number}"
-      end
+      @research_session.location = "Call #{current_user.name} at #{current_user.phone_number}" if @research_session.location.blank?
       @research_session.save
 
       # need to handle case when the invitation is invalid
@@ -79,7 +75,7 @@ class ResearchSessionsController < ApplicationController
 
     tags =  @s.ransack_tagged_with&.split(',')&.map { |t| t.delete(' ') } || []
     @tags = ResearchSession.tag_counts.where(name: tags).to_a
-    @research_sessions = @s.result(distinct: true).includes({invitations: :person}, :tags, :user).page(params[:page])
+    @research_sessions = @s.result(distinct: true).includes({ invitations: :person }, :tags, :user).page(params[:page])
   end
 
   def show
@@ -113,9 +109,7 @@ class ResearchSessionsController < ApplicationController
       flash[:error] = "Can't remove #{Person.find(inv.person_id).full_name}, they have a reward for this session."
     else
       inv.delete
-      if @research_session.save
-        flash[:notice] = "#{Person.find(inv.person_id).full_name} removed from session!"
-      end
+      flash[:notice] = "#{Person.find(inv.person_id).full_name} removed from session!" if @research_session.save
     end
     respond_to do |format|
       format.js
@@ -129,9 +123,7 @@ class ResearchSessionsController < ApplicationController
     inv = Invitation.create(person_id: params[:person_id], aasm_state: state, research_session_id: @research_session.id)
     @research_session.invitations << inv
     @person = inv.person
-    if @research_session.save && @research_session.is_invited?(@person)
-      flash[:notice] = "#{@person.full_name} added to session!"
-    end
+    flash[:notice] = "#{@person.full_name} added to session!" if @research_session.save && @research_session.is_invited?(@person)
     respond_to do |format|
       format.js
       format.html { redirect_to research_session_path(@research_session) }

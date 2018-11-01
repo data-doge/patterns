@@ -17,16 +17,12 @@ class SearchController < ApplicationController
     end
 
     # normalize phone numbers
-    if params[:q].present? && params[:q][:phone_number_eq].present?
-      params[:q][:phone_number_eq] = PhonyRails.normalize_number(params[:q][:phone_number_eq])
-    end
+    params[:q][:phone_number_eq] = PhonyRails.normalize_number(params[:q][:phone_number_eq]) if params[:q].present? && params[:q][:phone_number_eq].present?
 
     # allow for larger pages
     Person.per_page = params[:per_page] if params[:per_page].present?
 
-    if params[:q].present? && params[:q][:active_eq].blank?
-      params[:q][:active_eq] = true
-    end
+    params[:q][:active_eq] = true if params[:q].present? && params[:q][:active_eq].blank?
 
     @q = if current_user.admin?
            Person.ransack(params[:q])

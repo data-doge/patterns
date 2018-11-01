@@ -133,7 +133,6 @@ class CartController < ApplicationController
     end
   end
 
-
   def destroy
     @cart.destroy_all
     flash[:notice] = "#{@cart.name} has been destroyed"
@@ -146,9 +145,7 @@ class CartController < ApplicationController
 
   def change_cart
     @cart = Cart.find(params[:cart]) || current_cart
-    if params[:current_session_id].present?
-      @current_session = ResearchSession.find(params[:current_session_id]) || nil
-    end
+    @current_session = ResearchSession.find(params[:current_session_id]) || nil if params[:current_session_id].present?
     current_user.current_cart = @cart
     respond_to do |format|
       format.html { redirect_to cart_path(@cart) }
