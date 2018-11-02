@@ -17,7 +17,7 @@ class RewardsController < ApplicationController
                  else
                    Reward.where(created_by: current_user.id).ransack(params[:q])
                   end
-    @q_rewards.sorts = [sort_column + ' ' + sort_direction] if @q_Rewards.sorts.empty?
+    @q_rewards.sorts = [sort_column + ' ' + sort_direction] if @q_rewards.sorts.empty?
     respond_to do |format|
       format.html do
         @rewards = @q_rewards.result.includes(:person, :giftable).order(id: :desc).page(params[:page])

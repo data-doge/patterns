@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_31_193816) do
+ActiveRecord::Schema.define(version: 2018_11_02_172019) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "gift_card_id"
@@ -131,7 +131,7 @@ ActiveRecord::Schema.define(version: 2018_10_31_193816) do
     t.string "batch_id"
     t.string "status", default: "created"
     t.integer "user_id"
-    t.integer "gift_card_id"
+    t.integer "reward_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "amount_cents", default: 0, null: false
@@ -268,6 +268,7 @@ ActiveRecord::Schema.define(version: 2018_10_31_193816) do
     t.string "secure_code"
     t.bigint "team_id"
     t.string "finance_code"
+    t.integer "user_id"
     t.string "rewardable_type"
     t.bigint "rewardable_id"
     t.index ["giftable_type", "giftable_id"], name: "index_rewards_on_giftable_type_and_giftable_id"

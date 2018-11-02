@@ -6,6 +6,6 @@
     <% user = User.find person.versions.last.whodunnit.split('/').last %>
   <span class="deactivated-by">by:<%= user.name %></span><br/>
   <% end %>
-  <span class="gift-cards">Gift Cards: <%= person.gift_cards.size %></span><br/>
-  <span class="gift-cards">Last User Interaction: <%= person.research_sessions.last&.user&.name %></span>
+  <span class="rewards">Gift Cards: <%= person.rewards.size %></span><br/>
+  <span class="last-user">Last User Interaction: <%= person.research_sessions.last&.user&.name %></span>
 </div>

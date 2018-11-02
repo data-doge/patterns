@@ -37,8 +37,8 @@
         <dd><%= @deactivated_count %></dd>
         <dt>Active People in 1,6,12 months:</dt>
         <dd><%= @one_month_people%>, <%= @six_month_people%>, <%= @twelve_month_people%></dd>
-        <dt>Total Gift Card $ in 1,6,12 months:</dt>
-        <dd><%= @one_month_gc%>, <%= @six_month_gc%>, <%= @twelve_month_gc%></dd>
+        <dt>Total Reward $ in 1,6,12 months:</dt>
+        <dd><%= @one_month_reward %>, <%= @six_month_reward%>, <%= @twelve_month_reward %></dd>
       </dl>
       <% if current_user.admin? %>
       <h4>Last Logins, count</h4>

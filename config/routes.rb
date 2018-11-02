@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 Logan::Application.routes.draw do  
   
+  resources :cash_cards
   resources :budgets
   resources :giftrockets
   resources :activation_calls do

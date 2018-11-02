@@ -4,10 +4,8 @@
  <div class='span12'>
 
   <%= search_form_for @q_rewards, url: rewards_path, method: :get, class: 'form-inline' do |f| %>
-    <%= f.label :reward_number_cont %>
-    <%= f.search_field :reward_number_cont, class: 'input-mini' %>
-    <%= f.label "sequence" %>
-    <%= f.search_field :sequence_number_eq, class: 'input-mini' %>
+    
+    
     <label for='created_at_date_gteq'>Created on or after</label>
     <%= f.text_field :created_at_date_gteq, class: 'text_field input-small', id: 'datepicker_start', placeholder: 'yyyy-mm-dd' %>
     <label for='created_at_date_lteq'>Created on or before</label>
@@ -20,18 +18,13 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <!-- <th><%= sortable 'id', 'Gift Card ID'%></th>
-      <th>Person ID</th> -->
     <% if current_user.admin? %>
       <th>User</th>
     <% end %>
       <th>Person</th>
       <th>Reason</th>
       <th>Giftable Object</th>
-      <th>Batch</th>
-      <th><%= sortable 'sequence_number', 'Sequence #' %></th>
-      <th>Card Number</th>
-      <th>Expiration Date</th>
+      <th>Reward Type</th>
       <th>Amount</th>
       <th>Created On</th>
       <th>Edit?</th>
@@ -56,10 +49,7 @@
                   "None"
                 end
         %></td>
-        <td><%= reward.batch_id %></td>
-        <td><%= reward.sequence_number %></td>
-        <td><%= reward.reward_number %></td>
-        <td><%= reward.expiration_date %></td>
+        <td><%= link_to reward.rewardable_type, url_for(reward.rewardable) %>
         <td><%= humanized_money_with_symbol reward.amount %></td>
         <td><%= reward.created_at.strftime('%m/%d/%Y') %></td>
         <td><%= link_to 'Show', reward %></td>

@@ -87,7 +87,7 @@ class ResearchSession < ApplicationRecord
   end
 
   def rewards
-    invitations.map(&:gift_cards).flatten
+    invitations.map(&:rewards).flatten
   end
 
   def send_invitation_notifications
