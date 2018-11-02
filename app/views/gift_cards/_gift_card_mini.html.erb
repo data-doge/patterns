@@ -1,9 +1,7 @@
   <tr id='gift-card-<%= gift_card.id %>' 
       class='well well-small gift-card' 
       data-id='<%=gift_card.id%>' 
-      data-last-4='<%= gift_card.last_4 %>'
-      data-batch-id='<%= gift_card.batch_id %>'
-      data-sequence-number='<%= gift_card.sequence_number %>' >
+      data-amount='<%= gift_card.amount %>'
     <td class='batch_id'>
       <%= gift_card.batch_id %>
     </td>
@@ -22,20 +20,17 @@
     </td>
     <% end %>
     <td>
-      <%= select_tag :reason,  options_for_select(GiftCard.reasons.keys.to_a,'interview'),
+      <%= select_tag :reason,  options_for_select(Reward.reasons.keys.to_a,'interview'),
                       { class: 'input-small',
-                        id: "card-actionvation-reason-#{gift_card.id}" }
+                        id: "reward-reason-#{gift_card.id}" }
         %>
     </td>
     <td>
       <%= button_tag "Add",
             data:{
-              gift_card_id: gift_card.id,
-              gift_card_number: gift_card.last_4.to_s,
-              sequence_number: gift_card.sequence_number,
-              batch_id: gift_card.batch_id.to_s,
-              amount: gift_card.amount.to_s,
-              expiration_date: gift_card.expiration_date,
+              amount: gift_card.amount,
+              giftable_type: 'GiftCard',
+              giftable_id: gift_card.id
             },
             id: "add-reward-#{gift_card.id}",
             class: 'add-reward' ,

@@ -154,12 +154,14 @@ class RewardsController < ApplicationController
   def modal
     klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
     @giftable = klass.find(params[:giftable_id])
-    @rewards = if current_user.admin?
-                 GiftCard.unassigned.active
-               else
-                 GiftCard.unassigned.active.where(user_id: current_user.id)
-                        end
+    @gift_cards = if current_user.admin?
+                    GiftCard.unassigned.active
+                  else
+                    GiftCard.unassigned.active.where(user_id: current_user.id)
+                  end
     @reward = Reward.new
+    @cash_card = CashCard.new
+    @gift_rocket = Giftrocket.new
     @last_reward = Reward.last # default scope is id: :desc
     respond_to do |format|
       format.html

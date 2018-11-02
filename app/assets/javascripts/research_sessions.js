@@ -13,20 +13,15 @@ $(document).on('page:load turbolinks:load ready', function() {
   var searchSelector = 'input#invitees-typeahead';
 
   // called from card_activation_mini
-  add_card_activation = function(el){
+  add_reward = function(el){
     // this is a horrible hack
-    var card_data = $(el).data();
+    var reward_data = $(el).data();    
+    reward_data.reason = $('#reward-reason-' + card_data.giftCardId).val();
     
-    card_data.reason = $('#card-activation-reason-' + card_data.cardActivationId).val();
-    
-    var myform = document.getElementById("new_gift_card");
-    $('input[name="gift_card[reason]"]').val(card_data.reason);
-    $('input[name="gift_card[sequence_number]"]').val(card_data.sequenceNumber);
-    $('input[name="gift_card[gift_card_number]"]').val(card_data.giftCardNumber);
-    $('input[name="gift_card[batch_id]"]').val(card_data.batchId);
-    $('input[name="gift_card[expiration_date]"]').val(card_data.expirationDate);
-    $('input[name="gift_card[card_activation_id]"]').val(card_data.cardActivationId);
-    $('input[name="gift_card[amount]"]').val(card_data.amount);
+    var myform = document.getElementById("new_reward");
+    $('input[name="reward[reason]"]').val(card_data.reason);=    
+    $('input[name="reward[giftable_type]"]').val(card_data.giftabelType);
+    $('input[name="reward[giftable_id]"]').val(card_data.giftabelId);
     $('#add-gift-card-button').click();
   }
   //filters out tags that are already in the list

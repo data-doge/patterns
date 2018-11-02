@@ -46,8 +46,8 @@
             </thead>
             <tbody id='gift-cards-mini'>
               <%= render partial: "gift_cards/gift_card_mini",
-                     collection: @card_activations, 
-                     as: :card_activation %>
+                     collection: @gift_cards, 
+                     as: :gift_card %>
             </tbody>
           </table>
         </div>
@@ -55,21 +55,17 @@
         <%= button_tag 'Manually Enter Cash Card', 
           onclick: '$("#manual-card-form").toggle()', 
           class: 'btn'%>
-        <div id='manual-card-form' style='display:none'>
-              <%= form_for( @reward, remote: true) do |form| %>
+        <div id='manual-cash_card-form' style='display:none'>
+              <%= form_for( @cash_card, remote: true) do |form| %>
                 <%= form.hidden_field :person_id, value: @giftable.person_id %>
                 <%= form.hidden_field :giftable_id, value: @giftable.id %>
                 <%= form.hidden_field :giftable_type, value: @giftable.class.to_s %>
-                <%= form.hidden_field :card_activation_id %>
                 <table>
                   <thead>
                     <tr>
                       <th>Reason</th>
-                      <th>Sequence #</th>
-                      <th>Card #</th>
-                      <th>Batch</th>
-                      <th>Expiration</th>
                       <th>Amount</th>
+                      <th>Notes</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -84,34 +80,15 @@
                           id: "new-reason"
                          %>
                 </td><td>
-                <%= form.text_field :sequence_number,
-                        placeholder: "Sequence",
-                        class: 'input-mini',
-                        id: "new-sequencenumber" %>
-                </td><td>
-                <%= form.text_field :reward_number,
-                        placeholder: "Card #",
-                        class: 'input-mini',
-                        id: "new-cardnumber" %>
-                </td><td>
-                <%= form.text_field :batch_id,
-                        placeholder: "BatchID",
-                        class: 'input-mini',
-                        id: "new-batchid",
-                        value: @last_reward.batch_id %>
-                </td><td>
-                <%= form.text_field :expiration_date,
-                        placeholder: "MM/YY",
-                        class: 'input-mini',
-                        id: "new-expirationdate",
-                        value: @last_reward.expiration_date %>
-                </td><td>
                 <%= form.text_field :amount,
                         placeholder: "####",
                         class: 'input-mini',
                         id: "new-amount" %>
                 </td><td>
-
+                  <%= form.text_field :notes,
+                        class: 'input-mini',
+                        id: "new-notes" %>
+                </td><td>
                 <%= form.submit 'Add Gift Card', class: "btn btn-small", id: 'add-gift-card-button' %>
               </td>
             </tr>

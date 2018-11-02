@@ -1,10 +1,9 @@
 <tr class="reward" id="reward-<%= reward.id %>">
-    <td><%= best_in_place reward, :reward_number %></td>
-    <td><%= best_in_place reward, :sequence_number %></td>
-    <td><%= best_in_place reward, :batch_id %></td>
+    <td><%= reward.id %></td>
+    <td><%= reward.rewardable.class %></td>
     <td><%= humanized_money_with_symbol reward.amount %></td>
     <td><%= link_to 'Show', reward %></td>
     <td><%= link_to 'Edit', edit_reward_path(reward) %></td>
-    <% remove_text = reward.card_activation.present? ? 'Unassign' : 'Destroy' %>
+    <% remove_text = reward.rewardable.present? ? 'Unassign' : 'Destroy' %>
     <td><%= link_to remove_text, reward, remote: true, method: :delete, data: { confirm: 'Are you sure?' } %></td>
 </tr>
