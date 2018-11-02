@@ -1,4 +1,4 @@
-<%= render :partial => 'layouts/gift_card_menu' %>
+<%= render :partial => 'layouts/reward_menu' %>
 <style>
 table tr {
   padding-bottom: 1em !important;
@@ -157,7 +157,7 @@ table tr {
           <!-- should be partials below for reuse -->
           <%= render partial: "single_gift_card",
                      collection: @gift_cards, 
-                     as: :card_activation %>
+                     as: :gift_card %>
         </tbody>
       </table>
     </div>
@@ -165,8 +165,8 @@ table tr {
 </div>
 <br>
 
-<div id="modal-window" class="modal hide" role="dialog" aria-labelledby="ActivationUploadModal" aria-hidden="true">
-  <div id="gift-card-activation-modal">
+<div id="modal-window" class="modal hide" role="dialog" aria-labelledby="GiftCardUploadModal" aria-hidden="true">
+  <div id="gift-card-modal">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       <h3 id="myModalLabel">Upload Cards to Activate</h3>
@@ -175,7 +175,7 @@ table tr {
       <div class="container">
         <div class="row">
           <div class="span4">
-            <%= form_with url: upload_gift_card_path do |form| %>
+            <%= form_with url: upload_gift_cards_path do |form| %>
               <%= form.file_field :file %>
               <%= form.submit "Upload", {class:'btn btn-primary'} %>
             <% end %>

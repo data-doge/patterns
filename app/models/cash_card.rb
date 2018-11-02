@@ -25,4 +25,5 @@ class CashCard < ApplicationRecord
   has_one :reward, as: :rewardable, dependent: :nullify
   belongs_to :user
   belongs_to :person
+  validates :reward_id, uniqueness: true
 end

@@ -1,9 +1,9 @@
 <h2>Gift Card</h2>
 <h4>Created By: <%= User.find(@gift_card.created_by).name %></h4>
-<% if @gift_card.gift_card.present? %>
-<% gift_card = @gift_card.gift_card %>
-<h5>Given to: <%= link_to gift_card.person.full_name, person_path(gift_card.person) %></h5>
-<h5>For: <%= link_to(find_name(gift_card.giftable), url_for(gift_card.giftable)) %></h5>
+<% if @gift_card.reward.present? %>
+<% reward = @gift_card.reward %>
+<h5>Given to: <%= link_to reward.person.full_name, person_path(reward.person) %></h5>
+<h5>For: <%= link_to(find_name(reward.giftable), url_for(reward.giftable)) %></h5>
 <% end %>
 <table class="table">
   <thead>
