@@ -1,6 +1,8 @@
 require 'sidekiq/web'
 Logan::Application.routes.draw do  
   
+  resources :budgets
+  resources :giftrockets
   resources :activation_calls do
     collection do
       get 'activate/:token', 
