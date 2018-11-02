@@ -2,25 +2,20 @@
 #
 # Table name: gift_cards
 #
-#  id               :integer          not null, primary key
-#  gift_card_number :string(255)
+#  id               :bigint(8)        not null, primary key
+#  full_card_number :string(255)
 #  expiration_date  :string(255)
-#  person_id        :integer
-#  notes            :string(255)
-#  created_by       :integer
-#  reason           :integer
-#  amount_cents     :integer          default(0), not null
-#  amount_currency  :string(255)      default("USD"), not null
-#  giftable_id      :integer
-#  giftable_type    :string(255)
+#  sequence_number  :string(255)
+#  secure_code      :string(255)
+#  batch_id         :string(255)
+#  status           :string(255)      default("created")
+#  user_id          :integer
+#  reward_id        :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  batch_id         :string(255)
-#  sequence_number  :integer
-#  active           :boolean          default(FALSE)
-#  secure_code      :string(255)
-#  team_id          :bigint(8)
-#  finance_code     :string(255)
+#  amount_cents     :integer          default(0), not null
+#  amount_currency  :string(255)      default("USD"), not null
+#  created_by       :integer
 #
 
 FactoryGirl.define do

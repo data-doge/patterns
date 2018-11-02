@@ -1,34 +1,29 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: gift_cards
 #
-#  id               :integer          not null, primary key
-#  gift_card_number :string(255)
+#  id               :bigint(8)        not null, primary key
+#  full_card_number :string(255)
 #  expiration_date  :string(255)
-#  person_id        :integer
-#  notes            :string(255)
-#  created_by       :integer
-#  reason           :integer
-#  amount_cents     :integer          default(0), not null
-#  amount_currency  :string(255)      default("USD"), not null
-#  giftable_id      :integer
-#  giftable_type    :string(255)
+#  sequence_number  :string(255)
+#  secure_code      :string(255)
+#  batch_id         :string(255)
+#  status           :string(255)      default("created")
+#  user_id          :integer
+#  reward_id        :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  batch_id         :string(255)
-#  sequence_number  :integer
-#  active           :boolean          default(FALSE)
-#  secure_code      :string(255)
-#  team_id          :bigint(8)
-#  finance_code     :string(255)
+#  amount_cents     :integer          default(0), not null
+#  amount_currency  :string(255)      default("USD"), not null
+#  created_by       :integer
 #
 
 # records card details for activation and check calls
 class GiftCard < ApplicationRecord
   has_paper_trail
   include AASM
+  include Rewardable
   page 20
   monetize :amount_cents
   attr_accessor :old_user_id
@@ -46,7 +41,7 @@ class GiftCard < ApplicationRecord
   validates :expiration_date, presence: true
   validates :user_id, presence: true
   validates :secure_code, presence: true
-  validates :gift_card_id, uniqueness: true, allow_nil: true
+  validates :reward_id, uniqueness: true, allow_nil: true
 
   validates :expiration_date,
     format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
@@ -57,8 +52,8 @@ class GiftCard < ApplicationRecord
   # sequences are per batch
   validates :sequence_number, uniqueness: { scope: :batch_id }
 
-  scope :unassigned, -> { where(gift_card_id: nil) }
-  scope :assigned, -> { where.not(gift_card_id: nil) }
+  scope :unassigned, -> { where(reward_id: nil) }
+  scope :assigned, -> { where.not(reward_id: nil) }
 
   default_scope { order(sequence_number: :asc) }
   # see force_immutable below. do we not want to allow people to
@@ -139,12 +134,12 @@ class GiftCard < ApplicationRecord
   end
 
   def create_activation_call
-    ActivationCall.create(card_activation_id: id, call_type: 'activate')
+    ActivationCall.create(gift_card_id: id, call_type: 'activate')
   end
 
   # override allows manual check calls
   def create_check_call(override: false)
-    ActivationCall.create(card_activation_id: id, call_type: 'check') if override || activation_calls.where(call_type: 'check').size < 5
+    ActivationCall.create(gift_card_id: id, call_type: 'check') if override || activation_calls.where(call_type: 'check').size < 5
   end
 
   def do_success_notification
@@ -161,7 +156,7 @@ class GiftCard < ApplicationRecord
   def update_front_end
     # if assigned, delete.
     # otherwise, update
-    if gift_card_id.nil?
+    if reward_id.nil?
       User.admin.each { |u|  broadcast_update(u) }
       broadcast_update
     else
@@ -245,32 +240,32 @@ class GiftCard < ApplicationRecord
 
     def broadcast_update(c_user = nil)
       current_user = c_user.nil? ? user : c_user
-      ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
+      ActionCable.server.broadcast "gift_card_event_#{current_user.id}_channel",
         type: :update,
         id: id,
-        large: render_large_card_activation(current_user),
-        mini: render_mini_card_activation(current_user),
-        count: CardActivation.active_unassigned_count(current_user)
+        large: render_large_gift_card(current_user),
+        mini: render_mini_gift_card(current_user),
+        count: GiftCard.active_unassigned_count(current_user)
     end
 
     def broadcast_delete(c_user = nil)
       current_user = c_user.nil? ? user : c_user
-      ActionCable.server.broadcast "activation_event_#{current_user.id}_channel",
+      ActionCable.server.broadcast "gift_card_event_#{current_user.id}_channel",
         type: :delete,
         id: id,
-        count: CardActivation.active_unassigned_count(current_user)
+        count: GiftCard.active_unassigned_count(current_user)
     end
 
-    def render_large_card_activation(c_user = nil)
+    def render_large_gift_card(c_user = nil)
       current_user = c_user.nil? ? user : c_user
-      ApplicationController.render partial: 'card_activations/single_card_activation',
-        locals: { card_activation: self, current_user: current_user }
+      ApplicationController.render partial: 'gift_cards/single_gift_card',
+        locals: { gift_card: self, current_user: current_user }
     end
 
-    def render_mini_card_activation(c_user = nil)
+    def render_mini_gift_card(c_user = nil)
       current_user = c_user.nil? ? user : c_user
-      ApplicationController.render partial: 'card_activations/card_activation_mini',
-      locals: { card_activation: self, current_user: current_user }
+      ApplicationController.render partial: 'gift_cards/gift_card_mini',
+      locals: { gift_card: self, current_user: current_user }
     end
 
     def luhn_number_valid

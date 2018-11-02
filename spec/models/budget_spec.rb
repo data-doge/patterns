@@ -3,11 +3,11 @@
 # Table name: budgets
 #
 #  id              :bigint(8)        not null, primary key
+#  amount_cents    :integer          default(0), not null
+#  amount_currency :string(255)      default("USD"), not null
+#  team_id         :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  team_id         :integer          not null
-#  amount_cents    :integer          default(0), not null
-#  amount_currency :integer          default(0), not null
 #
 
 require 'rails_helper'

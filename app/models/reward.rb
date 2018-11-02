@@ -5,22 +5,27 @@
 #
 # Table name: rewards
 #
-#  id              :bigint(8)        not null, primary key
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  rewardable_type :string(255)
-#  rewardable_id   :bigint(8)
-#  user_id         :integer          not null
-#  person_id       :integer          not null
-#  giftable_type   :string(255)
-#  giftable_id     :bigint(8)
-#  created_by      :integer          not null
-#  reason          :string(255)
-#  notes           :text(65535)
-#  team_id         :integer
-#  finance_code    :string(255)
-#  amount_cents    :integer          default(0), not null
-#  amount_currency :string(255)      default("USD"), not null
+#  id               :integer          not null, primary key
+#  gift_card_number :string(255)
+#  expiration_date  :string(255)
+#  person_id        :integer
+#  notes            :string(255)
+#  created_by       :integer
+#  reason           :integer
+#  amount_cents     :integer          default(0), not null
+#  amount_currency  :string(255)      default("USD"), not null
+#  giftable_id      :integer
+#  giftable_type    :string(255)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  batch_id         :string(255)
+#  sequence_number  :integer
+#  active           :boolean          default(FALSE)
+#  secure_code      :string(255)
+#  team_id          :bigint(8)
+#  finance_code     :string(255)
+#  rewardable_type  :string(255)
+#  rewardable_id    :bigint(8)
 #
 
 class Reward < ApplicationRecord
@@ -156,9 +161,10 @@ class Reward < ApplicationRecord
       # tricksy: must allow creation of cards without activations
       # but must check to see if card has activation
       # AND throw error if we are duplicating.
-      return true if rewardable_id.blank?
+      
+      # return true if rewardable_id.blank? # should never be blank
 
-      if rewardable.nil?
+      if rewardable.nil? # should not happen either
         # first check if we have an activation id, then a search
         ca = CardActivation.find card_activation_id unless card_activation_id.nil?
         ca ||= CardActivation.find_by(sequence_number: sequence_number, batch_id: batch_id)
@@ -177,10 +183,7 @@ class Reward < ApplicationRecord
     end
 
     def unassign_reward
-      if rewardable.present?
-        rewardable.reward_id = nil
-        rewardable.save
-      end
+      rewardable.unassign if rewardable.present?
     end
 
     def giftable_person_ownership

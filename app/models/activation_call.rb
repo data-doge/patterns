@@ -1,19 +1,18 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: activation_calls
 #
-#  id                 :bigint(8)        not null, primary key
-#  card_activation_id :integer
-#  sid                :string(255)
-#  transcript         :text(16777215)
-#  audio_url          :string(255)
-#  call_type          :string(255)
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  call_status        :string(255)      default("created")
-#  token              :string(255)
+#  id           :bigint(8)        not null, primary key
+#  gift_card_id :integer
+#  sid          :string(255)
+#  transcript   :text(16777215)
+#  audio_url    :string(255)
+#  call_type    :string(255)
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  call_status  :string(255)      default("created")
+#  token        :string(255)
 #
 
 class ActivationCall < ApplicationRecord
@@ -62,9 +61,9 @@ class ActivationCall < ApplicationRecord
   def balance
     if transcript.present? && call_type == 'check'
       regex = Regexp.new('\$\ ?[+-]?[0-9]{1,3}(?:,?[0-9])*(?:\.[0-9]{1,2})?')
-      transcript.scan(regex)[0]&.delete('$')&.to_money || card_activation.amount
+      transcript.scan(regex)[0]&.delete('$')&.to_money || gift_card.amount
     else
-      card_activation.amount
+      gift_card.amount
     end
   end
 
@@ -78,12 +77,13 @@ class ActivationCall < ApplicationRecord
 
   def success
     self.call_status = 'success'
-    card_activation.success!
+    gift_card.success!
   end
 
   def failure
     self.call_status = 'failure'
-    card_activation.send("#{call_type}_error!".to_sym) if card_activation.present?
+    # some gift cards get deleted, hence check
+    gift_card.send("#{call_type}_error!".to_sym) if gift_card.present?
   end
 
   def enqueue_call

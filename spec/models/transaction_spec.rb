@@ -3,16 +3,13 @@
 # Table name: transactions
 #
 #  id              :bigint(8)        not null, primary key
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  from_id         :integer
-#  from_type       :string(255)
-#  to_id           :integer
-#  to_type         :string(255)
-#  notes           :string(255)
+#  credit_id       :bigint(8)
+#  debt_id         :bigint(8)
 #  user_id         :integer
 #  amount_cents    :integer          default(0), not null
-#  amount_currency :integer          default(0), not null
+#  amount_currency :string(255)      default("USD"), not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 require 'rails_helper'
