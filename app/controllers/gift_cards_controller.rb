@@ -31,16 +31,16 @@ class GiftCardsController < ApplicationController
     respond_to do |format|
       format.xlsx do
         response.headers['Content-Type'] = 'text/xlsx'
-        response.headers['Content-Disposition'] = 'attachment; filename=CardActivationTemplate.xlsx'
-        send_data axlsx.to_stream.read, filename: 'CardActivationTemplate.xlsx'
+        response.headers['Content-Disposition'] = 'attachment; filename=GiftCardTemplate.xlsx'
+        send_data axlsx.to_stream.read, filename: 'GiftCardTemplate.xlsx'
       end
       format.csv do
         response.headers['Content-Type'] = 'text/xlsx'
-        response.headers['Content-Disposition'] = 'attachment; filename=CardActivationTemplate.csv'
+        response.headers['Content-Disposition'] = 'attachment; filename=GiftCardTemplate.csv'
         output = CSV.generate do |csv|
           csv << %w[full_card_number expiration_date amount sequence_number secure_code batch_id]
         end
-        send_data output, filename: 'CardActivationTemplate.csv'
+        send_data output, filename: 'GiftCardTemplate.csv'
       end
     end
   end
@@ -116,7 +116,7 @@ class GiftCardsController < ApplicationController
       cards_count = 0
       xls.sheet(0).each { |row| cards_count += 1 if row[0].present? }
       flash[:notice] = "Import started for #{cards_count - 1} cards."
-      @errored_cards = CardActivation.import(params[:file].path, current_user)
+      @errored_cards = GiftCard.import(params[:file].path, current_user)
       flash[:error] = "Error! #{@errored_cards.size} cards not valid." if @errored_cards.present?
     end
     redirect_to gift_cards_path
@@ -127,7 +127,7 @@ class GiftCardsController < ApplicationController
   def create
     ca_params = gift_card_params
     ca_params[:full_card_number] = ca_params[:full_card_number].delete('-')
-    @gift_card = CardActivation.new(ca_params)
+    @gift_card = GiftCard.new(ca_params)
     @gift_card.user = current_user
     if @gift_card.save
       @gift_card.start_activate!

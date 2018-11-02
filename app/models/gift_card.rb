@@ -79,7 +79,7 @@ class GiftCard < ApplicationRecord
       next if row[:full_card_number].blank? ||  row[:full_card_number] == 'full_card_number' # empty rows
 
       row[:full_card_number].delete!('-')
-      ca = CardActivation.new(row)
+      ca = GiftCard.new(row)
       ca.user_id = user.id
       ca.created_by = user.id
       # results is an array of errored card activatoins
@@ -98,7 +98,7 @@ class GiftCard < ApplicationRecord
   end
 
   def self.active_unassigned_count(current_user)
-    current_user.admin? ? CardActivation.active.unassigned.size : CardActivation.active.unassigned.where(user_id: current_user.id).size
+    current_user.admin? ? GiftCard.active.unassigned.size : GiftCard.active.unassigned.where(user_id: current_user.id).size
   end
 
   aasm column: 'status', requires_lock: true do

@@ -1,5 +1,5 @@
-  <tr id='card-activation-<%= gift_card.id %>' 
-      class='well well-small card-activation' 
+  <tr id='gift-card-<%= gift_card.id %>' 
+      class='well well-small gift-card' 
       data-id='<%=gift_card.id%>' 
       data-last-4='<%= gift_card.last_4 %>'
       data-batch-id='<%= gift_card.batch_id %>'
@@ -37,8 +37,8 @@
               amount: gift_card.amount.to_s,
               expiration_date: gift_card.expiration_date,
             },
-            id: "add-card-activation-#{gift_card.id}",
-            class: 'add-card-activation' ,
-            onclick: "add_gift_card(this);"  %>
+            id: "add-reward-#{gift_card.id}",
+            class: 'add-reward' ,
+            onclick: "add_reward(this);"  %>
     </td>
   </tr>
