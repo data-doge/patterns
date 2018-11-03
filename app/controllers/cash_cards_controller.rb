@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class CashCardsController < ApplicationController
-  before_action :set_cash_card, only: [:show, :edit, :update, :destroy]
+  before_action :set_cash_card, only: %i[show edit update destroy]
 
   # GET /cash_cards
   # GET /cash_cards.json
@@ -9,8 +11,7 @@ class CashCardsController < ApplicationController
 
   # GET /cash_cards/1
   # GET /cash_cards/1.json
-  def show
-  end
+  def show; end
 
   # GET /cash_cards/new
   def new
@@ -18,8 +19,7 @@ class CashCardsController < ApplicationController
   end
 
   # GET /cash_cards/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /cash_cards
   # POST /cash_cards.json
@@ -62,6 +62,7 @@ class CashCardsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_cash_card
       @cash_card = CashCard.find(params[:id])

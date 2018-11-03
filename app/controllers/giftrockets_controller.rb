@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class GiftrocketsController < ApplicationController
-  before_action :set_giftrocket, only: [:show, :edit, :update, :destroy]
+  before_action :set_giftrocket, only: %i[show edit update destroy]
 
   # GET /giftrockets
   # GET /giftrockets.json
@@ -9,8 +11,7 @@ class GiftrocketsController < ApplicationController
 
   # GET /giftrockets/1
   # GET /giftrockets/1.json
-  def show
-  end
+  def show; end
 
   # GET /giftrockets/new
   def new
@@ -18,8 +19,7 @@ class GiftrocketsController < ApplicationController
   end
 
   # GET /giftrockets/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /giftrockets
   # POST /giftrockets.json
@@ -62,6 +62,7 @@ class GiftrocketsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_giftrocket
       @giftrocket = Giftrocket.find(params[:id])

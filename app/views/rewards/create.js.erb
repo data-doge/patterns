@@ -1,6 +1,6 @@
 <% # TODO FIXME %>
 <% Rails.logger.warn("In the create.js.erb file") %>
-<% if @create_result %>
+<% if @success %>
   // this should be like the dynamic panel in research session.
   //console.log("In Create_result if statement");
   $('#error-div').val("");
@@ -9,30 +9,15 @@
 
   $("<%= j render partial: 'rewards/mini_reward', locals:{ reward: @reward } %>").prependTo('#mini-gift-card');
 
-  $('td#new-submit-<%= @reward.person_id %>').html("Yes");
-  $('td#new-sequencenumber-<%= @reward.person_id %>').html('<%= @reward.sequence_number %>');
-  $('td#new-batchid-<%= @reward.person_id %>').html('<%= @reward.batch_id %>');
-  $('td#new-cardnumber-<%= @reward.person_id %>').html('<span class="add-on">****-****-***</span><input class="input-small" readonly="true" value="<%= @reward.reward_number %>">');
-  $('td#new-expirationdate-<%= @reward.person_id %>').html('<%= @reward.expiration_date %>');
   
   // should be actioncable callback. elementID should have personid in it.
   <% @reward.person.reload %>
-  $('#reward_total').html("<%= @reward.person.reward_total %>");
+  $('#rewards_total').html("<%= @reward.person.rewards_total %>");
   
   $("#reward_content").val("");
   $('#error-div').html("");
-  
-  $('#new-cardnumber').val('');
-  $('#new-sequencenumber').val('');
-  $('#new-amount').val('<%= @reward.amount %>');
-  $('#new-reason').val('<%= @reward.reason %>');
-  $('#new-expirationdate').val('<%= @reward.expiration_date %>');
 
   $('#<%= @reward.giftable&.id%>-gift-card-count').text('<%= @reward.giftable&.rewards&.size%>');
-  <% if defined? @card_activation %>
-    // removing card activation ui if it exists. should be actioncable callback.
-    // $('#<%= @card_activation.id %>-card-activation').remove();
-  <% end %>
 
 <% else %>
   console.log("In Create_result else statement");

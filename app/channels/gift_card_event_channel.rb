@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class ActivationEventChannel < ApplicationCable::Channel
+class GiftCardEventChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "activation_event_#{current_user.id}_channel"
+    stream_from "gift_card_event_#{current_user.id}_channel"
   end
 
   def unsubscribed

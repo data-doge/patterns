@@ -3,16 +3,8 @@
 	<td><%= reward.person_id %></td>
 	<td><%= reward.person.full_name %></td>
   <td><%= reward.reason.titleize %></td>
-  <td><%= if reward.giftable.present?
-            link_to(find_name(reward.giftable), url_for(reward.giftable))
-          else
-            "None"
-          end
-      %></td>
-  <td><%= reward.batch_id %></td>
-  <td><%= reward.sequence_number %></td>
-  <td><%= reward.reward_number %></td>
-  <td><%= reward.expiration_date %></td>
+  <td><%= link_to(reward.rewardable.class, url_for(reward.rewardable))%></td>
+  <td><%= link_to(find_name(reward.giftable), url_for(reward.giftable))%></td>
   <td><%= humanized_money_with_symbol reward.amount %></td>
   <td><%= reward.created_at.strftime('%m/%d/%Y') %></td>
   <td><%= link_to 'Show', reward %></td>

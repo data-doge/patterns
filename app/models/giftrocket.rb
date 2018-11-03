@@ -14,7 +14,6 @@
 #  updated_at    :datetime         not null
 #
 
-
 class Giftrocket < ApplicationRecord
   include Rewardable
   has_paper_trail

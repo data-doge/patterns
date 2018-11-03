@@ -20,11 +20,11 @@ class RewardsController < ApplicationController
     @q_rewards.sorts = [sort_column + ' ' + sort_direction] if @q_rewards.sorts.empty?
     respond_to do |format|
       format.html do
-        @rewards = @q_rewards.result.includes(:person, :giftable).order(id: :desc).page(params[:page])
+        @rewards = @q_rewards.result.includes(:person, :rewardable, :giftable).order(id: :desc).page(params[:page])
         # @recent_signups = Person.no_signup_card.paginate(page: params[:page]).where('signup_at > :startdate', { startdate: 3.months.ago }).order('signup_at DESC')
       end
       format.csv do
-        @rewards = @q_rewards.result.includes(:person, :giftable)
+        @rewards = @q_rewards.result.includes(:person, :rewardable, :giftable)
         send_data @rewards.export_csv,  filename: "Rewards-#{Time.zone.today}.csv"
       end
     end
@@ -61,61 +61,67 @@ class RewardsController < ApplicationController
   # POST /rewards.json
   # TODO
   # FIXME
-  def create
-    # this is gonna be a doozy
-    # we don't create rewards directly. First we find the rewardable obj, then
-    # we associate it with the created reward.
-    # this endpoint is likely unecessary
-    @reward = Reward.new(reward_params)
+  # def create
+  #   # this is gonna be a doozy
+  #   # we don't create rewards directly. First we find the rewardable obj, then
+  #   # we associate it with the created reward.
+  #   # this endpoint is likely unecessary
+  #   @reward = Reward.new(reward_params)
 
-    @total = @reward.person.blank? ? @reward.amount : @reward.person.reward_total
+  #   @total = @reward.person.blank? ? @reward.amount : @reward.person.reward_total
 
-    @reward.created_by = current_user.id
-    @reward.finance_code = current_user&.team&.finance_code
-    @reward.team = current_user&.team
-    @reward.save
+  #   @reward.created_by = current_user.id
+  #   @reward.finance_code = current_user&.team&.finance_code
+  #   @reward.team = current_user&.team
+  #   @reward.save
 
-    @create_result = @reward.save
-    respond_to do |format|
-      if @create_result
-        format.js {}
-        format.json {}
-        format.html { redirect_to @reward, notice: 'Reward was successfully created.'  }
-      else
-        flash[:error] = "Error adding Reward! #{@reward.errors.full_messages.join(', ')}"
-        format.js {}
-        format.html { render action: 'edit' }
-        format.json { render json: @reward.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  #   @create_result = @reward.save
+  #   respond_to do |format|
+  #     if @create_result
+  #       format.js {}
+  #       format.json {}
+  #       format.html { redirect_to @reward, notice: 'Reward was successfully created.'  }
+  #     else
+  #       flash[:error] = "Error adding Reward! #{@reward.errors.full_messages.join(', ')}"
+  #       format.js {}
+  #       format.html { render action: 'edit' }
+  #       format.json { render json: @reward.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
   # takes an card_activation_id, person_id, and sessionid
   # FIXME
   # TODO
   def assign
     ## todo, gotta find the right class and object
-    @card = GiftCard.find(params[:reward_id])
-
-    ca = @card # for shortness.
-    @reward = Reward.new(sequence_number: ca.sequence_number,
-                              batch_id: ca.batch_id,
-                              reward_number: ca.full_card_number.last(4),
-                              person_id: params[:person_id],
-                              giftable_type: params[:giftable_type],
-                              giftable_id: params[:giftable_id],
-                              finance_code: current_user&.team&.finance_code,
-                              team: current_user&.team,
-                              created_by: current_user.id)
-
+    
+    klass = reward_params['rewardable_type'].classify.constantize
+    @rewardable = klass.find(reward_params['rewardable_id'])
+    @success = false
+    if @rewardable
+      @reward = Reward.new(rewardable_type: @rewardable.class,
+                           rewardable_id: @rewardable.id,
+                           amount: @rewardable.amount,
+                           reason: reward_params['reason'],
+                           user_id: current_user.id,
+                           person_id: reward_params['person_id'],
+                           giftable_type: reward_params['giftable_type'],
+                           giftable_id: reward_params['giftable_id'],
+                           finance_code: current_user&.team&.finance_code,
+                           team: current_user&.team,
+                           created_by: current_user.id)
+      @success = @reward.save
+    else
+      flash[:error] = 'Reward doesn\'t exist'
+    end
     @total = @reward.person.rewards_total
-    @create_result = @reward.save
 
     respond_to do |format|
-      if @create_result
+      if @success
         format.js { render action: :create }
         format.json {}
-        format.html { redirect_to @rewadd, notice: 'Reward was successfully created.'  }
+        format.html { redirect_to @reward, notice: 'Reward was successfully created.'  }
       else
         format.js {}
         format.html { render action: 'edit' }
@@ -186,12 +192,10 @@ class RewardsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def reward_params
-      params.require(:reward).permit(:reward_number,
-        :batch_id,
-        :expiration_date,
+      params.require(:reward).permit(
         :person_id,
         :notes,
-        :sequence_number,
+        :user_id,
         :created_by,
         :reason,
         :amount,
@@ -200,7 +204,6 @@ class RewardsController < ApplicationController
         :giftable_id,
         :giftable_type,
         :team_id,
-        :finance_code,
-        :card_activation_id)
+        :finance_code)
     end
 end

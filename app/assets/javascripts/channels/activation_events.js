@@ -2,30 +2,30 @@ jQuery(document).on('turbolinks:load', function() {
   
   
     console.log('loading actioncable');
-    function render_card_activation(data){
+    function render_gift_card(data){
       console.log(data);
       if($('#active-unassigned-cards-count').length > 0){
         $('#active-unassigned-cards-count').html(data.count);
       }
       switch(data.type){
         case 'update':
-          if ($('#card-activations-mini').length > 0) {
-            if ($('#card-activation-' + data.id).length == 1) {
-              $('#card-activation-' + data.id).replaceWith(data.mini);
+          if ($('#gift-cards-mini').length > 0) {
+            if ($('#gift-card-' + data.id).length == 1) {
+              $('#gift-card-' + data.id).replaceWith(data.mini);
             }else{
-              $('#card-activations-mini').prepend(data.mini);
+              $('#gift-cards-mini').prepend(data.mini);
             }
           }
-          if ($('#card-activations-large').length > 0){
-            if ($('#card-activation-' + data.id).length == 1) {
-              $('#card-activation-' + data.id).replaceWith(data.large);
+          if ($('#gift-cards-large').length > 0){
+            if ($('#gift-card-' + data.id).length == 1) {
+              $('#gift-card-' + data.id).replaceWith(data.large);
             }else{
-              $('#card-activations-large').prepend(data.large);
+              $('#gift-cards-large').prepend(data.large);
             }
           }
           break;
         case 'delete':
-          $('#card-activation-'+data.id).remove();
+          $('#gift-card-'+data.id).remove();
           break;
         default:
           console.log('this should not happen.');  
@@ -33,7 +33,7 @@ jQuery(document).on('turbolinks:load', function() {
     };
 
     App.cable.subscriptions.create({
-      channel: "ActivationEventChannel"
+      channel: "GiftCardEventChannel"
     }, {
       connected: function() {
         this.perform('log_me')
@@ -42,7 +42,7 @@ jQuery(document).on('turbolinks:load', function() {
         console.log('disconnected');
       },
       received: function(data) {
-        render_card_activation(data);
+        render_gift_card(data);
       }
     });
   

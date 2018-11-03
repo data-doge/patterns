@@ -15,14 +15,23 @@ $(document).on('page:load turbolinks:load ready', function() {
   // called from card_activation_mini
   add_reward = function(el){
     // this is a horrible hack
-    var reward_data = $(el).data();    
-    reward_data.reason = $('#reward-reason-' + card_data.giftCardId).val();
-    
-    var myform = document.getElementById("new_reward");
-    $('input[name="reward[reason]"]').val(card_data.reason);=    
-    $('input[name="reward[giftable_type]"]').val(card_data.giftabelType);
-    $('input[name="reward[giftable_id]"]').val(card_data.giftabelId);
-    $('#add-gift-card-button').click();
+    var reward_data = $(el).data();
+    var giftable_data = $('#reward-modal').data();
+    console.log(reward_data);  
+    reward_data.reason = $('#reward-reason-' + reward_data.rewardableId).val(); 
+    var data = {reward:{
+              reason: reward_data.reason,
+              rewardable_type: reward_data.rewardableType,
+              rewardable_id: reward_data.rewardableId,
+              giftable_id: giftable_data.giftableId,
+              giftable_type: giftable_data.giftableType,
+              person_id: giftable_data.personId
+            }
+          }
+    console.log(data);
+    $.post({url:'/rewards/assign',
+           dataType: "script",
+           data: data })
   }
   //filters out tags that are already in the list
   var filter = function(suggestions) {

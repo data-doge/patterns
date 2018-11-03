@@ -1,5 +1,4 @@
 # encoding : utf-8
-require 'money-rails'
 
 MoneyRails.configure do |config|
 
@@ -48,25 +47,40 @@ MoneyRails.configure do |config|
   #
   # Example:
   # config.register_currency = {
-  #   :priority            => 1,
-  #   :iso_code            => "EU4",
-  #   :name                => "Euro with subunit of 4 digits",
-  #   :symbol              => "€",
-  #   :symbol_first        => true,
-  #   :subunit             => "Subcent",
-  #   :subunit_to_unit     => 10000,
-  #   :thousands_separator => ".",
-  #   :decimal_mark        => ","
+  #   priority:            1,
+  #   iso_code:            "EU4",
+  #   name:                "Euro with subunit of 4 digits",
+  #   symbol:              "€",
+  #   symbol_first:        true,
+  #   subunit:             "Subcent",
+  #   subunit_to_unit:     10000,
+  #   thousands_separator: ".",
+  #   decimal_mark:        ","
   # }
+
+  # Specify a rounding mode
+  # Any one of:
+  #
+  # BigDecimal::ROUND_UP,
+  # BigDecimal::ROUND_DOWN,
+  # BigDecimal::ROUND_HALF_UP,
+  # BigDecimal::ROUND_HALF_DOWN,
+  # BigDecimal::ROUND_HALF_EVEN,
+  # BigDecimal::ROUND_CEILING,
+  # BigDecimal::ROUND_FLOOR
+  #
+  # set to BigDecimal::ROUND_HALF_EVEN by default
+  #
+  # config.rounding_mode = BigDecimal::ROUND_HALF_UP
 
   # Set default money format globally.
   # Default value is nil meaning "ignore this option".
   # Example:
   #
   # config.default_format = {
-  #   :no_cents_if_whole => nil,
-  #   :symbol => nil,
-  #   :sign_before_symbol => nil
+  #   no_cents_if_whole: nil,
+  #   symbol: nil,
+  #   sign_before_symbol: nil
   # }
 
   # Set default raise_error_on_money_parsing option
@@ -76,3 +90,4 @@ MoneyRails.configure do |config|
   # Example:
   # config.raise_error_on_money_parsing = false
 end
+Money.locale_backend = :i18n

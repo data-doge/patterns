@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class BudgetsController < ApplicationController
-  before_action :set_budget, only: [:show, :edit, :update, :destroy]
+  before_action :set_budget, only: %i[show edit update destroy]
 
   # GET /budgets
   # GET /budgets.json
@@ -9,8 +11,7 @@ class BudgetsController < ApplicationController
 
   # GET /budgets/1
   # GET /budgets/1.json
-  def show
-  end
+  def show; end
 
   # GET /budgets/new
   def new
@@ -18,8 +19,7 @@ class BudgetsController < ApplicationController
   end
 
   # GET /budgets/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /budgets
   # POST /budgets.json
@@ -62,6 +62,7 @@ class BudgetsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_budget
       @budget = Budget.find(params[:id])

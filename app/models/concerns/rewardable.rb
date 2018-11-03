@@ -9,11 +9,11 @@ module Rewardable
   # has a user_id
 
   extend ActiveSupport::Concern
-  
+
   # may not be necessary because of dependent :nullify
-  def unassign 
+  def unassign
     self.reward_id = nil
-    self.save
+    save
   end
 
   def assign(reward_id)
@@ -24,7 +24,7 @@ module Rewardable
       raise ActiveRecord::RecordInvalid.new(self)
     else
       self.reward_id = reward_id
-      self.save
+      save
     end
   end
 end

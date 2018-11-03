@@ -17,7 +17,6 @@
 #  updated_at        :datetime         not null
 #
 
-
 class CashCard < ApplicationRecord
   include Rewardable
   has_paper_trail

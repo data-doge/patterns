@@ -157,11 +157,11 @@ class Reward < ApplicationRecord
 
   private
 
-    def assign_reward
+    def assign_rewarded
       # tricksy: must allow creation of cards without activations
       # but must check to see if card has activation
       # AND throw error if we are duplicating.
-      
+
       # return true if rewardable_id.blank? # should never be blank
 
       if rewardable.nil? # should not happen either
@@ -182,7 +182,7 @@ class Reward < ApplicationRecord
       end
     end
 
-    def unassign_reward
+    def unassign_rewarded
       rewardable.unassign if rewardable.present?
     end
 

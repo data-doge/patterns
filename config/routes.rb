@@ -48,7 +48,7 @@ Logan::Application.routes.draw do
   resource :inbox, :controller => 'inbox', :only => [:show,:create]
   resources :rewards do
     collection do
-      post 'assign/:gift_card_id', action: :assign, as: :assign
+      post 'assign', action: :assign, as: :assign
       get 'recent_signups', action: :recent_signups, as: :recent_signups
       get 'modal/:giftable_type/:giftable_id', action: :modal, as: :modal
     end

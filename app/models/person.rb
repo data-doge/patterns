@@ -249,7 +249,7 @@ class Person < ApplicationRecord
     verified&.start_with?('Verified')
   end
 
-  def reward_total
+  def rewards_total
     end_of_last_year = Time.zone.today.beginning_of_year - 1.day
     total = rewards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
     Money.new(total, 'USD')
