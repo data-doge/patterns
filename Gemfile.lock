@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/BlueRidgeLabs/tremendous-ruby.git
-  revision: c5a64d758c1de72b7df0dc455e178195adad35eb
-  branch: bump_httparty
+  revision: dcd72c3d3b8623d7de5b8528fbe30a3e55a66a17
+  branch: brl_branch
   specs:
     tremendous_ruby (1.2.0)
       activesupport (>= 3.2, <= 5.2.1)

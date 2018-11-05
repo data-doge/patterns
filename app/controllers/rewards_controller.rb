@@ -130,6 +130,25 @@ class RewardsController < ApplicationController
     end
   end
 
+  def add_giftrocket
+    if params[:amount].to_money >= current_user.available_budget
+      flash[:error] = 'Insufficient Budget'
+      return false # placeholder for now
+    end
+
+    if 
+    gr = GiftRocket.new( user_id: current_user.id,
+                        created_by: current_user.id,
+                        amount: params['amount'],
+                        person_id: reward_params['person_id'])
+
+    gr.user_id = current_user.id
+    gr.created_by = current_user.id
+    gr.amount = params['amount']
+    gr.giftable_id = reward_params['giftable_id']
+    gr.giftable_type
+  end
+
   # PATCH/PUT /rewards/1
   # PATCH/PUT /rewards/1.json
   def update

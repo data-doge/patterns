@@ -117,6 +117,10 @@ class User < ApplicationRecord
     team.budgets.first
   end
 
+  def available_budget
+    budget.amount # always in ruby money
+  end
+
   def self.send_all_reminders
     # this is where reservation_reminders
     # called by whenever in /config/schedule.rb

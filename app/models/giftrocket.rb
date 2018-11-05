@@ -36,9 +36,33 @@ class Giftrocket < ApplicationRecord
     state :initialized, initial: true
     state :insufficient_budget
     state :requested
-    state :created
     state :sent
     state :redeemed
+    
+    event :check_budget do
+      transitions from: :initialized, to: %i[requested insufficient_budget]
+    end
+    event :request_gift, guard: :sufficient_budget? do 
+      transitions from: :requested
+    end
+  end
+
+
+  
+  def self.campaigns
+    Tremendous::Campaigns.list
+  end
+
+  def self.funding_sources
+    Tremendous::FundingSource.list
+  end
+
+  def self.orders
+    Tremendous::Order.list
+  end
+
+  def self.gifts
+    Tremendous::Gift.list
   end
 
   def check_status
@@ -51,7 +75,6 @@ class Giftrocket < ApplicationRecord
     # DELIVERED                       receipt confirmed (Everytime, this)
 
     gift.status
-    # goes out to api to check status
   end
 
   def request_link
