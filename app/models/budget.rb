@@ -15,6 +15,8 @@
 class Budget < ApplicationRecord
   has_paper_trail
   monetize :amount_cents
+  belongs_to :team
+  has_many :users, through: :team
 
   has_many :credits, -> { where(from_type: 'Budget') },
     class_name: 'Transaction',

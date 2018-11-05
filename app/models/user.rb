@@ -112,6 +112,11 @@ class User < ApplicationRecord
     Money.new(total, 'USD')
   end
 
+  def budget
+    # eventually there may be several budgets
+    team.budgets.first
+  end
+
   def self.send_all_reminders
     # this is where reservation_reminders
     # called by whenever in /config/schedule.rb

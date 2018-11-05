@@ -16,6 +16,7 @@ class Team < ApplicationRecord
   has_many :users
   has_many :research_sessions, through: :users
   has_many :rewards
+  has_many :budgets
   validates :finance_code, inclusion: { in: %w[BRL CATA1 CATA2 FELL] }
 
   def self.finance_codes

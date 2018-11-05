@@ -95,7 +95,7 @@ class RewardsController < ApplicationController
   # TODO
   def assign
     ## todo, gotta find the right class and object
-    
+
     klass = reward_params['rewardable_type'].classify.constantize
     @rewardable = klass.find(reward_params['rewardable_id'])
     @success = false
@@ -204,6 +204,7 @@ class RewardsController < ApplicationController
         :giftable_id,
         :giftable_type,
         :team_id,
-        :finance_code)
+        :finance_code
+      )
     end
 end
