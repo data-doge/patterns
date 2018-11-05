@@ -20,6 +20,7 @@
 class CashCard < ApplicationRecord
   include Rewardable
   has_paper_trail
+  page 50
   monetize :amount_cents
   has_one :reward, as: :rewardable, dependent: :nullify
   belongs_to :user

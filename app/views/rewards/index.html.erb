@@ -61,7 +61,6 @@
 </table>
 <%= will_paginate @rewards, :renderer => BootstrapPagination::Rails %>
 <br>
+CSV export will be back!<!-- 
 <%= link_to "Save this list as CSV", rewards_path(params.merge(format: 'csv').permit!), :class => "btn"  %>
-<% if current_user.admin? %>
-  <%= link_to 'New Gift card', new_reward_path %>
-<% end %>
+-->

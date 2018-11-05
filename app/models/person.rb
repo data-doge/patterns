@@ -255,7 +255,7 @@ class Person < ApplicationRecord
     Money.new(total, 'USD')
   end
 
-  def reward_count
+  def rewards_count
     rewards.size
   end
 

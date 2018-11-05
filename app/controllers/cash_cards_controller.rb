@@ -6,7 +6,7 @@ class CashCardsController < ApplicationController
   # GET /cash_cards
   # GET /cash_cards.json
   def index
-    @cash_cards = CashCard.all
+    @cash_cards = CashCard.order(id: 'desc').includes(:reward).page(params[:page])
   end
 
   # GET /cash_cards/1

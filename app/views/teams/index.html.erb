@@ -21,7 +21,7 @@
             <td><%= best_in_place team, :finance_code,
                       as: :select,
                       collection: {'BRL': 'BRL', 'CATA1':'CATA1','CATA2':'CATA2', 'FELL':'FELL'} %></td>
-            <td><%= team.gift_card_total %></td>
+            <td><%= team.rewards_total %></td>
             <td><%= link_to 'Show', team, class: 'btn' %>
             <%= link_to 'Edit', edit_team_path(team), class: 'btn' %>
             <%= link_to 'Destroy', team, class: 'btn btn-warn', method: :delete, data: { confirm: 'Are you sure?' } %></td>

@@ -64,8 +64,9 @@
                                     pre_populate: @tags.to_json
                                   }
                           %>
-    <label for='gift_cards_gift_card_number_cont'>Gift card number contains</label>
-    <%= f.search_field :gift_cards_gift_card_number_cont %>
+    <!-- 
+    How do you search for people with rewards in this new paradigm?
+     -->
     <!-- <label for='additional'>&nbsp;</label>
     <span data-toggle="collapse" data-target="#additional-options"  class="btn btn-default">Click to Show Additional Options</span>
       <div class="collapse" id="additional-options">
@@ -133,7 +134,7 @@ Search Parameters:
           ZIP: <%= search_result_field result.postal_code, :postal_code %><br/>
           Neighborhood: <%= search_result_field result.neighborhood, :neighborhood %><br/>
           Verified?: <%= search_result_field result.verified, :verified %><br>
-          Gift Card Count: <%= search_result_field result.gift_card_count, :gift_card_count %>
+          Rewards Count: <%= search_result_field result.rewards_count, :rewards_count %>
         </td>
       </tr>
       <% end %>

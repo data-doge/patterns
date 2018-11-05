@@ -68,7 +68,7 @@ class RewardsController < ApplicationController
   #   # this endpoint is likely unecessary
   #   @reward = Reward.new(reward_params)
 
-  #   @total = @reward.person.blank? ? @reward.amount : @reward.person.reward_total
+  #   @total = @reward.person.blank? ? @reward.amount : @reward.person.rewards_total
 
   #   @reward.created_by = current_user.id
   #   @reward.finance_code = current_user&.team&.finance_code

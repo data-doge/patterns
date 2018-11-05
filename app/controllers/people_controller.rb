@@ -97,7 +97,7 @@ class PeopleController < ApplicationController
   def edit; end
 
   def amount
-    @people = Person.order_by_Reward_sum.page(params[:page])
+    @people = Person.order_by_reward_sum.page(params[:page])
   end
 
   # POST /people/:person_id/deactivate
