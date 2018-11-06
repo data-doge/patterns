@@ -1,75 +1,77 @@
 # frozen_string_literal: true
 
 class DigitalGiftsController < ApplicationController
-  before_action :set_giftrocket, only: %i[show edit update destroy]
+  before_action :set_digital_gift, only: %i[show edit update destroy]
 
-  # GET /giftrockets
-  # GET /giftrockets.json
+  # GET /digital_gifts
+  # GET /digital_gifts.json
   def index
-    @giftrockets = DigitalGift.all
+    @digital_gifts = DigitalGift.order(id: 'desc').includes(:reward).page(params[:page])
   end
 
-  # GET /giftrockets/1
-  # GET /giftrockets/1.json
+  # GET /digital_gifts/1
+  # GET /digital_gifts/1.json
   def show; end
 
-  # GET /giftrockets/new
+  # GET /digital_gifts/new
   def new
-    @giftrocket = DigitalGift.new
+    @digital_gift = DigitalGift.new
   end
 
-  # GET /giftrockets/1/edit
-  def edit; end
+  # GET /digital_gifts/1/edit
+  # def edit; end
 
-  # POST /giftrockets
-  # POST /giftrockets.json
-  def create
-    @giftrocket = DigitalGift.new(giftrocket_params)
+  # we don't create, destroy or update these via controller
 
-    respond_to do |format|
-      if @giftrocket.save
-        format.html { redirect_to @giftrocket, notice: 'DigitalGift was successfully created.' }
-        format.json { render :show, status: :created, location: @giftrocket }
-      else
-        format.html { render :new }
-        format.json { render json: @giftrocket.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # # POST /digital_gifts
+  # # POST /digital_gifts.json
+  # def create
+  #   @digital_gift = DigitalGift.new(digital_gift_params)
 
-  # PATCH/PUT /giftrockets/1
-  # PATCH/PUT /giftrockets/1.json
-  def update
-    respond_to do |format|
-      if @giftrocket.update(giftrocket_params)
-        format.html { redirect_to @giftrocket, notice: 'DigitalGift was successfully updated.' }
-        format.json { render :show, status: :ok, location: @giftrocket }
-      else
-        format.html { render :edit }
-        format.json { render json: @giftrocket.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  #   respond_to do |format|
+  #     if @digital_gift.save
+  #       format.html { redirect_to @digital_gift, notice: 'DigitalGift was successfully created.' }
+  #       format.json { render :show, status: :created, location: @digital_gift }
+  #     else
+  #       format.html { render :new }
+  #       format.json { render json: @digital_gift.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
-  # DELETE /giftrockets/1
-  # DELETE /giftrockets/1.json
-  def destroy
-    @giftrocket.destroy
-    respond_to do |format|
-      format.html { redirect_to giftrockets_url, notice: 'DigitalGift was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  # # PATCH/PUT /digital_gifts/1
+  # # PATCH/PUT /digital_gifts/1.json
+  # def update
+  #   respond_to do |format|
+  #     if @digital_gift.update(digital_gift_params)
+  #       format.html { redirect_to @digital_gift, notice: 'DigitalGift was successfully updated.' }
+  #       format.json { render :show, status: :ok, location: @digital_gift }
+  #     else
+  #       format.html { render :edit }
+  #       format.json { render json: @digital_gift.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
+
+  # DELETE /digital_gifts/1
+  # DELETE /digital_gifts/1.json
+  # def destroy
+  #   @digital_gift.destroy
+  #   respond_to do |format|
+  #     format.html { redirect_to digital_gifts_url, notice: 'DigitalGift was successfully destroyed.' }
+  #     format.json { head :no_content }
+  #   end
+  # end
 
   private
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_giftrocket
-      @giftrocket = DigitalGift.find(params[:id])
+    def set_digital_gift
+      @digital_gift = DigitalGift.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def giftrocket_params
-      params.fetch(:giftrocket, {})
+    def digital_gift_params
+      params.fetch(:digital_gift, {})
     end
 end

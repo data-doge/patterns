@@ -22,18 +22,15 @@
 
 # records card details for activation and check calls
 class GiftCard < ApplicationRecord
-  has_paper_trail
+  
   include AASM
   include Rewardable
   page 20
-  monetize :amount_cents
+  
   attr_accessor :old_user_id
 
   has_many :activation_calls, dependent: :destroy
   alias_attribute :calls, :activation_calls
-
-  has_one :reward, as: :rewardable, dependent: :nullify
-  belongs_to :user
 
   validate :luhn_number_valid
   validates :expiration_date, presence: true
@@ -52,11 +49,8 @@ class GiftCard < ApplicationRecord
   validates :sequence_number, format: { with: /[0-9]*/ }
   # sequences are per batch
   validates :sequence_number, uniqueness: { scope: :batch_id }
-
-  scope :unassigned, -> { where(reward_id: nil) }
-  scope :assigned, -> { where.not(reward_id: nil) }
-
   default_scope { order(sequence_number: :asc) }
+  
   # see force_immutable below. do we not want to allow people to
   # change the assigned activation to gift card? unclear
   # IMMUTABLE = %w{gift_card_id}
@@ -66,7 +60,6 @@ class GiftCard < ApplicationRecord
   before_create :set_created_by
 
   # starts activation call process on create after commit happens
-  # only hook we're using here
   # after_commit :create_activation_call, on: :create
 
   # uses action cable to update card.

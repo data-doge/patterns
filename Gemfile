@@ -4,7 +4,7 @@ ruby '2.5.1'
 gem 'rails', '~> 5.2.0'
 gem 'rails-i18n'
 gem 'actioncable'
-gem 'bootsnap' # for faster booting
+gem 'bootsnap', require: false
 gem 'rack-cache'
 gem 'airbrake', '~> 5.0' # sends errors to external service
 # gem 'pg' # soooooon!
@@ -145,6 +145,8 @@ gem 'gibbon'
 
 # use twilio-ruby for twilio
 gem 'twilio-ruby'
+
+gem 'parallel' # for parallel processing. 
 
 gem 'httparty', '0.15.7'
 # use Wuparty for wufoo

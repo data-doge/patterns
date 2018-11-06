@@ -638,6 +638,7 @@ DEPENDENCIES
   paper_trail
   paper_trail-association_tracking
   paper_trail-globalid
+  parallel
   phony_rails
   pry
   pry-rails

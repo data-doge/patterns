@@ -10,6 +10,18 @@ module Rewardable
 
   extend ActiveSupport::Concern
 
+  included do
+    has_paper_trail
+    validates :reward_id, uniqueness: true, allow_nil: true
+    monetize :amount_cents
+    has_one :reward, as: :rewardable, dependent: :nullify
+    belongs_to :user
+    belongs_to :person
+    default_scope { includes(:reward) }
+    scope :unassigned, -> { where(reward_id: nil) }
+    scope :assigned, -> { where.not(reward_id: nil) }
+  end
+
   # may not be necessary because of dependent :nullify
   def unassign
     self.reward_id = nil

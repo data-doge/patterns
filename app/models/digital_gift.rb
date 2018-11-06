@@ -23,14 +23,11 @@
 class DigitalGift < ApplicationRecord
   include Rewardable
   include AASM
-  has_paper_trail
-  monetize :amount_cents
+  page 50
+  
   monetize :fee_cents
-
-  has_one :reward, as: :rewardable, dependent: :nullify
-  belongs_to :user
   has_one :budget, through: :user
-  belongs_to :person
+  
 
   aasm requires_lock: true do
     state :initialized, initial: true
@@ -48,11 +45,11 @@ class DigitalGift < ApplicationRecord
   end
 
   def self.campaigns
-    Tremendous::Campaigns.list
+    Giftrocket::Campaigns.list
   end
 
   def self.funding_sources
-    Tremendous::FundingSource.list
+    Giftrocket::FundingSource.list
   end
 
   def self.current_budget
@@ -60,16 +57,16 @@ class DigitalGift < ApplicationRecord
   end
 
   def self.orders
-    Tremendous::Order.list
+    Giftrocket::Order.list
   end
 
   def self.gifts
-    Tremendous::Gift.list
+    Giftrocket::Gift.list
   end
 
   def check_status
     raise if gift_id.nil?
-    gift = Tremendous::Gift.retrieve(gift_id)
+    gift = Giftrocket::Gift.retrieve(gift_id)
     # STATUS                          Explanation
     # SCHEDULED_FOR_FUTURE_DELIVERY   self explanatory
     # DELIVERY_ATTEMPTED              receipt not confirmed
@@ -83,10 +80,10 @@ class DigitalGift < ApplicationRecord
   def request_link
     raise if person_id.nil?
 
-    funding_source_id = Tremendous::FundingSource.list.first.id
+    funding_source_id = Giftrocket::FundingSource.list.first.id
     self.external_id = generate_external_id
 
-    my_order = Tremendous::Order.create!(funding_source_id, gen_gifts, external_id)
+    my_order = Giftrocket::Order.create!(funding_source_id, gen_gifts, external_id)
     self.fee = my_order.payment.fees
     self.order_id = my_order.id
 

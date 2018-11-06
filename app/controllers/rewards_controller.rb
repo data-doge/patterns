@@ -184,7 +184,7 @@ class RewardsController < ApplicationController
                   end
     @reward = Reward.new
     @cash_card = CashCard.new
-    @gift_rocket = DigitalGift.new
+    @digital_gift = DigitalGift.new
     @last_reward = Reward.last # default scope is id: :desc
     respond_to do |format|
       format.html

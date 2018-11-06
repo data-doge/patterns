@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_05_235914) do
+ActiveRecord::Schema.define(version: 2018_11_06_002859) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "gift_card_id"
@@ -129,15 +129,17 @@ ActiveRecord::Schema.define(version: 2018_11_05_235914) do
     t.integer "user_id"
     t.integer "person_id"
     t.integer "reward_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "aasm_state", default: "initialized"
+    t.string "aasm_state"
     t.string "external_id"
-    t.string "link"
     t.string "order_id"
     t.string "gift_id"
+    t.text "link"
+    t.integer "amount_cents", default: 0, null: false
+    t.string "amount_currency", default: "USD", null: false
     t.integer "fee_cents", default: 0, null: false
     t.string "fee_currency", default: "USD", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "gift_cards", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
