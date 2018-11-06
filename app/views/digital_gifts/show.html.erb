@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<h2>Digital Gift</h2>
+<h4>Created By: <%= User.find(@digital_gift.created_by).name %></h4>
+<h4>User: <%= User.find(@digital_gift.user_id).name %></h4>
+<% reward = @digital_gift.reward %>
+<h5>Given to: <%= link_to reward.person.full_name, person_path(reward.person) %></h5>
+<h5>For: <%= link_to(find_name(reward.giftable), url_for(reward.giftable)) %></h5>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th colspan="1">Order ID</th>
+      <th colspan="1">Amount</th>
+      <th colspan="1">Status</th>
+      <th colspan="1">Campaign Title</th>
+      <th colspan="1">Reward</th>
+      <th colspan="1">Link</th>
+      <% if current_user.admin? %>
+      <th colspan="1">Change User</th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody> 
+    <%= render partial: "single_digital_gift",
+                   locals: {digital_gift: @digital_gift} %>
+  </tbody>
+</table>
+
+<%= link_to 'Back', digital_gifts_path %>

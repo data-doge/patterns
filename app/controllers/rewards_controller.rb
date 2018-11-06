@@ -32,18 +32,18 @@ class RewardsController < ApplicationController
 
   # GET /recent_signups
   # GET /recent_signups.csv
-  def recent_signups
-    @q_recent_signups = Person.no_signup_card.ransack(params[:q_signups], search_key: :q_signups)
+  # def recent_signups
+  #   @q_recent_signups = Person.no_signup_card.ransack(params[:q_signups], search_key: :q_signups)
 
-    @q_recent_signups.created_at_date_gteq = 3.weeks.ago.strftime('%Y-%m-%d') unless params[:q_signups]
+  #   @q_recent_signups.created_at_date_gteq = 3.weeks.ago.strftime('%Y-%m-%d') unless params[:q_signups]
 
-    @recent_signups = @q_recent_signups.result.order(id: :desc).page(params[:page_signups])
+  #   @recent_signups = @q_recent_signups.result.order(id: :desc).page(params[:page_signups])
 
-    @new_rewards = []
-    @recent_signups.length.times do
-      @new_grewards << Reward.new
-    end
-  end
+  #   @new_rewards = []
+  #   @recent_signups.length.times do
+  #     @new_grewards << Reward.new
+  #   end
+  # end
 
   # GET /rewards/1
   # GET /rewards/1.json
@@ -131,6 +131,19 @@ class RewardsController < ApplicationController
   end
 
   def add_digital_gift
+    klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
+    @giftable = klass.find(params[:giftable_id])
+    
+    if @giftable.nil?
+      flash[:error] = 'No giftable object present'
+      return false
+    end
+    
+    if @giftable.class = 'Invitation' && !@giftable&.attended?
+      flash[:error] = "#{@giftable.person.full_name} isn't marked as 'attended'."
+      return false
+    end
+    
     if params[:amount].to_money >= current_user.available_budget
       flash[:error] = 'Insufficient Team Budget'
       return false # placeholder for now
@@ -145,6 +158,13 @@ class RewardsController < ApplicationController
                         created_by: current_user.id,
                         amount: params['amount'],
                         person_id: reward_params['person_id'])
+    if dg.valid? # if it's not valid, error out
+      # do the thing!
+
+    else
+      flash[:error] = dg.error
+      return false
+    end
   end
 
   # PATCH/PUT /rewards/1

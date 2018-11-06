@@ -1,0 +1,23 @@
+<tr id='digital-gift-<%=digital_gift.id%>' 
+  class='well well-small digital-gift <%= cycle('dark', 'light') %>'
+  data-user-name='<%= digital_gift.user.name %>'
+  data-id='<%=digital_gift.id%>' >
+  <td><%= digital_gift.order_id %></td>
+  <td><%= humanized_money_with_symbol digital_gift.amount %></td>
+  <td><%= digital_gift.aasm_status %></td>
+  <td><%= digital_gift.campaign_title %></td>
+  <td><%= digital_gift.link %></td>
+  <% if current_user.admin? %>
+  <td> <!-- admin -->
+    <%= select_tag :user_id,
+        options_from_collection_for_select(User.approved.all,
+                                          'id',
+                                          'name', digital_gift.user_id),
+          class: 'input-small',
+          data: {
+           remote: true,
+           method: 'post',
+          url: change_user_digital_gifts_path(digital_gift)} %>
+  </td>
+  <% end %>
+</tr>

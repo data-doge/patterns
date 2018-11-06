@@ -3,7 +3,7 @@ Logan::Application.routes.draw do
   
   resources :cash_cards
   resources :budgets
-  resources :giftrockets
+  resources :digital_gifts
   resources :activation_calls do
     collection do
       get 'activate/:token', 

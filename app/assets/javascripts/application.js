@@ -44,8 +44,14 @@ $(document).on('turbolinks:load',function() {
     var html ='<div class="alert ' + cssClass + '">';
     html +='<button type="button" class="close" data-dismiss="alert">&times;</button>';
     html += msg +'</div>';
-    //fade_flash();
+    
     $("#notifications").html(html);
+    // show notifactions in modals too
+    if ($("#modal-notifications").length > 0) {
+      $("#modal-notifications").html(html);
+      //$(".alert" ).fadeOut(5000);
+    }
+    
   };
 
   scrollPosition = null;

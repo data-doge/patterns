@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_06_002859) do
+ActiveRecord::Schema.define(version: 2018_11_06_170148) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "gift_card_id"
@@ -140,6 +140,8 @@ ActiveRecord::Schema.define(version: 2018_11_06_002859) do
     t.string "fee_currency", default: "USD", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "campaign_id"
+    t.string "campaign_title"
   end
 
   create_table "gift_cards", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

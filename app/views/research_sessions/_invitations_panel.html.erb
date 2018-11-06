@@ -16,7 +16,7 @@
           title: 'Invitation State',
           original_title:"Change the state of the invitation"} %></th>
       <th>Current State</th>
-      <th>Gift Card #</th>
+      <th>Rewards</th>
       <th>Add Cards</th>
     </tr>
     <% for invitation in @research_session.invitations.includes(:person) do %>
@@ -33,7 +33,7 @@
           <%= render partial: 'invitations/actions', locals: {invitation: invitation} %>
         </td>
         <td><%= invitation.aasm_state %></td>
-        <td id="<%= invitation.id %>-gift-card-count">
+        <td id="<%= invitation.id %>-rewards-count">
           <%= invitation.rewards.size %>
         </td>
         <td>

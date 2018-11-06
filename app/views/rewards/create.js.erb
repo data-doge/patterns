@@ -17,7 +17,7 @@
   $("#reward_content").val("");
   $('#error-div').html("");
 
-  $('#<%= @reward.giftable&.id%>-gift-card-count').text('<%= @reward.giftable&.rewards&.size%>');
+  $('#<%= @reward.giftable&.id%>-rewards-count').text('<%= @reward.giftable&.rewards&.size%>');
 
 <% else %>
   console.log("In Create_result else statement");

@@ -12,6 +12,7 @@
         <h5>YTD Total: <span id='rewards_total'><%= @giftable.person.rewards_total %></span>
       </div>
       <div class="modal-body">
+        <div id="modal-notification"></div>
         <div id="error-div"></div>
           <% if @reward.errors.any? %>
             <div id="error_explanation">
@@ -28,6 +29,53 @@
         <%= render partial: 'rewards/mini_view',
               locals: { rewards: @giftable.rewards } %>
         <hr>
+        <!-- must be hideable -->
+        <div id='digital-gifts-for-<%= @giftable.id %>'>
+          <% if @giftable.rewards.find{|r| r.giftable_type == 'DigitalGift'}.nil? %>
+          <h4>Digital Gifts</h4>
+          <div class='input-group'>
+            <%= form_for( @digital_gift, remote: true) do |form| %>
+            <table>
+              <thead>
+                <tr>
+                  <th>Reason</th>
+                  <th>Amount</th>
+                  <th>Notes</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                  <%= form.select :reason,
+                          Reward.reasons.keys.to_a,
+                          { prompt: "Reason", selected: 'interview' },
+                            class: 'input-small',
+                            id: "new-reason"
+                           %>
+                  </td>
+                  <td>
+                  <%= form.text_field :amount,
+                          placeholder: "####",
+                          class: 'input-mini',
+                          id: "new-amount" %>
+                  </td>
+                  <td>
+                    <%= form.text_field :notes,
+                          class: 'input-mini',
+                          id: "new-notes" %>
+                  </td>
+                  <td>
+                  <%= form.submit 'Add Digital Gift', class: "btn btn-small", id: 'add-digital-gift-button' %>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <% end %>
+          </div>
+        </div>
+        <hr>
+        <% end %>
         <h4>Available Cards</h4>
         <div class="input-group">
           <input type="text" id='card-search' class="form-control has-clear" placeholder="filter cards">
