@@ -38,8 +38,8 @@ gem 'roo'
 
 gem 'redcarpet' # for markdown notes
 
-#giftrocekt API for automagic giftcarding
-gem 'tremendous_ruby', git: 'https://github.com/BlueRidgeLabs/tremendous-ruby.git', branch:'brl_branch'
+#giftrocket API for automagic giftcarding
+gem 'giftrocket_ruby', git: 'https://github.com/BlueRidgeLabs/giftrocket-ruby.git', branch:'brl_branch'
 
 gem "aws-sdk-s3", require: false
 

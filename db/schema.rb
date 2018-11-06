@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_02_172019) do
+ActiveRecord::Schema.define(version: 2018_11_05_235914) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "gift_card_id"
@@ -123,6 +123,23 @@ ActiveRecord::Schema.define(version: 2018_11_02_172019) do
     t.index ["queue"], name: "delayed_jobs_queue"
   end
 
+  create_table "digital_gifts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.text "order_details"
+    t.integer "created_by", null: false
+    t.integer "user_id"
+    t.integer "person_id"
+    t.integer "reward_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "aasm_state", default: "initialized"
+    t.string "external_id"
+    t.string "link"
+    t.string "order_id"
+    t.string "gift_id"
+    t.integer "fee_cents", default: 0, null: false
+    t.string "fee_currency", default: "USD", null: false
+  end
+
   create_table "gift_cards", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "full_card_number"
     t.string "expiration_date"
@@ -137,16 +154,6 @@ ActiveRecord::Schema.define(version: 2018_11_02_172019) do
     t.integer "amount_cents", default: 0, null: false
     t.string "amount_currency", default: "USD", null: false
     t.integer "created_by"
-  end
-
-  create_table "giftrockets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.text "order_details"
-    t.integer "created_by", null: false
-    t.integer "user_id"
-    t.integer "person_id"
-    t.integer "reward_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "invitation_invitees_join_table", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

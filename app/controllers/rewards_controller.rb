@@ -130,23 +130,21 @@ class RewardsController < ApplicationController
     end
   end
 
-  def add_giftrocket
+  def add_digital_gift
     if params[:amount].to_money >= current_user.available_budget
-      flash[:error] = 'Insufficient Budget'
+      flash[:error] = 'Insufficient Team Budget'
       return false # placeholder for now
     end
 
-    if 
-    gr = GiftRocket.new( user_id: current_user.id,
+    if params[:amount].to_money >= DigitalGift.current_budget
+      flash[:error] = 'Insufficient Gift Rocket Budget'
+      return false # placeholder for now
+    end
+
+    dg = DigitalGift.new( user_id: current_user.id,
                         created_by: current_user.id,
                         amount: params['amount'],
                         person_id: reward_params['person_id'])
-
-    gr.user_id = current_user.id
-    gr.created_by = current_user.id
-    gr.amount = params['amount']
-    gr.giftable_id = reward_params['giftable_id']
-    gr.giftable_type
   end
 
   # PATCH/PUT /rewards/1
@@ -186,7 +184,7 @@ class RewardsController < ApplicationController
                   end
     @reward = Reward.new
     @cash_card = CashCard.new
-    @gift_rocket = Giftrocket.new
+    @gift_rocket = DigitalGift.new
     @last_reward = Reward.last # default scope is id: :desc
     respond_to do |format|
       format.html

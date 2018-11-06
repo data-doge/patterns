@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class GiftrocketsController < ApplicationController
+class DigitalGiftsController < ApplicationController
   before_action :set_giftrocket, only: %i[show edit update destroy]
 
   # GET /giftrockets
   # GET /giftrockets.json
   def index
-    @giftrockets = Giftrocket.all
+    @giftrockets = DigitalGift.all
   end
 
   # GET /giftrockets/1
@@ -15,7 +15,7 @@ class GiftrocketsController < ApplicationController
 
   # GET /giftrockets/new
   def new
-    @giftrocket = Giftrocket.new
+    @giftrocket = DigitalGift.new
   end
 
   # GET /giftrockets/1/edit
@@ -24,11 +24,11 @@ class GiftrocketsController < ApplicationController
   # POST /giftrockets
   # POST /giftrockets.json
   def create
-    @giftrocket = Giftrocket.new(giftrocket_params)
+    @giftrocket = DigitalGift.new(giftrocket_params)
 
     respond_to do |format|
       if @giftrocket.save
-        format.html { redirect_to @giftrocket, notice: 'Giftrocket was successfully created.' }
+        format.html { redirect_to @giftrocket, notice: 'DigitalGift was successfully created.' }
         format.json { render :show, status: :created, location: @giftrocket }
       else
         format.html { render :new }
@@ -42,7 +42,7 @@ class GiftrocketsController < ApplicationController
   def update
     respond_to do |format|
       if @giftrocket.update(giftrocket_params)
-        format.html { redirect_to @giftrocket, notice: 'Giftrocket was successfully updated.' }
+        format.html { redirect_to @giftrocket, notice: 'DigitalGift was successfully updated.' }
         format.json { render :show, status: :ok, location: @giftrocket }
       else
         format.html { render :edit }
@@ -56,7 +56,7 @@ class GiftrocketsController < ApplicationController
   def destroy
     @giftrocket.destroy
     respond_to do |format|
-      format.html { redirect_to giftrockets_url, notice: 'Giftrocket was successfully destroyed.' }
+      format.html { redirect_to giftrockets_url, notice: 'DigitalGift was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -65,7 +65,7 @@ class GiftrocketsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_giftrocket
-      @giftrocket = Giftrocket.find(params[:id])
+      @giftrocket = DigitalGift.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

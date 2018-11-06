@@ -20,7 +20,7 @@
 # then if the order is successful
 # we create the reward and update the front end
 # if error, we update the front end with an error
-class Giftrocket < ApplicationRecord
+class DigitalGift < ApplicationRecord
   include Rewardable
   include AASM
   has_paper_trail
@@ -38,7 +38,7 @@ class Giftrocket < ApplicationRecord
     state :requested
     state :sent
     state :redeemed
-    
+
     event :check_budget do
       transitions from: :initialized, to: %i[requested insufficient_budget]
     end
@@ -47,14 +47,16 @@ class Giftrocket < ApplicationRecord
     end
   end
 
-
-  
   def self.campaigns
     Tremendous::Campaigns.list
   end
 
   def self.funding_sources
     Tremendous::FundingSource.list
+  end
+
+  def self.current_budget
+    (Giftrocket.funding_sources.first.available_cents / 100).to_money
   end
 
   def self.orders
@@ -77,6 +79,7 @@ class Giftrocket < ApplicationRecord
     gift.status
   end
 
+  # is this really how I want to do it?
   def request_link
     raise if person_id.nil?
 
@@ -97,10 +100,13 @@ class Giftrocket < ApplicationRecord
   # this is where we check if we can actually request this gift
   # first from our user's team budget
   # then from giftrocket, and then we make the request
-  def check_budget; end
+  def budget
+    amount >= user.available_budget
+  end
 
   def create_transaction; end
 
+  # maybe this is just a 
   def generate_external_id
     raise if reward.nil?
 

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "giftrockets/new", type: :view do
   before(:each) do
-    assign(:giftrocket, Giftrocket.new())
+    assign(:giftrocket, DigitalGift.new())
   end
 
   it "renders new giftrocket form" do

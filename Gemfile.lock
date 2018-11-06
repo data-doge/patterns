@@ -1,10 +1,10 @@
 GIT
-  remote: https://github.com/BlueRidgeLabs/tremendous-ruby.git
-  revision: dcd72c3d3b8623d7de5b8528fbe30a3e55a66a17
+  remote: https://github.com/BlueRidgeLabs/giftrocket-ruby.git
+  revision: e42d9b66e952e31e273d8794ef4da289026ed0f4
   branch: brl_branch
   specs:
-    tremendous_ruby (1.2.0)
-      activesupport (>= 3.2, <= 5.2.1)
+    giftrocket_ruby (2.0.0)
+      activesupport (~> 5.2.0, >= 3.2)
       httparty (~> 0.15.0)
       jwt (= 1.5.0)
 
@@ -604,6 +604,7 @@ DEPENDENCIES
   flamegraph
   fuzzy_match
   gibbon
+  giftrocket_ruby!
   glyphicons-rails
   groupdate
   gsm_encoder
@@ -668,7 +669,6 @@ DEPENDENCIES
   stackprof
   therubyracer
   timecop
-  tremendous_ruby!
   turbolinks
   twilio-ruby
   twitter-bootstrap-rails (~> 2.2.0)

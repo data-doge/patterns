@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe GiftrocketsController, type: :routing do
+RSpec.describe DigitalGiftsController, type: :routing do
   describe "routing" do
     it "routes to #index" do
       expect(:get => "/giftrockets").to route_to("giftrockets#index")

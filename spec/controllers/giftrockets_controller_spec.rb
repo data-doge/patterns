@@ -23,10 +23,10 @@ require 'rails_helper'
 # removed from Rails core in Rails 5, but can be added back in via the
 # `rails-controller-testing` gem.
 
-RSpec.describe GiftrocketsController, type: :controller do
+RSpec.describe DigitalGiftsController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
-  # Giftrocket. As you add validations to Giftrocket, be sure to
+  # DigitalGift. As you add validations to DigitalGift, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
     skip("Add a hash of attributes valid for your model")
@@ -38,12 +38,12 @@ RSpec.describe GiftrocketsController, type: :controller do
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
-  # GiftrocketsController. Be sure to keep this updated too.
+  # DigitalGiftsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   describe "GET #index" do
     it "returns a success response" do
-      Giftrocket.create! valid_attributes
+      DigitalGift.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(response).to be_successful
     end
@@ -51,7 +51,7 @@ RSpec.describe GiftrocketsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      giftrocket = Giftrocket.create! valid_attributes
+      giftrocket = DigitalGift.create! valid_attributes
       get :show, params: {id: giftrocket.to_param}, session: valid_session
       expect(response).to be_successful
     end
@@ -66,7 +66,7 @@ RSpec.describe GiftrocketsController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      giftrocket = Giftrocket.create! valid_attributes
+      giftrocket = DigitalGift.create! valid_attributes
       get :edit, params: {id: giftrocket.to_param}, session: valid_session
       expect(response).to be_successful
     end
@@ -74,15 +74,15 @@ RSpec.describe GiftrocketsController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new Giftrocket" do
+      it "creates a new DigitalGift" do
         expect {
           post :create, params: {giftrocket: valid_attributes}, session: valid_session
-        }.to change(Giftrocket, :count).by(1)
+        }.to change(DigitalGift, :count).by(1)
       end
 
       it "redirects to the created giftrocket" do
         post :create, params: {giftrocket: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Giftrocket.last)
+        expect(response).to redirect_to(DigitalGift.last)
       end
     end
 
@@ -101,14 +101,14 @@ RSpec.describe GiftrocketsController, type: :controller do
       }
 
       it "updates the requested giftrocket" do
-        giftrocket = Giftrocket.create! valid_attributes
+        giftrocket = DigitalGift.create! valid_attributes
         put :update, params: {id: giftrocket.to_param, giftrocket: new_attributes}, session: valid_session
         giftrocket.reload
         skip("Add assertions for updated state")
       end
 
       it "redirects to the giftrocket" do
-        giftrocket = Giftrocket.create! valid_attributes
+        giftrocket = DigitalGift.create! valid_attributes
         put :update, params: {id: giftrocket.to_param, giftrocket: valid_attributes}, session: valid_session
         expect(response).to redirect_to(giftrocket)
       end
@@ -116,7 +116,7 @@ RSpec.describe GiftrocketsController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        giftrocket = Giftrocket.create! valid_attributes
+        giftrocket = DigitalGift.create! valid_attributes
         put :update, params: {id: giftrocket.to_param, giftrocket: invalid_attributes}, session: valid_session
         expect(response).to be_successful
       end
@@ -125,14 +125,14 @@ RSpec.describe GiftrocketsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested giftrocket" do
-      giftrocket = Giftrocket.create! valid_attributes
+      giftrocket = DigitalGift.create! valid_attributes
       expect {
         delete :destroy, params: {id: giftrocket.to_param}, session: valid_session
-      }.to change(Giftrocket, :count).by(-1)
+      }.to change(DigitalGift, :count).by(-1)
     end
 
     it "redirects to the giftrockets list" do
-      giftrocket = Giftrocket.create! valid_attributes
+      giftrocket = DigitalGift.create! valid_attributes
       delete :destroy, params: {id: giftrocket.to_param}, session: valid_session
       expect(response).to redirect_to(giftrockets_url)
     end
