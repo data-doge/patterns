@@ -18,6 +18,69 @@ class DigitalGiftsController < ApplicationController
     @digital_gift = DigitalGift.new
   end
 
+
+  def create
+    klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
+    @giftable = klass.find(params[:giftable_id])
+    success = true
+    if @giftable.nil?
+      flash[:error] = 'No giftable object present'
+      success = false
+    end
+    
+    if @giftable.class == 'Invitation' && !@giftable&.attended?
+      flash[:error] = "#{@giftable.person.full_name} isn't marked as 'attended'."
+      success = false
+    end
+
+    if params[:amount].to_money >= current_user.available_budget
+      flash[:error] = 'Insufficient Team Budget'
+      success = false # placeholder for now
+    end
+
+    if params[:amount].to_money >= DigitalGift.current_budget
+      flash[:error] = 'Insufficient Gift Rocket Budget'
+      success = false # placeholder for now
+    end
+
+    @dg = DigitalGift.new( user_id: current_user.id,
+                          created_by: current_user.id,
+                          amount: dg_params['amount'],
+                          person_id: dg_params['person_id'],
+                          giftable_type: dg_params['giftable_type'],
+                          giftable_id: dg_params['giftable_id'])
+    
+    @reward = Reward.new( user_id: current_user.id,
+                         created_by: current_user.id,
+                         person_id: dg_params['person_id'],
+                         amount: dg_params['amount'],
+                         reason: dg_params['reason'],
+                         notes: dg_params['notes'],
+                         giftable_type: dg_params['giftable_type'],
+                         giftable_id: dg_params['giftable_id'],
+                         finance_code: current_user&.team&.finance_code,
+                         team: current_user&.team,
+                         rewardable_type: 'DigitalGift')
+    
+    if @dg.valid? # if it's not valid, error out
+      @dg.request_link # do the thing!
+      @dg.save
+      @reward.rewardable_id = @dg.id
+      success = @reward.save
+    else
+      flash[:error] = dg.error
+      success = false
+    end
+
+    respond_to do |format|
+      if success
+        format.js {}
+      else
+        all_errors = @dg.errors.full_messages.join(', ') + ', ' + @reward.errors.full_messages.join(', ')
+        format.js { "alert('#{all_errors}');" }
+      end
+    end
+  end
   # GET /digital_gifts/1/edit
   # def edit; end
 
@@ -64,6 +127,15 @@ class DigitalGiftsController < ApplicationController
   # end
 
   private
+    def dg_params
+        params.permit(:person_id,
+                      :user_id,
+                      :notes,
+                      :reason,
+                      :amount,
+                      :giftable_type,
+                      :giftable_id)
+    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_digital_gift

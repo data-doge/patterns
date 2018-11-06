@@ -28,6 +28,8 @@ class DigitalGift < ApplicationRecord
   monetize :fee_cents
   has_one :budget, through: :user
   
+  attr_accessor :giftable_id
+  attr_accessor :giftable_type
 
   aasm requires_lock: true do
     state :initialized, initial: true
@@ -53,7 +55,7 @@ class DigitalGift < ApplicationRecord
   end
 
   def self.current_budget
-    (Giftrocket.funding_sources.first.available_cents / 100).to_money
+    (DigitalGift.funding_sources.first.available_cents / 100).to_money
   end
 
   def self.orders
@@ -78,12 +80,16 @@ class DigitalGift < ApplicationRecord
 
   # is this really how I want to do it?
   def request_link
-    raise if person_id.nil?
+    raise if person_id.nil? || giftable_id.nil? || giftable_type.nil?
 
-    funding_source_id = Giftrocket::FundingSource.list.first.id
-    self.external_id = generate_external_id
+    self.funding_source_id = DigitalGift.funding_sources.first.id
 
-    my_order = Giftrocket::Order.create!(funding_source_id, gen_gifts, external_id)
+    # this is wrong. Should choose based on amount.
+    self.campaign_id = DigitalGift.campaigns.first.id
+    
+    generate_external_id
+
+    my_order = Giftrocket::Order.create!(gen_order)
     self.fee = my_order.payment.fees
     self.order_id = my_order.id
 
@@ -91,13 +97,12 @@ class DigitalGift < ApplicationRecord
     self.gift_id = gift.id
     self.link = gift.raw['recipient']['link']
     self.order_details = Marshal.dump(my_order)
-    save
   end
 
   # this is where we check if we can actually request this gift
   # first from our user's team budget
   # then from giftrocket, and then we make the request
-  def budget
+  def can_order?
     amount >= user.available_budget
   end
 
@@ -105,32 +110,18 @@ class DigitalGift < ApplicationRecord
 
   # maybe this is just a 
   def generate_external_id
-    raise if reward.nil?
+    self.external_id = { person_id: person_id,
+      giftable_id: giftable_id,
+      giftable_type: giftable_type }.to_json
 
-    { person_id: reward.person_id,
-      giftable_id: reward.giftable_id,
-      giftable_type: reward.giftable_type }.to_json
-  end
-
-  def gen_gifts
-    raise if person.nil?
-
-    [
-      {
-        amount: amount.to_s,
-        recipient: {
-          name: person.full_name,
-          delivery_method: 'LINK'
-        }
-      }
-    ]
+    return external_id
   end
 
   # rubocop:disable Security/MarshalLoad
   # we want to save the full object. probably don't need to,
   # but it's handy
-  def order
-    @order ||= Marshal.load(order_details)
+  def order_data
+    @order_data ||= Marshal.load(order_details)
   end
   # rubocop:enable Security/MarshalLoad
   
@@ -140,5 +131,27 @@ class DigitalGift < ApplicationRecord
 
   def update_frontend_failure
   end
+  private
+    def gen_gifts
+      raise if person.nil?
+      [
+        {
+          amount: amount.to_s,
+          recipient: {
+            name: person.full_name,
+            delivery_method: 'LINK'
+          }
+        }
+      ]
+    end
+
+    def generate_order
+      {
+        external_id: external_id,
+        funding_source_id: funding_source_id,
+        campaign_id: campaign_id,
+        gifts: gen_gifts
+      }
+    end
   
 end

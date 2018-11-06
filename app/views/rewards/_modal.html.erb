@@ -34,7 +34,7 @@
           <% if @giftable.rewards.find{|r| r.giftable_type == 'DigitalGift'}.nil? %>
           <h4>Digital Gifts</h4>
           <div class='input-group'>
-            <%= form_for( @digital_gift, remote: true) do |form| %>
+            <%= form_tag( '/digital_gifts', remote: true) do %>
             <table>
               <thead>
                 <tr>
@@ -47,26 +47,30 @@
               <tbody>
                 <tr>
                   <td>
-                  <%= form.select :reason,
-                          Reward.reasons.keys.to_a,
-                          { prompt: "Reason", selected: 'interview' },
-                            class: 'input-small',
-                            id: "new-reason"
+                  <%= select_tag :reason,
+                          options_for_select(Reward.reasons.keys.to_a, 'interview'),
+                            {class: 'input-small',id: "new-reason"}
                            %>
                   </td>
                   <td>
-                  <%= form.text_field :amount,
-                          placeholder: "####",
+                  <%= text_field_tag :amount,"",
+                          {placeholder: "####",
                           class: 'input-mini',
-                          id: "new-amount" %>
+                          id: "new-amount"} %>
                   </td>
                   <td>
-                    <%= form.text_field :notes,
-                          class: 'input-mini',
-                          id: "new-notes" %>
+                    <%= text_field_tag :notes,"",
+                          {class: 'input-small',
+                          id: "new-notes" }%>
                   </td>
                   <td>
-                  <%= form.submit 'Add Digital Gift', class: "btn btn-small", id: 'add-digital-gift-button' %>
+                  <%= hidden_field_tag :person_id, @giftable.person_id %>
+                  <%= hidden_field_tag :giftable_id, @giftable.id %>
+                  <%= hidden_field_tag :giftable_type, @giftable.class.to_s %> 
+                  <%= submit_tag 'Add Digital Gift', 
+                        class: "btn btn-small", 
+                        id: 'add-digital-gift-button',
+                        data: { confirm: 'Are you sure? This is not reversable.' } %>
                   </td>
                 </tr>
               </tbody>

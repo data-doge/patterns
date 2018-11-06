@@ -4,11 +4,6 @@ class RewardsController < ApplicationController
   before_action :set_reward, only: %i[show edit update destroy]
   helper_method :sort_column, :sort_direction
 
-  GIFTABLE_TYPES = {
-    'Person'     => Person,
-    'Invitation' => Invitation
-  }.freeze
-
   # GET /rewards
   # GET /rewards.csv
   def index
@@ -127,43 +122,6 @@ class RewardsController < ApplicationController
         format.html { render action: 'edit' }
         format.json { render json: @reward.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  def add_digital_gift
-    klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
-    @giftable = klass.find(params[:giftable_id])
-    
-    if @giftable.nil?
-      flash[:error] = 'No giftable object present'
-      return false
-    end
-    
-    if @giftable.class = 'Invitation' && !@giftable&.attended?
-      flash[:error] = "#{@giftable.person.full_name} isn't marked as 'attended'."
-      return false
-    end
-    
-    if params[:amount].to_money >= current_user.available_budget
-      flash[:error] = 'Insufficient Team Budget'
-      return false # placeholder for now
-    end
-
-    if params[:amount].to_money >= DigitalGift.current_budget
-      flash[:error] = 'Insufficient Gift Rocket Budget'
-      return false # placeholder for now
-    end
-
-    dg = DigitalGift.new( user_id: current_user.id,
-                        created_by: current_user.id,
-                        amount: params['amount'],
-                        person_id: reward_params['person_id'])
-    if dg.valid? # if it's not valid, error out
-      # do the thing!
-
-    else
-      flash[:error] = dg.error
-      return false
     end
   end
 

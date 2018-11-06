@@ -17,17 +17,16 @@ class Budget < ApplicationRecord
   monetize :amount_cents
   belongs_to :team
   has_many :users, through: :team
+  validates :team_id, uniqueness: true
 
   has_many :credits, -> { where(from_type: 'Budget') },
     class_name: 'Transaction',
     foreign_key: 'from_id',
-    dependent: :nullify,
     inverse_of: :debits
 
   has_many :debits, -> { where(to_type: 'Budget') },
     class_name: 'Transaction',
     foreign_key: 'to_id',
-    dependent: :nullify,
     inverse_of: :credits
 
   def transactions

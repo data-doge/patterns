@@ -16,8 +16,11 @@ class Team < ApplicationRecord
   has_many :users
   has_many :research_sessions, through: :users
   has_many :rewards
-  has_many :budgets
+  has_one :budget
+  has_many :debits, through: :budget
+  has_many :credits, through: :budget
   validates :finance_code, inclusion: { in: %w[BRL CATA1 CATA2 FELL] }
+  default_scope { includes(:rewards) }
 
   def self.finance_codes
     %w[BRL CATA1 CATA2 FELL]
@@ -28,6 +31,14 @@ class Team < ApplicationRecord
 
     total = rewards.where('created_at > ?', since).sum(:amount_cents)
     Money.new(total, 'USD')
+  end
+
+  def available_budget
+    budget.amount
+  end
+
+  def transactions
+    budget.transactions
   end
 
 end

@@ -1,0 +1,27 @@
+<% # TODO FIXME %>
+<% Rails.logger.warn("In the create.js.erb file") %>
+<% if @success %>
+  // this should be like the dynamic panel in research session.
+  //console.log("In Create_result if statement");
+  $('#error-div').val("");
+  $("<%= escape_javascript(render partial: 'rewards/reward', locals: { reward: @reward } ) %>").prependTo("#rewards");
+  $("<%= escape_javascript(render partial: 'people/reward', locals: { reward: @reward } ) %>").prependTo("#people_rewards");
+
+  $("<%= j render partial: 'rewards/mini_reward', locals:{ reward: @reward } %>").prependTo('#mini-gift-card');
+
+  
+  // should be actioncable callback. elementID should have personid in it.
+  <% @reward.person.reload %>
+  $('#rewards_total').html("<%= @reward.person.rewards_total %>");
+  
+  $("#reward_content").val("");
+  $('#error-div').html("");
+
+  $('#<%= @reward.giftable&.id%>-rewards-count').text('<%= @reward.giftable&.rewards&.size%>');
+
+<% else %>
+  console.log("In Create_result else statement");
+  $('#error-div').html("");
+  $("<%= escape_javascript(render partial: 'rewards/reward_error', locals: { reward: @reward } ) %>").prependTo("#error-div");
+<% end %>
+

@@ -6,8 +6,7 @@
 # Table name: rewards
 #
 #  id               :integer          not null, primary key
-#  gift_card_number :string(255)
-#  expiration_date  :string(255)
+
 #  person_id        :integer
 #  notes            :string(255)
 #  created_by       :integer

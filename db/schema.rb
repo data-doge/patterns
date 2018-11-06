@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(version: 2018_11_06_170148) do
     t.datetime "updated_at", null: false
     t.string "campaign_id"
     t.string "campaign_title"
+    t.string "funding_source_id"
   end
 
   create_table "gift_cards", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

@@ -114,7 +114,7 @@ class User < ApplicationRecord
 
   def budget
     # eventually there may be several budgets
-    team.budgets.first
+    team.budget
   end
 
   def available_budget
