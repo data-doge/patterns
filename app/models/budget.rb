@@ -19,17 +19,15 @@ class Budget < ApplicationRecord
   has_many :users, through: :team
   validates :team_id, uniqueness: true
 
-  has_many :credits, -> { where(from_type: 'Budget') },
-    class_name: 'Transaction',
-    foreign_key: 'from_id',
-    inverse_of: :debits
+  has_many :debits, -> { where(from_type: 'Budget') },
+    class_name: 'TransactionLog',
+    foreign_key: 'from_id'
 
-  has_many :debits, -> { where(to_type: 'Budget') },
-    class_name: 'Transaction',
-    foreign_key: 'to_id',
-    inverse_of: :credits
+  has_many :credits, -> { where(recipient_type: 'Budget') },
+    class_name: 'TransactionLog',
+    foreign_key: 'recipient_id'
 
   def transactions
-    Transactions.where(to_type: 'Budget', to_id: id).or(Transactions.where(to_type: 'Budget', from_id: id))
+    TransactionLog.where(recipient_type: 'Budget', recipient_id: id).or(TransactionLog.where(from_type: 'Budget', from_id: id))
   end
 end

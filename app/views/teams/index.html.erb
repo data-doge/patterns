@@ -10,6 +10,7 @@
           <th colspan="1">size</th>
           <th colspan="1">finance code</th>
           <th colspan="1">Amount YTD</th>
+          <th colspan="1">Digital Budget</th>
           <th colspan="3">actions</th>
         </tr>
       </thead>
@@ -21,7 +22,8 @@
             <td><%= best_in_place team, :finance_code,
                       as: :select,
                       collection: {'BRL': 'BRL', 'CATA1':'CATA1','CATA2':'CATA2', 'FELL':'FELL'} %></td>
-            <td><%= team.rewards_total %></td>
+            <td><%= humanized_money_with_symbol team.rewards_total %></td>
+            <td><%= humanized_money_with_symbol team.budget.amount %></td>
             <td><%= link_to 'Show', team, class: 'btn' %>
             <%= link_to 'Edit', edit_team_path(team), class: 'btn' %>
             <%= link_to 'Destroy', team, class: 'btn btn-warn', method: :delete, data: { confirm: 'Are you sure?' } %></td>

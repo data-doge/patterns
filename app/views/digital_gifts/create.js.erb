@@ -1,8 +1,4 @@
-<% # TODO FIXME %>
-<% Rails.logger.warn("In the create.js.erb file") %>
 <% if @success %>
-  // this should be like the dynamic panel in research session.
-  //console.log("In Create_result if statement");
   $('#error-div').val("");
   $("<%= escape_javascript(render partial: 'rewards/reward', locals: { reward: @reward } ) %>").prependTo("#rewards");
   $("<%= escape_javascript(render partial: 'people/reward', locals: { reward: @reward } ) %>").prependTo("#people_rewards");
@@ -22,6 +18,6 @@
 <% else %>
   console.log("In Create_result else statement");
   $('#error-div').html("");
-  $("<%= escape_javascript(render partial: 'rewards/reward_error', locals: { reward: @reward } ) %>").prependTo("#error-div");
+  $("<%= escape_javascript(render partial: 'digital_gift_error', locals: { reward: @reward, digital_gift: @dg, transaction_log: @transaction } ) %>").prependTo("#error-div");
 <% end %>
 

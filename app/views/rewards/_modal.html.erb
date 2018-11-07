@@ -31,7 +31,7 @@
         <hr>
         <!-- must be hideable -->
         <div id='digital-gifts-for-<%= @giftable.id %>'>
-          <% if @giftable.rewards.find{|r| r.giftable_type == 'DigitalGift'}.nil? %>
+          <% if @giftable.rewards.find{|r| r.rewardable_type == 'DigitalGift'}.nil? %>
           <h4>Digital Gifts</h4>
           <div class='input-group'>
             <%= form_tag( '/digital_gifts', remote: true) do %>

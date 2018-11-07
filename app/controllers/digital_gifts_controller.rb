@@ -18,39 +18,45 @@ class DigitalGiftsController < ApplicationController
     @digital_gift = DigitalGift.new
   end
 
-
   def create
+    # this is kinda horrific
     klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
     @giftable = klass.find(params[:giftable_id])
-    success = true
+    @success = true
     if @giftable.nil?
       flash[:error] = 'No giftable object present'
-      success = false
+      @success = false
     end
-    
-    if @giftable.class == 'Invitation' && !@giftable&.attended?
+
+    if params[:giftable_type] == 'Invitation' && !@giftable&.attended?
       flash[:error] = "#{@giftable.person.full_name} isn't marked as 'attended'."
-      success = false
+      @success = false
+    end
+
+    if params[:giftable_type] == 'Invitation' && @giftable.rewards.find {|r| r.rewardable_type == 'DigitalGift'}.present?
+      flash[:error] = "#{@giftable.person.full_name} Already has a digital gift"
+      @success = false
     end
 
     if params[:amount].to_money >= current_user.available_budget
       flash[:error] = 'Insufficient Team Budget'
-      success = false # placeholder for now
+      @success = false # placeholder for now
     end
 
-    if params[:amount].to_money >= DigitalGift.current_budget
-      flash[:error] = 'Insufficient Gift Rocket Budget'
-      success = false # placeholder for now
-    end
-
-    @dg = DigitalGift.new( user_id: current_user.id,
+    # so, the APIs are wonky
+    # if params[:amount].to_money >= DigitalGift.current_budget
+    #   flash[:error] = 'Insufficient Gift Rocket Budget'
+    #   @success = false # placeholder for now
+    # end
+    if @success
+      @dg = DigitalGift.new(user_id: current_user.id,
                           created_by: current_user.id,
                           amount: dg_params['amount'],
                           person_id: dg_params['person_id'],
                           giftable_type: dg_params['giftable_type'],
                           giftable_id: dg_params['giftable_id'])
-    
-    @reward = Reward.new( user_id: current_user.id,
+
+      @reward = Reward.new(user_id: current_user.id,
                          created_by: current_user.id,
                          person_id: dg_params['person_id'],
                          amount: dg_params['amount'],
@@ -61,24 +67,32 @@ class DigitalGiftsController < ApplicationController
                          finance_code: current_user&.team&.finance_code,
                          team: current_user&.team,
                          rewardable_type: 'DigitalGift')
-    
-    if @dg.valid? # if it's not valid, error out
-      @dg.request_link # do the thing!
-      @dg.save
-      @reward.rewardable_id = @dg.id
-      success = @reward.save
-    else
-      flash[:error] = dg.error
-      success = false
+
+      @transaction = TransactionLog.new(transaction_type: 'DigitalGift',
+                           from_id: current_user.budget.id,
+                           user_id: current_user.id,
+                           amount: dg_params['amount'],
+                           from_type: 'Budget',
+                           recipient_type: 'DigitalGift')
+
+      if @transaction.valid? && @dg.valid? # if it's not valid, error out
+        @dg.request_link # do the thing!
+        if @dg.save
+          @transaction.recipient_id = @dg.id
+          @transaction.save
+          @reward.rewardable_id = @dg.id
+          @success = @reward.save
+          @dg.reward_id = @reward.id # is this necessary?
+          @dg.save
+        end
+      else
+        flash[:error] = @dg.errors
+        @success = false
+      end
     end
 
     respond_to do |format|
-      if success
-        format.js {}
-      else
-        all_errors = @dg.errors.full_messages.join(', ') + ', ' + @reward.errors.full_messages.join(', ')
-        format.js { "alert('#{all_errors}');" }
-      end
+      format.js {}
     end
   end
   # GET /digital_gifts/1/edit
@@ -93,7 +107,7 @@ class DigitalGiftsController < ApplicationController
 
   #   respond_to do |format|
   #     if @digital_gift.save
-  #       format.html { redirect_to @digital_gift, notice: 'DigitalGift was successfully created.' }
+  #       format.html { redirect_to @digital_gift, notice: 'DigitalGift was @successfully created.' }
   #       format.json { render :show, status: :created, location: @digital_gift }
   #     else
   #       format.html { render :new }
@@ -107,7 +121,7 @@ class DigitalGiftsController < ApplicationController
   # def update
   #   respond_to do |format|
   #     if @digital_gift.update(digital_gift_params)
-  #       format.html { redirect_to @digital_gift, notice: 'DigitalGift was successfully updated.' }
+  #       format.html { redirect_to @digital_gift, notice: 'DigitalGift was @successfully updated.' }
   #       format.json { render :show, status: :ok, location: @digital_gift }
   #     else
   #       format.html { render :edit }
@@ -121,20 +135,21 @@ class DigitalGiftsController < ApplicationController
   # def destroy
   #   @digital_gift.destroy
   #   respond_to do |format|
-  #     format.html { redirect_to digital_gifts_url, notice: 'DigitalGift was successfully destroyed.' }
+  #     format.html { redirect_to digital_gifts_url, notice: 'DigitalGift was @successfully destroyed.' }
   #     format.json { head :no_content }
   #   end
   # end
 
   private
+
     def dg_params
-        params.permit(:person_id,
-                      :user_id,
-                      :notes,
-                      :reason,
-                      :amount,
-                      :giftable_type,
-                      :giftable_id)
+      params.permit(:person_id,
+        :user_id,
+        :notes,
+        :reason,
+        :amount,
+        :giftable_type,
+        :giftable_id)
     end
 
     # Use callbacks to share common setup or constraints between actions.

@@ -22,11 +22,11 @@
 
 # records card details for activation and check calls
 class GiftCard < ApplicationRecord
-  
+
   include AASM
   include Rewardable
   page 20
-  
+
   attr_accessor :old_user_id
 
   has_many :activation_calls, dependent: :destroy
@@ -50,7 +50,7 @@ class GiftCard < ApplicationRecord
   # sequences are per batch
   validates :sequence_number, uniqueness: { scope: :batch_id }
   default_scope { order(sequence_number: :asc) }
-  
+
   # see force_immutable below. do we not want to allow people to
   # change the assigned activation to gift card? unclear
   # IMMUTABLE = %w{gift_card_id}

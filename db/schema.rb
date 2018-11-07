@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_06_170148) do
+ActiveRecord::Schema.define(version: 2018_11_06_214912) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "gift_card_id"
@@ -321,17 +321,20 @@ ActiveRecord::Schema.define(version: 2018_11_06_170148) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "credit_id"
-    t.bigint "debt_id"
+  create_table "transaction_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "from_id"
+    t.string "from_type"
+    t.integer "recipient_id"
+    t.string "recipient_type"
+    t.string "transaction_type"
     t.integer "user_id"
     t.integer "amount_cents", default: 0, null: false
     t.string "amount_currency", default: "USD", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["credit_id"], name: "index_transactions_on_credit_id"
-    t.index ["debt_id"], name: "index_transactions_on_debt_id"
-    t.index ["user_id"], name: "index_transactions_on_user_id"
+    t.index ["from_id", "from_type"], name: "index_transaction_logs_on_from_id_and_from_type"
+    t.index ["recipient_id", "recipient_type"], name: "index_transaction_logs_on_recipient_id_and_recipient_type"
+    t.index ["user_id"], name: "index_transaction_logs_on_user_id"
   end
 
   create_table "twilio_messages", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

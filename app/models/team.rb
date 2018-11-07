@@ -37,8 +37,6 @@ class Team < ApplicationRecord
     budget.amount
   end
 
-  def transactions
-    budget.transactions
-  end
+  delegate :transactions, to: :budget
 
 end

@@ -112,10 +112,7 @@ class User < ApplicationRecord
     Money.new(total, 'USD')
   end
 
-  def budget
-    # eventually there may be several budgets
-    team.budget
-  end
+  delegate :budget, to: :team
 
   def available_budget
     budget.amount # always in ruby money

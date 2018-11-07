@@ -2,16 +2,28 @@
 
 # == Schema Information
 #
-# Table name: giftrockets
+# Table name: digital_gifts
 #
-#  id            :bigint(8)        not null, primary key
-#  order_details :text(65535)
-#  created_by    :integer          not null
-#  user_id       :integer
-#  person_id     :integer
-#  reward_id     :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id                :bigint(8)        not null, primary key
+#  order_details     :text(65535)
+#  created_by        :integer          not null
+#  user_id           :integer
+#  person_id         :integer
+#  reward_id         :integer
+#  aasm_state        :string(255)
+#  external_id       :string(255)
+#  order_id          :string(255)
+#  gift_id           :string(255)
+#  link              :text(65535)
+#  amount_cents      :integer          default(0), not null
+#  amount_currency   :string(255)      default("USD"), not null
+#  fee_cents         :integer          default(0), not null
+#  fee_currency      :string(255)      default("USD"), not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  campaign_id       :string(255)
+#  campaign_title    :string(255)
+#  funding_source_id :string(255)
 #
 
 # first we create the giftrocket, with a person and user and created_by
@@ -24,10 +36,12 @@ class DigitalGift < ApplicationRecord
   include Rewardable
   include AASM
   page 50
-  
+
   monetize :fee_cents
   has_one :budget, through: :user
-  
+  has_one :transaction_log, as: :recipient
+  belongs_to :reward, polymorphic: :rewardable, required: false
+
   attr_accessor :giftable_id
   attr_accessor :giftable_type
 
@@ -41,13 +55,13 @@ class DigitalGift < ApplicationRecord
     event :check_budget do
       transitions from: :initialized, to: %i[requested insufficient_budget]
     end
-    event :request_gift, guard: :sufficient_budget? do 
+    event :request_gift, guard: :sufficient_budget? do
       transitions from: :requested
     end
   end
 
   def self.campaigns
-    Giftrocket::Campaigns.list
+    Giftrocket::Campaign.list
   end
 
   def self.funding_sources
@@ -68,6 +82,7 @@ class DigitalGift < ApplicationRecord
 
   def check_status
     raise if gift_id.nil?
+
     gift = Giftrocket::Gift.retrieve(gift_id)
     # STATUS                          Explanation
     # SCHEDULED_FOR_FUTURE_DELIVERY   self explanatory
@@ -87,9 +102,10 @@ class DigitalGift < ApplicationRecord
     # this is wrong. Should choose based on amount.
     self.campaign_id = DigitalGift.campaigns.first.id
     
+
     generate_external_id
 
-    my_order = Giftrocket::Order.create!(gen_order)
+    my_order = Giftrocket::Order.create!(generate_order)
     self.fee = my_order.payment.fees
     self.order_id = my_order.id
 
@@ -106,15 +122,13 @@ class DigitalGift < ApplicationRecord
     amount >= user.available_budget
   end
 
-  def create_transaction; end
-
-  # maybe this is just a 
+  # maybe this is just a
   def generate_external_id
     self.external_id = { person_id: person_id,
-      giftable_id: giftable_id,
-      giftable_type: giftable_type }.to_json
+                         giftable_id: giftable_id,
+                         giftable_type: giftable_type }.to_json
 
-    return external_id
+    external_id
   end
 
   # rubocop:disable Security/MarshalLoad
@@ -124,16 +138,17 @@ class DigitalGift < ApplicationRecord
     @order_data ||= Marshal.load(order_details)
   end
   # rubocop:enable Security/MarshalLoad
-  
-  # use actioncable again to update our front end status
-  def update_frontend_success
-  end
 
-  def update_frontend_failure
-  end
+  # use actioncable again to update our front end status
+  def update_frontend_success; end
+
+  def update_frontend_failure; end
+
   private
-    def gen_gifts
+
+    def generate_gifts
       raise if person.nil?
+
       [
         {
           amount: amount.to_s,
@@ -150,8 +165,8 @@ class DigitalGift < ApplicationRecord
         external_id: external_id,
         funding_source_id: funding_source_id,
         campaign_id: campaign_id,
-        gifts: gen_gifts
+        gifts: generate_gifts
       }
     end
-  
+
 end

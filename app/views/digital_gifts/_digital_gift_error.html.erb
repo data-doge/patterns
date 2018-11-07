@@ -1,0 +1,36 @@
+<% if reward && reward.errors.size > 0 %>
+   <div id="errorExplanation">
+   <h3><%= pluralize(reward.errors.size, "error") %> prohibited this record from being saved.</h3>
+   <p>There were problems with the following fields:</p>
+   <ul>
+     <% reward.errors.full_messages.each do |msg| %>
+       <li><%= msg %></li>
+     <% end %>
+   </ul>
+ </div>
+<% end %>
+
+<% if digital_gift && digital_gift.errors.size > 0 %>
+   <div id="errorDigitalGiftExplanation">
+   <h3><%= pluralize(digital_gift.errors.size, "error") %> prohibited this record from being saved.</h3>
+   <p>There were problems with the following fields:</p>
+   <ul>
+     <% digital_gift.errors.full_messages.each do |msg| %>
+       <li><%= msg %></li>
+     <% end %>
+   </ul>
+ </div>
+<% end %>
+
+<% if transaction_log && transaction_log.errors.size > 0 %>
+   <div id="errorTransactionExplanation">
+   <h3><%= pluralize(transaction_log.errors.size, "error") %> prohibited this record from being saved.</h3>
+   <p>There were problems with the following fields:</p>
+   <ul>
+     <% transaction_log.errors.full_messages.each do |msg| %>
+       <li><%= msg %></li>
+     <% end %>
+   </ul>
+ </div>
+<% end %>
+
