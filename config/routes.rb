@@ -3,7 +3,15 @@ Logan::Application.routes.draw do
   
   resources :cash_cards
   resources :budgets
-  resources :digital_gifts
+  resources :digital_gifts do
+    collection do 
+      get 'api_create', 
+          action: :api_create, 
+          as: :api_create, 
+          defaults:{format:'json'}
+    end
+  end
+
   resources :activation_calls do
     collection do
       get 'activate/:token', 

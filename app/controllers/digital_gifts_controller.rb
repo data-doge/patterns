@@ -93,8 +93,8 @@ class DigitalGiftsController < ApplicationController
     end
   end
 
-  def api_gift
-    # this is horrific too
+  def api_create
+    # apithis is horrific too
     # https://blog.arkency.com/2014/07/4-ways-to-early-return-from-a-rails-controller/
     validate_api_args
     return if performed?
