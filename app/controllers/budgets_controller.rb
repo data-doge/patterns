@@ -11,13 +11,19 @@ class BudgetsController < ApplicationController
 
   # GET /budgets/1
   # GET /budgets/1.json
-  def show; end
+  def show
+    @transaction_log = TransactionLog.new
+    @transactions  = @budget.transactions
+  end
 
   # GET /budgets/new
   def new
     @budget = Budget.new
   end
 
+  def create_transaction
+
+  end
   # GET /budgets/1/edit
   def edit; end
 

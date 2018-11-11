@@ -22,7 +22,7 @@
           <tr id='person-<%= person.id %>'>
             <td><%= link_to "#{person.first_name} #{person.last_name}", person_path(person) %></td>
             <td><%= person.active? %>
-            <td><%= person.total_gc / 100 %></td>
+            <td><%= humanized_money_with_symbol person.total_rewards/100 %></td>
             <td><%= link_to person.research_sessions.last.title, research_session_path(person.research_sessions.last) %></td>
             <td><%= link_to person.research_sessions.last.user.name, user_path(person.research_sessions.last.user) %></td>
           </tr>

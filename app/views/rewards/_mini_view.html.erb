@@ -1,15 +1,16 @@
 <table class="table table-striped rewards">
   <thead>
     <tr>
-      <th>id</th>
+      <th>By</th>
       <th>Reward Type</th>
+      <th>Reward ID</th>
       <th>Amount</th>
       <th>&nbsp;</th>
       <th>&nbsp;</th>
       <th>&nbsp;</th>
     </tr>
   </thead>
-  <tbody id='mini-reward'>
+  <tbody id='mini-rewards'>
     <%= render partial: 'rewards/mini_reward',
           collection: rewards,
           as: :reward %>

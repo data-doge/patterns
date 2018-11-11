@@ -3,7 +3,7 @@
   $("<%= escape_javascript(render partial: 'rewards/reward', locals: { reward: @reward } ) %>").prependTo("#rewards");
   $("<%= escape_javascript(render partial: 'people/reward', locals: { reward: @reward } ) %>").prependTo("#people_rewards");
 
-  $("<%= j render partial: 'rewards/mini_reward', locals:{ reward: @reward } %>").prependTo('#mini-gift-card');
+  $("<%= j render partial: 'rewards/mini_reward', locals:{ reward: @reward } %>").prependTo('#mini-rewards');
 
   
   // should be actioncable callback. elementID should have personid in it.
@@ -11,13 +11,13 @@
   $('#rewards_total').html("<%= @reward.person.rewards_total %>");
   
   $("#reward_content").val("");
-  $('#error-div').html("");
+  $('#modal-error-div').html("");
 
   $('#<%= @reward.giftable&.id%>-rewards-count').text('<%= @reward.giftable&.rewards&.size%>');
-
+  $('#digital-gifts-for-<%= @reward.giftable&.id%>').hide();
 <% else %>
   console.log("In Create_result else statement");
-  $('#error-div').html("");
-  $("<%= escape_javascript(render partial: 'digital_gift_error', locals: { reward: @reward, digital_gift: @dg, transaction_log: @transaction } ) %>").prependTo("#error-div");
+  $('#modal-error-div').html("");
+  $("#modal-error-div").html("<%= escape_javascript(render partial: 'digital_gift_error', locals: { reward: @reward, digital_gift: @dg, transaction_log: @transaction } ) %>");
 <% end %>
 

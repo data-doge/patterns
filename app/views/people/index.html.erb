@@ -57,7 +57,7 @@
           <th><%= sortable 'created_at', 'Signup date' %></th>
           <th>Preferred Contact Method</th>
           <th><%= sortable 'tag_count_cache', 'Tag Count' %></th>
-          <th>Gift Cards</th>
+          <th>Rewards</th>
           <th>Sessions Attended</th>
           <th conspan="3">&nbsp;</th>
         </tr>
@@ -82,7 +82,7 @@
             <%= person.tag_count %>
             </td>
             <td>
-              <%= person.gift_cards.size %>
+              <%= person.rewards.size %>
             </td>
             <td>
               <%= person.invitations.where(aasm_state:'attended').size %>

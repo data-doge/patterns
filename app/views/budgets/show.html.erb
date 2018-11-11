@@ -1,4 +1,42 @@
-<p id="notice"><%= notice %></p>
-
+<%= render partial: 'layouts/admin_menu' %>
+<div class='row'>
+  <% if @budget.team.id == 1 %>
+  <div class='well'>
+    <dl >
+      <dt>Money in GiftRocket Account:</dt>
+      <dd> <%= humanized_money_with_symbol DigitalGift.current_budget %></dd>
+      <dt>Money left All Budgets:</dt>
+      <dd> <%= humanized_money_with_symbol Budget.all.sum(&:amount) %></dd>
+      <h5>Add/Subtract to Patterns Digital Gift Budget<h5>
+      todo
+    </dl>
+  </div>
+  <% end %>
+  <div class='span12'>
+    <h5> transactions</h5>
+    <table class='table table-striped'>
+      <thead>
+        <th>id</th>
+        <th>Amount</th>
+        <th>user</th>
+        <th>From</th>
+        <th>Recipient</th>
+        <th>Type</th>
+      </thead>
+      <tbody>
+        <% @budget.transactions.each do |trans| %>
+        <tr>
+          <td><%= trans.id %></td>
+          <td><%= humanized_money_with_symbol trans.amount %></td>
+          <td><%= link_to trans.user.name, trans.user %></td>
+          <td><%= link_to trans.from_type, trans.from %></td>
+          <td><%= link_to trans.recipient_type, trans.recipient %></td>
+          <td><%= trans.transaction_type %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
 <%= link_to 'Edit', edit_budget_path(@budget) %> |
 <%= link_to 'Back', budgets_path %>

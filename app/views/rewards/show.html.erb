@@ -3,7 +3,21 @@
 
 <% if @reward.rewardable_id.present? %>
 <p>
-  <strong>link to edit the Rewardable thing:</strong>
+  <strong>Reward Type:</strong>
+  <%= link_to(@reward.rewardable_type, @reward.rewardable) %>
+</p>
+<p>
+  <strong>Reward For:</strong>
+  <%= link_to(@reward.giftable_type, @reward.giftable) %>
+</p>
+
+<p>
+  <strong>Given By</strong>
+  <% if current_user.admin? %>
+    <%= link_to(@reward.user.name, @reward.user) %>
+    <% else %>
+    <%= @reward.user.name %>
+    <% end %>
 </p>
 <% end %>
 

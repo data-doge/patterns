@@ -6,7 +6,12 @@ class CashCardsController < ApplicationController
   # GET /cash_cards
   # GET /cash_cards.json
   def index
-    @cash_cards = CashCard.order(id: 'desc').includes(:reward).page(params[:page])
+    if current_user.admin?
+      @cash_cards = CashCard.order(id: 'desc').includes(:reward).page(params[:page])
+    else
+      team_ids = current_user.team.users.map(&:id)
+      @cash_cards = CashCard.where(user_id: team_ids).order(id: 'desc').includes(:reward).page(params[:page])
+    end
   end
 
   # GET /cash_cards/1

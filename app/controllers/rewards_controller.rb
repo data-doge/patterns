@@ -94,7 +94,8 @@ class RewardsController < ApplicationController
     klass = reward_params['rewardable_type'].classify.constantize
     @rewardable = klass.find(reward_params['rewardable_id'])
     @success = false
-    if @rewardable
+    if @rewardable && Reward.find_by(rewardable_type: @rewardable.class.to_s,
+                           rewardable_id: @rewardable.id).nil?
       @reward = Reward.new(rewardable_type: @rewardable.class,
                            rewardable_id: @rewardable.id,
                            amount: @rewardable.amount,
@@ -107,10 +108,13 @@ class RewardsController < ApplicationController
                            team: current_user&.team,
                            created_by: current_user.id)
       @success = @reward.save
+      @rewardable.reward_id = @reward.id
+      @rewardable.save
     else
       flash[:error] = 'Reward doesn\'t exist'
     end
-    @total = @reward.person.rewards_total
+    @person = Person.find reward_params['person_id']
+    @total = @person.rewards_total
 
     respond_to do |format|
       if @success

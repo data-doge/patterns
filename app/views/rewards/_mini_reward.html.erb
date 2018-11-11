@@ -1,6 +1,16 @@
 <tr class="reward" id="reward-<%= reward.id %>">
-    <td><%= reward.id %></td>
+    <td><%= reward.user.name %></td>
     <td><%= link_to(reward.rewardable.class, reward.rewardable) %></td>
+    <td><%= case reward.rewardable.class.to_s
+        when 'GiftCard'
+            "Seq# " + reward.rewardable.sequence_number
+        when 'DigitalGift'
+            link_to "link", reward.rewardable
+        when 'CashCard'
+           reward.rewardable.notes
+       end
+    %>        
+    </td>
     <td><%= humanized_money_with_symbol reward.amount %></td>
     <td><%= link_to 'Show', reward %></td>
     <td><%= link_to 'Edit', edit_reward_path(reward) %></td>

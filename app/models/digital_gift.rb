@@ -40,25 +40,27 @@ class DigitalGift < ApplicationRecord
   monetize :fee_cents
   has_one :budget, through: :user
   has_one :transaction_log, as: :recipient
-  belongs_to :reward, polymorphic: :rewardable, required: false
+  belongs_to :reward, required: false
 
+  after_create :save_transaction
+  
   attr_accessor :giftable_id
   attr_accessor :giftable_type
 
-  aasm requires_lock: true do
-    state :initialized, initial: true
-    state :insufficient_budget
-    state :requested
-    state :sent
-    state :redeemed
+  # aasm requires_lock: true do
+  #   state :initialized, initial: true
+  #   state :insufficient_budget
+  #   state :requested
+  #   state :sent
+  #   state :redeemed
 
-    event :check_budget do
-      transitions from: :initialized, to: %i[requested insufficient_budget]
-    end
-    event :request_gift, guard: :sufficient_budget? do
-      transitions from: :requested
-    end
-  end
+  #   event :check_budget do
+  #     transitions from: :initialized, to: %i[requested insufficient_budget]
+  #   end
+  #   event :request_gift, guard: :sufficient_budget? do
+  #     transitions from: :requested
+  #   end
+  # end
 
   def self.campaigns
     Giftrocket::Campaign.list
@@ -80,17 +82,21 @@ class DigitalGift < ApplicationRecord
     Giftrocket::Gift.list
   end
 
-  def check_status
+  def fetch_gift
     raise if gift_id.nil?
 
-    gift = Giftrocket::Gift.retrieve(gift_id)
+    Giftrocket::Gift.retrieve(gift_id)
+  end
+
+  def check_status
     # STATUS                          Explanation
     # SCHEDULED_FOR_FUTURE_DELIVERY   self explanatory
     # DELIVERY_ATTEMPTED              receipt not confirmed
     # EMAIL_BOUNCED                   only if we email things
     # DELIVERED                       receipt confirmed (Everytime, this)
+    # I assume REDEEMED is a status?
 
-    gift.status
+    fetch_gift.status
   end
 
   # is this really how I want to do it?
@@ -100,8 +106,7 @@ class DigitalGift < ApplicationRecord
     self.funding_source_id = DigitalGift.funding_sources.first.id
 
     # this is wrong. Should choose based on amount.
-    self.campaign_id = DigitalGift.campaigns.first.id
-    
+    self.campaign_id = DigitalGift.campaigns&.first&.id
 
     generate_external_id
 
@@ -112,7 +117,7 @@ class DigitalGift < ApplicationRecord
     gift = my_order.gifts.first
     self.gift_id = gift.id
     self.link = gift.raw['recipient']['link']
-    self.order_details = Marshal.dump(my_order)
+    self.order_details = Base64.encode64(Marshal.dump(my_order))
   end
 
   # this is where we check if we can actually request this gift
@@ -135,7 +140,7 @@ class DigitalGift < ApplicationRecord
   # we want to save the full object. probably don't need to,
   # but it's handy
   def order_data
-    @order_data ||= Marshal.load(order_details)
+    @order_data ||= Marshal.load(Base64.decode64(order_details))
   end
   # rubocop:enable Security/MarshalLoad
 
@@ -167,6 +172,16 @@ class DigitalGift < ApplicationRecord
         campaign_id: campaign_id,
         gifts: generate_gifts
       }
+    end
+
+    def save_transaction
+      TransactionLog.create(transaction_type: 'DigitalGift',
+                           from_id: user.budget.id,
+                           user_id: user.id,
+                           amount: total_for_budget,
+                           from_type: 'Budget',
+                           recipient_id: id,
+                           recipient_type: 'DigitalGift')
     end
 
 end

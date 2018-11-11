@@ -7,6 +7,7 @@ development:
   adapter: mysql2
   database: development
   encoding: utf8
+  collation: utf8_general_ci
   pool: 5
   timeout: 5000
   host: <%= ENV['MYSQL_HOST'] || 'localhost' %>
@@ -28,6 +29,8 @@ staging:
   host: <%= ENV['MYSQL_HOST'] || 'localhost' %>
   username: <%= ENV['MYSQL_USER'] || 'logan' %>
   password: <%= ENV['MYSQL_PWD'] || '' %>
+  encoding: utf8
+  collation: utf8_general_ci
   pool: 5
   timeout: 5000
 
@@ -39,4 +42,6 @@ production:
   username: <%= ENV['MYSQL_USER'] || 'logan' %>
   password: <%= ENV['MYSQL_PWD'] || '' %>
   pool: <%= ENV['RAILS_MAX_THREADS'] || 25 %>
+  encoding: utf8
+  collation: utf8_general_ci
   timeout: 5000

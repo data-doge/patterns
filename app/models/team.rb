@@ -22,6 +22,8 @@ class Team < ApplicationRecord
   validates :finance_code, inclusion: { in: %w[BRL CATA1 CATA2 FELL] }
   default_scope { includes(:rewards) }
 
+  after_create :make_budget
+
   def self.finance_codes
     %w[BRL CATA1 CATA2 FELL]
   end
@@ -39,4 +41,8 @@ class Team < ApplicationRecord
 
   delegate :transactions, to: :budget
 
+  private
+    def make_budget
+      Budget.create(team_id: id)
+    end
 end

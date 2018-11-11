@@ -12,8 +12,8 @@
         <h5>YTD Total: <span id='rewards_total'><%= @giftable.person.rewards_total %></span>
       </div>
       <div class="modal-body">
-        <div id="modal-notification"></div>
-        <div id="error-div"></div>
+        <div id="modal-notifications"></div>
+        <div id="modal-error-div"></div>
           <% if @reward.errors.any? %>
             <div id="error_explanation">
               <h2><%= pluralize(@reward.errors.count, "error") %> prohibited this reward from being saved:</h2>
@@ -31,8 +31,9 @@
         <hr>
         <!-- must be hideable -->
         <div id='digital-gifts-for-<%= @giftable.id %>'>
-          <% if @giftable.rewards.find{|r| r.rewardable_type == 'DigitalGift'}.nil? %>
+          <% if @giftable.rewards.find{|r| r.rewardable_type == 'DigitalGift'}.nil? && @giftable.attended? %>
           <h4>Digital Gifts</h4>
+          <h6>available budget:<span id='available-budget<%= current_user.team.budget.id%>'><%= humanized_money_with_symbol current_user.available_budget %></h6>
           <div class='input-group'>
             <%= form_tag( '/digital_gifts', remote: true) do %>
             <table>

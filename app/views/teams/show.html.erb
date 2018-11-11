@@ -16,8 +16,8 @@
                       ok_button: 'Save',
                       cancel_button: 'Cancel' %></dd>
 
-        <dt>YTD Gift Card $</dt>
-        <dd><%= @team.gift_card_total %></dd>
+        <dt>YTD Rewards $</dt>
+        <dd><%= @team.rewards_total %></dd>
 
       </dl>
     </div>
@@ -50,8 +50,8 @@
           <th colspan="1">User</th>
           <th colspan="1">Date</th>
           <th colspan="1">Invited</th>
-          <th colspan="1">Gift Card Count</th>
-          <th colspan="1">Gift Card Amount</th>
+          <th colspan="1">Rewards Count</th>
+          <th colspan="1">Rewards Amount</th>
           <th colspan="1">Tags</th>
         </tr>
       </thead>
@@ -62,8 +62,8 @@
           <td><%= link_to session.user.name, session.user %> </td>
           <td><%= session.start_datetime_human %> </td>
           <td><%= session.invitations.invited.size %> </td>
-          <td><%= session.gift_cards.size %> </td>
-          <td><%= session.gift_cards.sum(&:amount) %> </td>
+          <td><%= session.rewards.size %> </td>
+          <td><%= session.rewards.sum(&:amount) %> </td>
           <td><%= session.tag_list.to_s %> </td>
         </tr>
         <% end %>
@@ -90,7 +90,7 @@
           <td><%= link_to person.full_name, person %></td>
           <td><%= person.postal_code %></td>
           <td><%= person.neighborhood %></td>
-          <td><%= person.gift_card_total %></td>
+          <td><%= person.rewards_total %></td>
           <td><%= person.tag_list.to_s %></td>
         </tr>
         <% end %>

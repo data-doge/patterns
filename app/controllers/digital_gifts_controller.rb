@@ -6,7 +6,12 @@ class DigitalGiftsController < ApplicationController
   # GET /digital_gifts
   # GET /digital_gifts.json
   def index
-    @digital_gifts = DigitalGift.order(id: 'desc').includes(:reward).page(params[:page])
+    if current_user.admin?
+      @digital_gifts = DigitalGift.order(id: 'desc').includes(:reward).page(params[:page])
+    else
+      team_ids = current_user.team.users.map(&:id)
+      @digital_gifts = DigitalGift.where(user_id:team_ids).order(id: 'desc').includes(:reward).page(params[:page])
+    end
   end
 
   # GET /digital_gifts/1
@@ -38,7 +43,8 @@ class DigitalGiftsController < ApplicationController
       @success = false
     end
 
-    if params[:amount].to_money >= current_user.available_budget
+    # cover fees
+    if params[:amount].to_money + 2.to_money >= current_user.available_budget
       flash[:error] = 'Insufficient Team Budget'
       @success = false # placeholder for now
     end
@@ -75,11 +81,9 @@ class DigitalGiftsController < ApplicationController
                            from_type: 'Budget',
                            recipient_type: 'DigitalGift')
 
-      if @transaction.valid? && @dg.valid? # if it's not valid, error out
+      if @dg.valid? # if it's not valid, error out
         @dg.request_link # do the thing!
         if @dg.save
-          @transaction.recipient_id = @dg.id
-          @transaction.save
           @reward.rewardable_id = @dg.id
           @success = @reward.save
           @dg.reward_id = @reward.id # is this necessary?

@@ -1,17 +1,19 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
-# Table name: transactions
+# Table name: transaction_logs
 #
-#  id              :bigint(8)        not null, primary key
-#  recipient_id       :bigint(8)
-#  from_id         :bigint(8)
-#  user_id         :integer
-#  amount_cents    :integer          default(0), not null
-#  amount_currency :string(255)      default("USD"), not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id               :bigint(8)        not null, primary key
+#  from_id          :integer
+#  from_type        :string(255)
+#  recipient_id     :integer
+#  recipient_type   :string(255)
+#  transaction_type :string(255)
+#  user_id          :integer
+#  amount_cents     :integer          default(0), not null
+#  amount_currency  :string(255)      default("USD"), not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #
 
 # srecipientres all transactions in a log
@@ -20,8 +22,7 @@ class TransactionLog < ApplicationRecord
   monetize :amount_cents
   after_create :update_budgets
 
-  has_one :digital_gift, as: :recipient
-  has_one :budget, as: [:recipient, :from]
+  belongs_to :user
 
   validate :sufficient_budget?
   validate :correct_type?

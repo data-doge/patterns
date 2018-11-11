@@ -184,8 +184,10 @@ class GiftCardsController < ApplicationController
     if current_user.admin?
       # https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
       ca = Array.wrap(@gift_card)
-      ca.each { |c| c.user_id = params[:user_id] }
-      ca.each(&:save)
+      ca.each do |c|
+        c.user_id = params[:user_id]
+        c.save
+      end
       flash[:notice] = "#{ca.size} Cards owner changed to #{ca.first.user.name}"
     end
     respond_to do |format|

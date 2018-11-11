@@ -14,6 +14,7 @@ $(document).on('page:load turbolinks:load ready', function() {
 
   // called from card_activation_mini
   add_reward = function(el){
+    $(el).addClass('loading');
     // this is a horrible hack
     var reward_data = $(el).data();
     var giftable_data = $('#reward-modal').data();
@@ -28,10 +29,13 @@ $(document).on('page:load turbolinks:load ready', function() {
               person_id: giftable_data.personId
             }
           }
-    console.log(data);
+
+
     $.post({url:'/rewards/assign',
            dataType: "script",
-           data: data })
+           data: data }).done(function(){
+            $(el).removeClass('loading');
+           })
   }
   //filters out tags that are already in the list
   var filter = function(suggestions) {

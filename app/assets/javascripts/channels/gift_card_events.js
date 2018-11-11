@@ -1,12 +1,11 @@
 jQuery(document).on('turbolinks:load', function() {
-  
-  
     console.log('loading actioncable');
     function render_gift_card(data){
-      console.log(data);
+      
       if($('#active-unassigned-cards-count').length > 0){
         $('#active-unassigned-cards-count').html(data.count);
       }
+
       switch(data.type){
         case 'update':
           if ($('#gift-cards-mini').length > 0) {
@@ -25,7 +24,7 @@ jQuery(document).on('turbolinks:load', function() {
           }
           break;
         case 'delete':
-          $('#gift-card-'+data.id).remove();
+          $('#gift-card-'+ data.id).remove();
           break;
         default:
           console.log('this should not happen.');  

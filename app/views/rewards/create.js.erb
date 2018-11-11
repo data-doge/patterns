@@ -7,7 +7,7 @@
   $("<%= escape_javascript(render partial: 'rewards/reward', locals: { reward: @reward } ) %>").prependTo("#rewards");
   $("<%= escape_javascript(render partial: 'people/reward', locals: { reward: @reward } ) %>").prependTo("#people_rewards");
 
-  $("<%= j render partial: 'rewards/mini_reward', locals:{ reward: @reward } %>").prependTo('#mini-gift-card');
+  $("<%= j render partial: 'rewards/mini_reward', locals:{ reward: @reward } %>").prependTo('#mini-rewards');
 
   
   // should be actioncable callback. elementID should have personid in it.

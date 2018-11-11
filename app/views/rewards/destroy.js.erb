@@ -1,5 +1,5 @@
 $('#reward-<%= @reward.id%>').remove();
-if ($('#rewards_total').length) {
+if ($('#rewards_total').length > 0) {
   <% @reward.person.reload %>
   $('#rewards_total').html("<%= humanized_money_with_symbol @reward.person.rewards_total %>");
 }

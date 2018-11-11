@@ -16,7 +16,7 @@ module Rewardable
     monetize :amount_cents
     has_one :reward, as: :rewardable, dependent: :nullify
     belongs_to :user
-    belongs_to :person
+    belongs_to :person, required: false
     default_scope { includes(:reward) }
     scope :unassigned, -> { where(reward_id: nil) }
     scope :assigned, -> { where.not(reward_id: nil) }
@@ -37,6 +37,14 @@ module Rewardable
     else
       self.reward_id = reward_id
       save
+    end
+  end
+
+  def total_for_budget
+    if self.respond_to?(:fee)
+      amount + fee
+    else
+      amount
     end
   end
 end
