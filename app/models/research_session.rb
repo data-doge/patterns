@@ -82,6 +82,10 @@ class ResearchSession < ApplicationRecord
     end
   end
 
+  def can_survey?
+    tag_list.include? 'survey'
+  end
+  
   def is_invited?(person)
     invitations.pluck(:person_id).include? person.id
   end
