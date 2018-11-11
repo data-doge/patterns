@@ -136,7 +136,8 @@ class DigitalGiftsController < ApplicationController
         render status: :unprocessable_entity, json: { success: false, msg: @digital_gift.errors.full_messages}.to_json
       end
     else
-      render status: :unprocessable_entity, json: { success: false, msg: @digital_gift.errors.full_messages}.to_json
+      Airbrake.notify("Can't create Digital Gift #{@digital_gift.attributes}, #{@digital_gift.errors.full_messages.join("\n")}")
+      render status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong. we will be in touch soon!', errors: @digital_gift.errors.full_messages}.to_json
     end
   end
 
@@ -147,6 +148,12 @@ class DigitalGiftsController < ApplicationController
     @research_session = ResearchSession.find(api_params['research_session_id'])
     @person = Person.active.find api_params['person_id']
     render status: :not_found and return if @person.blank? || @research_session.blank?
+
+    # $2 fee possibly
+    if @user.available_budget + 2.to_money < api_params['amount'].to_money
+      Airbrake.notify("Can't create Digital Gift, insufficient budget! #{@digital_gift.attributes}, #{@digital_gift.errors.full_messages.join("\n")}")
+      render status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong, we will be in touch soon.' }.to_json and return
+    end
   end
   # GET /digital_gifts/1/edit
   # def edit; end
