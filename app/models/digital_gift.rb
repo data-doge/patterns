@@ -43,7 +43,7 @@ class DigitalGift < ApplicationRecord
   belongs_to :reward, required: false
 
   after_create :save_transaction
-  
+
   attr_accessor :giftable_id
   attr_accessor :giftable_type
 

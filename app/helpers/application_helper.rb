@@ -86,8 +86,8 @@ module ApplicationHelper
     tag.button 'Remove', class: 'remove_fields btn'
   end
 
-  def button_to_add_fields(f, type)
-    new_object = f.object.send("build_#{type}")
+  def button_to_add_fields(form, type)
+    new_object = form.object.send("build_#{type}")
     name = "#{type}_fields"
     fields = f.send(name, new_object, child_index: "new_#{type}") do |builder|
       render(name, f: builder)

@@ -11,7 +11,7 @@ class DigitalGiftsController < ApplicationController
       @digital_gifts = DigitalGift.order(id: 'desc').includes(:reward).page(params[:page])
     else
       team_ids = current_user.team.users.map(&:id)
-      @digital_gifts = DigitalGift.where(user_id:team_ids).order(id: 'desc').includes(:reward).page(params[:page])
+      @digital_gifts = DigitalGift.where(user_id: team_ids).order(id: 'desc').includes(:reward).page(params[:page])
     end
   end
 
@@ -39,7 +39,7 @@ class DigitalGiftsController < ApplicationController
       @success = false
     end
 
-    if params[:giftable_type] == 'Invitation' && @giftable.rewards.find {|r| r.rewardable_type == 'DigitalGift'}.present?
+    if params[:giftable_type] == 'Invitation' && @giftable.rewards.find { |r| r.rewardable_type == 'DigitalGift' }.present?
       flash[:error] = "#{@giftable.person.full_name} Already has a digital gift"
       @success = false
     end
@@ -98,7 +98,7 @@ class DigitalGiftsController < ApplicationController
     # https://blog.arkency.com/2014/07/4-ways-to-early-return-from-a-rails-controller/
     validate_api_args
     return if performed?
-    
+
     if @research_session.can_survey? && !@research_session.is_invited?(@person)
       @invitation = Invitation.new(aasm_state: 'attended',
                            person_id: @person.id,
@@ -129,30 +129,30 @@ class DigitalGiftsController < ApplicationController
           @success = @reward.save
           @digital_gift.reward_id = @reward.id # is this necessary?
           @digital_gift.save
-          render status: :created, json: { success: true, link: @digital_gift.link, msg:'Successfully created a gift card for you!' }.to_json
+          render status: :created, json: { success: true, link: @digital_gift.link, msg: 'Successfully created a gift card for you!' }.to_json
         end
       else
         Airbrake.notify("Can't create Digital Gift #{@digital_gift.attributes}, #{@digital_gift.errors.full_messages.join("\n")}")
-        render status: :unprocessable_entity, json: { success: false, msg: @digital_gift.errors.full_messages}.to_json
+        render status: :unprocessable_entity, json: { success: false, msg: @digital_gift.errors.full_messages }.to_json
       end
     else
       Airbrake.notify("Can't create Digital Gift #{@digital_gift.attributes}, #{@digital_gift.errors.full_messages.join("\n")}")
-      render status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong. we will be in touch soon!', errors: @digital_gift.errors.full_messages}.to_json
+      render status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong. we will be in touch soon!', errors: @digital_gift.errors.full_messages }.to_json
     end
   end
 
   def validate_api_args
     @user = User.find_by(token: api_params['api_token'])
-    render status: :unauthorized  and return if @user.blank? || !@user.admin?
+    render(status: :unauthorized)  && return if @user.blank? || !@user.admin?
 
     @research_session = ResearchSession.find(api_params['research_session_id'])
     @person = Person.active.find api_params['person_id']
-    render status: :not_found and return if @person.blank? || @research_session.blank?
+    render(status: :not_found) && return if @person.blank? || @research_session.blank?
 
     # $2 fee possibly
     if @user.available_budget + 2.to_money < api_params['amount'].to_money
       Airbrake.notify("Can't create Digital Gift, insufficient budget! #{@digital_gift.attributes}, #{@digital_gift.errors.full_messages.join("\n")}")
-      render status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong, we will be in touch soon.' }.to_json and return
+      render(status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong, we will be in touch soon.' }.to_json) && return
     end
   end
   # GET /digital_gifts/1/edit
@@ -204,9 +204,9 @@ class DigitalGiftsController < ApplicationController
 
     def api_params
       params.permit(:person_id,
-                    :api_token,
-                    :research_session_id,
-                    :amount)
+        :api_token,
+        :research_session_id,
+        :amount)
     end
 
     def dg_params

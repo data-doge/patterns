@@ -42,6 +42,7 @@ class Team < ApplicationRecord
   delegate :transactions, to: :budget
 
   private
+
     def make_budget
       Budget.create(team_id: id)
     end

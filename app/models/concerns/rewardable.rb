@@ -41,7 +41,7 @@ module Rewardable
   end
 
   def total_for_budget
-    if self.respond_to?(:fee)
+    if respond_to?(:fee)
       amount + fee
     else
       amount

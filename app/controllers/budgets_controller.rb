@@ -21,9 +21,8 @@ class BudgetsController < ApplicationController
     @budget = Budget.new
   end
 
-  def create_transaction
+  def create_transaction; end
 
-  end
   # GET /budgets/1/edit
   def edit; end
 
