@@ -18,7 +18,7 @@ Person.create(
   phone_number: '312-555-9090',
   participation_type: 'in-person',
   preferred_contact_method: 'EMAIL',
-  token: 'thisismytoken'
+  token: 'thisismytoken2'
 )
 
 Person.create(
@@ -42,11 +42,22 @@ Person.create(
   token: 'thisismytoken'
 )
 
-User.create(
-  email: 'cutgroup@example.com',
+user = User.create(
+  email: 'patterns@example.com',
   password: 'foobar123',
   password_confirmation: 'foobar123',
   approved: true,
+  new_person_notification: true,
   name: 'Joe User',
   phone_number: '555-555-5555'
 )
+
+team = Team.create(name:'patterns',finance_code:'FINCODE')
+
+team.users << user
+
+Budget.create(team_id: team.id, amount:0)
+
+cart = Cart.create(user_id: user.id, name:'example pool')
+
+cart.users << user
