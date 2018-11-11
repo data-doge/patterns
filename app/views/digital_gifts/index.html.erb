@@ -2,7 +2,7 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Digital Gifts</h1>
-<h6>Available budget: <%= current_user.available_budget %></h6>
+<h6>Available Digital Budget: <%= current_user.available_budget %></h6>
 <div class="row">
   <div class="span12">
 <%= will_paginate @digital_gifts, :renderer => BootstrapPagination::Rails %>

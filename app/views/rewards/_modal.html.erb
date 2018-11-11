@@ -31,7 +31,7 @@
         <hr>
         <!-- must be hideable -->
         <div id='digital-gifts-for-<%= @giftable.id %>'>
-          <% if @giftable.rewards.find{|r| r.rewardable_type == 'DigitalGift'}.nil? && @giftable.attended? %>
+          <% if @giftable.rewards.find{|r| r.rewardable_type == 'DigitalGift'}.nil? && @giftable.attended? && current_user.available_budget.to_i > 0 %>
           <h4>Digital Gifts</h4>
           <h6>available budget:<span id='available-budget<%= current_user.team.budget.id%>'><%= humanized_money_with_symbol current_user.available_budget %></h6>
           <div class='input-group'>

@@ -132,6 +132,7 @@ class DigitalGiftsController < ApplicationController
           render status: :created, json: { success: true, link: @digital_gift.link, msg:'Successfully created a gift card for you!' }.to_json
         end
       else
+        Airbrake.notify("Can't create Digital Gift #{@digital_gift.attributes}, #{@digital_gift.errors.full_messages.join("\n")}")
         render status: :unprocessable_entity, json: { success: false, msg: @digital_gift.errors.full_messages}.to_json
       end
     else
@@ -141,7 +142,7 @@ class DigitalGiftsController < ApplicationController
 
   def validate_api_args
     @user = User.find_by(token: api_params['api_token'])
-    render status: :unauthorized  and return if @user.blank?
+    render status: :unauthorized  and return if @user.blank? || !@user.admin?
 
     @research_session = ResearchSession.find(api_params['research_session_id'])
     @person = Person.active.find api_params['person_id']
