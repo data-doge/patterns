@@ -5,7 +5,7 @@ require 'capybara/email/rspec'
 
 feature 'search using ransack'  do
   before do
-    @person_one = FactoryGirl.create(:person, postal_code: '60606', preferred_contact_method: 'SMS')
+    @person_one = FactoryBot.create(:person, postal_code: '60606', preferred_contact_method: 'SMS')
   end
 
   scenario 'with no parameters' do

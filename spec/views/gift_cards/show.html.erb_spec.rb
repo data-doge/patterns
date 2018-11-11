@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'gift_cards/show', type: :view do
   before(:each) do
-    @person = FactoryGirl.create(:person)
-    @user = FactoryGirl.create(:user)
+    @person = FactoryBot.create(:person)
+    @user = FactoryBot.create(:user)
     @gift_card = assign(:gift_card, GiftCard.create!(
                                       gift_card_number: 12345,
                                       person_id: @person.id,

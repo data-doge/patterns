@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Calendarable do
   context 'reservation calendar' do
-    let!(:event_invitation) { FactoryGirl.create(:event_invitation) }
+    let!(:event_invitation) { FactoryBot.create(:event_invitation) }
     let!(:person) { event_invitation.invitees.sample }
     let!(:time_slot) { event_invitation.event.time_slots.sample }
     let!(:reservation) {
@@ -33,7 +33,7 @@ describe Calendarable do
   end
 
   context 'event_invitation' do
-    let(:ei) { FactoryGirl.create(:event_invitation) }
+    let(:ei) { FactoryBot.create(:event_invitation) }
 
     it 'can generate an ical event' do
       expect(ei).to respond_to(:to_ics)

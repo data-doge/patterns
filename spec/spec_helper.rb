@@ -5,7 +5,7 @@ require 'simplecov'
 SimpleCov.start
 
 require 'devise'
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 # spec/spec_helper.rb
 # require 'rspec/retry'
 

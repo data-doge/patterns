@@ -1,6 +1,6 @@
 module Helpers
   def login_with_admin_user
-    user = FactoryGirl.create(:user)
+    user = FactoryBot.create(:user)
     visit '/users/sign_in'
     fill_in 'Email', with: user.email
     fill_in 'Password', with: user.password
@@ -29,7 +29,7 @@ module Helpers
   def login_user
     before(:each) do
       @request.env['devise.mapping'] = Devise.mappings[:user]
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       sign_in :user, user # sign_in(scope, resource)
     end
   end

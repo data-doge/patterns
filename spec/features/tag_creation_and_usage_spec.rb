@@ -5,8 +5,8 @@ require 'capybara/email/rspec'
 
 feature 'tag person'  do
   scenario 'add tag', js: :true  do
-    person = FactoryGirl.create(:person)
-    FactoryGirl.create(:gift_card,person_id: person.id)
+    person = FactoryBot.create(:person)
+    FactoryBot.create(:gift_card,person_id: person.id)
     login_with_admin_user
 
     tag_name = Faker::Company.buzzword.downcase
@@ -29,8 +29,8 @@ feature 'tag person'  do
   end
 
   scenario 'delete tag', js: :true  do
-    person = FactoryGirl.create(:person, preferred_contact_method: 'EMAIL')
-    FactoryGirl.create(:gift_card, person_id: person.id)
+    person = FactoryBot.create(:person, preferred_contact_method: 'EMAIL')
+    FactoryBot.create(:gift_card, person_id: person.id)
     login_with_admin_user
 
     tag_name = Faker::Company.buzzword.downcase

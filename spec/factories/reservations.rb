@@ -15,7 +15,7 @@
 
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :reservation, class: Invitation do
     person
     user
@@ -24,11 +24,11 @@ FactoryGirl.define do
     time_slot
 
     before(:create) do |reservation|
-      event_invitation = FactoryGirl.create(:event_invitation)
+      event_invitation = FactoryBot.create(:event_invitation)
       reservation.person =  event_invitation.invitees.first
       reservation.event = event_invitation.event
       reservation.user = event_invitation.user
-      reservation.time_slot = FactoryGirl.create(:time_slot, event: event_invitation.event)
+      reservation.time_slot = FactoryBot.create(:time_slot, event: event_invitation.event)
     end
   end
 end

@@ -5,7 +5,7 @@ feature 'SMS invitation to phone call' do
 
   before do
     clear_messages
-    @research_subject = FactoryGirl.create(:person, preferred_contact_method: 'SMS')
+    @research_subject = FactoryBot.create(:person, preferred_contact_method: 'SMS')
   end
 
   scenario 'Texting a link to the invitation, successfully', js: :true do

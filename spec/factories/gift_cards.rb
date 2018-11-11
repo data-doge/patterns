@@ -18,7 +18,7 @@
 #  created_by       :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :gift_card do
     gift_card_number Faker::Number.number(4)
     expiration_date '05/20'

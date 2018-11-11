@@ -53,7 +53,7 @@
 require 'rails_helper'
 
 describe Person do
-  subject { FactoryGirl.build(:person) }
+  subject { FactoryBot.build(:person) }
 
   it { is_expected.to validate_presence_of(:first_name) }
   it { is_expected.to validate_presence_of(:last_name) }
@@ -68,7 +68,7 @@ describe Person do
 
   it 'validates uniqueness of phone_number' do
     expect(subject).to be_valid
-    another_person = FactoryGirl.create(:person)
+    another_person = FactoryBot.create(:person)
     subject.phone_number = another_person.phone_number
     expect(subject).to_not be_valid
   end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe CalendarController, type: :controller do
-  let!(:event_invitation) { FactoryGirl.create(:event_invitation) }
+  let!(:event_invitation) { FactoryBot.create(:event_invitation) }
   let!(:user) { event_invitation.user }
   let!(:event) { event_invitation.event }
   let!(:person) { event_invitation.invitees.sample }

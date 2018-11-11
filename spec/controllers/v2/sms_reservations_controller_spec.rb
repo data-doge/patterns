@@ -5,7 +5,7 @@ xdescribe V2::SmsReservationsController do
 
   let(:twilio_phone_number) { ENV['TWILIO_SCHEDULING_NUMBER'] }
 
-  let(:event_invitation) { FactoryGirl.create(:event_invitation) }
+  let(:event_invitation) { FactoryBot.create(:event_invitation) }
   let(:user) { event_invitation.user }
   let(:research_subject) { event_invitation.invitees.first }
   let(:research_subject_2) { event_invitation.invitees.last }

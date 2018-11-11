@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'gift_cards/index', type: :view do
   before(:each) do
-    person = FactoryGirl.create(:person)
+    person = FactoryBot.create(:person)
     @a = GiftCard.create!(
       gift_card_number: 12345,
       batch_id: 1,

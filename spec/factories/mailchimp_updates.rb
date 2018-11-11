@@ -13,7 +13,7 @@
 #
 
 require 'faker'
-FactoryGirl.define do
+FactoryBot.define do
   factory :mailchimp_update do
     raw_content 'MyText'
     email { Faker::Internet.email }

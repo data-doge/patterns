@@ -11,7 +11,7 @@ feature 'Person responds to interview invitation over email' do
     t = Time.zone.local(2016, 5, 4, 10, 5, 0)
     Timecop.travel(t)
     clear_emails
-    @event_invitation = FactoryGirl.create(:event_invitation, buffer: 5)
+    @event_invitation = FactoryBot.create(:event_invitation, buffer: 5)
     @event = @event_invitation.event
     @research_subject = @event_invitation.invitees.last
     @research_subject.preferred_contact_method = 'EMAIL'

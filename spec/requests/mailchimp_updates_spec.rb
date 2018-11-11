@@ -17,7 +17,7 @@ require 'rails_helper'
 RSpec.describe 'MailchimpUpdates', type: :request do
   # gotta login!
   before(:each) do
-    user = FactoryGirl.create(:user)
+    user = FactoryBot.create(:user)
     post_via_redirect user_session_path, 'user[email]' => user.email, 'user[password]' => user.password
   end
 

@@ -30,8 +30,8 @@ describe ResearchSession do
   it { is_expected.to validate_presence_of(:end_time) }
 
   describe '#save' do
-    let(:people) { FactoryGirl.create_list(:person, 2) }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:people) { FactoryBot.create_list(:person, 2) }
+    let(:user) { FactoryBot.create(:user) }
     let(:valid_args) do
       {
         people_ids: people.map(&:id).join(','),

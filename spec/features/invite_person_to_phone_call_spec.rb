@@ -11,7 +11,7 @@ feature 'Invite person to a phone call' do
     login_with_admin_user
     visit '/v2/event_invitations/new'
 
-    research_subjects = FactoryGirl.create_list(:person, 3, preferred_contact_method: 'EMAIL')
+    research_subjects = FactoryBot.create_list(:person, 3, preferred_contact_method: 'EMAIL')
 
     admin_email = ENV['MAILER_SENDER']
 

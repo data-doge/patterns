@@ -4,7 +4,7 @@ RSpec.describe 'gift_cards/new', type: :view do
   before(:each) do
     @gift_card = assign(:gift_card, GiftCard.new)
     @last_gift_card = assign(:last_gift_card,
-      FactoryGirl.create(:gift_card,
+      FactoryBot.create(:gift_card,
         gift_card_number: Faker::Number.number(4),
         sequence_number: Faker::Number.number(3),
         reason: 2))

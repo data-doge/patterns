@@ -22,9 +22,9 @@ describe Invitation do
   subject { described_class }
 
   describe 'when different users, same person' do
-    let(:research_session) { FactoryGirl.create(:research_session) }
+    let(:research_session) { FactoryBot.create(:research_session) }
     let(:person) { event_invitation.invitees.first }
-    let(:research_session_2) { FactoryGirl.create(:research_session) }
+    let(:research_session_2) { FactoryBot.create(:research_session) }
 
     it 'should not alow a person to be double booked' do
       valid_args_1 = build_valid_args_from_event_invitation(research_session)
@@ -42,8 +42,8 @@ describe Invitation do
   end
 
   describe 'same user, different people' do
-    let(:research_session) { FactoryGirl.create(:research_session) }
-    let(:research_session_2) { FactoryGirl.create(:research_session, user: research_session.user) }
+    let(:research_session) { FactoryBot.create(:research_session) }
+    let(:research_session_2) { FactoryBot.create(:research_session, user: research_session.user) }
 
     it 'should not allow a user to be double booked' do
       valid_args_1 = build_valid_args_from_event_invitation(event_invitation)

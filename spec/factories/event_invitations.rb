@@ -1,6 +1,6 @@
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :event_invitation, class: Session do
     title 'event title'
     description 'Lorem ipsum for now'
@@ -9,7 +9,7 @@ FactoryGirl.define do
     user
 
     before(:create) do |event_invitation|
-      invitees = FactoryGirl.create_list(:person, 3)
+      invitees = FactoryBot.create_list(:person, 3)
       event_invitation.invitees << invitees
       event_invitation.people_ids = invitees.collect(&:id).join(',')
 

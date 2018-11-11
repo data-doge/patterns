@@ -23,7 +23,7 @@ def complete_form_with_invalid_data
 end
 
 def complete_form_with_valid_data
-  person = FactoryGirl.build(:person)
+  person = FactoryBot.build(:person)
   fill_in 'First name', with: person.first_name
   fill_in 'Last name', with: person.last_name
   fill_in 'Email address', with: person.email_address
