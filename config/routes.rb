@@ -8,7 +8,11 @@ Logan::Application.routes.draw do
       get 'api_create', 
           action: :api_create, 
           as: :api_create, 
-          defaults:{format:'json'}
+          defaults: { format: 'json' }
+      post 'webhook', 
+          action: :webhook, 
+          as: :webhook, 
+          defaults: { format:'json' }
     end
   end
 

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class DigitalGiftsController < ApplicationController
-  before_action :set_digital_gift, only: %i[show edit update destroy]
-  skip_before_action :authenticate_user!, only: :api_gift
-
+  before_action :set_digital_gift, only: %i[show]
+  skip_before_action :authenticate_user!, only: %i[api_create webhook]
+  skip_before_action :verify_authenticity_token, only: :webhook
   # GET /digital_gifts
   # GET /digital_gifts.json
   def index
@@ -12,6 +12,17 @@ class DigitalGiftsController < ApplicationController
     else
       team_ids = current_user.team.users.map(&:id)
       @digital_gifts = DigitalGift.where(user_id: team_ids).order(id: 'desc').includes(:reward).page(params[:page])
+    end
+  end
+
+  def webhook
+    @digital_gift = DigitalGift.find_by(gift_id: params[:payload][:id])
+    if @digtial_gift.nil?
+      render status: :unprocessable_entity, json: { success: false }
+    else
+      @digital_gift.aasm_state = 'redeemed'
+      @digital_gift.save
+      render status: :ok, json: { success: true }
     end
   end
 
@@ -201,6 +212,10 @@ class DigitalGiftsController < ApplicationController
   # end
 
   private
+
+    def webhook_params
+      params.permit(:payload, :event, :digital_gift)
+    end
 
     def api_params
       params.permit(:person_id,
