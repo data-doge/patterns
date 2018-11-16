@@ -17,12 +17,14 @@ class DigitalGiftsController < ApplicationController
 
   def webhook
     @digital_gift = DigitalGift.find_by(gift_id: params[:payload][:id])
-    if @digtial_gift.nil?
-      render status: :unprocessable_entity, json: { success: false }
+    if @digtial_gift.nil? || !valid_request?(request)
+      render json: { success: false }
     else
-      @digital_gift.aasm_state = 'redeemed'
-      @digital_gift.save
-      render status: :ok, json: { success: true }
+      if params[:event].match? 'gift'
+        @digital_gift.aasm_state = params[:event].delete('gift.')
+        @digital_gift.save
+      end
+      render json: { success: true }
     end
   end
 
@@ -242,5 +244,17 @@ class DigitalGiftsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def digital_gift_params
       params.fetch(:digital_gift, {})
+    end
+
+    def valid_request?(request)
+      signature_header = request.headers['GiftRocket-Webhook-Signature']
+      algorithm, received_signature = signature_header.split('=', 2)
+
+      raise Exception, "Invalid algorithm" if algorithm != 'sha256'
+
+      expected_signature = OpenSSL::HMAC.hexdigest(
+        OpenSSL::Digest.new(algorithm), ENV['GIFT_ROCKET_WEBHOOK'], request.body.read
+      )
+      received_signature == expected_signature
     end
 end
