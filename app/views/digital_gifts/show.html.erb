@@ -26,7 +26,7 @@
   class='well well-small digital-gift'>
       <td><%= @digital_gift.order_id %></td>
       <td><%= humanized_money_with_symbol @digital_gift.amount %></td>
-      <td><%= @digital_gift.aasm_state %></td>
+      <td><%= @digital_gift.giftrocket_status %></td>
       <td><%= @digital_gift.campaign_title %></td>
       <td><%= link_to @digital_gift.reward.giftable_type,  @digital_gift.reward%></td>
       <td><%= @digital_gift.link %></td>

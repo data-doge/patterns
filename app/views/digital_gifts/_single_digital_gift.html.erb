@@ -4,7 +4,12 @@
   data-id='<%=digital_gift.id%>' >
   <td><%= digital_gift.order_id %></td>
   <td><%= humanized_money_with_symbol digital_gift.amount %></td>
-  <td><%= digital_gift.aasm_state %></td>
+  <td><%= digital_gift.giftrocket_status %></td>
   <td><%= digital_gift.campaign_title %></td>
+  <% if digital_gift.link_sent %>
+  <td><%= digital_gift.link_sent %></td>
+  <% else %>
+  <td> button to switch link_sent </td>
+  <% end %>
   <td><%= digital_gift.link %></td>
 </tr>

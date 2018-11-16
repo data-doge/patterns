@@ -10,7 +10,7 @@
 #  user_id           :integer
 #  person_id         :integer
 #  reward_id         :integer
-#  aasm_state        :string(255)
+#  giftrocket_status :string(255)
 #  external_id       :string(255)
 #  order_id          :string(255)
 #  gift_id           :string(255)
@@ -24,6 +24,7 @@
 #  campaign_id       :string(255)
 #  campaign_title    :string(255)
 #  funding_source_id :string(255)
+#  sent              :text(65535)
 #
 
 # first we create the giftrocket, with a person and user and created_by
@@ -34,7 +35,6 @@
 # if error, we update the front end with an error
 class DigitalGift < ApplicationRecord
   include Rewardable
-  include AASM
   page 50
 
   monetize :fee_cents
@@ -47,20 +47,6 @@ class DigitalGift < ApplicationRecord
   attr_accessor :giftable_id
   attr_accessor :giftable_type
 
-  # aasm requires_lock: true do
-  #   state :initialized, initial: true
-  #   state :insufficient_budget
-  #   state :requested
-  #   state :sent
-  #   state :redeemed
-
-  #   event :check_budget do
-  #     transitions from: :initialized, to: %i[requested insufficient_budget]
-  #   end
-  #   event :request_gift, guard: :sufficient_budget? do
-  #     transitions from: :requested
-  #   end
-  # end
 
   def self.campaigns
     Giftrocket::Campaign.list

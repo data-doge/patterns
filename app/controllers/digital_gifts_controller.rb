@@ -21,7 +21,7 @@ class DigitalGiftsController < ApplicationController
       render json: { success: false }
     else
       if params[:event].match? 'gift'
-        @digital_gift.aasm_state = params[:event].delete('gift.')
+        @digital_gift.giftrocket_status = params[:event].delete('gift.')
         @digital_gift.save
       end
       render json: { success: true }
@@ -250,7 +250,7 @@ class DigitalGiftsController < ApplicationController
       signature_header = request.headers['GiftRocket-Webhook-Signature']
       algorithm, received_signature = signature_header.split('=', 2)
 
-      raise Exception, "Invalid algorithm" if algorithm != 'sha256'
+      raise Exception.new('Invalid algorithm') if algorithm != 'sha256'
 
       expected_signature = OpenSSL::HMAC.hexdigest(
         OpenSSL::Digest.new(algorithm), ENV['GIFT_ROCKET_WEBHOOK'], request.body.read
