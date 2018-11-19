@@ -47,7 +47,6 @@ class DigitalGift < ApplicationRecord
   attr_accessor :giftable_id
   attr_accessor :giftable_type
 
-
   def self.campaigns
     Giftrocket::Campaign.list
   end

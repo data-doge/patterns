@@ -11,7 +11,7 @@ class RewardsController < ApplicationController
                    Reward.ransack(params[:q])
                  else
                    Reward.where(created_by: current_user.id).ransack(params[:q])
-                  end
+                 end
     @q_rewards.sorts = [sort_column + ' ' + sort_direction] if @q_rewards.sorts.empty?
     respond_to do |format|
       format.html do

@@ -61,7 +61,7 @@ class PeopleController < ApplicationController
                Person.active.includes(:taggings).paginate(page: params[:page]).
                  order(sort_column + ' ' + sort_direction).
                  tagged_with(tags)
-            end
+             end
     # only show verified people to non-admins
     @people = current_user.admin? ? search : search.verified
     @tags ||= []

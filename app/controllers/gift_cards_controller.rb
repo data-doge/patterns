@@ -12,7 +12,7 @@ class GiftCardsController < ApplicationController
                GiftCard.unassigned
              else
                GiftCard.unassigned.where(user_id: current_user.id)
-                        end
+             end
     # busted ones first
 
     @gift_cards = @cards.sort_by(&:sort_helper)
@@ -50,7 +50,7 @@ class GiftCardsController < ApplicationController
                    GiftCard.unassigned.all
                  else
                    current_user.gift_cards.unassigned
-                       end
+                 end
     axlsx = Axlsx::Package.new
     wb = axlsx.workbook
 
