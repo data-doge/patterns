@@ -69,7 +69,7 @@ class ActivationCall < ApplicationRecord
   end
 
   def call
-    @call ||= sid.nil? ? nil : @twilio.calls(sid).fetch
+    @call ||= sid.nil? ? nil : @twilio.api.account.calls(sid).fetch
   end
 
   def timeout_error?
