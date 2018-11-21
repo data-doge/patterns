@@ -2,14 +2,14 @@
 <Response>
     <Pause length="27"/>
     <!-- card number -->
-    <Play digits="<%= @card_activation.full_card_number %>#"></Play>
+    <Play digits="<%= @gift_card.full_card_number %>#"></Play>
     <Pause length="18"/>
     <Play digits="1234#"></Play>
     <Pause length="18"/>
     <Play digits="1234#"></Play>
     <Pause length="10"/>
     <!-- security code -->
-    <Play digits="<%= @card_activation.secure_code %>#"></Play>
+    <Play digits="<%= @gift_card.secure_code %>#"></Play>
     <!-- "Your pin has been created your card has been activated"-->
     <!-- Should be a gather that pings an endpoint-->
     

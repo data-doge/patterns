@@ -107,12 +107,12 @@ class ActivationCallsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_secret_activation_call
       @activation_call = ActivationCall.find_by(token: params[:token])
-      @card_activation = @activation_call.card_activation
+      @gift_card = @activation_call.gift_card
     end
 
     def set_activation_call
       @activation_call = ActivationCall.find(params[:id])
-      @card_activation = @activation_call.card_activation
+      @gift_card = @activation_call.gift_card
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

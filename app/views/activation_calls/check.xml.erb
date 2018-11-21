@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Pause length="27"/>
-    <Play digits="<%= @card_activation.full_card_number %>#"></Play>
+    <Play digits="<%= @gift_card.full_card_number %>#"></Play>
     <Pause length="9"/>
-    <Play digits="<%= @card_activation.secure_code %>#"></Play>
+    <Play digits="<%= @gift_card.secure_code %>#"></Play>
     <Pause length="4"/>
-    <Play digits="<%= @card_activation.expiration_date.gsub("/","") %>#"></Play>
+    <Play digits="<%= @gift_card.expiration_date.gsub("/","") %>#"></Play>
     <% 
     # please hold while we access your account as of 
     # Date.current.to_s :long 
