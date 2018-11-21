@@ -2,7 +2,7 @@ class MoveOldRewardsToNewRecords < ActiveRecord::Migration[5.2]
   def change
     Reward.reset_column_information
     
-    Reward.find_each do |r|
+    Reward.find_each(10) do |r|
       r.user_id = r.created_by if r.user_id.nil?
       r.team_id = 1 if r.team_id.nil? # again, old gift cards
       
