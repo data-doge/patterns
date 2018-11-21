@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: digital_gifts
@@ -24,7 +23,9 @@
 #  campaign_id       :string(255)
 #  campaign_title    :string(255)
 #  funding_source_id :string(255)
-#  sent              :text(65535)
+#  sent              :boolean
+#  sent_at           :datetime
+#  sent_by           :integer
 #
 
 # first we create the giftrocket, with a person and user and created_by

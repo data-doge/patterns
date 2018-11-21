@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-#
 # == Schema Information
 #
 # Table name: rewards
@@ -29,25 +28,6 @@
 #  rewardable_id    :bigint(8)
 #
 
-#  person_id        :integer
-#  notes            :string(255)
-#  created_by       :integer
-#  reason           :integer
-#  amount_cents     :integer          default(0), not null
-#  amount_currency  :string(255)      default("USD"), not null
-#  giftable_id      :integer
-#  giftable_type    :string(255)
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  batch_id         :string(255)
-#  sequence_number  :integer
-#  active           :boolean          default(FALSE)
-#  secure_code      :string(255)
-#  team_id          :bigint(8)
-#  finance_code     :string(255)
-#  rewardable_type  :string(255)
-#  rewardable_id    :bigint(8)
-#
 
 class Reward < ApplicationRecord
   has_paper_trail
@@ -55,7 +35,6 @@ class Reward < ApplicationRecord
   monetize :amount_cents
 
   before_destroy :unassign_rewarded
-  after_create :assign_rewarded
 
   enum reason: {
     unknown: 0,
@@ -127,22 +106,6 @@ class Reward < ApplicationRecord
     giftable&.research_session # double check unnecessary, but I like it.
   end
 
-  def self.batch_create(post_content)
-    # begin exception handling
-
-    # begin a transaction on the gift card model
-    Reward.transaction do
-      # for each gift card record in the passed json
-      JSON.parse(post_content).each do |gift_card_hash|
-        # create a new gift card
-        Reward.create!(gift_card_hash)
-      end # json.parse.
-    end # transaction
-  rescue StandardError
-    Rails.logger('There was a problem.')
-    # exception handling
-  end  # batch_create
-
   # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
@@ -178,30 +141,30 @@ class Reward < ApplicationRecord
 
   private
 
-    def assign_rewarded
-      # tricksy: must allow creation of cards without activations
-      # but must check to see if card has activation
-      # AND throw error if we are duplicating.
+    # def assign_rewarded
+    #   # tricksy: must allow creation of cards without activations
+    #   # but must check to see if card has activation
+    #   # AND throw error if we are duplicating.
 
-      # return true if rewardable_id.blank? # should never be blank
+    #   # return true if rewardable_id.blank? # should never be blank
 
-      if rewardable.nil? # should not happen either
-        # first check if we have an activation id, then a search
-        ca = CardActivation.find card_activation_id unless card_activation_id.nil?
-        ca ||= CardActivation.find_by(sequence_number: sequence_number, batch_id: batch_id)
+    #   if rewardable.nil? # should not happen either
+    #     # first check if we have an activation id, then a search
+    #     ca = GiftCard.find card_activation_id unless card_activation_id.nil?
+    #     ca ||= CardActivation.find_by(sequence_number: sequence_number, batch_id: batch_id)
 
-        if ca.present? && ca.gift_card_id.nil?
-          self.card_activation = ca
-          return true
-        elsif ca.gift_card_id.present?
-          # error case, duplicating
-          errors.add(:base, 'This card as already been assigned')
-          raise ActiveRecord::RecordInvalid.new(self)
-        else
-          return true # no card activation for this gift card
-        end
-      end
-    end
+    #     if ca.present? && ca.gift_card_id.nil?
+    #       self.card_activation = ca
+    #       return true
+    #     elsif ca.gift_card_id.present?
+    #       # error case, duplicating
+    #       errors.add(:base, 'This card as already been assigned')
+    #       raise ActiveRecord::RecordInvalid.new(self)
+    #     else
+    #       return true # no card activation for this gift card
+    #     end
+    #   end
+    # end
 
     def unassign_rewarded
       rewardable.unassign if rewardable.present?
