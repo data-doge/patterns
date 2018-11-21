@@ -5,10 +5,16 @@ Logan::Application.routes.draw do
   resources :budgets
   resources :digital_gifts do
     collection do 
+      post 'sent/:id',
+            action: :sent,
+            as: :sent,
+            defaults: {format: 'js'}
+
       get 'api_create', 
           action: :api_create, 
           as: :api_create, 
           defaults: { format: 'json' }
+          
       post 'webhook', 
           action: :webhook, 
           as: :webhook, 

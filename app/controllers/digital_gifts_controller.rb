@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DigitalGiftsController < ApplicationController
-  before_action :set_digital_gift, only: %i[show]
+  before_action :set_digital_gift, only: %i[show sent]
   skip_before_action :authenticate_user!, only: %i[api_create webhook]
   skip_before_action :verify_authenticity_token, only: :webhook
   # GET /digital_gifts
@@ -25,6 +25,16 @@ class DigitalGiftsController < ApplicationController
         @digital_gift.save
       end
       render json: { success: true }
+    end
+  end
+
+  def sent
+    @digital_gift.sent = true
+    @digital_gift.sent_by = current_user.id
+    @digital_gift.sent_at = Time.current
+    @digital_gift.save
+    respond_to do |format|
+      format.js {}
     end
   end
 

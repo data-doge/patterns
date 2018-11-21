@@ -5,6 +5,9 @@
 <h4>User: <%= User.find(@digital_gift.user_id).name %></h4>
 <% reward = @digital_gift.reward %>
 <h5>Given to: <%= link_to reward.person.full_name, person_path(reward.person) %></h5>
+<h5>phone: <%= reward.person.phone_number %></h5>
+<h5>email: <%= reward.person.email_address %></h5>
+
 <h5>For: <%= link_to(find_name(reward.giftable), url_for(reward.giftable)) %></h5>
 
 <table class="table">
@@ -31,9 +34,15 @@
       <td><%= @digital_gift.campaign_title %></td>
       <td><%= link_to @digital_gift.reward.giftable_type,  @digital_gift.reward%></td>
       <% if @digital_gift.sent %>
-      <td>Sent already</td>
+      <td id='digital-gift-<%=@digital_gift.id%>-sent' >Yes</td>
       <% else %>
-      <td> button to switch link_sent </td>
+      <td id='digital-gift-<%=@digital_gift.id%>-sent'>
+      <%= button_to "Not Yet", 
+              sent_digital_gifts_path(@digital_gift), 
+              remote: true,
+              data: { confirm:'Did you send the digital gift link to the person? This is not reversable!'}
+              %>
+      </td>
       <% end %>
       <td><%= @digital_gift.link %></td>
     </tr>

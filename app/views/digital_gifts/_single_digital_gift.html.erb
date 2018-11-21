@@ -6,10 +6,15 @@
   <td><%= humanized_money_with_symbol digital_gift.amount %></td>
   <td><%= digital_gift.giftrocket_status %></td>
   <td><%= digital_gift.campaign_title %></td>
-  <% if digital_gift.link_sent %>
-  <td><%= digital_gift.link_sent %></td>
+  <% if digital_gift.sent %>
+  <td id='digital-gift-<%=digital_gift.id%>-sent' >Yes</td>
   <% else %>
-  <td> button to switch link_sent </td>
+  <td id='digital-gift-<%=digital_gift.id%>-sent'>
+    <%= button_to "Not Yet", 
+                  sent_digital_gifts_path(digital_gift.id), 
+                  remote: true,
+                  data: { confirm:'Did you send the digital gift link to the person? This is not reversable!'}%>
+  </td>
   <% end %>
   <td><%= digital_gift.link %></td>
 </tr>
