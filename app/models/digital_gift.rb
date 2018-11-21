@@ -56,7 +56,7 @@ class DigitalGift < ApplicationRecord
   end
 
   def self.current_budget
-    (DigitalGift.funding_sources.first.available_cents / 100).to_money
+    (DigitalGift.funding_sources.find{|fs| fs.method == 'balance'}.available_cents / 100).to_money
   end
 
   def self.orders
