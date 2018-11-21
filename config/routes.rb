@@ -4,6 +4,7 @@ Logan::Application.routes.draw do
   resources :cash_cards
   resources :budgets
   resources :digital_gifts do
+    resources :comments, controller: 'comments'
     collection do 
       post 'sent/:id',
             action: :sent,

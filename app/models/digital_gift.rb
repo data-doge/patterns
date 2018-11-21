@@ -41,6 +41,7 @@ class DigitalGift < ApplicationRecord
   monetize :fee_cents
   has_one :budget, through: :user
   has_one :transaction_log, as: :recipient
+  has_many :comments, as: :commentable, dependent: :destroy
   belongs_to :reward, required: false
 
   after_create :save_transaction
