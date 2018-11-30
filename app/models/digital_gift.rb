@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: digital_gifts
@@ -58,7 +59,7 @@ class DigitalGift < ApplicationRecord
   end
 
   def self.current_budget
-    (DigitalGift.funding_sources.find{|fs| fs.method == 'balance'}.available_cents / 100).to_money
+    (DigitalGift.funding_sources.find { |fs| fs.method == 'balance' }.available_cents / 100).to_money
   end
 
   def self.orders

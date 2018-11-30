@@ -28,7 +28,6 @@
 #  rewardable_id    :bigint(8)
 #
 
-
 class Reward < ApplicationRecord
   has_paper_trail
   page 50
