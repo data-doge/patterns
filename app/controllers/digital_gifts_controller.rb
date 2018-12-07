@@ -122,6 +122,8 @@ class DigitalGiftsController < ApplicationController
     # apithis is horrific too
     # https://blog.arkency.com/2014/07/4-ways-to-early-return-from-a-rails-controller/
     validate_api_args
+
+    # https://api.rubyonrails.org/v4.1.4/classes/ActionController/Metal.html#method-i-performed-3F
     return if performed?
 
     if @research_session.can_survey? && !@research_session.is_invited?(@person)
@@ -167,7 +169,9 @@ class DigitalGiftsController < ApplicationController
   end
 
   def validate_api_args
-    @user = User.find_by(token: api_params['api_token'])
+
+    @user = User.find_by(token: request.headers['AUTHORIZATION']) if request.headers['AUTHORIZATION'].present?
+
     render(status: :unauthorized)  && return if @user.blank? || !@user.admin?
 
     @research_session = ResearchSession.find(api_params['research_session_id'])
@@ -179,6 +183,7 @@ class DigitalGiftsController < ApplicationController
       Airbrake.notify("Can't create Digital Gift, insufficient budget! #{@digital_gift.attributes}, #{@digital_gift.errors.full_messages.join("\n")}")
       render(status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong, we will be in touch soon.' }.to_json) && return
     end
+    #  should check if we've already given a digital gift for this research session
   end
   # GET /digital_gifts/1/edit
   # def edit; end
