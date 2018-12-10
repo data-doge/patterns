@@ -41,7 +41,7 @@ class Public::PeopleController < ApplicationController
       end
 
       if update_params[:note].present?
-        Comment.create(content: update_params[:note],
+        Comment.create(content: update_params[:note].tr('_', ' '),
                        user_id: @current_user.id,
                        commentable_type: 'Person',
                        commentable_id: @person.id)
