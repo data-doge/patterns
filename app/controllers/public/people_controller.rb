@@ -192,7 +192,7 @@ class Public::PeopleController < ApplicationController
       if request.headers['AUTHORIZATION'].present? && update_params[:phone_number].present?
         @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
 
-        phone = PhonyRails.normalize_number(update_params[:phone_number])
+        phone = PhonyRails.normalize_number(CGI.unescape(update_params[:phone_number]))
         @person = Person.find_by(phone_number: phone)
 
         if @current_user.nil? || @person.nil?
