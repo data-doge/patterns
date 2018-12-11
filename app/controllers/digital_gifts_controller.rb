@@ -155,6 +155,9 @@ class DigitalGiftsController < ApplicationController
           @reward.rewardable_id = @digital_gift.id
           @success = @reward.save
           @digital_gift.reward_id = @reward.id # is this necessary?
+          @digital_gift.sent = true
+          @digital_gift.sent_at = Time.current
+          @digital_gift.sent_by = @user.id
           @digital_gift.save
           render status: :created, json: { success: true, link: @digital_gift.link, msg: 'Successfully created a gift card for you!' }.to_json
         end
