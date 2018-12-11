@@ -175,7 +175,9 @@ class DigitalGiftsController < ApplicationController
     render(status: :unauthorized)  && return if @user.blank? || !@user.admin?
 
     @research_session = ResearchSession.find(api_params['research_session_id'])
-    @person = Person.active.find api_params['person_id']
+    phone = PhonyRails.normalize_number(api_params['phone_number'])
+    @person = Person.active.find_by(phone_number: phone)
+    
     render(status: :not_found) && return if @person.blank? || @research_session.blank?
 
     # $2 fee possibly
@@ -240,6 +242,7 @@ class DigitalGiftsController < ApplicationController
       params.permit(:person_id,
         :api_token,
         :research_session_id,
+        :phone_number,
         :amount)
     end
 
