@@ -1,6 +1,6 @@
 {
   "version": "11.4",
-  "site": "https://rapidpro.yourdomain.com",
+  "site": "https://rapidpro.brl.nyc",
   "flows": [
     {
       "entry": "c74157ca-f287-431b-a9e7-414e14ee8c29",
@@ -475,7 +475,7 @@
             {
               "type": "api",
               "uuid": "29b1f6c2-9d84-435a-8775-120549db5235",
-              "webhook": "https://patterns-domain.com/api/create_person?phone_number=@contact.tel_e164&first_name=@flow.first_name.text&last_name=@flow.last_name.text&verified=Verified&postal_code=@flow.zip.text&preferred_contact_method=SMS&tags=@flow.age.category,parent,@flow.kids_under_18.category&low_income=@flow.low_income.category&rapidpro_uuid=@contact.uuid&locale_name=@contact.language",
+              "webhook": "https://example.com/api/create_person?phone_number=@contact.tel_e164&first_name=@flow.first_name.text&last_name=@flow.last_name.text&verified=Verified&postal_code=@flow.zip.text&preferred_contact_method=SMS&tags=@flow.age.category,parent,@flow.kids_under_18.category&low_income=@flow.low_income.category&rapidpro_uuid=@contact.uuid&locale_name=@contact.language",
               "action": "POST",
               "webhook_headers": [
                 {
@@ -496,7 +496,7 @@
             {
               "type": "api",
               "uuid": "10c22276-7b43-4e6a-bf29-ef5470e2fa32",
-              "webhook": "https://patterns-domain.com/api/create_person?phone_number=@contact.tel_e164&first_name=@flow.first_name.text&last_name=@flow.last_name.text&verified=Verified&postal_code=@flow.zip.text&preferred_contact_method=SMS&tags=@flow.age.category&rapidpro_uuid=@contact.uuid&locale_name=@contact.language",
+              "webhook": "https://example.com/api/create_person?phone_number=@contact.tel_e164&first_name=@flow.first_name.text&last_name=@flow.last_name.text&verified=Verified&postal_code=@flow.zip.text&preferred_contact_method=SMS&tags=@flow.age.category&rapidpro_uuid=@contact.uuid&locale_name=@contact.language",
               "action": "POST",
               "webhook_headers": [
                 {
@@ -1030,7 +1030,7 @@
           "response_type": "",
           "operand": "@step.value",
           "config": {
-            "webhook": "https://patterns-domain.com/api/show?phone_number=@contact.tel_e164",
+            "webhook": "https://example.com/api/show?phone_number=@contact.tel_e164",
             "webhook_action": "GET",
             "webhook_headers": [
               {
@@ -1315,7 +1315,7 @@
           {
             "y": 2917,
             "x": 1333,
-            "body": "Production Saving people to patterns url below\n\n\nhttps://patterns-domain.com/api/create_person?phone_number=@contact.tel_e164&first_name=@flow.first_name.text&last_name=@flow.last_name.text&verified=Verified&postal_code=@flow.zip.text&preferred_contact_method=SMS&tags=@flow.age.category&rapidpro_uuid=@contact.uuid\n\n\nadd a header:\nAuthorization\nCHANGEME\n\nit's not what's in the webhook now, because we don't want to create a bunch of users in testing this.",
+            "body": "Production Saving people to patterns url below\n\n\nhttps://example.com/api/create_person?phone_number=@contact.tel_e164&first_name=@flow.first_name.text&last_name=@flow.last_name.text&verified=Verified&postal_code=@flow.zip.text&preferred_contact_method=SMS&tags=@flow.age.category&rapidpro_uuid=@contact.uuid\n\n\nadd a header:\nAuthorization\nCHANGEME\n\nit's not what's in the webhook now, because we don't want to create a bunch of users in testing this.",
             "title": "New Note"
           },
           {
@@ -1335,6 +1335,1631 @@
         "name": "dig signup",
         "saved_on": "2018-10-19T14:39:29.852029Z",
         "revision": 44
+      }
+    },
+    {
+      "entry": "64425e57-e30c-405d-9e90-6002f804f2e1",
+      "action_sets": [
+        {
+          "uuid": "64425e57-e30c-405d-9e90-6002f804f2e1",
+          "x": 103,
+          "y": 0,
+          "destination": "68d10e8b-6f6b-4dd6-a4f3-9f7c05f678c0",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "291c3aa8-fda7-4e89-8afc-7a7fa7fbef7c",
+              "msg": {
+                "base": "Hi @contact.first_name! \nKT here from Blue Ridge Labs. We build technology to make New Yorkers' lives better. We're currently looking for participants for upcoming projects. We offer $25/hr to participate in research conversations. \n\nAre you interested in this opportunity? Respond with Y for yes or N for no."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            },
+            {
+              "type": "api",
+              "uuid": "58984970-6981-4692-ba0e-2de9fab54fd1",
+              "webhook": "https://example.com/api/show?phone_number=@contact.tel_e164",
+              "action": "GET",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "40cab6df-da38-46bd-a05f-8bd774366aea"
+        },
+        {
+          "uuid": "0811863a-458e-4ab8-bfb5-fc1e7919417e",
+          "x": 722,
+          "y": 1565,
+          "destination": "bce1a26c-40bf-4ffa-bcf5-bb502ef6b588",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "b98fbc8e-cf24-4fe0-af28-dff976d5c684",
+              "msg": {
+                "base": "I'm sorry, I didn't understand that. Are you a parent? Please only answer 'Y' for yes or 'N' for no."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "ea97cc1f-a1de-4ef4-b217-8e785448271c"
+        },
+        {
+          "uuid": "d5a7b358-b796-4f8a-a9d6-13bfcaa823e0",
+          "x": 567,
+          "y": 712,
+          "destination": "c535141a-52ab-412d-9a4e-492830151054",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "35d149d0-93cd-480a-ae42-a25fbfeaacac",
+              "msg": {
+                "base": "No problem. We'll reach out again with future opportunities. \n\nTo learn more about our work, visit www.joinDIG.nyc\n\nIf you'd like to be permanently removed from our list, type 'remove' and we won't contact you again."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "92f8d003-47eb-49df-9ac2-df2876de4cb8"
+        },
+        {
+          "uuid": "868d8695-4c7e-47ea-b7d7-8a5333730655",
+          "x": 14,
+          "y": 1018,
+          "destination": "bce1a26c-40bf-4ffa-bcf5-bb502ef6b588",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "a9cab23f-9885-4051-8213-2ff06d731f45",
+              "msg": {
+                "base": "Great! We have a few questions to get started and see if you're a good fit for any current projects. This should take about 5 minutes to complete. First, are you a parent?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "25a12d82-ae53-4eb1-b857-7122a16f4677"
+        },
+        {
+          "uuid": "85941b63-d140-4e21-8c21-18b2cc3648c4",
+          "x": 760,
+          "y": 275,
+          "destination": "e673258f-2fe4-4336-9b50-e623e086387f",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "a7d305bc-d3df-4eab-9008-b587385c9410",
+              "msg": {
+                "base": "Sorry, I didn't understand. Please type Y if you are interested in participating or N for no."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "3d833b0d-7ba9-40c6-ac57-29ed750ae046"
+        },
+        {
+          "uuid": "8d5ce071-f201-4837-b761-b0ce45a9d26b",
+          "x": 108,
+          "y": 1510,
+          "destination": "769873f8-eca3-45a7-8b74-04d21edd247b",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "59a52be8-785a-4c25-9e11-d30e65c5993d",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=parent",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            },
+            {
+              "type": "reply",
+              "uuid": "eb3c8317-4947-40d8-9566-a35bcd5280e0",
+              "msg": {
+                "base": "Great! Are you a single parent?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "626f93fd-2c8e-4fc4-9a89-bd656d3dc07e"
+        },
+        {
+          "uuid": "57c32b65-14ec-41bc-a9a0-1bce0fc5a750",
+          "x": 1164,
+          "y": 1240,
+          "destination": "c535141a-52ab-412d-9a4e-492830151054",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "4e9f0ad3-10b6-4edc-90d8-09df3120689b",
+              "msg": {
+                "base": "I'm sorry, I didn't understand that. Type REMOVE and we will not contact you again."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "e2d3df63-45c6-4a8b-b2a4-5d1769ac1772"
+        },
+        {
+          "uuid": "c36d0f34-1988-45c2-a6e7-bbd7a5967249",
+          "x": 1183,
+          "y": 1703,
+          "destination": null,
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "cd824cb9-bf7f-423e-b83b-4bffb0d3a4f2",
+              "msg": {
+                "base": "Ok, got it! You have been successfully removed."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "5999098e-bd38-4477-9056-663264175e6f"
+        },
+        {
+          "uuid": "e8842804-40bf-41f9-a483-d585163d1ac1",
+          "x": 20,
+          "y": 2127,
+          "destination": "6f057136-ff92-40f4-9f83-cf10cd3660b8",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "7ac25285-6f10-40e1-a286-8274f56175d3",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=single_parent",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "63e7d23c-1460-4c00-98da-68489abebded"
+        },
+        {
+          "uuid": "2d887965-0d89-43ee-bafe-ef2e86172bdb",
+          "x": 429,
+          "y": 2823,
+          "destination": "4a90bd86-3fbf-430d-8452-ee13ffffd09a",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "778114de-97db-43da-abd7-8e65e8f155e3",
+              "msg": {
+                "base": "Ok, got it. Next question: are you currently a student in high school or college?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "75a87f7e-f285-4c7a-b80c-e583481f13c8"
+        },
+        {
+          "uuid": "423d5e67-fbf1-4757-8ebf-8fc794aa9fbc",
+          "x": 721,
+          "y": 1807,
+          "destination": "769873f8-eca3-45a7-8b74-04d21edd247b",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "1d176dce-b564-4f49-8e2f-7cba25b728a9",
+              "msg": {
+                "base": "Sorry, I didn't understand your answer. Are you a single parent? Reply Y for yes or N for no."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "1ecbc500-1db6-4889-b8d5-e3cb5eaca718"
+        },
+        {
+          "uuid": "dff880c7-ce72-492e-a255-4c77d5be207f",
+          "x": 113,
+          "y": 3080,
+          "destination": "71649498-f118-4720-8ad7-af3dc09ffa7a",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "779b188a-c1ea-4028-a2ea-97fcbaf1e5e9",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=student",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "e02007ba-d716-42b2-8ab8-1337b009eb58"
+        },
+        {
+          "uuid": "71649498-f118-4720-8ad7-af3dc09ffa7a",
+          "x": 471,
+          "y": 3170,
+          "destination": "059dbbd0-a2c6-43cd-897c-3dd0c17ed33a",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "9e3bc644-3b93-4b08-9eaa-c666186242f6",
+              "msg": {
+                "base": "Cool, thanks! Do you have a high school diploma or equivalent, like a GED?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "3ea7dc12-2f95-4c1d-8b80-b8badbd5a601"
+        },
+        {
+          "uuid": "3def2272-31b5-4c7d-ac18-3e8dd0927ac1",
+          "x": 927,
+          "y": 3057,
+          "destination": "4a90bd86-3fbf-430d-8452-ee13ffffd09a",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "d4c1c3a7-832e-4112-b843-6ed6dfc4bdcc",
+              "msg": {
+                "base": "Sorry, please answer again with either Y or N: are you currently in high school or college?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "33454e44-af82-4745-9d2e-de1265901fa2"
+        },
+        {
+          "uuid": "def7b61e-0162-49d3-a973-22cc2fffcebc",
+          "x": 171,
+          "y": 3543,
+          "destination": "e9482f9c-2423-427f-aeff-f54bed409013",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "85bea21a-18e6-4595-b520-58174b854bf0",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=HS_diploma",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "50d763f0-01ac-4b78-93bc-b00e1c13d309"
+        },
+        {
+          "uuid": "4f8b8c00-f747-470a-818d-5e6f02c40ab9",
+          "x": 1183,
+          "y": 1533,
+          "destination": "c36d0f34-1988-45c2-a6e7-bbd7a5967249",
+          "actions": [
+            {
+              "type": "email",
+              "uuid": "f359e9e8-7238-4b76-a637-3b9e81cbc307",
+              "emails": [
+                "kt@robinhood.org"
+              ],
+              "subject": "Failed deactivation tag on rapid pro flow",
+              "msg": "This person tried to deactivate, but something went wrong.\n@contact.tel_e164 \n@contact.name"
+            }
+          ],
+          "exit_uuid": "a93cd512-f791-44fa-97e9-b9ca31e46e34"
+        },
+        {
+          "uuid": "202cdcc0-6e0d-4a94-9227-ebe74d8272d7",
+          "x": 852,
+          "y": 5180,
+          "destination": "5cc34ecd-6ae3-4869-8010-09c1ab7542dc",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "3ea8bb9e-a199-4efc-8715-e7e04241b449",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=051217SurveyCompleted&verified=Verified",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "054a9223-d55b-42d4-b858-4f6cd7eb6f1f"
+        },
+        {
+          "uuid": "cfed8424-e873-4356-96bb-82851bab6a43",
+          "x": 884,
+          "y": 3334,
+          "destination": "059dbbd0-a2c6-43cd-897c-3dd0c17ed33a",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "e0155b98-7747-4011-b691-dce50f8256c9",
+              "msg": {
+                "base": "Sorry, please respond with either Y or N.\n\nDo you have a highschool diploma, or equivalent, like a GED?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "266e7512-84db-4825-8690-d3ca77eb2023"
+        },
+        {
+          "uuid": "5cc34ecd-6ae3-4869-8010-09c1ab7542dc",
+          "x": 1246,
+          "y": 4996,
+          "destination": null,
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "cf080327-0ad2-4e50-b003-a39042eabaca",
+              "msg": {
+                "base": "Thanks! We've received your responses and we'll be in touch soon if you are a good fit.\n\nIf you want to contact Blue Ridge Labs directly, you can text me (KT) at: 347-699-6285."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "e5a9e70a-fb85-4623-81a5-47b2d49cea8a"
+        },
+        {
+          "uuid": "bd41e816-b60a-48be-b833-6917e03ac0ed",
+          "x": 604,
+          "y": 4342,
+          "destination": "b41ca5c6-d905-491d-9e8c-c575120b3d66",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "f5b23654-8ecd-4fab-acf0-ddf99fc29412",
+              "msg": {
+                "base": "Ok. Next question: are you over the age of 61?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "e40777e8-af12-4771-b555-25561359f179"
+        },
+        {
+          "uuid": "8bc31118-f38f-492d-bf08-86c172115bf0",
+          "x": 1059,
+          "y": 3992,
+          "destination": "b41ca5c6-d905-491d-9e8c-c575120b3d66",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "a9becc38-3921-4897-ac46-eb39ae0a247b",
+              "msg": {
+                "base": "I'm sorry, I didn't understand that... Are you over the age of 61? Please respond Yes or No."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "318d1ea2-e100-4014-9401-99be70ecf397"
+        },
+        {
+          "uuid": "20fa67a9-8f4e-4d96-900e-acb12c25496e",
+          "x": 148,
+          "y": 4725,
+          "destination": "362dce4f-b819-483f-a63c-4bf1f7f5cd77",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "5e22f7d3-9f49-46ed-9a4d-0240f63c3cc6",
+              "msg": {
+                "base": "Great. Regardless of your living situation, do you have a spare bedroom at home?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "68ae96c3-d916-4ef1-a914-9770ccd3238e"
+        },
+        {
+          "uuid": "60566a6b-c5df-4067-b562-1a66e86b9bc9",
+          "x": 485,
+          "y": 4992,
+          "destination": "362dce4f-b819-483f-a63c-4bf1f7f5cd77",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "4e8270c0-0de7-4e32-994e-8ab6cf569c24",
+              "msg": {
+                "base": "I'm sorry, I didn't understand that. Do you have a spare bedroom at home? Please answer only yes or no"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "a441d222-b558-43eb-bd09-3342aa1803c1"
+        },
+        {
+          "uuid": "e155d047-9a35-49d1-a476-503708292733",
+          "x": 61,
+          "y": 5099,
+          "destination": "202cdcc0-6e0d-4a94-9227-ebe74d8272d7",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "3f198b99-a024-4476-b676-d832ccf41cd6",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=OA_Spare_Bedroom",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "bb75058a-a441-41bd-903b-931a5cd1d83f"
+        },
+        {
+          "uuid": "b82c6e65-0c08-4cc5-813f-7b2382e6cf7e",
+          "x": 148,
+          "y": 4531,
+          "destination": "20fa67a9-8f4e-4d96-900e-acb12c25496e",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "61713b9f-7906-4ebb-82d1-9f0625cdffe5",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=61%2B",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "3de85981-dba1-4e5e-85fa-1456064ee0bb"
+        },
+        {
+          "uuid": "6f057136-ff92-40f4-9f83-cf10cd3660b8",
+          "x": 180,
+          "y": 2437,
+          "destination": "ce5fe6e1-62d9-4f29-9dd6-535ffce0c833",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "d379516e-5dfd-42a2-a4fb-013f194447e9",
+              "msg": {
+                "base": "Thanks. Do you have kids under the age of 6?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "f0ee41ab-4ba0-4333-b530-370146bae702"
+        },
+        {
+          "uuid": "f98c1c27-cedf-4387-bcd1-69249617946f",
+          "x": 1163,
+          "y": 2169,
+          "destination": "ce5fe6e1-62d9-4f29-9dd6-535ffce0c833",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "2bfc8e1f-6c14-40d3-82c6-4a3cd0d3371b",
+              "msg": {
+                "base": "I'm sorry, I didn't understand that. Do you have kids under the age of 6? Answer only yes or no."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "02e35785-8b9a-4955-92a7-dccdce3e920f"
+        },
+        {
+          "uuid": "5b64a12b-62c8-45c5-91b1-c34869bf9053",
+          "x": 515,
+          "y": 2255,
+          "destination": "8135322b-ad30-4f63-a81e-a21d1d5f5375",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "9d2b1e73-8014-488c-a84b-13cd42328f67",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=kids_under_6",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "CHANGEME"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "47bd5a61-3a29-464f-85e3-3af02fb74605"
+        },
+        {
+          "uuid": "8135322b-ad30-4f63-a81e-a21d1d5f5375",
+          "x": 989,
+          "y": 2336,
+          "destination": "1949197f-ad17-4728-bd3d-a3e5bdc3718d",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "54f29b05-e6b0-4179-a124-f01dde39d982",
+              "msg": {
+                "base": "Are your kids in ESL/English as a Second Language courses, or are you planning to enroll them when they are old enough?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "142a2483-ccd3-4f1c-8f0c-a52c3b803941"
+        },
+        {
+          "uuid": "58cb609c-646e-4bff-8aa9-9934c1bf6f45",
+          "x": 1128,
+          "y": 2783,
+          "destination": "1949197f-ad17-4728-bd3d-a3e5bdc3718d",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "94115af0-8d59-4eb3-8101-278c7fa0b634",
+              "msg": {
+                "base": "Sorry, I didn't understand that. \n\nAre your kids in ESL/English as a Second Language courses, or are you planning to enroll them when they are old enough?\n\n\nYes or No please"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "9e77313e-b695-43b5-89e0-aff60866063b"
+        },
+        {
+          "uuid": "8d2c6879-9087-46b4-9fa7-81e34e8479ce",
+          "x": 845,
+          "y": 2677,
+          "destination": "2d887965-0d89-43ee-bafe-ef2e86172bdb",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "0f5259c8-7328-4ba5-a860-d95f4e9d83b8",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=Kid_ESL",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "ed8afa37-90f2-439c-8406-96400c494198"
+        },
+        {
+          "uuid": "e9482f9c-2423-427f-aeff-f54bed409013",
+          "x": 514,
+          "y": 3751,
+          "destination": "8e8d1af2-671b-40f7-83dc-ad9f7fc66427",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "73e0822d-dd51-4571-8903-4f945e69fa92",
+              "msg": {
+                "base": "Thanks. Next: do you live in a rent-stabilized or rent-controlled apartment?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "4f110e2d-690d-4ae4-9f05-8a4176d00776"
+        },
+        {
+          "uuid": "413c7a5a-245f-4c61-a670-69e47b18634d",
+          "x": 893,
+          "y": 3712,
+          "destination": "8e8d1af2-671b-40f7-83dc-ad9f7fc66427",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "593ec881-08f7-4f7a-a911-b039b54d57c1",
+              "msg": {
+                "base": "I'm sorry, I couldn't understand your answer. Please respond w Y or N: do you live in a rent-stabilized or rent-controlled apartment?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "9af833d6-c630-4f34-8333-2376348af52b"
+        },
+        {
+          "uuid": "6cbc0be8-caa7-440f-a313-8051bd68ddab",
+          "x": 172,
+          "y": 3954,
+          "destination": "6d5b9fdb-fbb4-47db-bae2-99283c5bba2a",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "456930af-8d4f-45fb-ac72-1671474d4972",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=rent_stabilized",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "f079c94a-98a4-4938-8a71-0e5fe34f89ee"
+        },
+        {
+          "uuid": "6d5b9fdb-fbb4-47db-bae2-99283c5bba2a",
+          "x": 518,
+          "y": 4062,
+          "destination": "750fe3ef-bedf-4ac8-b923-dadfe590bc5c",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "8067eff6-6b34-49c8-8999-b46c436eb741",
+              "msg": {
+                "base": "Ok. Do you live in NYCHA housing? (if you don't know, respond 'N')"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "a20a4b0e-659b-413a-8edc-225ff9688dfc"
+        },
+        {
+          "uuid": "bd6c7d46-5cb4-4638-a99b-7f638bf736ba",
+          "x": 108,
+          "y": 4292,
+          "destination": "bd41e816-b60a-48be-b833-6917e03ac0ed",
+          "actions": [
+            {
+              "type": "api",
+              "uuid": "287f5dca-aa8f-4b94-987a-3b42c3b462fb",
+              "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=nycha",
+              "action": "POST",
+              "webhook_headers": [
+                {
+                  "name": "Authorization",
+                  "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+                }
+              ]
+            }
+          ],
+          "exit_uuid": "f521f84b-5c47-4a63-80d2-41f2860d15fd"
+        },
+        {
+          "uuid": "25c037b0-6f29-4950-bd12-fd184633c2b7",
+          "x": 771,
+          "y": 4166,
+          "destination": "750fe3ef-bedf-4ac8-b923-dadfe590bc5c",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "dcd26548-3ee0-4e4a-8041-b3429145ea9c",
+              "msg": {
+                "base": "Sorry, I couldn't understand what you were trying to say. Do you live in NYCHA (public) housing? Y or N"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "81ec1c84-f031-4f77-87fa-3d24357f59db"
+        }
+      ],
+      "rule_sets": [
+        {
+          "uuid": "bce1a26c-40bf-4ffa-bcf5-bb502ef6b588",
+          "x": 361,
+          "y": 1244,
+          "label": "parent",
+          "rules": [
+            {
+              "uuid": "a77293c7-d657-4b7b-82cf-060192e70f22",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "8d5ce071-f201-4837-b761-b0ce45a9d26b",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "y yes yeah yep Y am"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "47e888c6-9d8b-4546-9902-2657b15e8c1e",
+              "category": {
+                "base": "N"
+              },
+              "destination": "2d887965-0d89-43ee-bafe-ef2e86172bdb",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "no nope nah n N not"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "bf25f62f-f60a-4528-ad74-b885b3797657",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "0811863a-458e-4ab8-bfb5-fc1e7919417e",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "68d10e8b-6f6b-4dd6-a4f3-9f7c05f678c0",
+          "x": 70,
+          "y": 615,
+          "label": "Interested",
+          "rules": [
+            {
+              "uuid": "97efe827-33cf-4261-afe3-054804161a1b",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "868d8695-4c7e-47ea-b7d7-8a5333730655",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "yes y yeah yup yep sure ok"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "c43b8ab4-8597-414f-a33f-c9146894e371",
+              "category": {
+                "base": "N"
+              },
+              "destination": "d5a7b358-b796-4f8a-a9d6-13bfcaa823e0",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "n no nope nah"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "e7027799-1167-4961-a48a-30f93a93c452",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "85941b63-d140-4e21-8c21-18b2cc3648c4",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "e673258f-2fe4-4336-9b50-e623e086387f",
+          "x": 1072,
+          "y": 526,
+          "label": "interested",
+          "rules": [
+            {
+              "uuid": "859d1ebf-fb21-4c65-8d48-4bc4692d1b04",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "868d8695-4c7e-47ea-b7d7-8a5333730655",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "y yes yeah yep yup yea"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "0c22f7af-811d-4a24-b758-16e428eceb02",
+              "category": {
+                "base": "N"
+              },
+              "destination": "d5a7b358-b796-4f8a-a9d6-13bfcaa823e0",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "n no not now nope"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "140d6925-323c-4748-9cf8-49e90f444af6",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "85941b63-d140-4e21-8c21-18b2cc3648c4",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "b674372d-da99-4ca9-a56f-f71280a00b62",
+          "x": 965,
+          "y": 1416,
+          "label": "unsubscribe",
+          "rules": [
+            {
+              "uuid": "6c04f7b5-3810-4137-af8c-340c10bb95c5",
+              "category": {
+                "base": "Success"
+              },
+              "destination": "c36d0f34-1988-45c2-a6e7-bbd7a5967249",
+              "destination_type": "A",
+              "test": {
+                "type": "webhook_status",
+                "status": "success"
+              },
+              "label": null
+            },
+            {
+              "uuid": "96d1c50e-3029-43c6-bf70-c3b7c583bdd4",
+              "category": {
+                "base": "Failure"
+              },
+              "destination": "4f8b8c00-f747-470a-818d-5e6f02c40ab9",
+              "destination_type": "A",
+              "test": {
+                "type": "webhook_status",
+                "status": "failure"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "webhook",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {
+            "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&tags=unsubscribe",
+            "legacy_format": true,
+            "webhook_action": "POST",
+            "webhook_headers": [
+              {
+                "name": "Authorization",
+                "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
+              }
+            ]
+          }
+        },
+        {
+          "uuid": "c535141a-52ab-412d-9a4e-492830151054",
+          "x": 738,
+          "y": 1179,
+          "label": "not interested",
+          "rules": [
+            {
+              "uuid": "ca59fb79-5554-4df8-8d5e-2d5cc45a54c2",
+              "category": {
+                "base": "Unsubscribe"
+              },
+              "destination": "b674372d-da99-4ca9-a56f-f71280a00b62",
+              "destination_type": "R",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "remove remoove"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "d73b581e-f5e6-4d15-8759-f158fd9d0efb",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "57c32b65-14ec-41bc-a9a0-1bce0fc5a750",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "769873f8-eca3-45a7-8b74-04d21edd247b",
+          "x": 179,
+          "y": 1864,
+          "label": "single parent",
+          "rules": [
+            {
+              "uuid": "e8526eb1-6072-4b20-9979-619d460e4193",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "e8842804-40bf-41f9-a483-d585163d1ac1",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "yes y yeah yep yup yea am"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "360b3c83-a32f-4e1a-9267-b674804eb2a2",
+              "category": {
+                "base": "N"
+              },
+              "destination": "6f057136-ff92-40f4-9f83-cf10cd3660b8",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "no nope nah n not"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "c605abf0-1a22-48cd-893e-792f286c958a",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "e8842804-40bf-41f9-a483-d585163d1ac1",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_phrase",
+                "test": {
+                  "base": "I am"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "d578c11e-8b6f-4920-be6e-113a5eb477b5",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "e8842804-40bf-41f9-a483-d585163d1ac1",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "divorced"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "491e46ef-8f73-4beb-85fe-71a6c1f3afb6",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "423d5e67-fbf1-4757-8ebf-8fc794aa9fbc",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "4a90bd86-3fbf-430d-8452-ee13ffffd09a",
+          "x": 446,
+          "y": 3053,
+          "label": "student",
+          "rules": [
+            {
+              "uuid": "f498dc49-7da9-469b-9383-40ed9b7f5633",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "dff880c7-ce72-492e-a255-4c77d5be207f",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "yes y yeah yep yea yup"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "9b51117d-2089-4117-9262-e2c68bff86fd",
+              "category": {
+                "base": "N"
+              },
+              "destination": "71649498-f118-4720-8ad7-af3dc09ffa7a",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "no nope nah n"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "16932221-75a0-44a1-8dd7-32fa5d1d54d0",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "3def2272-31b5-4c7d-ac18-3e8dd0927ac1",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "059dbbd0-a2c6-43cd-897c-3dd0c17ed33a",
+          "x": 479,
+          "y": 3600,
+          "label": "HS_diploma",
+          "rules": [
+            {
+              "uuid": "38abcf70-01b0-49f4-b5ef-c29292c8cd59",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "def7b61e-0162-49d3-a973-22cc2fffcebc",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "yes yeah yup yea y yep"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "63d59d4b-6cea-4df1-a23f-066c0edb2c0d",
+              "category": {
+                "base": "N"
+              },
+              "destination": "e9482f9c-2423-427f-aeff-f54bed409013",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "no n nope nah noo not"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "b491ae1f-d4f2-418b-a68c-f8065553e8d3",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "def7b61e-0162-49d3-a973-22cc2fffcebc",
+              "destination_type": "A",
+              "test": {
+                "type": "contains",
+                "test": {
+                  "base": "i do"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "a50bf546-cfd5-4aa3-8a5e-436a01ce6735",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "def7b61e-0162-49d3-a973-22cc2fffcebc",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_phrase",
+                "test": {
+                  "base": "of course"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "28ff87f5-d4fe-4c0d-b655-6fcec896ea54",
+              "category": {
+                "base": "N"
+              },
+              "destination": "e9482f9c-2423-427f-aeff-f54bed409013",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_phrase",
+                "test": {
+                  "base": "I don't"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "456c5df5-939c-47b3-8774-111eadd1e804",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "cfed8424-e873-4356-96bb-82851bab6a43",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "b41ca5c6-d905-491d-9e8c-c575120b3d66",
+          "x": 572,
+          "y": 4514,
+          "label": "over61",
+          "rules": [
+            {
+              "uuid": "a9258a71-f1c5-4a13-8aee-992cfe7da842",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "b82c6e65-0c08-4cc5-813f-7b2382e6cf7e",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "y yes yeah yup yah"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "0c5853e4-0564-4cba-b1b8-2cbb8180ff56",
+              "category": {
+                "base": "N"
+              },
+              "destination": "202cdcc0-6e0d-4a94-9227-ebe74d8272d7",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "n no nope nah"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "61c7f2d2-e00b-4eec-bbfe-c6fef899507d",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "8bc31118-f38f-492d-bf08-86c172115bf0",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "362dce4f-b819-483f-a63c-4bf1f7f5cd77",
+          "x": 116,
+          "y": 4885,
+          "label": "spare bedroom",
+          "rules": [
+            {
+              "uuid": "ab094d07-76d0-478d-b4f1-a02f4fb99f5b",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "e155d047-9a35-49d1-a476-503708292733",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "y yes yeah yup"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "7cbb03b4-f799-4683-9f0a-cc426fd21a2d",
+              "category": {
+                "base": "N"
+              },
+              "destination": "202cdcc0-6e0d-4a94-9227-ebe74d8272d7",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "n no nope nah"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "6372f68e-853d-4d20-bd79-638427942378",
+              "category": {
+                "base": "N"
+              },
+              "destination": "202cdcc0-6e0d-4a94-9227-ebe74d8272d7",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "don't"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "e189dc6d-d238-4074-a2de-49d8b322828a",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "e155d047-9a35-49d1-a476-503708292733",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_phrase",
+                "test": {
+                  "base": "i do"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "1f8f674c-15c3-479a-a1a9-7d35409837c5",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "60566a6b-c5df-4067-b562-1a66e86b9bc9",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "ce5fe6e1-62d9-4f29-9dd6-535ffce0c833",
+          "x": 571,
+          "y": 2084,
+          "label": "KidsUnder6",
+          "rules": [
+            {
+              "uuid": "b439f6d9-9a7e-422c-ad5a-62739960600e",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "5b64a12b-62c8-45c5-91b1-c34869bf9053",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "y yes yeah yup do"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "f44d77af-2136-4a45-b087-d317a583be1f",
+              "category": {
+                "base": "N"
+              },
+              "destination": "2d887965-0d89-43ee-bafe-ef2e86172bdb",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "n no nope nah not"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "528a47de-a0e5-4fe6-af31-686c0c97a581",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "f98c1c27-cedf-4387-bcd1-69249617946f",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "1949197f-ad17-4728-bd3d-a3e5bdc3718d",
+          "x": 1127,
+          "y": 2524,
+          "label": "KidESL",
+          "rules": [
+            {
+              "uuid": "b3b650ee-5404-4c68-8cfb-4075a01726fc",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "8d2c6879-9087-46b4-9fa7-81e34e8479ce",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "y yes yeah yup"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "2c35dc39-90f5-4745-8b38-b2fc26d92c75",
+              "category": {
+                "base": "N"
+              },
+              "destination": "2d887965-0d89-43ee-bafe-ef2e86172bdb",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "n no nope nah"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "37cc077b-6910-423d-99c9-e91d77d06303",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "58cb609c-646e-4bff-8aa9-9934c1bf6f45",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "8e8d1af2-671b-40f7-83dc-ad9f7fc66427",
+          "x": 480,
+          "y": 3909,
+          "label": "rent stabilized",
+          "rules": [
+            {
+              "uuid": "89883cb9-a5f7-4cc7-bea9-91d69dfd393b",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "6cbc0be8-caa7-440f-a313-8051bd68ddab",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "yes yeah y yep yea"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "1837c698-2391-4c02-aee1-60bac040f342",
+              "category": {
+                "base": "N"
+              },
+              "destination": "6d5b9fdb-fbb4-47db-bae2-99283c5bba2a",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "no nah nope n"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "1176ede6-6406-4c3d-9c16-d46c1ccb93e0",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "413c7a5a-245f-4c61-a670-69e47b18634d",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "750fe3ef-bedf-4ac8-b923-dadfe590bc5c",
+          "x": 299,
+          "y": 4198,
+          "label": "nycha response",
+          "rules": [
+            {
+              "uuid": "0ff541ef-0896-40f7-859d-897207f6cbe7",
+              "category": {
+                "base": "Y"
+              },
+              "destination": "bd6c7d46-5cb4-4638-a99b-7f638bf736ba",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "yes yeah y yep yup"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "8c27d48f-fb24-4e81-89e7-6ea133ab81a5",
+              "category": {
+                "base": "N"
+              },
+              "destination": "bd41e816-b60a-48be-b833-6917e03ac0ed",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "n no nope nah"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "25daaae3-2766-4062-bc45-74c10121cbc3",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "25c037b0-6f29-4950-bd12-fd184633c2b7",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        }
+      ],
+      "base_language": "base",
+      "flow_type": "F",
+      "version": "11.4",
+      "metadata": {
+        "uuid": "b566d2d8-927e-457a-9182-02b5ff3ff7c0",
+        "notes": [
+          {
+            "y": 819,
+            "x": 1321,
+            "body": "Create a \"webhook\" and set it to \"GET\" to this url:\n\nhttps://example.com/api/update_person?phone_number=@contact.tel_e164&tags=foobar,baz,bat                   \n\nAdd the header: Authorization with the value:\nLrtGkKpD8E3srsMoXdX7aZ1z\n\nafter \"&tags=\" you can put as many tags as you want, comma delimited \"_\" is a space in a tag",
+            "title": "To add a tag:"
+          }
+        ],
+        "expires": 10080,
+        "name": "Catalyst - DIG Recruiting Survey 2017",
+        "saved_on": "2018-11-12T17:22:19.453153Z",
+        "revision": 2
       }
     },
     {
@@ -1449,12 +3074,69 @@
             {
               "type": "save",
               "uuid": "b9bf1735-9caf-4654-bca4-97595f272f61",
-              "label": "last name",
+              "label": "Last Name",
               "field": "last_name",
               "value": "@flow.last_name.text"
             }
           ],
           "exit_uuid": "18541b44-f82f-4780-90bd-d392c62e1658"
+        },
+        {
+          "uuid": "99bb7db3-51e4-4591-812c-089ada428511",
+          "x": 584,
+          "y": 679,
+          "destination": "8199d157-f2f8-43dc-a08e-aa0297cc3ccd",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "57e7bcd6-1ff5-4c99-b318-307575829661",
+              "msg": {
+                "base": "Great, your current zip code in the system is: @extra.postal_code\n\nIs that correct?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "8efda129-950e-42a1-a510-d09689f1c782"
+        },
+        {
+          "uuid": "701ee2d3-d75a-4ff6-a1bd-36aec3b1e0b4",
+          "x": 996,
+          "y": 1057,
+          "destination": "8199d157-f2f8-43dc-a08e-aa0297cc3ccd",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "fd71ae84-6a98-450e-bd03-0a60d0ca1d4e",
+              "msg": {
+                "base": "Sorry, I didn't recognize that response. Is @extra.postal_code your zip code? Please answer Y or N."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "a3aaf6f9-4362-4724-a388-5be7f05944e1"
+        },
+        {
+          "uuid": "a7778f2c-6b4c-4571-ac71-23f9734d52ec",
+          "x": 688,
+          "y": 1081,
+          "destination": "b82bbdbc-d894-4f75-be03-3188cd42e79e",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "038b4b30-2d52-4fb3-86ef-c720e3178121",
+              "msg": {
+                "base": "Ok, what is your zip code?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "068f5980-b5bf-44b6-a980-a8028ef1f8e9"
         }
       ],
       "rule_sets": [
@@ -1496,12 +3178,12 @@
           "response_type": "",
           "operand": "@step.value",
           "config": {
-            "webhook": "https://patterns-domain.com/api/show?phone_number=@contact.tel_e164",
+            "webhook": "https://example.com/api/show?phone_number=@contact.tel_e164",
             "webhook_action": "GET",
             "webhook_headers": [
               {
                 "name": "Authorization",
-                "value": "changeme"
+                "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
               }
             ]
           }
@@ -1530,8 +3212,8 @@
               "category": {
                 "base": "2"
               },
-              "destination": null,
-              "destination_type": null,
+              "destination": "99bb7db3-51e4-4591-812c-089ada428511",
+              "destination_type": "A",
               "test": {
                 "type": "contains_any",
                 "test": {
@@ -1711,8 +3393,8 @@
         },
         {
           "uuid": "376289c2-24c7-403e-bf09-6bd468bb2dbf",
-          "x": 447,
-          "y": 1732,
+          "x": 151,
+          "y": 1796,
           "label": "saving_name",
           "rules": [
             {
@@ -1747,16 +3429,123 @@
           "response_type": "",
           "operand": "@step.value",
           "config": {
-            "webhook": "https://patterns-domain.com/api/update_person?phone_number=@contact.tel_e164&first_name=@flow.first_name.text&last_name=@flow.last_name.text",
+            "webhook": "https://example.com/api/update_person?phone_number=@contact.tel_e164&first_name=@flow.first_name.text&last_name=@flow.last_name.text",
             "legacy_format": true,
             "webhook_action": "POST",
             "webhook_headers": [
               {
                 "name": "Authorization",
-                "value": "changeme"
+                "value": "LrtGkKpD8E3srsMoXdX7aZ1z"
               }
             ]
           }
+        },
+        {
+          "uuid": "8199d157-f2f8-43dc-a08e-aa0297cc3ccd",
+          "x": 732,
+          "y": 819,
+          "label": "postal_correct",
+          "rules": [
+            {
+              "uuid": "de239f18-a3ca-4570-bb8e-0819bee44a67",
+              "category": {
+                "base": "Yes"
+              },
+              "destination": "f162f89c-7a71-411a-801f-e6ab8b6208c2",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "yes yeah yup y sure correct right"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "27097e39-3058-4a90-983c-0d2e46a0894e",
+              "category": {
+                "base": "No"
+              },
+              "destination": "a7778f2c-6b4c-4571-ac71-23f9734d52ec",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "base": "no n nope nah not isn wrong"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "548a80eb-4088-4817-b477-42f752915dbd",
+              "category": {
+                "base": "Other"
+              },
+              "destination": "701ee2d3-d75a-4ff6-a1bd-36aec3b1e0b4",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "b82bbdbc-d894-4f75-be03-3188cd42e79e",
+          "x": 655,
+          "y": 1307,
+          "label": "new_postal_code",
+          "rules": [
+            {
+              "uuid": "6255dedc-b20e-4fbe-b726-bf5af98b8d0d",
+              "category": {
+                "base": "matches"
+              },
+              "destination": null,
+              "destination_type": null,
+              "test": {
+                "type": "regex",
+                "test": {
+                  "base": "^[0-9]{5}(?:-[0-9]{4})?$"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "6af8c7b3-741c-4d7b-983b-9155c76e49e7",
+              "category": {
+                "base": "not_match"
+              },
+              "destination": null,
+              "destination_type": null,
+              "test": {
+                "type": "not_empty"
+              },
+              "label": null
+            },
+            {
+              "uuid": "63edbc64-7e20-476d-8456-123e1851abd0",
+              "category": {
+                "base": "Other"
+              },
+              "destination": null,
+              "destination_type": null,
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
         }
       ],
       "base_language": "base",
@@ -1774,8 +3563,1698 @@
         ],
         "expires": 10080,
         "name": "ProfileEditor",
-        "saved_on": "2018-10-08T20:25:32.752583Z",
-        "revision": 1
+        "saved_on": "2018-11-12T16:31:20.012396Z",
+        "revision": 21
+      }
+    },
+    {
+      "entry": "2c3553ef-bbf9-4f70-a3ff-e01ce3a126ca",
+      "action_sets": [
+        {
+          "uuid": "2c3553ef-bbf9-4f70-a3ff-e01ce3a126ca",
+          "x": 210,
+          "y": 0,
+          "destination": "95f5d23a-88bd-400f-b4de-ff4bcd9f380c",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "3f726e42-5171-4269-aceb-4c43932c38fa",
+              "msg": {
+                "eng": "What's your main source of water?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "e804ef33-0dd5-4498-9611-ac0b64cd334e"
+        },
+        {
+          "uuid": "691b552c-5b73-4f03-b815-80d1782f0a1e",
+          "x": 530,
+          "y": 283,
+          "destination": "d3022a3a-0e28-4c1c-8eac-d06a12794e68",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "a54206c9-9073-41ed-ac1b-04934751de58",
+              "msg": {
+                "eng": "Thank you. Do you boil your drinking water? Please respond with yes or no"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "7f96aae9-cc83-4ca8-a253-528e654a8452"
+        },
+        {
+          "uuid": "b6c6998f-4b25-4934-b4ef-6fbc91117cc0",
+          "x": 97,
+          "y": 1097,
+          "destination": null,
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "f04b790d-ea42-495c-bada-c2525733c60e",
+              "msg": {
+                "eng": "That's very good!"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "4e828962-d96e-48d2-aeb9-1a7de8e12c1a"
+        },
+        {
+          "uuid": "400ecd6c-1936-4556-a572-b4f63b5a5917",
+          "x": 645,
+          "y": 1001,
+          "destination": null,
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "6388169f-1032-4dae-8abd-eb017e171dfa",
+              "msg": {
+                "eng": "Thank you. To ensure your safety and the safety of your family please make sure you boil your water before drinking it."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "44cd9560-a636-414e-8802-9a03a32045d4"
+        }
+      ],
+      "rule_sets": [
+        {
+          "uuid": "95f5d23a-88bd-400f-b4de-ff4bcd9f380c",
+          "x": 135,
+          "y": 141,
+          "label": "water source",
+          "rules": [
+            {
+              "uuid": "8f0744d2-146f-4ecf-b30a-3607b14b4fa3",
+              "category": {
+                "eng": "Stream"
+              },
+              "destination": "691b552c-5b73-4f03-b815-80d1782f0a1e",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "Stream"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "f0b5e010-f2ab-4725-8a8f-11955e57614d",
+              "category": {
+                "eng": "Well"
+              },
+              "destination": "691b552c-5b73-4f03-b815-80d1782f0a1e",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "Well"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "476b7ab7-f7ed-4d24-b321-1659475b7707",
+              "category": {
+                "eng": "Bottled"
+              },
+              "destination": "691b552c-5b73-4f03-b815-80d1782f0a1e",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "Bottled"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "561fd1f9-bc9c-45f5-9930-4a0d3ad64662",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": "691b552c-5b73-4f03-b815-80d1782f0a1e",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "d3022a3a-0e28-4c1c-8eac-d06a12794e68",
+          "x": 493,
+          "y": 446,
+          "label": "boiling water",
+          "rules": [
+            {
+              "uuid": "7f135a01-d11d-4b71-9812-5a901eb3a365",
+              "category": {
+                "eng": "Yes"
+              },
+              "destination": "b6c6998f-4b25-4934-b4ef-6fbc91117cc0",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "yes"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "24729f5d-512c-4f5c-9d0d-4ecb8da5ce7c",
+              "category": {
+                "eng": "No"
+              },
+              "destination": "4d291f41-338d-4664-82be-c1617a7ec60e",
+              "destination_type": "R",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "no"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "fc4fb33b-6170-4b28-aad8-20616db25821",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": null,
+              "destination_type": null,
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "4d291f41-338d-4664-82be-c1617a7ec60e",
+          "x": 553,
+          "y": 566,
+          "label": "Response 3",
+          "rules": [
+            {
+              "uuid": "2084e20f-fc6c-48ac-8318-f7dc932772b2",
+              "category": {
+                "eng": "At risk"
+              },
+              "destination": "36729a47-cedc-4163-9715-ca572f9a1af8",
+              "destination_type": "R",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "Stream well"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "2cb38de6-9bfc-40ce-9c4d-9174d0f25e05",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": null,
+              "destination_type": null,
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "flow_field",
+          "response_type": "",
+          "operand": "@flow.water_source",
+          "config": {}
+        },
+        {
+          "uuid": "36729a47-cedc-4163-9715-ca572f9a1af8",
+          "x": 552,
+          "y": 690,
+          "label": "Response 4",
+          "rules": [
+            {
+              "uuid": "a6cd44ed-73ee-4fc3-9fb1-21ed14da3bf4",
+              "category": {
+                "eng": "Yes"
+              },
+              "destination": "b6c6998f-4b25-4934-b4ef-6fbc91117cc0",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "yes"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "b2fb7bdb-5171-46c5-b457-9a913a32b969",
+              "category": {
+                "eng": "No"
+              },
+              "destination": "400ecd6c-1936-4556-a572-b4f63b5a5917",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "no"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "9b74cf99-be9a-40de-9f1e-34591ea8d33c",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": null,
+              "destination_type": null,
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "flow_field",
+          "response_type": "",
+          "operand": "@flow.boiling_water",
+          "config": {}
+        }
+      ],
+      "base_language": "eng",
+      "flow_type": "F",
+      "version": "11.4",
+      "metadata": {
+        "notes": [
+          {
+            "y": 506,
+            "x": 808,
+            "body": "Here we only select the respondents who answered with either stream or well as source of water to move to the next step",
+            "title": "Split by water source"
+          },
+          {
+            "y": 666,
+            "x": 854,
+            "body": "Same logic here, but now we split by whether respondent is boiling water or not",
+            "title": "Split by yes/no for boiling water"
+          },
+          {
+            "y": 973,
+            "x": 868,
+            "body": "This message will only go out to respondents who both answered stream or well AND no for boiling",
+            "title": "combine two flow fields"
+          },
+          {
+            "y": 32,
+            "x": 527,
+            "body": "In this flow we ask 2 different questions and combining the 2 responses we can take a decision.",
+            "title": "Intro"
+          }
+        ],
+        "expires": 10080,
+        "revision": 4,
+        "saved_on": "2018-10-19T21:23:19.639364Z",
+        "uuid": "16028f8e-387d-4a31-ba06-1e217077639d",
+        "name": "General - Using split by flow field to combine 2 responses"
+      }
+    },
+    {
+      "entry": "9c8ce086-948e-4b0e-8055-86028d80ce32",
+      "action_sets": [
+        {
+          "uuid": "9c8ce086-948e-4b0e-8055-86028d80ce32",
+          "x": 100,
+          "y": 0,
+          "destination": "ce6b8cee-9910-47fe-bf09-e9b0b8c5520b",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "598aa57b-28ef-4535-8d52-d0f4ae54e879",
+              "msg": {
+                "eng": "What is the name of the animal in the photo?"
+              },
+              "media": {
+                "eng": "image/jpeg:attachments/1/21/steps/029b9709-7023-485b-a929-ae7ca1542ca0.jpg"
+              },
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "a5fe3e4d-f557-4308-9a88-0b658711d82e"
+        },
+        {
+          "uuid": "00bf6e5c-0808-479e-b2d2-1b934cc8a52e",
+          "x": 122,
+          "y": 294,
+          "destination": "ad4483ce-bab7-415f-ade4-5612a69510d2",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "cb7e4bc2-0bb1-42c3-9a95-670b4f894915",
+              "msg": {
+                "eng": "Yes! It is a photo of raccoons!\n\nCan you use the word raccoon in a sentence?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "1451b318-4065-4b4f-921a-7b68dfeaa2a4"
+        },
+        {
+          "uuid": "9139190f-71da-4962-9992-035ca515d9ad",
+          "x": 710,
+          "y": 241,
+          "destination": "ce6b8cee-9910-47fe-bf09-e9b0b8c5520b",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "b843a6d5-c803-4e4a-b3ba-ab6337c32845",
+              "msg": {
+                "eng": "yes, it is funny, but what are the animals in the photo?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "d774af3c-10b6-415e-98e0-fd269e87592a"
+        },
+        {
+          "uuid": "87c699bd-0d08-4129-8bae-a736def1de2c",
+          "x": 815,
+          "y": 60,
+          "destination": "ce6b8cee-9910-47fe-bf09-e9b0b8c5520b",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "0562e0b8-8278-4bb6-be38-e937f5a01262",
+              "msg": {
+                "eng": "I'm sorry, I didn't understand what you said. What animal is in the photo?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "0a265cf8-32e8-4fb4-a324-c0e4402ff63d"
+        },
+        {
+          "uuid": "93a491eb-d85c-414b-ac64-910f51f47571",
+          "x": 446,
+          "y": 688,
+          "destination": null,
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "4dc79233-b134-42a4-b1f1-606517261978",
+              "msg": {
+                "eng": "Great job! Moving on."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "5d635d02-f535-4b12-81d2-707c2b768a69"
+        },
+        {
+          "uuid": "00e0898d-1606-45ab-883b-bc0b3e691ce6",
+          "x": 812,
+          "y": 500,
+          "destination": "ad4483ce-bab7-415f-ade4-5612a69510d2",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "bf15281c-4df6-42a3-9271-50e9424c1c28",
+              "msg": {
+                "eng": "Sorry, I didn't understand that. Could you use the word \"raccoon\" in a sentence?"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "2c8bb6d5-dab8-4028-9091-0568b37d45a9"
+        }
+      ],
+      "rule_sets": [
+        {
+          "uuid": "ce6b8cee-9910-47fe-bf09-e9b0b8c5520b",
+          "x": 385,
+          "y": 75,
+          "label": "Response 1",
+          "rules": [
+            {
+              "uuid": "68ec704e-7faf-4d50-bac1-f125b108b5a1",
+              "category": {
+                "eng": "Racoon"
+              },
+              "destination": "00bf6e5c-0808-479e-b2d2-1b934cc8a52e",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "racoon"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "c804faaa-b1f0-4d99-98bf-8f9d3a5dd11e",
+              "category": {
+                "eng": "Funny"
+              },
+              "destination": "9139190f-71da-4962-9992-035ca515d9ad",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "funny"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "b4e2e55c-a160-4efa-8aeb-6aebf1cb2d9b",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": "87c699bd-0d08-4129-8bae-a736def1de2c",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "ad4483ce-bab7-415f-ade4-5612a69510d2",
+          "x": 389,
+          "y": 423,
+          "label": "Response 2",
+          "rules": [
+            {
+              "uuid": "97ec4bd9-9b2e-4900-aece-f32f867ca451",
+              "category": {
+                "eng": "Racoon"
+              },
+              "destination": "93a491eb-d85c-414b-ac64-910f51f47571",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "racoon"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "bdfdcace-2e25-4321-989c-46f3572890ae",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": "00e0898d-1606-45ab-883b-bc0b3e691ce6",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        }
+      ],
+      "base_language": "eng",
+      "flow_type": "F",
+      "version": "11.4",
+      "metadata": {
+        "name": "ESLworks demo",
+        "saved_on": "2018-11-20T21:49:53.250063Z",
+        "revision": 30,
+        "uuid": "7535e1b3-d9ee-4f5a-8fab-3adeff1973c4",
+        "expires": 10080
+      }
+    },
+    {
+      "entry": "ca4c63a6-9c9e-4b35-946e-6a51d86055b4",
+      "action_sets": [
+        {
+          "uuid": "221ea2cb-53d5-49fb-925e-46ef326cb5ef",
+          "x": 190,
+          "y": 153,
+          "destination": "cb7d77b3-3887-4604-b0ca-8a493456a810",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "85d23415-f6b8-44a1-a1a4-83f5ce6c1d2f",
+              "msg": {
+                "eng": "Did you receive your digital gift card? type \"Y\" if you received it, \"N\" if you did not."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "bffca6de-d78c-4d99-81f2-eeb3e1358dc9"
+        },
+        {
+          "uuid": "c8f8ab96-e1dd-4c7f-93c4-978e840d9625",
+          "x": 158,
+          "y": 2149,
+          "destination": "c2d30065-9ff3-41b3-9d54-7944aa65d9f7",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "263696bc-08bb-4986-801e-b9cd02597a2b",
+              "msg": {
+                "eng": "Here is the link to redeem your $5 digital gift card:\n@extra.link\n\nPlease let KT know if you have any trouble using it!"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "4609faba-5ed0-4d03-a261-e4c3d7d5752f"
+        },
+        {
+          "uuid": "63c6a134-4274-437c-94c7-67ef67801e3b",
+          "x": 482,
+          "y": 2144,
+          "destination": null,
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "f2070595-8d9a-41c5-af50-c8c36e6992c3",
+              "msg": {
+                "eng": "Oops, looks like something went wrong. KT has been notified and will be in touch soon."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            },
+            {
+              "type": "email",
+              "uuid": "481cbe6e-d7b2-45f5-858d-d6d4d9c416c4",
+              "emails": [
+                "gillett@robinhood.org",
+                "bill@robinhood.org"
+              ],
+              "subject": "Error creating digital gift",
+              "msg": "Contact Name: @contact.first_name \nContact Phone: @contact.tel_e164 \ntime: @date.now \nFrom: @channel.tel_e164"
+            },
+            {
+              "type": "send",
+              "uuid": "3b8ad308-0e04-4330-a070-076eea2dac55",
+              "msg": {
+                "eng": "Error creating digital gift card:\nContact Name: @contact.first_name \nContact Phone: @contact.tel_e164 \ntime: @date.now \nFrom: @channel.tel_e164"
+              },
+              "contacts": [
+                {
+                  "id": 1080,
+                  "name": "Bill Cromie",
+                  "uuid": "ca48cbed-3075-476f-889f-8f80ff0ddc67",
+                  "urns": [
+                    {
+                      "scheme": "tel",
+                      "path": "+19172153576",
+                      "priority": 99
+                    },
+                    {
+                      "scheme": "mailto",
+                      "path": "bill.cromie@gmail.com",
+                      "priority": 98
+                    }
+                  ]
+                },
+                {
+                  "id": 985,
+                  "name": "KT Gillett",
+                  "uuid": "55c2ba68-9f1a-4274-b725-89d598effb55",
+                  "urns": [
+                    {
+                      "scheme": "tel",
+                      "path": "+13212770181",
+                      "priority": 99
+                    },
+                    {
+                      "scheme": "mailto",
+                      "path": "gillett@fakeemail.com",
+                      "priority": 98
+                    }
+                  ]
+                }
+              ],
+              "groups": [],
+              "variables": [],
+              "media": {}
+            }
+          ],
+          "exit_uuid": "08f76928-04a8-4056-8b5c-e29bdb195b10"
+        },
+        {
+          "uuid": "603f9ce6-068a-4f95-a103-99802589613e",
+          "x": 471,
+          "y": 405,
+          "destination": "823756fe-d9b0-4a17-903c-e1e7bd3125e8",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "3b867a6d-3c98-4b42-b15c-9d4a0c5fd9d4",
+              "msg": {
+                "eng": "I'm sorry, I didn't understand that!"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "8a88e649-b004-4970-a113-ed35c91bfcb0"
+        },
+        {
+          "uuid": "b4c310c6-f70b-4c85-9e22-ca3706c6a984",
+          "x": 78,
+          "y": 448,
+          "destination": "b55e2c5d-690a-4860-a066-b49d9b061a06",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "51d803be-e0f0-44b0-ba09-160916a0998a",
+              "msg": {
+                "eng": "Was it confusing to receive this reward?\n1 = very confusing\n3 = kind of confusing\n5 = not confusing at all"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "358d4233-d40a-4973-ba9e-772f9a25e67e"
+        },
+        {
+          "uuid": "4e85fdd0-4f69-42dd-88b7-7db4ca7a74e2",
+          "x": 522,
+          "y": 535,
+          "destination": "b4c310c6-f70b-4c85-9e22-ca3706c6a984",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "a5b28828-1886-4d34-88e8-a629dd031818",
+              "msg": {
+                "eng": "Sorry I didn't understand that!"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "f6480994-5fe2-4050-8cc7-59f01bc433a3"
+        },
+        {
+          "uuid": "e093cccf-e8b2-43aa-b52f-6ef86fe9ee52",
+          "x": 578,
+          "y": 1713,
+          "destination": "e04887aa-4c06-4264-b06b-0627ad0943d5",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "32a2312a-932d-439d-8fd8-02bad4838d7a",
+              "msg": {
+                "eng": "Anything you'd like to let us know about these digital gift cards? If not, just say \"done\" and we'll move on."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "d1906136-f4a8-4aec-8347-ddff2fa9b072"
+        },
+        {
+          "uuid": "e1ad0f03-4c4c-4947-afa4-ca2b2ab7f6b7",
+          "x": 681,
+          "y": 1922,
+          "destination": "ca91be7c-abfa-4260-97e6-d65f5cfebd1b",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "6f8dd819-4722-4dfb-9563-ff8328ffa5c3",
+              "msg": {
+                "eng": "We are going to create a new digital gift card link for you as a reward for finishing this survey! Hold on while we generate it for you."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "aec0284e-9597-4509-82ee-c27e2cbf8a47"
+        },
+        {
+          "uuid": "2c54b591-e750-4e22-b7f9-c6cc4f6ff6b0",
+          "x": 63,
+          "y": 1779,
+          "destination": "e04887aa-4c06-4264-b06b-0627ad0943d5",
+          "actions": [
+            {
+              "type": "save",
+              "uuid": "51e9bf3c-2188-4dc9-8fd0-7c92a657a52f",
+              "label": "Textholder",
+              "field": "textholder",
+              "value": "@(contact.textholder & \" \" & flow.anything_else.text)"
+            },
+            {
+              "type": "reply",
+              "uuid": "b619438d-d1d2-49dd-8ddd-f15f785376e9",
+              "msg": {
+                "eng": "We've recorded your response! If you'd like to add more, just respond to this message. \nIf you're done, just respond \"done\" and we'll move on to the next step."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "2ea3e107-1c8a-4fd1-8b57-7572cb2371b1"
+        },
+        {
+          "uuid": "7d000048-d548-4297-ace0-5b6a4fe6ac63",
+          "x": 545,
+          "y": 60,
+          "destination": "221ea2cb-53d5-49fb-925e-46ef326cb5ef",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "f7cc104f-9bbe-4497-b63d-fd42a8e088ad",
+              "msg": {
+                "eng": "Sorry, I didn't understand that."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "99a9541e-44a5-4934-a65d-f1d9628feb24"
+        },
+        {
+          "uuid": "ca4c63a6-9c9e-4b35-946e-6a51d86055b4",
+          "x": 188,
+          "y": 0,
+          "destination": "221ea2cb-53d5-49fb-925e-46ef326cb5ef",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "264194a7-e0be-4a77-8722-e1c473c234fd",
+              "msg": {
+                "eng": "Hi @contact.first_name! Thank you for helping us test our new digital gift cards!"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "541f64ce-b0c2-4a42-9a1c-5b35ee38e56d"
+        },
+        {
+          "uuid": "91267a79-5870-4fd7-92af-50e816e53c3c",
+          "x": 977,
+          "y": 312,
+          "destination": null,
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "6a282a6b-3ff5-496f-bdf1-f1d886677302",
+              "msg": {
+                "eng": "Oh no! We will notify KT and they will be in touch with you shortly."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            },
+            {
+              "type": "email",
+              "uuid": "ca62138b-37b8-41b5-93be-2a5d491d4531",
+              "emails": [
+                "gillett@robinhood.org"
+              ],
+              "subject": "Couldn't redeem digital gift",
+              "msg": "@contact.first_name @contact.last_name @contact.name Wasn't able to redeem their digital gift."
+            },
+            {
+              "type": "send",
+              "uuid": "657e72a0-c9fb-42dd-85d2-2cc5d0358e38",
+              "msg": {
+                "eng": "@contact.name couldn't redeem their digital gift card!"
+              },
+              "contacts": [
+                {
+                  "id": 985,
+                  "name": "KT Gillett",
+                  "uuid": "55c2ba68-9f1a-4274-b725-89d598effb55",
+                  "urns": [
+                    {
+                      "scheme": "tel",
+                      "path": "+13212770181",
+                      "priority": 99
+                    },
+                    {
+                      "scheme": "mailto",
+                      "path": "gillett@fakeemail.com",
+                      "priority": 98
+                    }
+                  ]
+                },
+                {
+                  "id": 1080,
+                  "name": "Bill Cromie",
+                  "uuid": "ca48cbed-3075-476f-889f-8f80ff0ddc67",
+                  "urns": [
+                    {
+                      "scheme": "tel",
+                      "path": "+19172153576",
+                      "priority": 99
+                    },
+                    {
+                      "scheme": "mailto",
+                      "path": "bill.cromie@gmail.com",
+                      "priority": 98
+                    }
+                  ]
+                }
+              ],
+              "groups": [],
+              "variables": [],
+              "media": {}
+            }
+          ],
+          "exit_uuid": "87c3c68b-d701-42d2-8553-cd692bf66e88"
+        },
+        {
+          "uuid": "823756fe-d9b0-4a17-903c-e1e7bd3125e8",
+          "x": 534,
+          "y": 233,
+          "destination": "b1fb2f47-43fc-49b2-af76-577ac8bf3bd2",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "878e16e2-7aa1-4b2f-930d-4001a540962f",
+              "msg": {
+                "eng": "On a scale of 1-5, was easy to receive this reward?\n1 = very hard\n3 = ok\n5 = very easy"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "dae8d118-6367-4a50-b8b9-1159370deca5"
+        },
+        {
+          "uuid": "3ab8e72f-1db9-45b9-a98b-6fbe9137307f",
+          "x": 105,
+          "y": 1285,
+          "destination": "de9c5023-ffe2-447e-8a74-5431cd7aafc5",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "e7435c0a-dcfd-44a5-84c1-53d2efc67b76",
+              "msg": {
+                "eng": "Would like to receive this kind of reward again in the future? \n1 = No! Never!\n3 = Sometimes\n5 = Yes! Everytime!"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "897b6e84-6905-4830-b03e-49fb37d54487"
+        },
+        {
+          "uuid": "d788d115-f3bb-4291-b175-e986756163a0",
+          "x": 616,
+          "y": 1262,
+          "destination": "3ab8e72f-1db9-45b9-a98b-6fbe9137307f",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "a1c7d82c-0f9e-4419-89d8-8fcd8761d54f",
+              "msg": {
+                "eng": "I'm sorry, I didn't understand that..."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "df467d47-72ae-4aac-b443-e3a1a9c45261"
+        },
+        {
+          "uuid": "cea1fee5-adcf-4282-919c-906cbbe60760",
+          "x": 642,
+          "y": 1471,
+          "destination": "3e0493a7-55c0-4b58-9383-8a4bf23ea1c3",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "02c87ae1-6f80-46cf-a5c2-31ffc60ec29d",
+              "msg": {
+                "eng": "If given the choice between digital and physical gift card, I would choose:\nA = Digital\nB = Keep regular physical cards\nC = Depends\nD = No Preference"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "46f42d5e-90d2-4557-9cd0-5a55667d2b41"
+        },
+        {
+          "uuid": "d9b432ff-afa9-4f26-9480-daad0c8328ba",
+          "x": 911,
+          "y": 1636,
+          "destination": "cea1fee5-adcf-4282-919c-906cbbe60760",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "7157839d-12e3-43e8-a216-8d943ac09230",
+              "msg": {
+                "eng": "I'm sorry, I didn't understand that. Please respond with just a letter for your choice."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "99212abd-9b5d-4510-baa5-f4b7f703b14d"
+        },
+        {
+          "uuid": "07d5e7c1-bd77-43ae-801a-cf110ca0c627",
+          "x": 180,
+          "y": 763,
+          "destination": "7538d9b7-23d9-4a68-8770-aff21912de2a",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "103f4750-5215-4f57-9588-f2fb63f606a7",
+              "msg": {
+                "eng": "For small dollar amounts, under $20, how excited would you be if you could only redeem w/ online retailers like Starbucks, iTunes, etc.? meaning, not able to transfer to a bank or paypal? 1-5\n\n1= not excited at all\n3 = Ok, but not the best\n5 = Doesn\u2019t Matter"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "2f1e0938-61d4-4ec4-bc4a-7273dba04f2d"
+        },
+        {
+          "uuid": "d42c5739-ed38-4e01-9d97-566f46fbb2a8",
+          "x": 573,
+          "y": 861,
+          "destination": "07d5e7c1-bd77-43ae-801a-cf110ca0c627",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "bba1f58c-bf25-4f0b-9046-b1482fe88de4",
+              "msg": {
+                "eng": "I'm sorry, I didn't understand that..."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "1133419f-aa24-49e2-aa0e-0f1db2cecd36"
+        }
+      ],
+      "rule_sets": [
+        {
+          "uuid": "ca91be7c-abfa-4260-97e6-d65f5cfebd1b",
+          "x": 291,
+          "y": 2034,
+          "label": "digital_gift",
+          "rules": [
+            {
+              "uuid": "bfc00b1a-8b25-4394-818a-ff644b7a6c58",
+              "category": {
+                "eng": "Success"
+              },
+              "destination": "c8f8ab96-e1dd-4c7f-93c4-978e840d9625",
+              "destination_type": "A",
+              "test": {
+                "type": "webhook_status",
+                "status": "success"
+              },
+              "label": null
+            },
+            {
+              "uuid": "8a30a580-2070-4b58-9503-cfaaaf90108d",
+              "category": {
+                "eng": "Failure"
+              },
+              "destination": "63c6a134-4274-437c-94c7-67ef67801e3b",
+              "destination_type": "A",
+              "test": {
+                "type": "webhook_status",
+                "status": "failure"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "webhook",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {
+            "webhook": "https://example.com/digital_gifts/api_create?phone_number=@contact.tel_e164&research_session_id=347&amount=5",
+            "webhook_action": "GET",
+            "webhook_headers": [
+              {
+                "name": "AUTHORIZATION",
+                "value": "CHANGEME"
+              }
+            ]
+          }
+        },
+        {
+          "uuid": "c2d30065-9ff3-41b3-9d54-7944aa65d9f7",
+          "x": 135,
+          "y": 2333,
+          "label": "create_note",
+          "rules": [
+            {
+              "uuid": "0ff524a0-bb31-4dca-9b8c-1b212b3f1774",
+              "category": {
+                "eng": "Success"
+              },
+              "destination": null,
+              "destination_type": null,
+              "test": {
+                "type": "webhook_status",
+                "status": "success"
+              },
+              "label": null
+            },
+            {
+              "uuid": "6e3cfa23-1200-4387-986b-383d10a8e25a",
+              "category": {
+                "eng": "Failure"
+              },
+              "destination": null,
+              "destination_type": null,
+              "test": {
+                "type": "webhook_status",
+                "status": "failure"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "webhook",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {
+            "webhook": "https://example.com/api/update_person.json?phone_number=@contact.tel_e164&note=receive_link_via_text:_@extras.link&tags=2018_Paid_Survey_Test",
+            "webhook_action": "GET",
+            "webhook_headers": [
+              {
+                "name": "AUTHORIZATION",
+                "value": "CHANGEME"
+              }
+            ]
+          }
+        },
+        {
+          "uuid": "b1fb2f47-43fc-49b2-af76-577ac8bf3bd2",
+          "x": 116,
+          "y": 325,
+          "label": "easy",
+          "rules": [
+            {
+              "uuid": "ac22ebac-d914-4ad4-9559-b7d544ce829b",
+              "category": {
+                "eng": "easy_score"
+              },
+              "destination": "b4c310c6-f70b-4c85-9e22-ca3706c6a984",
+              "destination_type": "A",
+              "test": {
+                "type": "between",
+                "min": "1",
+                "max": "5"
+              },
+              "label": null
+            },
+            {
+              "uuid": "3a940398-6c21-4cde-a601-dd8a6c688589",
+              "category": {
+                "eng": "Skip"
+              },
+              "destination": "b4c310c6-f70b-4c85-9e22-ca3706c6a984",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "skip"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "a37777d8-2ff3-41a7-a11d-aea3cf8ad90e",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": "603f9ce6-068a-4f95-a103-99802589613e",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "b55e2c5d-690a-4860-a066-b49d9b061a06",
+          "x": 92,
+          "y": 635,
+          "label": "confused",
+          "rules": [
+            {
+              "uuid": "6d1b075a-5916-4fdd-9e26-f1394f0ed751",
+              "category": {
+                "eng": "confused_score"
+              },
+              "destination": "07d5e7c1-bd77-43ae-801a-cf110ca0c627",
+              "destination_type": "A",
+              "test": {
+                "type": "between",
+                "min": "1",
+                "max": "5"
+              },
+              "label": null
+            },
+            {
+              "uuid": "72610462-8a2f-421f-b3b6-3873120e1d0d",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": "4e85fdd0-4f69-42dd-88b7-7db4ca7a74e2",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "e04887aa-4c06-4264-b06b-0627ad0943d5",
+          "x": 375,
+          "y": 1899,
+          "label": "anything_else",
+          "rules": [
+            {
+              "uuid": "9ceeba7a-4287-4cbc-b8bd-02b7856d2583",
+              "category": {
+                "eng": "Done"
+              },
+              "destination": "e1ad0f03-4c4c-4947-afa4-ca2b2ab7f6b7",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "done"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "dcb2b5a0-36cb-4020-9d08-e3402be1645d",
+              "category": {
+                "eng": "comments"
+              },
+              "destination": "2c54b591-e750-4e22-b7f9-c6cc4f6ff6b0",
+              "destination_type": "A",
+              "test": {
+                "type": "not_empty"
+              },
+              "label": null
+            },
+            {
+              "uuid": "7524499d-a337-47e8-a861-67be0b0c3bf8",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": null,
+              "destination_type": null,
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "cb7d77b3-3887-4604-b0ca-8a493456a810",
+          "x": 883,
+          "y": 95,
+          "label": "redeem",
+          "rules": [
+            {
+              "uuid": "1f435c45-c3e4-45dd-8282-c0bf83f41f23",
+              "category": {
+                "eng": "Y"
+              },
+              "destination": "823756fe-d9b0-4a17-903c-e1e7bd3125e8",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "Y yes yup si sure"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "a868c73e-a257-4850-8b6d-466a8a860290",
+              "category": {
+                "eng": "N"
+              },
+              "destination": "91267a79-5870-4fd7-92af-50e816e53c3c",
+              "destination_type": "A",
+              "test": {
+                "type": "contains_any",
+                "test": {
+                  "eng": "no N Nope nah didn"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "9572671f-50f4-46e9-872c-a6bca713e7f3",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": "7d000048-d548-4297-ace0-5b6a4fe6ac63",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "de9c5023-ffe2-447e-8a74-5431cd7aafc5",
+          "x": 374,
+          "y": 1379,
+          "label": "again",
+          "rules": [
+            {
+              "uuid": "cc3dc189-ff0a-4222-8d0d-603496b4aecd",
+              "category": {
+                "eng": "again_score"
+              },
+              "destination": "cea1fee5-adcf-4282-919c-906cbbe60760",
+              "destination_type": "A",
+              "test": {
+                "type": "between",
+                "min": "1",
+                "max": "5"
+              },
+              "label": null
+            },
+            {
+              "uuid": "b7082bca-f7c1-4e39-acbd-9310e198514a",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": "d788d115-f3bb-4291-b175-e986756163a0",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "3e0493a7-55c0-4b58-9383-8a4bf23ea1c3",
+          "x": 140,
+          "y": 1606,
+          "label": "digital_or_physical",
+          "rules": [
+            {
+              "uuid": "fedb6911-488b-4116-b1c4-27ecb894a51a",
+              "category": {
+                "eng": "digital"
+              },
+              "destination": "e093cccf-e8b2-43aa-b52f-6ef86fe9ee52",
+              "destination_type": "A",
+              "test": {
+                "type": "starts",
+                "test": {
+                  "eng": "a"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "90d23384-c782-4857-b51e-c48c1fa25dfc",
+              "category": {
+                "eng": "physical"
+              },
+              "destination": "e093cccf-e8b2-43aa-b52f-6ef86fe9ee52",
+              "destination_type": "A",
+              "test": {
+                "type": "starts",
+                "test": {
+                  "eng": "b"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "f21776b6-ab7b-43c0-b237-50dcfaed8f85",
+              "category": {
+                "eng": "depends"
+              },
+              "destination": "e093cccf-e8b2-43aa-b52f-6ef86fe9ee52",
+              "destination_type": "A",
+              "test": {
+                "type": "starts",
+                "test": {
+                  "eng": "c"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "137994e2-b4ba-4415-bc2a-68d217ac54bc",
+              "category": {
+                "eng": "no preference"
+              },
+              "destination": "e093cccf-e8b2-43aa-b52f-6ef86fe9ee52",
+              "destination_type": "A",
+              "test": {
+                "type": "starts",
+                "test": {
+                  "eng": "d"
+                }
+              },
+              "label": null
+            },
+            {
+              "uuid": "49215f0b-6ec8-49a3-afd8-3d0203e20cfe",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": "d9b432ff-afa9-4f26-9480-daad0c8328ba",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        },
+        {
+          "uuid": "7538d9b7-23d9-4a68-8770-aff21912de2a",
+          "x": 369,
+          "y": 1090,
+          "label": "cash_option",
+          "rules": [
+            {
+              "uuid": "8ca305e7-5fb7-4984-8098-f2e3bd7aef60",
+              "category": {
+                "eng": "cash_option_score"
+              },
+              "destination": "3ab8e72f-1db9-45b9-a98b-6fbe9137307f",
+              "destination_type": "A",
+              "test": {
+                "type": "between",
+                "min": "1",
+                "max": "5"
+              },
+              "label": null
+            },
+            {
+              "uuid": "02546048-cb3a-43bc-9465-7ad121dc5e5e",
+              "category": {
+                "eng": "Other"
+              },
+              "destination": "d42c5739-ed38-4e01-9d97-566f46fbb2a8",
+              "destination_type": "A",
+              "test": {
+                "type": "true"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "wait_message",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {}
+        }
+      ],
+      "base_language": "eng",
+      "flow_type": "F",
+      "version": "11.4",
+      "metadata": {
+        "name": "Paid Survey Test",
+        "saved_on": "2018-12-11T21:18:30.860707Z",
+        "revision": 252,
+        "uuid": "3e8f2622-4ed2-46a7-ba75-c223c6990ed0",
+        "expires": 10080
+      }
+    },
+    {
+      "entry": "894a1b64-a849-4733-8fa8-ecec1f3d5257",
+      "action_sets": [
+        {
+          "uuid": "894a1b64-a849-4733-8fa8-ecec1f3d5257",
+          "x": 100,
+          "y": 0,
+          "destination": "7e469fd5-7d75-4901-9dc6-3f262b65cb9e",
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "2d1eea28-4350-4133-abeb-2753201fcb81",
+              "msg": {
+                "eng": "Oops! This is another automatic message from Blue Ridge Labs.\nSorry about the error. We're going to try again! \nHold on while we create another gift link."
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "49f2e1dc-0e9f-49db-a92e-183571c33a65"
+        },
+        {
+          "uuid": "5b764abf-6230-41e5-b249-789a0c34a8f6",
+          "x": 279,
+          "y": 392,
+          "destination": null,
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "94c97e13-f7c2-4c4c-89a8-1b6fcbb04ef3",
+              "msg": {
+                "eng": "oops! Something went wrong AGAIN! Our fault! We'll fix this and get in touch with you personally.\n\nSorry!"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            },
+            {
+              "type": "send",
+              "uuid": "90b48690-b546-48b5-a9d8-51ba7a6d72f2",
+              "msg": {
+                "eng": "another error creating a card for @contact.name"
+              },
+              "contacts": [
+                {
+                  "id": 985,
+                  "name": "KT Gillett",
+                  "uuid": "55c2ba68-9f1a-4274-b725-89d598effb55",
+                  "urns": [
+                    {
+                      "scheme": "tel",
+                      "path": "+13212770181",
+                      "priority": 99
+                    },
+                    {
+                      "scheme": "mailto",
+                      "path": "gillett@fakeemail.com",
+                      "priority": 98
+                    }
+                  ]
+                },
+                {
+                  "id": 1080,
+                  "name": "Bill Cromie",
+                  "uuid": "ca48cbed-3075-476f-889f-8f80ff0ddc67",
+                  "urns": [
+                    {
+                      "scheme": "tel",
+                      "path": "+19172153576",
+                      "priority": 99
+                    },
+                    {
+                      "scheme": "mailto",
+                      "path": "bill.cromie@gmail.com",
+                      "priority": 98
+                    }
+                  ]
+                }
+              ],
+              "groups": [],
+              "variables": [],
+              "media": {}
+            }
+          ],
+          "exit_uuid": "bdd7d86d-00e1-43e5-8efa-32629dde05d2"
+        },
+        {
+          "uuid": "0c06375a-2de1-40ac-baa6-054d38be5f15",
+          "x": 29,
+          "y": 471,
+          "destination": null,
+          "actions": [
+            {
+              "type": "reply",
+              "uuid": "20644332-20e4-4a30-a06c-342051666940",
+              "msg": {
+                "eng": "Here is the link to redeem your $5 digital gift card:\n@extra.link\n\nPlease let KT know if you have any trouble using it!"
+              },
+              "media": {},
+              "quick_replies": [],
+              "send_all": false
+            }
+          ],
+          "exit_uuid": "ec2281ea-402e-45da-bcd3-259dfe3a8af8"
+        }
+      ],
+      "rule_sets": [
+        {
+          "uuid": "7e469fd5-7d75-4901-9dc6-3f262b65cb9e",
+          "x": 72,
+          "y": 288,
+          "label": "create_digital_gift",
+          "rules": [
+            {
+              "uuid": "e0c14434-46c2-4a69-a613-b468f0803cd1",
+              "category": {
+                "eng": "Success"
+              },
+              "destination": "0c06375a-2de1-40ac-baa6-054d38be5f15",
+              "destination_type": "A",
+              "test": {
+                "type": "webhook_status",
+                "status": "success"
+              },
+              "label": null
+            },
+            {
+              "uuid": "5cbc55d8-9514-4e04-abb2-117fb633e58d",
+              "category": {
+                "eng": "Failure"
+              },
+              "destination": "5b764abf-6230-41e5-b249-789a0c34a8f6",
+              "destination_type": "A",
+              "test": {
+                "type": "webhook_status",
+                "status": "failure"
+              },
+              "label": null
+            }
+          ],
+          "finished_key": null,
+          "ruleset_type": "webhook",
+          "response_type": "",
+          "operand": "@step.value",
+          "config": {
+            "webhook": "https://example.com/digital_gifts/api_create.json?phone_number=@contact.tel_e164&research_session_id=347&amount=5",
+            "webhook_action": "GET",
+            "webhook_headers": [
+              {
+                "name": "AUTHORIZATION",
+                "value": "CHANGEME"
+              }
+            ]
+          }
+        }
+      ],
+      "base_language": "eng",
+      "flow_type": "F",
+      "version": "11.4",
+      "metadata": {
+        "name": "alonzo and dystini fix",
+        "saved_on": "2018-12-11T21:33:25.477044Z",
+        "revision": 15,
+        "uuid": "75eb2d9e-6895-41ef-aff0-f89ce3088303",
+        "expires": 10080
       }
     }
   ],
