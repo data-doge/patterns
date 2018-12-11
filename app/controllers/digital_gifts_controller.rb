@@ -169,7 +169,6 @@ class DigitalGiftsController < ApplicationController
   end
 
   def validate_api_args
-
     @user = User.find_by(token: request.headers['AUTHORIZATION']) if request.headers['AUTHORIZATION'].present?
 
     render(status: :unauthorized)  && return if @user.blank? || !@user.admin?
@@ -177,8 +176,11 @@ class DigitalGiftsController < ApplicationController
     @research_session = ResearchSession.find(api_params['research_session_id'])
     phone = PhonyRails.normalize_number(CGI.unescape(api_params['phone_number']))
     @person = Person.active.find_by(phone_number: phone)
-    
-    render(status: :not_found) && return if @person.blank? || @research_session.blank?
+
+    if @person.blank? || @research_session.blank?
+      Airbrake.notify("person: #{@person}, rs: #{@research_session}, params:#{api_params}")
+      render(status: :not_found) && return
+    end
 
     # $2 fee possibly
     if @user.available_budget + 2.to_money < api_params['amount'].to_money
