@@ -79,12 +79,24 @@ class TransactionLog < ApplicationRecord
 
     def correct_type?
       case transaction_type
-      when 'Budget'
-        recipient_type == 'Budget' && from_type == 'Budget'
+      when 'Transfer'
+        if recipient_type == 'Budget' && from_type == 'Budget' && from_id != recipient_id
+          true
+        else
+          errors.add('Incorrect recipients')
+        end
       when 'Topup'
-        recipient_type == 'Budget' && from_type == 'User' && admin? && from.team == recipient.team
+        if recipient_type == 'Budget' && from_type == 'User' && admin? && from.team == recipient.team
+          true
+        else
+          errors.add('not admin, likely.')
+        end
       when 'DigitalGift'
-        recipient_type == 'DigitalGift' && from_type == 'Budget'
+        if recipient_type == 'DigitalGift' && from_type == 'Budget'
+          true
+        else
+          errors.add('wrong types!')
+        end
       end
     end
 

@@ -18,7 +18,8 @@ class Budget < ApplicationRecord
   belongs_to :team
   has_many :users, through: :team
   validates :team_id, uniqueness: true
-
+  delegate :name, to: :team
+  
   has_many :debits, -> { where(from_type: 'Budget') },
     class_name: 'TransactionLog',
     foreign_key: 'from_id'

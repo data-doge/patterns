@@ -2,7 +2,14 @@ require 'sidekiq/web'
 Logan::Application.routes.draw do  
   
   resources :cash_cards
-  resources :budgets
+  resources :budgets do
+    collection do
+      post '/transaction/create',
+        action: :create_transaction,
+        as: :create_transaction,
+        defaults: {format: 'js' }
+    end
+  end
   resources :digital_gifts do
     resources :comments, controller: 'comments'
     collection do 

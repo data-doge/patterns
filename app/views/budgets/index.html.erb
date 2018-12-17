@@ -1,24 +1,55 @@
 <%= render partial: 'layouts/admin_menu' %>
 
 <h1>Budgets</h1>
+<div class='row'>
+  <dl class='well'>
+    <% if current_user.admin? %>
+      <dt>Money in GiftRocket Account:</dt>
+      <dd> <%= humanized_money_with_symbol DigitalGift.current_budget %></dd>
+      <dt>Money left All Budgets:</dt>
+      <dd id='all_budget'> <%= humanized_money_with_symbol Budget.all.sum(&:amount) %></dd>
+      <h5>Add/Subtract to Patterns Digital Gift Budget<h5>
+      <dt>Top Up</dt>
+      <dd><%= form_tag("/budgets/transaction/create", method: 'post', remote: true ) do %>
 
-<table class='table table-striped'>
-  <thead>
-    <tr>
-      <th colspan="1">Team</th>
-      <th colspan="2">Amount</th>
-      <th colspan="1"></th>
-    </tr>
-  </thead>
+        <%= label_tag(:top_up, 'Amount') %>
+        <%= text_field_tag(:amount) %>
+        <%= hidden_field_tag(:transaction_type, 'Topup') %>
+        <%= submit_tag("Top Up") %>
+      <% end %></dd>
+      <dt>Transfer</dt>
+      <dd><%= form_tag("/budgets/transaction/create", method: 'post', remote: true ) do %>
 
-  <tbody>
-    <% @budgets.each do |budget| %>
+        <%= label_tag(:top_up, 'Amount') %>
+        <%= text_field_tag(:amount) %>
+        <%= label_tag(:from,'From') %>
+        <%= select_tag(:from_id, options_from_collection_for_select(Budget.includes(:team).all, :id, :name)) %>
+        <%= label_tag(:from,'Recipient') %>
+        <%= select_tag(:recipient_id, options_from_collection_for_select(Budget.includes(:team).all, :id, :name)) %>
+        <%= hidden_field_tag(:transaction_type, 'Transfer') %>
+        <%= submit_tag("Transfer") %>
+      <% end %></dd>
+      <% end %>
+  </dl>
+  <table class='table table-striped span12'>
+    <thead>
       <tr>
-        <td><%= link_to budget.team.name, budget.team %></td>
-        <td><%= humanized_money_with_symbol budget.amount %></td>
-        <td><%= link_to 'Show', budget %></td>
+        <th colspan="1">Budget ID</th>
+        <th colspan="1">Team</th>
+        <th colspan="2">Amount</th>
+        <th colspan="1"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
+    <tbody>
+      <% @budgets.each do |budget| %>
+        <tr>
+          <td><%= link_to budget.id, budget %></td>
+          <td><%= link_to budget.team.name, budget.team %></td>
+          <td id='budget_amount_<%= budget.id %>'><%= humanized_money_with_symbol budget.amount %></td>
+          <td><%= link_to 'Show', budget %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

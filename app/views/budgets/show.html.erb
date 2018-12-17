@@ -1,17 +1,15 @@
 <%= render partial: 'layouts/admin_menu' %>
 <div class='row'>
-  <% if @budget.team.id == 1 %>
+
   <div class='well'>
     <dl >
-      <dt>Money in GiftRocket Account:</dt>
-      <dd> <%= humanized_money_with_symbol DigitalGift.current_budget %></dd>
-      <dt>Money left All Budgets:</dt>
-      <dd> <%= humanized_money_with_symbol Budget.all.sum(&:amount) %></dd>
-      <h5>Add/Subtract to Patterns Digital Gift Budget<h5>
-      todo
+      <dt>Money in Budget</dt>
+      <dd id='budget_amount_<%= @budget.id %>'><%= humanized_money_with_symbol @budget.amount %></dd>
     </dl>
   </div>
-  <% end %>
+  <div id='error_explanation' style="display: none;"></div>
+  
+
   <div class='span12'>
     <h5> transactions</h5>
     <table class='table table-striped'>
@@ -23,9 +21,9 @@
         <th>Recipient</th>
         <th>Type</th>
       </thead>
-      <tbody>
+      <tbody id='transaction_logs'>
         <% @budget.transactions.each do |trans| %>
-        <tr>
+        <tr id='transaction_log_<%=trans.id %>'>
           <td><%= trans.id %></td>
           <td><%= humanized_money_with_symbol trans.amount %></td>
           <td><%= link_to trans.user.name, trans.user %></td>

@@ -2,7 +2,7 @@
 
 class BudgetsController < ApplicationController
   before_action :set_budget, only: %i[show edit update destroy]
-
+  before_action :check_transaction_type, only: :create_transaction
   # GET /budgets
   # GET /budgets.json
   def index
@@ -21,7 +21,37 @@ class BudgetsController < ApplicationController
     @budget = Budget.new
   end
 
-  def create_transaction; end
+  def create_transaction
+    case transaction_log_params[:transaction_type]
+    when 'Topup'
+      from_type = 'User'
+      from_id = current_user.id
+      recipient_id = current_user.budget.id
+    when 'Transfer'
+      from_type = 'Budget'
+      recipient_id = transaction_log_params[:recipient_id]
+      from_id = transaction_log_params[:from_id].present? ? transaction_log_params[:from_id] : current_user.budget.id
+    end
+
+    @transaction_log = TransactionLog.new(amount: transaction_log_params[:amount],
+                                   transaction_type: transaction_log_params[:transaction_type],
+                                   # all recipients here are budgets. No Digital Gifts
+                                   recipient_type: 'Budget',
+                                   recipient_id: recipient_id,
+                                   from_id: from_id,
+                                   from_type: from_type,
+                                   user_id: current_user.id)
+    respond_to do |format|
+      if @transaction_log.save
+        flash[:success] = 'Transaction Created'
+        format.json { render json: @transaction_log }
+      else
+        flash[:error] = "Transaction failed: #{@transaction_log.errors.full_messages.join(" ")}"
+        format.json { render json: @transaction_log.errors, status: :unprocessable_entity }
+      end
+      format.js {}
+    end
+  end
 
   # GET /budgets/1/edit
   def edit; end
@@ -67,6 +97,15 @@ class BudgetsController < ApplicationController
   end
 
   private
+
+    def check_transaction_type
+      @transaction_type = transaction_log_params[:transaction_type]
+      %w[Transfer Topup].include? @transaction_typez
+    end
+
+    def transaction_log_params
+      params.permit(:transaction_type, :recipient_id, :from_id, :amount)
+    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_budget
