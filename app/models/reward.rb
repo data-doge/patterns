@@ -100,7 +100,7 @@ class Reward < ApplicationRecord
   end
 
   def research_session
-    return nil if giftable.nil? && giftable_type != 'Invitation'
+    return nil if giftable.nil? || giftable_type != 'Invitation'
 
     giftable&.research_session # double check unnecessary, but I like it.
   end
@@ -108,31 +108,33 @@ class Reward < ApplicationRecord
   # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
-      csv_column_names =  ['Gift Card ID', 'Given By', 'Team', 'FinanceCode', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
+      csv_column_names =  ['Gift Card ID', 'Type', 'Given By', 'Team', 'FinanceCode', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
       csv << csv_column_names
-      all.find_each do |gift_card|
-        this_person = Person.unscoped.find gift_card.person_id
-        row_items = [gift_card.id,
-                     gift_card.user.name,
-                     gift_card.team&.name || '',
-                     gift_card.finance_code || '',
-                     gift_card.research_session&.title || '',
-                     gift_card.research_session&.created_at&.to_date&.to_s || '',
-                     gift_card.created_at.to_s(:rfc822),
-                     gift_card.batch_id.to_s,
-                     gift_card.sequence_number.to_s,
-                     gift_card.amount.to_s,
-                     gift_card.reason.titleize,
-                     this_person.id || '',
-                     this_person.full_name || '',
-                     this_person.address_fields_to_sentence || '']
-        if this_person.phone_number.present?
-          row_items.push(this_person.phone_number.phony_formatted(format: :national, spaces: '-'))
+      all.includes(:person, :user, :team, :rewardable, :giftable).find_each do |reward|
+        batch_id = reward.rewardable_type == 'GiftCard' ? reward.rewardable.batch_id : ''
+        sequence_number = reward.rewardable_type == 'GiftCard' ? reward.rewardable.sequence_number : ''
+        row_items = [reward.id,
+                     reward.rewardable_type,
+                     reward.user.name,
+                     reward.team.name || '',
+                     reward.finance_code || '',
+                     reward.giftable.title || '',
+                     reward.giftable.created_at.to_date.to_s || '',
+                     reward.created_at.to_s(:rfc822),
+                     batch_id,
+                     sequence_number ||'',
+                     reward.amount.to_s,
+                     reward.reason.titleize,
+                     reward.person.id || '',
+                     reward.person.full_name || '',
+                     reward.person.address_fields_to_sentence || '']
+        if reward.person.phone_number.present?
+          row_items.push(reward.person.phone_number.phony_formatted(format: :national, spaces: '-'))
         else
           row_items.push('')
         end
-        row_items.push(this_person.email_address)
-        row_items.push(gift_card.notes)
+        row_items.push(reward.person.email_address)
+        row_items.push(reward.notes)
         csv << row_items
       end
     end
