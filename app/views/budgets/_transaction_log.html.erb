@@ -1,0 +1,8 @@
+<tr id='transaction_log_<%= @transaction_log.id %>'>
+  <td><%= @transaction_log.id %></td>
+  <td><%= humanized_money_with_symbol transaction_log.amount %></td>
+  <td><%= link_to transaction_log.user.name, transaction_log.user %></td>
+  <td><%= link_to transaction_log.from_type, transaction_log.from %></td>
+  <td><%= link_to transaction_log.recipient_type, transaction_log.recipient %></td>
+  <td><%= transaction_log.transaction_type %></td>
+</tr>

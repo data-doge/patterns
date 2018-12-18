@@ -1,0 +1,17 @@
+<% if @transaction_log.valid? %>
+  $('#transaction_logs').prepend("<%= j render(partial: 'budgets/transaction_log', locals: { transaction_log: @transaction_log })%> ");
+<% else %>
+  $('#error_explanation').show();
+  $('#error_explanation').html("<%= @transaction_log.errors.full_messages.join('</br>') %>");
+<% end %>
+$('#all_budget').html('<%= humanized_money_with_symbol(Budget.all.sum(&:amount)) %>')
+
+<% if @transaction_log.recipient.class == Budget %>
+  $('#budget_amount_<%= @transaction_log.recipient_id %>').html("<%= humanized_money_with_symbol @transaction_log.recipient.amount %>")
+<% end %>
+
+<% if @transaction_log.from.class == Budget %>
+  $('#budget_amount_<%= @transaction_log.from_id %>').html("<%= humanized_money_with_symbol @transaction_log.from.amount %>")
+<% end %>
+
+$('input[name=amount]').val(0);
