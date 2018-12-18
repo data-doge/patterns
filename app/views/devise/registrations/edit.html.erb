@@ -36,10 +36,10 @@
       <dl>
         <dt>Team</dt>
         <dd><%= resource&.team&.name %></dd>
-        <dt>Personal Gift Card Total</dt>
-        <dd><%= resource.gift_card_total %></dd>
+        <dt>Personal Rewards Total</dt>
+        <dd><%= resource.rewards_total %></dd>
         <dt>Current Team Gift Cards</dt>
-        <dd><%= resource&.team&.gift_card_total || "$0.00" %></dd>
+        <dd><%= resource&.team&.rewards_total || "$0.00" %></dd>
         <dt><%= link_to "Research Sessions", research_sessions_path(q:{user_name_cont: resource.name}) %></dt>
         <dd><%= link_to resource.research_sessions.size, research_sessions_path(q:{user_name_cont: resource.name}) %></dd>
       </dl>
