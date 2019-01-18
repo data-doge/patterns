@@ -71,21 +71,22 @@ class GiftCard < ApplicationRecord
     cols = { full_card_number: 'full_card_number', expiration_date: 'expiration_date', amount: 'amount', sequence_number: 'sequence_number', secure_code: 'secure_code', batch_id: 'batch_id' }
     xls.sheet(0).each(cols) do |row|
       next if row[:full_card_number].blank? ||  row[:full_card_number] == 'full_card_number' # empty rows
+      next if GiftCard.find(sequence_number: row[:sequence_number], batch_id: row[:batch_id])
 
       row[:full_card_number].delete!('-')
+
       ca = GiftCard.new(row)
       ca.user_id = user.id
       ca.created_by = user.id
       # results is an array of errored card activatoins
-      if ca.save
+      if ca.valid?
+        ca.save
         ca.start_activate!
       else
-        if ca.errors.present?
-          err_msg = "Card Error: sequence: #{ca.sequence_number}, #{ca.full_card_number}, #{ca.errors[:base]}"
-          Airbrake.notify(err_msg)
-          logger.info(err_msg)
-          errored_cards << ca
-       end
+        err_msg = "Card Error: sequence: #{ca.sequence_number}, #{ca.full_card_number}, #{ca.errors[:base]}"
+        Airbrake.notify(err_msg)
+        logger.info(err_msg)
+        errored_cards << ca
       end
     end
     errored_cards
