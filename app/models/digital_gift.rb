@@ -58,7 +58,7 @@ class DigitalGift < ApplicationRecord
     Giftrocket::FundingSource.list
   end
 
-  def self.funding_source
+  def self.balance_funding_source
     DigitalGift.funding_sources.find { |fs| fs.method == 'balance' }
   end
 
