@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.5.3'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0'
+gem 'rails', '5.2.2'
 gem 'rails-i18n'
 gem 'actioncable'
 gem 'bootsnap', require: false
@@ -29,17 +29,17 @@ gem 'fuzzy_match' # for sms command fuzzy matching
 
 gem 'groupdate' # for graphing
 gem 'chartkick'
-gem 'nokogiri', '1.8.2'
+gem 'nokogiri'
 
 # csv files are TERRIBLE for importing. Excel messes with column formats
-gem 'axlsx'
+gem 'axlsx', '~> 3.0.0.pre'
 gem 'rubyzip'
 gem 'roo'
 
 gem 'redcarpet' # for markdown notes
 
 #giftrocket API for automagic giftcarding
-gem 'giftrocket_ruby', git: 'https://github.com/BlueRidgeLabs/giftrocket-ruby.git', branch:'brl_branch'
+gem 'giftrocket_ruby', github: 'BlueRidgeLabs/giftrocket-ruby', branch: 'brl_branch'
 
 gem "aws-sdk-s3", require: false
 
@@ -53,7 +53,7 @@ group :development do
   gem 'ed25519'
   gem 'rvm-capistrano', require: false
   gem 'rbnacl', '~> 4.0.0' # for modern ssh keys
-  gem 'rbnacl-libsodium' # same as above
+  #gem 'rbnacl-libsodium' # same as above
   gem 'bcrypt_pbkdf' # same as above
   # this whole group makes finding performance issues much friendlier
   gem 'flamegraph'
@@ -148,7 +148,7 @@ gem 'twilio-ruby'
 
 gem 'parallel' # for parallel processing. 
 
-gem 'httparty', '0.15.7'
+gem 'httparty'
 # use Wuparty for wufoo
 gem 'wuparty' # breaks latest version of httparty
 
