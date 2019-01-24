@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/BlueRidgeLabs/giftrocket-ruby.git
-  revision: a74fec4c5e656b330f25299132ba003c801fa1cc
+  revision: 6f13b3d4773b2cd9303f7a71e52bb3e39db092b4
   branch: brl_branch
   specs:
     giftrocket_ruby (2.0.0)
