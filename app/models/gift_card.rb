@@ -71,7 +71,7 @@ class GiftCard < ApplicationRecord
     cols = { full_card_number: 'full_card_number', expiration_date: 'expiration_date', amount: 'amount', sequence_number: 'sequence_number', secure_code: 'secure_code', batch_id: 'batch_id' }
     xls.sheet(0).each(cols) do |row|
       next if row[:full_card_number].blank? ||  row[:full_card_number] == 'full_card_number' # empty rows
-      next if GiftCard.where(sequence_number: row[:sequence_number], batch_id: row[:batch_id]).presnet?
+      next if GiftCard.where(sequence_number: row[:sequence_number], batch_id: row[:batch_id]).present?
 
       row[:full_card_number].delete!('-')
 
