@@ -95,7 +95,7 @@ class DigitalGift < ApplicationRecord
   def request_link
     raise if person_id.nil? || giftable_id.nil? || giftable_type.nil?
 
-    self.funding_source_id = 'JCRZG0RWLLRO' # hardwired for now
+    self.funding_source_id = DigitalGift.balance_funding_source.id
 
     # this is wrong. Should choose based on amount.
     self.campaign_id = DigitalGift.campaigns&.first&.id
