@@ -61,7 +61,7 @@ class DigitalGift < ApplicationRecord
   def self.funding_source
     DigitalGift.funding_sources.find { |fs| fs.method == 'balance' }
   end
-  
+
   def self.current_budget
     (DigitalGift.funding_sources.find { |fs| fs.method == 'balance' }.available_cents / 100).to_money
   end
@@ -95,7 +95,7 @@ class DigitalGift < ApplicationRecord
   def request_link
     raise if person_id.nil? || giftable_id.nil? || giftable_type.nil?
 
-    self.funding_source_id = DigitalGift.funding_sources.first.id
+    self.funding_source_id = 'JCRZG0RWLLRO' # hardwired for now
 
     # this is wrong. Should choose based on amount.
     self.campaign_id = DigitalGift.campaigns&.first&.id
