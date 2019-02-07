@@ -15,7 +15,7 @@ class ActivationCallUpdateJob
             activation_call.save
           end
           activation_call.update_front_end
-          redis.setex('ActivationCallUpdateLock', 3, true)
+          redis.setex('ActivationCallUpdateLock', 5, true)
           sleep 1
         else
           # no card associated with this call. do away with it!
