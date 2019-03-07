@@ -43,6 +43,9 @@ gem 'giftrocket_ruby', github: 'BlueRidgeLabs/giftrocket-ruby', branch: 'brl_bra
 
 gem "aws-sdk-s3", require: false
 
+# generate capybara tests
+gem 'heavens_door', group: :development
+
 group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
