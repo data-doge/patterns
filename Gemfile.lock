@@ -167,10 +167,6 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     fast_blank (1.0.0)
-    faster_path (0.3.10)
-      bundler (~> 1.12)
-      rake (~> 12.3)
-      thermite (= 0.13.0)
     ffi (1.9.25)
     flamegraph (0.9.5)
     formatador (0.2.5)
@@ -276,7 +272,6 @@ GEM
     mimemagic (0.3.3)
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
-    minitar (0.8)
     minitest (5.11.3)
     mocha (1.8.0)
       metaclass (~> 0.0.1)
@@ -498,10 +493,6 @@ GEM
     stackprof (0.2.12)
     term-ansicolor (1.7.1)
       tins (~> 1.0)
-    thermite (0.13.0)
-      minitar (~> 0.5)
-      rake (>= 10)
-      tomlrb (~> 1.2)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
       ref
@@ -510,7 +501,6 @@ GEM
     tilt (2.0.9)
     timecop (0.9.1)
     tins (1.20.2)
-    tomlrb (1.2.8)
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -596,7 +586,6 @@ DEPENDENCIES
   factory_bot_rails
   faker
   fast_blank
-  faster_path
   flamegraph
   fuzzy_match
   gibbon

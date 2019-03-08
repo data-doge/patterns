@@ -201,7 +201,7 @@ gem 'paper_trail-association_tracking'
 
 gem 'fast_blank' # blank? rewritten in c
 
-gem 'faster_path' #if !`which rustc`.empty?
+#gem 'faster_path' #if !`which rustc`.empty?
 
 # storing money with money-rails
 gem 'money-rails'
