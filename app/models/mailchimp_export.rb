@@ -12,7 +12,7 @@
 #  updated_at :datetime
 #
 
-class MailchimpExport < ApplicationRecord
+class MailchimpExport < ApplicationRecord # largely unused
 
   validates :name, :body, presence: true
   validates :name, length: { in: 1..50 }

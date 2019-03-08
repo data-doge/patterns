@@ -7,7 +7,7 @@ class MailchimpUpdateJob
   def perform(id, status)
     Rails.logger.info '[MailchimpSave] job enqueued'
     person = Person.unscoped.find id
-    if person.email_address.present? && person.verified?
+    if person.email_address.present?
       begin
         gibbon = Gibbon::Request.new
         gibbon.lists(ENV['MAILCHIMP_LIST_ID']).members(person.md5_email).upsert(body: {

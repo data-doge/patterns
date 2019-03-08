@@ -14,7 +14,7 @@
 #  updated_at  :datetime         not null
 #
 
-class MailchimpUpdate < ApplicationRecord
+class MailchimpUpdate < ApplicationRecord # largely unused
   scope :latest, -> { order('fired_at DESC') }
   after_save :update_person
   self.per_page = 15
