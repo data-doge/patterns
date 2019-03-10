@@ -125,7 +125,7 @@ gem 'glyphicons-rails'
 gem 'momentjs-rails' # sane time management in js
 gem 'bootstrap3-datetimepicker-rails'
 
-# want to switch pagination to kaminari 
+# want to switch pagination to kaminari
 # http://blogs.element-labs.com/2015/10/replacing-will_paginate-with-kaminari/
 
 # pagniate with will_paginate: https://github.com/mislav/will_paginate
@@ -149,7 +149,7 @@ gem 'gibbon'
 # use twilio-ruby for twilio
 gem 'twilio-ruby'
 
-gem 'parallel' # for parallel processing. 
+gem 'parallel' # for parallel processing.
 
 gem 'httparty'
 # use Wuparty for wufoo
@@ -257,10 +257,11 @@ group :development, :test do
   gem 'guard-minitest'
   gem 'guard-rspec', require: false
   gem 'guard-rubocop'
-  #gem 'poltergeist'
+  gem 'poltergeist'
   gem 'pry' # a console anywhere!
   gem 'rspec'
   gem 'rspec-rails'
   gem 'shoulda-matchers', '~> 3.1.1', require: false
   gem 'sms-spec'
+  gem "byebug", "~> 11.0"
 end
