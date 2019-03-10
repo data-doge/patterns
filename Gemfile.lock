@@ -216,7 +216,7 @@ GEM
     htmlentities (4.3.4)
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
-    i18n (1.5.3)
+    i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     icalendar (2.5.2)
       ice_cube (~> 0.16)
@@ -639,7 +639,8 @@ DEPENDENCIES
   redis
   redis-rails
   roo
-  rspec-rails (~> 3.0)
+  rspec
+  rspec-rails
   rspec-retry
   rubocop
   ruby-prof
