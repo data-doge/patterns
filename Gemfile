@@ -251,7 +251,7 @@ group :development, :test do
   gem 'capybara'
   #gem 'capybara-email'
   gem 'database_cleaner'
-  gem 'factory_bot_rails', require: false
+  gem 'factory_bot_rails', '4.10.0', require: false
   gem 'guard'
   gem 'guard-bundler', require: false
   gem 'guard-minitest'

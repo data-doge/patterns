@@ -1,5 +1,5 @@
 require 'rails_helper'
 
-RSpec.describe DigitalGiftController, type: :controller do
+# RSpec.describe DigitalGiftController, type: :controller do
 
-end
+# end

@@ -157,10 +157,10 @@ GEM
       json
     erubi (1.8.0)
     execjs (2.7.0)
-    factory_bot (4.11.1)
+    factory_bot (4.10.0)
       activesupport (>= 3.0.0)
-    factory_bot_rails (4.11.1)
-      factory_bot (~> 4.11.1)
+    factory_bot_rails (4.10.0)
+      factory_bot (~> 4.10.0)
       railties (>= 3.0.0)
     faker (1.9.1)
       i18n (>= 0.7)
@@ -583,7 +583,7 @@ DEPENDENCIES
   devise_zxcvbn
   ed25519
   emoji
-  factory_bot_rails
+  factory_bot_rails (= 4.10.0)
   faker
   fast_blank
   flamegraph
