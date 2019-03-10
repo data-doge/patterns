@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MailchimpUpdateJob
+class MailchimpUpdateJob # this is broken
   include Sidekiq::Worker
   sidekiq_options retry: 1
 
