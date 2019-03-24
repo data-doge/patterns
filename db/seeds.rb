@@ -42,22 +42,28 @@ Person.create(
   token: 'thisismytoken'
 )
 
+team = Team.create(name:'patterns',finance_code:'BRL')
 user = User.create(
-  email: 'patterns@example.com',
-  password: 'foobar123',
-  password_confirmation: 'foobar123',
+  email: 'user@example.com',
+  password: 'foobar123!01203$#$%R',
+  password_confirmation: 'foobar123!01203$#$%R',
   approved: true,
-  new_person_notification: true,
+  new_person_notification: false,
   name: 'Joe User',
+  team_id: team.id,
   phone_number: '555-555-5555'
 )
 
-team = Team.create(name:'patterns',finance_code:'FINCODE')
+admin_team = Team.create(name:'Admin Team',finance_code:'BRL')
+admin = User.create(
+  email: 'admin@example.com',
+  password: 'foobar123!01203$#$%R',
+  password_confirmation: 'foobar123!01203$#$%R',
+  approved: true,
+  new_person_notification: true,
+  name: 'Admin User',
+  team_id: admin_team.id,
+  phone_number: '555-555-5555'
+)
 
-team.users << user
 
-Budget.create(team_id: team.id, amount:0)
-
-cart = Cart.create(user_id: user.id, name:'example pool')
-
-cart.users << user
