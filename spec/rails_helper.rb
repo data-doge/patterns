@@ -26,6 +26,9 @@ ActiveRecord::Base.logger = nil
 require 'devise'
 require 'support/controller_macros'
 
+Capybara.configure do |config|
+  config.server_port = 9887 + ENV['TEST_ENV_NUMBER'].to_i
+end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
