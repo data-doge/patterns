@@ -14,10 +14,10 @@ class RapidproService
       tags.map { |t| t.tr(' ', '_') }.join(' ')
     end
 
-    def request(path:, body: {}, query: {})
+    def request(method:, path:, body: {}, query: {})
       url = "#{BASE_URL}#{path}"
       url += "?#{query.to_query}" unless query.empty?
-      HTTParty.post(url, headers: REQUEST_HEADERS, body: body.to_json)
+      HTTParty.send(method, url, headers: REQUEST_HEADERS, body: body.to_json)
     end
   end
 end

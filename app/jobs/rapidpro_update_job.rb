@@ -33,7 +33,7 @@ class RapidproUpdateJob
 
     query = @person&.rapidpro_uuid.present? ? { uuid: @person.rapidpro_uuid } : { urn: urn }
 
-    @res = RapidproService.request(path: "/contacts.json", body: body, query: query)
+    @res = RapidproService.request(method: :post, path: "/contacts.json", body: body, query: query)
 
     case @res.code
       when 201 then handle_created

@@ -9,13 +9,13 @@ RSpec.describe RapidproUpdateJob, :type => :job do
     code: 200
   }) }
 
-  before { allow(HTTParty).to receive(:post).and_return(rapidpro_res) }
+  before { allow(HTTParty).to receive(:send).and_return(rapidpro_res) }
 
   context "person not dig" do
     it "enqueues RapidproDeleteJob and early-returns" do
       person.update(tag_list: "not dig")
       expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
-      expect(HTTParty).not_to receive(:post)
+      expect(HTTParty).not_to receive(:send)
       action
     end
   end
@@ -24,7 +24,7 @@ RSpec.describe RapidproUpdateJob, :type => :job do
     it "enqueues RapidproDeleteJob and early-returns" do
       person.update(active: false)
       expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
-      expect(HTTParty).not_to receive(:post)
+      expect(HTTParty).not_to receive(:send)
       action
     end
   end
@@ -32,7 +32,7 @@ RSpec.describe RapidproUpdateJob, :type => :job do
   context "person doesn't have phone number" do
     it "doesn't do a damn thing" do
       person.update(phone_number: nil)
-      expect(HTTParty).not_to receive(:post)
+      expect(HTTParty).not_to receive(:send)
       expect(sut).not_to receive(:perform_in)
       action
     end
@@ -42,7 +42,8 @@ RSpec.describe RapidproUpdateJob, :type => :job do
     before { person.update(tag_list: "tag 1, tag 2") }
     context "person has email" do
       it "adds tel and email to RP URNs, adds tags to RP fields, and adds to group 'DIG'" do
-        expect(HTTParty).to receive(:post).with(
+        expect(HTTParty).to receive(:send).with(
+          :post,
           "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
           headers: rapidpro_req_headers,
           body: {
@@ -63,7 +64,8 @@ RSpec.describe RapidproUpdateJob, :type => :job do
     context "person doesn't have email" do
       it "adds tel to RP URNs, adds tags to RP fields, and adds to group 'DIG'" do
         person.update(email_address: nil)
-        expect(HTTParty).to receive(:post).with(
+        expect(HTTParty).to receive(:send).with(
+          :post,
           "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
           headers: rapidpro_req_headers,
           body: {
@@ -87,7 +89,8 @@ RSpec.describe RapidproUpdateJob, :type => :job do
 
     it "finds contact on rapidpro through phone #" do
       person.update(rapidpro_uuid: nil)
-      expect(HTTParty).to receive(:post).with(
+      expect(HTTParty).to receive(:send).with(
+        :post,
         "https://rapidpro.brl.nyc/api/v2/contacts.json?urn=#{CGI.escape("tel:#{person.phone_number}")}",
         headers: rapidpro_req_headers,
         body: {
