@@ -12,17 +12,19 @@ RSpec.describe RapidproUpdateJob, :type => :job do
   before { allow(HTTParty).to receive(:post).and_return(rapidpro_res) }
 
   context "person not dig" do
-    it "enqueues RapidproDeleteJob" do
+    it "enqueues RapidproDeleteJob and early-returns" do
       person.update(tag_list: "not dig")
       expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
+      expect(HTTParty).not_to receive(:post)
       action
     end
   end
 
   context "person not active" do
-    it "enqueues RapidproDeleteJob" do
+    it "enqueues RapidproDeleteJob and early-returns" do
       person.update(active: false)
       expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
+      expect(HTTParty).not_to receive(:post)
       action
     end
   end
@@ -81,6 +83,8 @@ RSpec.describe RapidproUpdateJob, :type => :job do
   end
 
   context "person doesn't have rapidpro_uuid" do
+    before { person.update(tag_list: "tag 1, tag 2") }
+
     it "finds contact on rapidpro through phone #" do
       person.update(rapidpro_uuid: nil)
       expect(HTTParty).to receive(:post).with(
@@ -89,7 +93,12 @@ RSpec.describe RapidproUpdateJob, :type => :job do
         body: {
           name: person.full_name,
           first_name: person.first_name,
-          language: RapidproService.language_for_person(person)
+          language: RapidproService.language_for_person(person),
+          urns: ["tel:#{person.phone_number}", "mailto:#{person.email_address}"],
+          groups: ["DIG"],
+          fields: {
+            tags: "tag_1 tag_2"
+          }
         }.to_json
       )
       action

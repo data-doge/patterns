@@ -8,62 +8,56 @@ class RapidproUpdateJob
   # otherwise use uuid. this will allow changes to phone numbers.
   # additionally, it means we only need one worker.
   def perform(id)
-    @headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
-    @base_url = 'https://rapidpro.brl.nyc/api/v2/'
     Rails.logger.info '[RapidProUpdate] job enqueued'
     @person = Person.find(id)
+    urn = "tel:#{@person.phone_number}"
 
-    # TODO: (EL) should we early-return?
-    RapidproDeleteJob.perform_async(id) if @person.tag_list.include?('not dig') || @person.active == false
+    return RapidproDeleteJob.perform_async(id) if (@person.tag_list.include?('not dig') || @person.active == false)
+    return unless @person.phone_number.present? # we may deal with a word where rapidpro does email but not now.
+    body = {
+      name: @person.full_name,
+      first_name: @person.first_name,
+      language: RapidproService.language_for_person(@person),
+      urns: [urn],
+      groups: ['DIG'],
+      fields: { tags: RapidproService.normalize_tags(@person.tag_list) }
+    }
+    body[:urns] << "mailto:#{@person.email_address}" if @person.email_address.present?
+    # eventual fields: # first_name: person.first_name,
+    # last_name: person.last_name,
+    # email_address: person.email_address,
+    # zip_code: person.postal_code,
+    # neighborhood: person.neighborhood,
+    # patterns_token: person.token,
+    # patterns_id: person.id
 
-    # we may deal with a word where rapidpro does email...
-    # but not now.
-    if @person.phone_number.present?
-      endpoint_url = @base_url + 'contacts.json'
+    query = @person&.rapidpro_uuid.present? ? { uuid: @person.rapidpro_uuid } : { urn: urn }
 
-      body = { name: @person.full_name,
-               first_name: @person.first_name,
-               language: RapidproService.language_for_person(@person) }
+    @res = RapidproService.request(path: "/contacts.json", body: body, query: query)
 
-      # eventual fields: # first_name: person.first_name,
-      # last_name: person.last_name,
-      # email_address: person.email_address,
-      # zip_code: person.postal_code,
-      # neighborhood: person.neighborhood,
-      # patterns_token: person.token,
-      # patterns_id: person.id
-
-      urn = "tel:#{@person.phone_number}"
-
-      if @person&.rapidpro_uuid.present? # already created in rapidpro
-        url = endpoint_url + "?uuid=#{@person.rapidpro_uuid}"
-        body[:urns] = [urn] # adds new phone number if need be.
-        body[:urns] << "mailto:#{@person.email_address}" if @person.email_address.present?
-        body[:groups] = ['DIG']
-        # rapidpro tags are space delimited and have underscores for spaces
-        body[:fields] = { tags: @person.tag_list.map { |t| t.tr(' ', '_') }.join(' ') }
-      else # person doesn't yet exist in rapidpro
-        # TODO: (EL) should we also set urns, groups, and fields?
-        cgi_urn = CGI.escape(urn)
-        url = endpoint_url + "?urn=#{cgi_urn}" # uses phone number to identify.
-      end
-
-      res = HTTParty.post(url, headers: @headers, body: body.to_json)
-
-      case res.code
-      when 201 # new person in rapidpro
-        if @person.rapidpro_uuid.blank?
-          # update column to skip callbacks
-          @person.update_column(:rapidpro_uuid, res.parsed_response['uuid'])
-        end
-      when 429 # throttled
-        retry_delay = res.headers['retry-after'].to_i + 5
-        RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
-      when 200 # happy response
-        return true
-      else
-        raise "error: #{res.code}"
-      end
+    case @res.code
+      when 201 then handle_created
+      when 429 then handle_throttled
+      when 200 then true
+      else handle_unknown
     end
+  end
+
+  private
+
+  def handle_created
+    if @person.rapidpro_uuid.blank?
+      # update column to skip callbacks
+      @person.update_column(:rapidpro_uuid, @res.parsed_response['uuid'])
+    end
+  end
+
+  def handle_throttled
+    retry_delay = @res.headers['retry-after'].to_i + 5
+    RapidproUpdateJob.perform_in(retry_delay, @person.id) # re-queue job
+  end
+
+  def handle_unknown
+    raise "error: #{@res.code}"
   end
 end
