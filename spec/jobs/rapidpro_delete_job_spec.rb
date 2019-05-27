@@ -10,14 +10,15 @@ RSpec.describe RapidproDeleteJob, :type => :job do
     before { person.update(rapidpro_uuid: nil) }
 
     it "doesnt do anything" do
-      expect(HTTParty).not_to receive(:delete)
+      expect(HTTParty).not_to receive(:send)
       expect(action).to be_nil
     end
   end
 
   context "rapidpro returns 404" do
     it "returns false and doesnt do anything" do
-      expect(HTTParty).to receive(:delete).with(
+      expect(HTTParty).to receive(:send).with(
+        :delete,
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new({
@@ -29,7 +30,8 @@ RSpec.describe RapidproDeleteJob, :type => :job do
 
   context "rapidpro returns 204" do
     it "updates rapidpro_uuid to nil and returns true" do
-      expect(HTTParty).to receive(:delete).with(
+      expect(HTTParty).to receive(:send).with(
+        :delete,
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new({
@@ -42,7 +44,8 @@ RSpec.describe RapidproDeleteJob, :type => :job do
 
   context "rapidpro returns 201" do
     it "updates rapidpro_uuid to nil and returns true" do
-      expect(HTTParty).to receive(:delete).with(
+      expect(HTTParty).to receive(:send).with(
+        :delete,
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new({
@@ -55,7 +58,8 @@ RSpec.describe RapidproDeleteJob, :type => :job do
 
   context "rapidpro returns 200" do
     it "updates rapidpro_uuid to nil and returns true" do
-      expect(HTTParty).to receive(:delete).with(
+      expect(HTTParty).to receive(:send).with(
+        :delete,
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new({
@@ -68,7 +72,8 @@ RSpec.describe RapidproDeleteJob, :type => :job do
 
   context "rapidpro returns 429" do
     it "re-queues job" do
-      expect(HTTParty).to receive(:delete).with(
+      expect(HTTParty).to receive(:send).with(
+        :delete,
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new({
@@ -85,7 +90,8 @@ RSpec.describe RapidproDeleteJob, :type => :job do
 
   context "rapidpro returns unknown response" do
     it "raises error" do
-      expect(HTTParty).to receive(:delete).with(
+      expect(HTTParty).to receive(:send).with(
+        :delete,
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new({

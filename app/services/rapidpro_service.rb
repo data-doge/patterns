@@ -17,7 +17,9 @@ class RapidproService
     def request(method:, path:, body: {}, query: {})
       url = "#{BASE_URL}#{path}"
       url += "?#{query.to_query}" unless query.empty?
-      HTTParty.send(method, url, headers: REQUEST_HEADERS, body: body.to_json)
+      params = { headers: REQUEST_HEADERS }
+      params[:body] = body.to_json unless body.empty?
+      HTTParty.send(method, url, **params)
     end
   end
 end
