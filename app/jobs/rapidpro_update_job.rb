@@ -12,8 +12,8 @@ class RapidproUpdateJob
     @person = Person.find(id)
     urn = "tel:#{@person.phone_number}"
 
-    return RapidproDeleteJob.perform_async(id) if (@person.tag_list.include?('not dig') || @person.active == false)
-    return unless @person.phone_number.present? # we may deal with a word where rapidpro does email but not now.
+    return RapidproDeleteJob.perform_async(id) if @person.tag_list.include?('not dig') || @person.active == false
+    return if @person.phone_number.blank? # we may deal with a word where rapidpro does email but not now.
     body = {
       name: @person.full_name,
       first_name: @person.first_name,
@@ -33,23 +33,21 @@ class RapidproUpdateJob
 
     query = @person&.rapidpro_uuid.present? ? { uuid: @person.rapidpro_uuid } : { urn: urn }
 
-    @res = RapidproService.request(method: :post, path: "/contacts.json", body: body, query: query)
+    @res = RapidproService.request(method: :post, path: '/contacts.json', body: body, query: query)
 
     case @res.code
-      when 201 then handle_created
-      when 429 then handle_throttled
-      when 200 then true
-      else handle_unknown
+    when 201 then handle_created
+    when 429 then handle_throttled
+    when 200 then true
+    else handle_unknown
     end
   end
 
   private
 
   def handle_created
-    if @person.rapidpro_uuid.blank?
-      # update column to skip callbacks
-      @person.update_column(:rapidpro_uuid, @res.parsed_response['uuid'])
-    end
+    return unless @person.rapidpro_uuid.blank?
+    @person.update_column(:rapidpro_uuid, @res.parsed_response['uuid']) # update column to skip callbacks
   end
 
   def handle_throttled
